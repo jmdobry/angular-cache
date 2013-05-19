@@ -1,7 +1,7 @@
 {
   "name": "ngAdvancedCache",
   "description": "ngAdvancedCache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "homepage": "https://github.com/jmdobry/ngAdvancedCache",
   "author": {
     "name": "Jason Dobry",
@@ -13,7 +13,6 @@
     "grunt-contrib-jshint": "~0.5.2",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-release": "~0.3.3"
+    "grunt-contrib-copy": "~0.4.1"
   }
 }

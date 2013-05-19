@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: ngAdvancedCache-0.2.0.js</title>
+    <title>JSDoc: Source: ngAdvancedCache-0.4.0.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: ngAdvancedCache-0.2.0.js</h1>
+    <h1 class="page-title">Source: ngAdvancedCache-0.4.0.js</h1>
     
     
 
@@ -27,10 +27,10 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * @author Jason Dobry &lt;jason.dobry@gmail.com>
- * @file ngAdvancedCache-0.2.0.js
- * @version 0.2.0
- * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/jmdobry/ngAdvancedCache>
- * @licence MIT &lt;http://jmdobry.github.io/jmdobry/ngAdvancedCache>
+ * @file ngAdvancedCache-0.4.0.js
+ * @version 0.4.0
+ * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/ngAdvancedCache>
+ * @license MIT &lt;https://github.com/jmdobry/ngAdvancedCache/blob/master/LICENSE>
  *
  * @overview ngAdvancedCache is a caching system that improves upon the capabilities of the
  * $cacheFactory provided by AngularJS.
@@ -46,23 +46,24 @@
      *       functionality.
      *
      * @example
-     angular.module('myApp', ['ngAdvancedCache']);
+    angular.module('myApp', ['ngAdvancedCache']);
 
-     angular.module('myApp').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    angular.module('myApp').service('myService', ['$advancedCacheFactory',
+        function ($advancedCacheFactory) {
+            // create a cache with default settings
+            var myCache = $advancedCacheFactory('myCache');
 
-        // create a cache with default settings
-        var advancedCache = $advancedCacheFactory();
+            // create an LRU cache with a capacity of 10
+            var myLRUCache = $advancedCacheFactory('myLRUCache', {
+                capacity: 10
+            });
 
-        // create an LRU cache with a capacity of 10
-        advancedCache = $advancedCacheFactory({
-            capacity: 10
-        });
-
-        // create a cache whose items have a default maximum lifetime of 10 minutes
-        advancedCache = $advancedCacheFactory({
-            maxAge: 600000
-        });
-     }
+            // create a cache whose items have a default maximum lifetime of 10 minutes
+            var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+                maxAge: 600000
+            });
+        }
+    ]);
      */
     angular.module('ngAdvancedCache', []);
 
@@ -72,21 +73,22 @@
      * @see {@link http://docs.angularjs.org/api/ng.$cacheFactory|ng.$cacheFactory}
      *
      * @example
-     angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    angular.module('myApp').service('myService', ['$advancedCacheFactory',
+        function ($advancedCacheFactory) {
+            // create a cache with default settings
+            var myCache = $advancedCacheFactory('myCache');
 
-        // create a cache with default settings
-        var advancedCache = $advancedCacheFactory();
+            // create an LRU cache with a capacity of 10
+            var myLRUCache = $advancedCacheFactory('myLRUCache', {
+                capacity: 10
+            });
 
-        // create an LRU cache with a capacity of 10
-        advancedCache = $advancedCacheFactory({
-            capacity: 10
-        });
-
-        // create a cache whose items have a default maximum lifetime of 10 minutes
-        advancedCache = $advancedCacheFactory({
-            maxAge: 600000
-        });
-     }
+            // create a cache whose items have a default maximum lifetime of 10 minutes
+            var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+                maxAge: 600000
+            });
+        }
+    ]);
      */
     function $AdvancedCacheFactoryProvider() {
 
@@ -107,10 +109,10 @@
                 var myCache = $advancedCacheFactory('myCache');
 
                 // create an LRU cache with a capacity of 10
-                var myCapacityCache = $advancedCacheFactory('myCapacityCache', { capacity: 10 });
+                var myLRUCache = $advancedCacheFactory('myLRUCache', { capacity: 10 });
 
                 // create a cache whose items have a default maximum lifetime of 10 minutes
-                var myMaxAgeCache = $advancedCacheFactory('myMaxAgeCache', { maxAge: 600000 });
+                var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', { maxAge: 600000 });
             });
              */
             function AdvancedCache(cacheId, options) {
@@ -371,7 +373,7 @@
              */
             function advancedCacheFactory(cacheId, options) {
                 if (cacheId in caches) {
-                    throw Error('cacheId ' + cacheId + ' taken');
+                    throw new Error('cacheId ' + cacheId + ' taken');
                 }
 
                 caches[cacheId] = new AdvancedCache(cacheId, options);
@@ -443,7 +445,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun May 19 2013 01:13:19 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun May 19 2013 14:59:59 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,36 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: ngAdvancedCache-0.3.1.js</title>
-    
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-    
-    <h1 class="page-title">Source: ngAdvancedCache-0.3.1.js</h1>
-    
-    
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>/**
- * @author Jason Dobry &lt;jason.dobry@gmail.com>
- * @file ngAdvancedCache-0.3.1.js
- * @version 0.3.1
- * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/ngAdvancedCache>
- * @license MIT &lt;https://github.com/jmdobry/ngAdvancedCache/blob/master/LICENSE>
+/**
+ * @author Jason Dobry <jason.dobry@gmail.com>
+ * @file ngAdvancedCache-0.4.0.js
+ * @version 0.4.0
+ * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/ngAdvancedCache>
+ * @license MIT <https://github.com/jmdobry/ngAdvancedCache/blob/master/LICENSE>
  *
  * @overview ngAdvancedCache is a caching system that improves upon the capabilities of the
  * $cacheFactory provided by AngularJS.
@@ -46,23 +19,24 @@
      *       functionality.
      *
      * @example
-     angular.module('myApp', ['ngAdvancedCache']);
+    angular.module('myApp', ['ngAdvancedCache']);
 
-     angular.module('myApp').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    angular.module('myApp').service('myService', ['$advancedCacheFactory',
+        function ($advancedCacheFactory) {
+            // create a cache with default settings
+            var myCache = $advancedCacheFactory('myCache');
 
-        // create a cache with default settings
-        var advancedCache = $advancedCacheFactory();
+            // create an LRU cache with a capacity of 10
+            var myLRUCache = $advancedCacheFactory('myLRUCache', {
+                capacity: 10
+            });
 
-        // create an LRU cache with a capacity of 10
-        advancedCache = $advancedCacheFactory({
-            capacity: 10
-        });
-
-        // create a cache whose items have a default maximum lifetime of 10 minutes
-        advancedCache = $advancedCacheFactory({
-            maxAge: 600000
-        });
-     }
+            // create a cache whose items have a default maximum lifetime of 10 minutes
+            var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+                maxAge: 600000
+            });
+        }
+    ]);
      */
     angular.module('ngAdvancedCache', []);
 
@@ -72,21 +46,22 @@
      * @see {@link http://docs.angularjs.org/api/ng.$cacheFactory|ng.$cacheFactory}
      *
      * @example
-     angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    angular.module('myApp').service('myService', ['$advancedCacheFactory',
+        function ($advancedCacheFactory) {
+            // create a cache with default settings
+            var myCache = $advancedCacheFactory('myCache');
 
-        // create a cache with default settings
-        var advancedCache = $advancedCacheFactory();
+            // create an LRU cache with a capacity of 10
+            var myLRUCache = $advancedCacheFactory('myLRUCache', {
+                capacity: 10
+            });
 
-        // create an LRU cache with a capacity of 10
-        advancedCache = $advancedCacheFactory({
-            capacity: 10
-        });
-
-        // create a cache whose items have a default maximum lifetime of 10 minutes
-        advancedCache = $advancedCacheFactory({
-            maxAge: 600000
-        });
-     }
+            // create a cache whose items have a default maximum lifetime of 10 minutes
+            var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+                maxAge: 600000
+            });
+        }
+    ]);
      */
     function $AdvancedCacheFactoryProvider() {
 
@@ -96,7 +71,7 @@
 
             /**
              * @class AdvancedCache
-             * @desc Instantiated via &lt;code>$advancedCacheFactory()&lt;/code>
+             * @desc Instantiated via <code>$advancedCacheFactory()</code>
              * @param {string} cacheId The id of the new cache.
              * @param {object} [options] { capacity: {number}, maxAge: {number} }
              *
@@ -107,10 +82,10 @@
                 var myCache = $advancedCacheFactory('myCache');
 
                 // create an LRU cache with a capacity of 10
-                var myCapacityCache = $advancedCacheFactory('myCapacityCache', { capacity: 10 });
+                var myLRUCache = $advancedCacheFactory('myLRUCache', { capacity: 10 });
 
                 // create a cache whose items have a default maximum lifetime of 10 minutes
-                var myMaxAgeCache = $advancedCacheFactory('myMaxAgeCache', { maxAge: 600000 });
+                var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', { maxAge: 600000 });
             });
              */
             function AdvancedCache(cacheId, options) {
@@ -371,7 +346,7 @@
              */
             function advancedCacheFactory(cacheId, options) {
                 if (cacheId in caches) {
-                    throw Error('cacheId ' + cacheId + ' taken');
+                    throw new Error('cacheId ' + cacheId + ' taken');
                 }
 
                 caches[cacheId] = new AdvancedCache(cacheId, options);
@@ -427,26 +402,3 @@
     // Register the new provider with Angular.
     angular.module('ngAdvancedCache').provider('$advancedCacheFactory', $AdvancedCacheFactoryProvider);
 })(window, window.angular);
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-ngAdvancedCache.html">ngAdvancedCache</a></li></ul><h3>Classes</h3><ul><li><a href="$AdvancedCacheFactoryProvider.html">$AdvancedCacheFactoryProvider</a></li><li><a href="AdvancedCache.html">AdvancedCache</a></li><li><a href="advancedCacheFactory.html">advancedCacheFactory</a></li></ul>
-</nav>
-
-<br clear="both">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun May 19 2013 01:42:28 GMT-0600 (MDT)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>
