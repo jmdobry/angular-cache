@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file ngAdvancedCache-0.2.0.js
- * @version 0.2.0
+ * @file ngAdvancedCache-0.3.0.js
+ * @version 0.3.0
  * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/jmdobry/ngAdvancedCache>
  * @licence MIT <http://jmdobry.github.io/jmdobry/ngAdvancedCache>
  *
