@@ -1,9 +1,9 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file ngAdvancedCache-0.3.0.js
- * @version 0.3.0
- * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/jmdobry/ngAdvancedCache>
- * @licence MIT <http://jmdobry.github.io/jmdobry/ngAdvancedCache>
+ * @file ngAdvancedCache-0.3.1.js
+ * @version 0.3.1
+ * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/ngAdvancedCache>
+ * @license MIT <https://github.com/jmdobry/ngAdvancedCache/blob/master/LICENSE>
  *
  * @overview ngAdvancedCache is a caching system that improves upon the capabilities of the
  * $cacheFactory provided by AngularJS.
