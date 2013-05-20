@@ -171,7 +171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.4.0.js.html">ngAdvancedCache-0.4.0.js</a>, <a href="ngAdvancedCache-0.4.0.js.html#line72">line 72</a>
+        <a href="ngAdvancedCache-0.4.1.js.html">ngAdvancedCache-0.4.1.js</a>, <a href="ngAdvancedCache-0.4.1.js.html#line37">line 37</a>
     </li></ul></dd>
     
     
@@ -196,7 +196,7 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>            angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
 
                 // create a cache with default settings
                 var myCache = $advancedCacheFactory('myCache');
@@ -273,7 +273,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.4.0.js.html">ngAdvancedCache-0.4.0.js</a>, <a href="ngAdvancedCache-0.4.0.js.html#line303">line 303</a>
+        <a href="ngAdvancedCache-0.4.1.js.html">ngAdvancedCache-0.4.1.js</a>, <a href="ngAdvancedCache-0.4.1.js.html#line262">line 262</a>
     </li></ul></dd>
     
     
@@ -298,19 +298,11 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>                myCache.destroy();
 
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
 
-                    myCache.put('someItem', { name: 'John Doe' });
-                    myCache.put('someOtherItem', { name: 'Sally Jean' });
-
-                    myCache.destroy();
-
-                    myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
-
-                    $advancedCacheFactory.get('myCache'); // undefined
-                });</code></pre>
+                $advancedCacheFactory.get('myCache'); // undefined</code></pre>
 
     
 </dd>
@@ -407,7 +399,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.4.0.js.html">ngAdvancedCache-0.4.0.js</a>, <a href="ngAdvancedCache-0.4.0.js.html#line209">line 209</a>
+        <a href="ngAdvancedCache-0.4.1.js.html">ngAdvancedCache-0.4.1.js</a>, <a href="ngAdvancedCache-0.4.1.js.html#line178">line 178</a>
     </li></ul></dd>
     
     
@@ -454,12 +446,10 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>                myCache.get('someItem'); // { name: 'John Doe' });
 
-                    var myCache = $advancedCacheFactory('myCache');
-
-                    myCache.get('someItem'); // { name: 'John Doe', role: 'Manager' }
-                });</code></pre>
+                // if the item is not in the cache or has expired
+                myCache.get('someMissingItem'); // undefined</code></pre>
 
     
 </dd>
@@ -508,7 +498,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.4.0.js.html">ngAdvancedCache-0.4.0.js</a>, <a href="ngAdvancedCache-0.4.0.js.html#line330">line 330</a>
+        <a href="ngAdvancedCache-0.4.1.js.html">ngAdvancedCache-0.4.1.js</a>, <a href="ngAdvancedCache-0.4.1.js.html#line281">line 281</a>
     </li></ul></dd>
     
     
@@ -552,6 +542,11 @@
 
         
     
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>                myCache.info(); // { id: 'myCache', size: 13 }</code></pre>
+
     
 </dd>
 
@@ -721,7 +716,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.4.0.js.html">ngAdvancedCache-0.4.0.js</a>, <a href="ngAdvancedCache-0.4.0.js.html#line163">line 163</a>
+        <a href="ngAdvancedCache-0.4.1.js.html">ngAdvancedCache-0.4.1.js</a>, <a href="ngAdvancedCache-0.4.1.js.html#line128">line 128</a>
     </li></ul></dd>
     
     
@@ -768,17 +763,21 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>                myCache.put('someItem', { name: 'John Doe' });
 
-                    // create a cache with default settings
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.get('someItem'); // { name: 'John Doe' });
 
-                    // add an item to the cache with a maximum lifetime of 10 seconds.
-                    myCache.put('someItem', {
-                        name: 'John Doe',
-                        role: 'Manager'
-                    }, { maxAge: 10000 });
-                });</code></pre>
+                // Give a specific item a maximum age
+                myCache.put('someItem', { name: 'John Doe' }, { maxAge: 10000 });
+
+                myCache.get('someItem'); // { name: 'John Doe' });
+
+                // wait at least ten seconds
+                setTimeout(function() {
+
+                    myCache.get('someItem'); // undefined
+
+                }, 15000); // 15 seconds</code></pre>
 
     
 </dd>
@@ -875,7 +874,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.4.0.js.html">ngAdvancedCache-0.4.0.js</a>, <a href="ngAdvancedCache-0.4.0.js.html#line241">line 241</a>
+        <a href="ngAdvancedCache-0.4.1.js.html">ngAdvancedCache-0.4.1.js</a>, <a href="ngAdvancedCache-0.4.1.js.html#line208">line 208</a>
     </li></ul></dd>
     
     
@@ -900,14 +899,11 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>                myCache.put('someItem', { name: 'John Doe' });
 
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.remove('someItem');
 
-                    myCache.remove('someItem');
-
-                    myCache.get('someItem'); // undefined
-                });</code></pre>
+                myCache.get('someItem'); // undefined</code></pre>
 
     
 </dd>
@@ -956,7 +952,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.4.0.js.html">ngAdvancedCache-0.4.0.js</a>, <a href="ngAdvancedCache-0.4.0.js.html#line277">line 277</a>
+        <a href="ngAdvancedCache-0.4.1.js.html">ngAdvancedCache-0.4.1.js</a>, <a href="ngAdvancedCache-0.4.1.js.html#line241">line 241</a>
     </li></ul></dd>
     
     
@@ -981,18 +977,13 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>                myCache.put('someItem', { name: 'John Doe' });
+                myCache.put('someOtherItem', { name: 'Sally Jean' });
 
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.removeAll();
 
-                    myCache.put('someItem', { name: 'John Doe' });
-                    myCache.put('someOtherItem', { name: 'Sally Jean' });
-
-                    myCache.removeAll();
-
-                    myCache.get('someItem'); // undefined
-                    myCache.get('someOtherItem'); // undefined
-                });</code></pre>
+                myCache.get('someItem'); // undefined
+                myCache.get('someOtherItem'); // undefined</code></pre>
 
     
 </dd>
@@ -1019,7 +1010,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun May 19 2013 14:59:59 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun May 19 2013 20:26:00 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

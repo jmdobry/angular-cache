@@ -1,7 +1,7 @@
 {
   "name": "ngAdvancedCache",
   "description": "ngAdvancedCache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "homepage": "https://github.com/jmdobry/ngAdvancedCache",
   "author": {
     "name": "Jason Dobry",

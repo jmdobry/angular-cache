@@ -20,23 +20,6 @@
      *
      * @example
     angular.module('myApp', ['ngAdvancedCache']);
-
-    angular.module('myApp').service('myService', ['$advancedCacheFactory',
-        function ($advancedCacheFactory) {
-            // create a cache with default settings
-            var myCache = $advancedCacheFactory('myCache');
-
-            // create an LRU cache with a capacity of 10
-            var myLRUCache = $advancedCacheFactory('myLRUCache', {
-                capacity: 10
-            });
-
-            // create a cache whose items have a default maximum lifetime of 10 minutes
-            var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
-                maxAge: 600000
-            });
-        }
-    ]);
      */
     angular.module('ngAdvancedCache', []);
 
@@ -44,24 +27,6 @@
      * @class $AdvancedCacheFactoryProvider
      * @desc Provider for the $advancedCacheFactory.
      * @see {@link http://docs.angularjs.org/api/ng.$cacheFactory|ng.$cacheFactory}
-     *
-     * @example
-    angular.module('myApp').service('myService', ['$advancedCacheFactory',
-        function ($advancedCacheFactory) {
-            // create a cache with default settings
-            var myCache = $advancedCacheFactory('myCache');
-
-            // create an LRU cache with a capacity of 10
-            var myLRUCache = $advancedCacheFactory('myLRUCache', {
-                capacity: 10
-            });
-
-            // create a cache whose items have a default maximum lifetime of 10 minutes
-            var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
-                maxAge: 600000
-            });
-        }
-    ]);
      */
     function $AdvancedCacheFactoryProvider() {
 
@@ -76,7 +41,7 @@
              * @param {object} [options] { capacity: {number}, maxAge: {number} }
              *
              * @example
-             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+            angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
 
                 // create a cache with default settings
                 var myCache = $advancedCacheFactory('myCache');
@@ -170,17 +135,21 @@
                  * @public
                  *
                  * @example
-                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+                myCache.put('someItem', { name: 'John Doe' });
 
-                    // create a cache with default settings
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.get('someItem'); // { name: 'John Doe' });
 
-                    // add an item to the cache with a maximum lifetime of 10 seconds.
-                    myCache.put('someItem', {
-                        name: 'John Doe',
-                        role: 'Manager'
-                    }, { maxAge: 10000 });
-                });
+                // Give a specific item a maximum age
+                myCache.put('someItem', { name: 'John Doe' }, { maxAge: 10000 });
+
+                myCache.get('someItem'); // { name: 'John Doe' });
+
+                // wait at least ten seconds
+                setTimeout(function() {
+
+                    myCache.get('someItem'); // undefined
+
+                }, 15000); // 15 seconds
                  */
                 this.put = function (key, value, options) {
                     var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
@@ -214,12 +183,10 @@
                  * @public
                  *
                  * @example
-                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+                myCache.get('someItem'); // { name: 'John Doe' });
 
-                    var myCache = $advancedCacheFactory('myCache');
-
-                    myCache.get('someItem'); // { name: 'John Doe', role: 'Manager' }
-                });
+                // if the item is not in the cache or has expired
+                myCache.get('someMissingItem'); // undefined
                  */
                 this.get = function (key) {
                     var lruEntry = lruHash[key];
@@ -245,14 +212,11 @@
                  * @public
                  *
                  * @example
-                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+                myCache.put('someItem', { name: 'John Doe' });
 
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.remove('someItem');
 
-                    myCache.remove('someItem');
-
-                    myCache.get('someItem'); // undefined
-                });
+                myCache.get('someItem'); // undefined
                  */
                 this.remove = function (key) {
                     var lruEntry = lruHash[key];
@@ -280,18 +244,13 @@
                  * @public
                  *
                  * @example
-                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+                myCache.put('someItem', { name: 'John Doe' });
+                myCache.put('someOtherItem', { name: 'Sally Jean' });
 
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.removeAll();
 
-                    myCache.put('someItem', { name: 'John Doe' });
-                    myCache.put('someOtherItem', { name: 'Sally Jean' });
-
-                    myCache.removeAll();
-
-                    myCache.get('someItem'); // undefined
-                    myCache.get('someOtherItem'); // undefined
-                });
+                myCache.get('someItem'); // undefined
+                myCache.get('someOtherItem'); // undefined
                  */
                 this.removeAll = function () {
                     data = {};
@@ -306,19 +265,11 @@
                  * @public
                  *
                  * @example
-                 angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+                myCache.destroy();
 
-                    var myCache = $advancedCacheFactory('myCache');
+                myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
 
-                    myCache.put('someItem', { name: 'John Doe' });
-                    myCache.put('someOtherItem', { name: 'Sally Jean' });
-
-                    myCache.destroy();
-
-                    myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
-
-                    $advancedCacheFactory.get('myCache'); // undefined
-                });
+                $advancedCacheFactory.get('myCache'); // undefined
                  */
                 this.destroy = function () {
                     data = null;
@@ -332,6 +283,9 @@
                  * @desc Return an object containing information about this cache.
                  * @returns {object} stats Object containing information about this cache.
                  * @public
+                 *
+                 * @example
+                myCache.info(); // { id: 'myCache', size: 13 }
                  */
                 this.info = function () {
                     return angular.extend({}, stats, {size: size});
@@ -365,7 +319,7 @@
                     var myCache = $advancedCacheFactory('myCache'),
                         myOtherCache = $advancedCacheFactory('myOtherCache');
 
-                    console.log($advancedCacheFactory.info()); // { {id: 'myCache', size: 0}, {id: 'myOtherCache', size: 0} }
+                    $advancedCacheFactory.info(); // { {id: 'myCache', size: 0}, {id: 'myOtherCache', size: 0} }
                 });
              */
             advancedCacheFactory.info = function () {
