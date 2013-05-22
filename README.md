@@ -23,12 +23,8 @@ Set the cache to periodically clear itself.
 Configure the cache to proactively remove items right when they expire, instead of lazily removing them. Use in conjunction with MaxAge.
 
 ## Roadmap
-##### 0.5.0
-- Complete set of unit tests
-
 ##### 0.6.0 Alpha
-- Add ability for a cache to proactively remove expired items.
-- Add ability for a cache to periodically clear itself.
+- Unit tests for `AdvancedCache` class.
 - Submit project to Angular.js user groups for feedback.
 
 ##### 0.7.0 Compatibility and Performance
@@ -51,8 +47,8 @@ Configure the cache to proactively remove items right when they expire, instead 
 ## Download
 | Type          | File                                                                                                                    | Size    |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
-| Production    | [ngAdvancedCache-0.4.0.min.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.4.0.min.js) | 1.3 KB  |
-| Development   | [ngAdvancedCache-0.4.0.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.4.0.js)         | 13.5 KB |
+| Production    | [ngAdvancedCache-0.5.0.min.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.min.js) | 2.23 KB  |
+| Development   | [ngAdvancedCache-0.5.0.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.js)         | 16.2 KB |
 
 ## Usage
 
@@ -90,6 +86,11 @@ angular.module('myApp').service('myService', ['$advancedCacheFactory',
         // create a cache whose items have a default maximum lifetime of 10 minutes
         var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
             maxAge: 600000
+        });
+
+        // create a cache that will clear itself on an interval of 10 minutes
+        var myIntervalCache = $advancedCacheFactory('myIntervalCache', {
+            cacheFlushInterval: 600000
         });
     }
 ]);
