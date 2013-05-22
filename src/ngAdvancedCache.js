@@ -19,7 +19,7 @@
      *       functionality.
      *
      * @example
-    angular.module('myApp', ['ngAdvancedCache']);
+     angular.module('myApp', ['ngAdvancedCache']);
      */
     angular.module('ngAdvancedCache', []);
 
@@ -38,10 +38,10 @@
              * @class AdvancedCache
              * @desc Instantiated via <code>$advancedCacheFactory()</code>
              * @param {string} cacheId The id of the new cache.
-             * @param {object} [options] { capacity: {number}, maxAge: {number} }
+             * @param {object} [options] { capacity: {number}, maxAge: {number}, cacheFlushInterval: {number} }
              *
              * @example
-            angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
 
                 // create a cache with default settings
                 var myCache = $advancedCacheFactory('myCache');
@@ -55,35 +55,80 @@
              */
             function AdvancedCache(cacheId, options) {
                 var size = 0,
-                    stats = angular.extend({}, options, {id: cacheId}),
+                    config = angular.extend({}, options, {id: cacheId}),
                     data = {},
-                    capacity = (options && options.capacity) || Number.MAX_VALUE,
-                    maxAge = (options && options.maxAge) || null,
                     lruHash = {},
                     freshEnd = null,
-                    staleEnd = null;
+                    staleEnd = null,
+                    errorMsg = '';
+
+                // validate options
+                errorMsg += _validateCapacity(config.capacity);
+                errorMsg += _validateMaxAge(config.maxAge);
+                errorMsg += _validateCacheFlushInterval(config.cacheFlushInterval);
+                if (errorMsg) throw new Error(errorMsg);
+
+                // Set the default capacity
+                if (!config.capacity) {
+                    config.capacity = Number.MAX_VALUE;
+                }
+
+                // Start the timer for the cacheFlushInterval
+                if (config.cacheFlushInterval) {
+                    config.cacheFlushIntervalId = setInterval(function () {
+                        for (var key in data) {
+                            clearTimeout(data[key].timeoutId);
+                        }
+                        data = {};
+                        lruHash = {};
+                        freshEnd = null;
+                        staleEnd = null;
+                    }, config.cacheFlushInterval);
+                }
 
                 /**
-                 * @method isExpired
-                 * @desc Returns true if the entry has been in the cache longer than its max age.
-                 * @param {object} lruEntry The cache entry to be examined.
-                 * @returns {boolean} true if the entry has been in the cache longer than its
-                 *          maxAge, false if not or maxAge is null
+                 *
+                 * @param {number} capacity
+                 * @returns {string} errorMsg
                  * @private
                  */
-                function _isExpired(lruEntry) {
-                    var entryMaxAge;
-
-                    if ((lruEntry.maxAge || maxAge)) {
-                        entryMaxAge = lruEntry.maxAge ? lruEntry.maxAge
-                            : maxAge ? maxAge
-                            : null;
+                function _validateCapacity(capacity) {
+                    var errorMsg = '';
+                    if (config.capacity) {
+                        if (!angular.isNumber(config.capacity)) errorMsg += 'capacity must be a number!;';
+                        if (config.capacity < 0) errorMsg += 'capacity must be greater than zero!;';
                     }
+                    return errorMsg;
+                }
 
-                    if (entryMaxAge) {
-                        return new Date().getTime() - lruEntry.timestamp > entryMaxAge;
+                /**
+                 *
+                 * @param {number} cacheFlushInterval
+                 * @returns {string} errorMsg
+                 * @private
+                 */
+                function _validateCacheFlushInterval(cacheFlushInterval) {
+                    var errorMsg = '';
+                    if (config.cacheFlushInterval) {
+                        if (!angular.isNumber(config.cacheFlushInterval)) errorMsg += 'cacheFlushInterval must be a number!;';
+                        if (config.cacheFlushInterval < 0) errorMsg += 'cacheFlushInterval must be greater than zero!;';
                     }
-                    return false;
+                    return errorMsg;
+                }
+
+                /**
+                 *
+                 * @param {number} maxAge
+                 * @returns {string} errorMsg
+                 * @private
+                 */
+                function _validateMaxAge(maxAge) {
+                    var errorMsg = '';
+                    if (config.maxAge) {
+                        if (!angular.isNumber(config.maxAge)) errorMsg += 'maxAge must be a number!;';
+                        if (config.maxAge < 0) errorMsg += 'maxAge must be greater than zero!;';
+                    }
+                    return errorMsg;
                 }
 
                 /**
@@ -135,24 +180,34 @@
                  * @public
                  *
                  * @example
-                myCache.put('someItem', { name: 'John Doe' });
+                 myCache.put('someItem', { name: 'John Doe' });
 
-                myCache.get('someItem'); // { name: 'John Doe' });
+                 myCache.get('someItem'); // { name: 'John Doe' });
 
-                // Give a specific item a maximum age
-                myCache.put('someItem', { name: 'John Doe' }, { maxAge: 10000 });
+                 // Give a specific item a maximum age
+                 myCache.put('someItem', { name: 'John Doe' }, { maxAge: 10000 });
 
-                myCache.get('someItem'); // { name: 'John Doe' });
+                 myCache.get('someItem'); // { name: 'John Doe' });
 
-                // wait at least ten seconds
-                setTimeout(function() {
+                 // wait at least ten seconds
+                 setTimeout(function() {
 
                     myCache.get('someItem'); // undefined
 
                 }, 15000); // 15 seconds
                  */
                 this.put = function (key, value, options) {
-                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
+                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key}),
+                        self = this,
+                        errorMsg = '';
+
+                    if (!angular.isString(key)) {
+                        throw new Error('The key must be a string!');
+                    }
+                    if (options && options.maxAge) {
+                        errorMsg += _validateMaxAge(options.maxAge);
+                        if (errorMsg) throw new Error(errorMsg);
+                    }
 
                     _refresh(lruEntry);
 
@@ -163,12 +218,20 @@
                         size++;
                     }
                     data[key] = {
-                        timestamp: new Date().getTime(),
-                        maxAge: (options && options.maxAge) || null,
                         value: value
                     };
 
-                    if (size > capacity) {
+                    if (config.maxAge || (options && options.maxAge)) {
+                        data[key].timestamp = new Date().getTime();
+                        if (data[key].timeoutId) {
+                            clearTimeout(data[key].timeoutId);
+                        }
+                        data[key].timeoutId = setTimeout(function () {
+                            self.remove(key);
+                        }, ((options && options.maxAge) || config.maxAge));
+                    }
+
+                    if (size > config.capacity) {
                         this.remove(staleEnd.key);
                     }
 
@@ -183,20 +246,15 @@
                  * @public
                  *
                  * @example
-                myCache.get('someItem'); // { name: 'John Doe' });
+                 myCache.get('someItem'); // { name: 'John Doe' });
 
-                // if the item is not in the cache or has expired
-                myCache.get('someMissingItem'); // undefined
+                 // if the item is not in the cache or has expired
+                 myCache.get('someMissingItem'); // undefined
                  */
                 this.get = function (key) {
                     var lruEntry = lruHash[key];
 
                     if (!lruEntry) {
-                        return;
-                    }
-
-                    if (_isExpired(data[key])) {
-                        this.remove(key);
                         return;
                     }
 
@@ -212,11 +270,11 @@
                  * @public
                  *
                  * @example
-                myCache.put('someItem', { name: 'John Doe' });
+                 myCache.put('someItem', { name: 'John Doe' });
 
-                myCache.remove('someItem');
+                 myCache.remove('someItem');
 
-                myCache.get('someItem'); // undefined
+                 myCache.get('someItem'); // undefined
                  */
                 this.remove = function (key) {
                     var lruEntry = lruHash[key];
@@ -244,13 +302,13 @@
                  * @public
                  *
                  * @example
-                myCache.put('someItem', { name: 'John Doe' });
-                myCache.put('someOtherItem', { name: 'Sally Jean' });
+                 myCache.put('someItem', { name: 'John Doe' });
+                 myCache.put('someOtherItem', { name: 'Sally Jean' });
 
-                myCache.removeAll();
+                 myCache.removeAll();
 
-                myCache.get('someItem'); // undefined
-                myCache.get('someOtherItem'); // undefined
+                 myCache.get('someItem'); // undefined
+                 myCache.get('someOtherItem'); // undefined
                  */
                 this.removeAll = function () {
                     data = {};
@@ -265,15 +323,16 @@
                  * @public
                  *
                  * @example
-                myCache.destroy();
+                 myCache.destroy();
 
-                myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
+                 myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
 
-                $advancedCacheFactory.get('myCache'); // undefined
+                 $advancedCacheFactory.get('myCache'); // undefined
                  */
                 this.destroy = function () {
+                    clearInterval(config.cacheFlushIntervalId);
                     data = null;
-                    stats = null;
+                    config = null;
                     lruHash = null;
                     delete caches[cacheId];
                 };
@@ -285,10 +344,10 @@
                  * @public
                  *
                  * @example
-                myCache.info(); // { id: 'myCache', size: 13 }
+                 myCache.info(); // { id: 'myCache', size: 13 }
                  */
                 this.info = function () {
-                    return angular.extend({}, stats, {size: size});
+                    return angular.extend({}, config, {size: size});
                 };
             }
 
@@ -300,7 +359,9 @@
              */
             function advancedCacheFactory(cacheId, options) {
                 if (cacheId in caches) {
-                    throw new Error('cacheId ' + cacheId + ' taken');
+                    throw new Error('cacheId ' + cacheId + ' taken!');
+                } else if (!angular.isString(cacheId)) {
+                    throw new Error('cacheId must be a string!');
                 }
 
                 caches[cacheId] = new AdvancedCache(cacheId, options);
@@ -342,7 +403,7 @@
 
                     var myCache = $advancedCacheFactory.get('myCache');
 
-                    // use can now use myCache
+                    // you can now use myCache
                 });
              */
             advancedCacheFactory.get = function (cacheId) {

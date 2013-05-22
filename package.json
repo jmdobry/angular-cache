@@ -1,18 +1,24 @@
 {
-  "name": "ngAdvancedCache",
-  "description": "ngAdvancedCache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.",
-  "version": "0.4.1",
-  "homepage": "https://github.com/jmdobry/ngAdvancedCache",
-  "author": {
-    "name": "Jason Dobry",
-    "url": "http://www.pseudobry.com",
-    "email": "jason.dobry@gmail.com"
-  },
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.5.2",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-copy": "~0.4.1"
-  }
+    "name": "ngAdvancedCache",
+    "description": "ngAdvancedCache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.",
+    "version": "0.5.0",
+    "homepage": "https://github.com/jmdobry/ngAdvancedCache",
+    "author": {
+        "name": "Jason Dobry",
+        "url": "http://www.pseudobry.com",
+        "email": "jason.dobry@gmail.com"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-jshint": "~0.5.2",
+        "grunt-contrib-clean": "~0.4.1",
+        "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-copy": "~0.4.1",
+        "karma": "~0.8.5"
+    },
+    "scripts": {
+        "test": "cd test && node ../node_modules/karma/bin/karma start --autoWatch false --single-run true --browsers Firefox",
+        "test_Chrome": "cd test && node ../node_modules/karma/bin/karma start --autoWatch false --single-run true --browsers Chrome",
+        "test_PhantomJS": "cd test && node ../node_modules/karma/bin/karma start --autoWatch false --single-run true --browsers PhantomJS"
+    }
 }
