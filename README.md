@@ -30,8 +30,8 @@ Set the cache to periodically clear itself.
 ## Download
 | Type          | File                                                                                                                    | Size    |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
-| Production    | [ngAdvancedCache-0.6.0.min.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.min.js) | 2.21 KB |
-| Development   | [ngAdvancedCache-0.6.0.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.js)         | 17.1 KB |
+| Production    | [ngAdvancedCache-0.6.0.min.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.6.0.min.js) | 2.21 KB |
+| Development   | [ngAdvancedCache-0.6.0.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.6.0.js)         | 17.1 KB |
 
 ## Roadmap
 ##### 0.6.0 Alpha ([master](https://github.com/jmdobry/ngAdvancedCache))
