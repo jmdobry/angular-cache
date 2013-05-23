@@ -171,7 +171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.5.0.js.html">ngAdvancedCache-0.5.0.js</a>, <a href="ngAdvancedCache-0.5.0.js.html#line37">line 37</a>
+        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 37
     </li></ul></dd>
     
     
@@ -184,10 +184,6 @@
 
     
     
-
-    
-
-    
     
     
     
@@ -196,17 +192,34 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>             angular.module('myApp').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
 
-                // create a cache with default settings
-                var myCache = $advancedCacheFactory('myCache');
+                    // create a cache with default settings
+                    var myCache = $advancedCacheFactory('myCache');
 
-                // create an LRU cache with a capacity of 10
-                var myLRUCache = $advancedCacheFactory('myLRUCache', { capacity: 10 });
+                    // create an LRU cache with a capacity of 10
+                    var myLRUCache = $advancedCacheFactory('myLRUCache', {
+                        capacity: 10
+                    });
 
-                // create a cache whose items have a default maximum lifetime of 10 minutes
-                var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', { maxAge: 600000 });
-            });</code></pre>
+                    // create a cache whose items have a maximum lifetime of 10 minutes
+                    var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+                        maxAge: 600000
+                    });
+
+                    // create a cache that will clear itself every 10 minutes
+                    var myIntervalCache = $advancedCacheFactory('myIntervalCache', {
+                        cacheFlushInterval: 600000
+                    });
+
+                    // create an cache with all options
+                    var myAwesomeCache = $advancedCacheFactory('myAwesomeCache', {
+                        capacity: 10,
+                        maxAge: 600000,
+                        cacheFlushInterval: 600000
+                    });
+                }
+             ]);</code></pre>
 
     
 </dd>
@@ -273,7 +286,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.5.0.js.html">ngAdvancedCache-0.5.0.js</a>, <a href="ngAdvancedCache-0.5.0.js.html#line320">line 320</a>
+        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 340
     </li></ul></dd>
     
     
@@ -285,10 +298,6 @@
 </dl>
 
     
-    
-
-    
-
     
     
     
@@ -399,7 +408,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.5.0.js.html">ngAdvancedCache-0.5.0.js</a>, <a href="ngAdvancedCache-0.5.0.js.html#line241">line 241</a>
+        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 261
     </li></ul></dd>
     
     
@@ -411,10 +420,6 @@
 </dl>
 
     
-    
-
-    
-
     
     
     
@@ -498,7 +503,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.5.0.js.html">ngAdvancedCache-0.5.0.js</a>, <a href="ngAdvancedCache-0.5.0.js.html#line340">line 340</a>
+        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 360
     </li></ul></dd>
     
     
@@ -510,10 +515,6 @@
 </dl>
 
     
-    
-
-    
-
     
     
     
@@ -716,7 +717,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.5.0.js.html">ngAdvancedCache-0.5.0.js</a>, <a href="ngAdvancedCache-0.5.0.js.html#line173">line 173</a>
+        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 193
     </li></ul></dd>
     
     
@@ -728,10 +729,6 @@
 </dl>
 
     
-    
-
-    
-
     
     
     
@@ -874,7 +871,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.5.0.js.html">ngAdvancedCache-0.5.0.js</a>, <a href="ngAdvancedCache-0.5.0.js.html#line266">line 266</a>
+        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 286
     </li></ul></dd>
     
     
@@ -886,10 +883,6 @@
 </dl>
 
     
-    
-
-    
-
     
     
     
@@ -952,7 +945,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.5.0.js.html">ngAdvancedCache-0.5.0.js</a>, <a href="ngAdvancedCache-0.5.0.js.html#line299">line 299</a>
+        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 319
     </li></ul></dd>
     
     
@@ -964,10 +957,6 @@
 </dl>
 
     
-    
-
-    
-
     
     
     
@@ -1004,16 +993,15 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-ngAdvancedCache.html">ngAdvancedCache</a></li></ul><h3>Classes</h3><ul><li><a href="$AdvancedCacheFactoryProvider.html">$AdvancedCacheFactoryProvider</a></li><li><a href="AdvancedCache.html">AdvancedCache</a></li><li><a href="advancedCacheFactory.html">advancedCacheFactory</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-ngAdvancedCache.html">ngAdvancedCache</a></li></ul><h3>Classes</h3><ul><li><a href="$AdvancedCacheFactoryProvider.html">$AdvancedCacheFactoryProvider</a></li><li><a href="AdvancedCache.html">AdvancedCache</a></li><li><a href="advancedCacheFactory.html">advancedCacheFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_validateCacheFlushInterval">_validateCacheFlushInterval</a></li><li><a href="global.html#_validateCapacity">_validateCapacity</a></li><li><a href="global.html#_validateMaxAge">_validateMaxAge</a></li><li><a href="global.html#link">link</a></li><li><a href="global.html#refresh">refresh</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed May 22 2013 00:36:00 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed May 22 2013 22:09:48 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
 </body>
 </html>

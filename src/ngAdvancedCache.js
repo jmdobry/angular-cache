@@ -41,17 +41,34 @@
              * @param {object} [options] { capacity: {number}, maxAge: {number}, cacheFlushInterval: {number} }
              *
              * @example
-             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+             angular.module('myApp').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
 
-                // create a cache with default settings
-                var myCache = $advancedCacheFactory('myCache');
+                    // create a cache with default settings
+                    var myCache = $advancedCacheFactory('myCache');
 
-                // create an LRU cache with a capacity of 10
-                var myLRUCache = $advancedCacheFactory('myLRUCache', { capacity: 10 });
+                    // create an LRU cache with a capacity of 10
+                    var myLRUCache = $advancedCacheFactory('myLRUCache', {
+                        capacity: 10
+                    });
 
-                // create a cache whose items have a default maximum lifetime of 10 minutes
-                var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', { maxAge: 600000 });
-            });
+                    // create a cache whose items have a maximum lifetime of 10 minutes
+                    var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+                        maxAge: 600000
+                    });
+
+                    // create a cache that will clear itself every 10 minutes
+                    var myIntervalCache = $advancedCacheFactory('myIntervalCache', {
+                        cacheFlushInterval: 600000
+                    });
+
+                    // create an cache with all options
+                    var myAwesomeCache = $advancedCacheFactory('myAwesomeCache', {
+                        capacity: 10,
+                        maxAge: 600000,
+                        cacheFlushInterval: 600000
+                    });
+                }
+             ]);
              */
             function AdvancedCache(cacheId, options) {
                 var size = 0,
@@ -87,7 +104,8 @@
                 }
 
                 /**
-                 *
+                 * @method _validateCapacity
+                 * @desc Validates the capacity.
                  * @param {number} capacity
                  * @returns {string} errorMsg
                  * @private
@@ -102,7 +120,8 @@
                 }
 
                 /**
-                 *
+                 * @method _validateCacheFlushInterval
+                 * @desc Validates the cacheFlushInterval.
                  * @param {number} cacheFlushInterval
                  * @returns {string} errorMsg
                  * @private
@@ -117,16 +136,17 @@
                 }
 
                 /**
-                 *
+                 * @method _validateMaxAge
+                 * @desc Validates the maxAge.
                  * @param {number} maxAge
                  * @returns {string} errorMsg
                  * @private
                  */
                 function _validateMaxAge(maxAge) {
                     var errorMsg = '';
-                    if (config.maxAge) {
-                        if (!angular.isNumber(config.maxAge)) errorMsg += 'maxAge must be a number!;';
-                        if (config.maxAge < 0) errorMsg += 'maxAge must be greater than zero!;';
+                    if (maxAge) {
+                        if (!angular.isNumber(maxAge)) errorMsg += 'maxAge must be a number!;';
+                        if (maxAge < 0) errorMsg += 'maxAge must be greater than zero!;';
                     }
                     return errorMsg;
                 }

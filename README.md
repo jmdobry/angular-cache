@@ -1,4 +1,4 @@
-ngAdvancedCache
+ngAdvancedCache (0.6.0 - Alpha)
 ===============
 ##### ngAdvancedCache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.
 
@@ -6,8 +6,9 @@ ngAdvancedCache
 
 ## Table of Contents
 - [Features](#features)
-- [Roadmap](#roadmap)
+- [Status](#status)
 - [Download](#download)
+- [Roadmap](#roadmap)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
@@ -16,22 +17,32 @@ ngAdvancedCache
 ##### Capacity
 Set maximum capacity on a cache, turning it into an LRU cache.
 ##### MaxAge
-Set a default maximum lifetime on all items in a cache. This uses a lazy check. When an item is requested it is checked for expiration. If the item has expired it is removed from the cache and the request results in a miss.
-##### CacheExpire (upcoming)
+Set a default maximum lifetime on all items added to the cache. They will be removed when they expire. Can be configured on a per-item basis for greater specificity.
+##### CacheFlushInterval
 Set the cache to periodically clear itself.
-##### DeleteOnExpire (upcoming)
-Configure the cache to proactively remove items right when they expire, instead of lazily removing them. Use in conjunction with MaxAge.
+
+## Status
+| Version | Branch  | Build status                                                                                                            | Test Coverage |
+| ------- | ------- | ----------------------------------------------------------------------------------------------------------------------- | -------- |
+| 0.6.0   | [master](https://github.com/jmdobry/ngAdvancedCache)  | [![Build Status](https://travis-ci.org/jmdobry/ngAdvancedCache.png?branch=master)](https://travis-ci.org/jmdobry/ngAdvancedCache) | [Test Coverage](http://jmdobry.github.io/ngAdvancedCache/coverage/) |
+| 0.7.0   | [develop](https://github.com/jmdobry/ngAdvancedCache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/ngAdvancedCache.png?branch=develop)](https://travis-ci.org/jmdobry/ngAdvancedCache) | |
+
+## Download
+| Type          | File                                                                                                                    | Size    |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
+| Production    | [ngAdvancedCache-0.6.0.min.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.min.js) | 2.21 KB |
+| Development   | [ngAdvancedCache-0.6.0.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.js)         | 17.1 KB |
 
 ## Roadmap
-##### 0.6.0 Alpha
+##### 0.6.0 Alpha ([master](https://github.com/jmdobry/ngAdvancedCache))
 - Unit tests for `AdvancedCache` class.
 - Submit project to Angular.js user groups for feedback.
 
-##### 0.7.0 Compatibility and Performance
-- Ensure ngAdvancedCache's compatibility matches that of Angular.js in supporting browsers.
+##### 0.7.0 Compatibility and Performance ([develop](https://github.com/jmdobry/ngAdvancedCache/tree/develop))
+- Ensure ngAdvancedCache's compatibility matches that of Angular.js's browser support.
 - Ensure ngAdvancedCache supports a reasonable number of older versions of Angular.js.
 - Ensure ngAdvancedCache does not result in memory leaks.
-- Find a good default balance between memory use and cpu use and allow the user to configure it.
+- Find a good default balance between memory use and cpu use (timeouts and intervals) and allow the user to configure it.
 
 ##### 0.8.0 Beta
 - Bug fixes
@@ -43,12 +54,6 @@ Configure the cache to proactively remove items right when they expire, instead 
 
 ##### 1.0.0 Stable Release
 - Yay!
-
-## Download
-| Type          | File                                                                                                                    | Size    |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
-| Production    | [ngAdvancedCache-0.5.0.min.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.min.js) | 2.23 KB  |
-| Development   | [ngAdvancedCache-0.5.0.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.5.0.js)         | 16.2 KB |
 
 ## Usage
 
@@ -83,13 +88,20 @@ angular.module('myApp').service('myService', ['$advancedCacheFactory',
             capacity: 10
         });
 
-        // create a cache whose items have a default maximum lifetime of 10 minutes
+        // create a cache whose items have a maximum lifetime of 10 minutes
         var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
             maxAge: 600000
         });
 
-        // create a cache that will clear itself on an interval of 10 minutes
+        // create a cache that will clear itself every 10 minutes
         var myIntervalCache = $advancedCacheFactory('myIntervalCache', {
+            cacheFlushInterval: 600000
+        });
+
+        // create an cache with all options
+        var myAwesomeCache = $advancedCacheFactory('myAwesomeCache', {
+            capacity: 10,
+            maxAge: 600000,
             cacheFlushInterval: 600000
         });
     }
@@ -126,6 +138,7 @@ myCache.get('someItem'); // { name: 'John Doe' });
 
 Give a specific item a maximum age
 ```javascript
+// The maxAge given to this item will override the maxAge of the cache, if any was set
 myCache.put('someItem', { name: 'John Doe' }, { maxAge: 10000 });
 
 myCache.get('someItem'); // { name: 'John Doe' });

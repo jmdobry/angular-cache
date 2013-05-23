@@ -21,7 +21,16 @@ exclude = [
 
 // test results reporter to use
 // possible values: 'dots', 'progress', 'junit'
-reporters = ['progress'];
+reporters = ['progress', 'coverage'];
+
+preprocessors = {
+    'src/ngAdvancedCache.js': 'coverage'
+};
+
+coverageReporter = {
+    type: 'html',
+    dir: 'coverage/'
+};
 
 // web server port
 port = 9876;
