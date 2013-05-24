@@ -33,8 +33,8 @@ Set the cache to periodically clear itself.
 ## Download
 | Type          | File                                                                                                                    | Size    |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
-| Production    | [angular-cache-0.6.0.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.min.js) | 2.21 KB |
-| Development   | [angular-cache-0.6.0.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.js)         | 17.1 KB |
+| Production    | [angular-cache-0.6.1.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.min.js) | 2.21 KB |
+| Development   | [angular-cache-0.6.1.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.js)         | 17.1 KB |
 
 <a name='roadmap'></a>
 ## Roadmap
