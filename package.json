@@ -1,7 +1,7 @@
 {
   "name": "angular-cache",
   "description": "angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "homepage": "https://github.com/jmdobry/angular-cache",
   "author": {
     "name": "Jason Dobry",
