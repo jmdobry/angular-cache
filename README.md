@@ -1,4 +1,4 @@
-angular-cache (0.6.0 - Alpha)
+angular-cache (0.6.x - Alpha)
 ===============
 ##### angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. With angular-cache your caches can periodically clear themselves and flush items that have expired.
 
@@ -26,33 +26,33 @@ Set the cache to periodically clear itself.
 ## Status
 | Version | Branch  | Build status                                                                                                            | Test Coverage |
 | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------- | -------- |
-| 0.6.0   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
-| 0.7.0   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
+| 0.6.1   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
+| 0.7.1   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
 
 <a name='download'></a>
 ## Download
 | Type          | File                                                                                                                    | Size    |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
-| Production    | [angular-cache-0.6.0.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.min.js) | 2.21 KB |
-| Development   | [angular-cache-0.6.0.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.js)         | 17.1 KB |
+| Production    | [angular-cache-0.6.1.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.min.js) | 2.21 KB |
+| Development   | [angular-cache-0.6.1.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.1.js)         | 17.1 KB |
 
 <a name='roadmap'></a>
 ## Roadmap
-##### 0.6.0 Alpha ([master](https://github.com/jmdobry/angular-cache))
+##### 0.6.x Alpha ([master](https://github.com/jmdobry/angular-cache))
 - Unit tests for `Cache` class.
 - Submit project to Angular.js user groups for feedback.
 
-##### 0.7.0 Compatibility and Performance ([develop](https://github.com/jmdobry/angular-cache/tree/develop))
+##### 0.7.x Compatibility and Performance ([develop](https://github.com/jmdobry/angular-cache/tree/develop))
 - Ensure angular-cache's compatibility matches that of Angular.js's browser support.
 - Ensure angular-cache supports a reasonable number of older versions of Angular.js.
 - Ensure angular-cache does not result in memory leaks.
 - Find a good default balance between memory use and cpu use (timeouts and intervals) and allow the user to configure it.
 
-##### 0.8.0 Beta
+##### 0.8.x Beta
 - Bug fixes
 - Submit project to Angular.js user groups for feedback again.
 
-##### 0.9.0 Release Candidate
+##### 0.9.x Release Candidate
 - Bug fixes
 - Documentation tidy up.
 
