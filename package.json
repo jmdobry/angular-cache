@@ -1,26 +1,26 @@
 {
-  "name": "ngAdvancedCache",
-  "description": "ngAdvancedCache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.",
-  "version": "0.7.0",
-  "homepage": "https://github.com/jmdobry/ngAdvancedCache",
-  "author": {
-    "name": "Jason Dobry",
-    "url": "http://www.pseudobry.com",
-    "email": "jason.dobry@gmail.com"
-  },
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.5.2",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-copy": "~0.4.1",
-    "karma": "~0.8.5",
-    "grunt-karma": "~0.4.4",
-    "grunt-jsdoc": "~0.3.2",
-    "grunt-cli": "~0.1.8"
-  },
-  "scripts": {
-    "test": "node node_modules/grunt-cli/bin/grunt travis",
-    "test_dev": "node node_modules/grunt-cli/bin/grunt build"
-  }
+    "name": "angular-cache",
+    "description": "angular-cache improves upon the capabilities of the $cacheFactory provided by AngularJS.",
+    "version": "0.7.1",
+    "homepage": "https://github.com/jmdobry/angular-cache",
+    "author": {
+        "name": "Jason Dobry",
+        "url": "http://www.pseudobry.com",
+        "email": "jason.dobry@gmail.com"
+    },
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-jshint": "~0.5.2",
+        "grunt-contrib-clean": "~0.4.1",
+        "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-copy": "~0.4.1",
+        "karma": "~0.8.5",
+        "grunt-karma": "~0.4.4",
+        "grunt-jsdoc": "~0.3.2",
+        "grunt-cli": "~0.1.8"
+    },
+    "scripts": {
+        "test": "node node_modules/grunt-cli/bin/grunt travis",
+        "test_dev": "node node_modules/grunt-cli/bin/grunt build"
+    }
 }

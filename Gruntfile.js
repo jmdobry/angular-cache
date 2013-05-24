@@ -1,9 +1,9 @@
 /*
- * ngAdvancedCache
- * http://github.com/jmdobry/ngAdvancedCache
+ * angular-cache
+ * http://github.com/jmdobry/angular-cache
  *
- * Copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/ngAdvancedCache>
- * Licensed under the MIT license. <https://github.com/jmdobry/ngAdvancedCache/blob/master/LICENSE>
+ * Copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
+ * Licensed under the MIT license. <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  */
 
 'use strict';
@@ -14,7 +14,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: ['dist/', 'docs/'],
-        jshint: ['src/ngAdvancedCache.js'],
+        jshint: ['src/angular-cache.js'],
         copy: {
             options: {
                 processContent: function (contents) {
@@ -23,14 +23,14 @@ module.exports = function (grunt) {
                 }
             },
             dist: {
-                src: ['src/ngAdvancedCache.js'],
-                dest: 'dist/ngAdvancedCache-<%= pkg.version %>.js'
+                src: ['src/angular-cache.js'],
+                dest: 'dist/angular-cache-<%= pkg.version %>.js'
             }
         },
         uglify: {
             main: {
                 files: {
-                    'dist/ngAdvancedCache-<%= pkg.version %>.min.js': ['dist/ngAdvancedCache-<%= pkg.version %>.js']
+                    'dist/angular-cache-<%= pkg.version %>.min.js': ['dist/angular-cache-<%= pkg.version %>.js']
                 }
             }
         },
@@ -49,11 +49,12 @@ module.exports = function (grunt) {
         },
         jsdoc : {
             dist : {
-                src: ['dist/ngAdvancedCache-<%= pkg.version %>.js'],
+                src: ['dist/angular-cache-<%= pkg.version %>.js'],
                 options: {
                     destination: 'docs',
                     lenient: true,
-                    verbose: true
+                    verbose: true,
+                    private: true
                 }
             }
         }
