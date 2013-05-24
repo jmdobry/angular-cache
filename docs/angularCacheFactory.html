@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: advancedCacheFactory</title>
+    <title>JSDoc: Class: angularCacheFactory</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: advancedCacheFactory</h1>
+    <h1 class="page-title">Class: angularCacheFactory</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    advancedCacheFactory
+    angularCacheFactory
     </h2>
     
 </header>  
@@ -39,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="advancedCacheFactory"><span class="type-signature"></span>new advancedCacheFactory<span class="signature">(cacheId, <span class="optional">options</span>)</span><span class="type-signature"> &rarr; {<a href="AdvancedCache.html">AdvancedCache</a>}</span></h4>
+    <h4 class="name" id="angularCacheFactory"><span class="type-signature"></span>new angularCacheFactory<span class="signature">(cacheId, <span class="optional">options</span>)</span><span class="type-signature"> &rarr; {<a href="AngularCache.html">AngularCache</a>}</span></h4>
     
     
 </dt>
@@ -167,7 +167,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 374
+        <a href="angular-cache-0.6.0.js.html">angular-cache-0.6.0.js</a>, line 379
     </li></ul></dd>
     
     
@@ -195,7 +195,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="AdvancedCache.html">AdvancedCache</a></span>
+<span class="param-type"><a href="AngularCache.html">AngularCache</a></span>
 
 
 	</dd>
@@ -227,7 +227,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(cacheId)</span><span class="type-signature"> &rarr; {<a href="AdvancedCache.html">AdvancedCache</a>}</span></h4>
+    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(cacheId)</span><span class="type-signature"> &rarr; {<a href="AngularCache.html">AngularCache</a>}</span></h4>
     
     
 </dt>
@@ -316,7 +316,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 414
+        <a href="angular-cache-0.6.0.js.html">angular-cache-0.6.0.js</a>, line 419
     </li></ul></dd>
     
     
@@ -348,7 +348,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="AdvancedCache.html">AdvancedCache</a></span>
+<span class="param-type"><a href="AngularCache.html">AngularCache</a></span>
 
 
 	</dd>
@@ -359,9 +359,9 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
 
-                    var myCache = $advancedCacheFactory.get('myCache');
+                    var myCache = $angularCacheFactory.get('myCache');
 
                     // you can now use myCache
                 });</code></pre>
@@ -413,7 +413,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ngAdvancedCache-0.6.0.js.html">ngAdvancedCache-0.6.0.js</a>, line 391
+        <a href="angular-cache-0.6.0.js.html">angular-cache-0.6.0.js</a>, line 396
     </li></ul></dd>
     
     
@@ -456,12 +456,12 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
 
-                    var myCache = $advancedCacheFactory('myCache'),
-                        myOtherCache = $advancedCacheFactory('myOtherCache');
+                    var myCache = $angularCacheFactory('myCache'),
+                        myOtherCache = $angularCacheFactory('myOtherCache');
 
-                    $advancedCacheFactory.info(); // { {id: 'myCache', size: 0}, {id: 'myOtherCache', size: 0} }
+                    $angularCacheFactory.info(); // { {id: 'myCache', size: 0}, {id: 'myOtherCache', size: 0} }
                 });</code></pre>
 
     
@@ -483,13 +483,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-ngAdvancedCache.html">ngAdvancedCache</a></li></ul><h3>Classes</h3><ul><li><a href="$AdvancedCacheFactoryProvider.html">$AdvancedCacheFactoryProvider</a></li><li><a href="AdvancedCache.html">AdvancedCache</a></li><li><a href="advancedCacheFactory.html">advancedCacheFactory</a></li></ul><h3>Global</h3><ul><li><a href="global.html#_validateCacheFlushInterval">_validateCacheFlushInterval</a></li><li><a href="global.html#_validateCapacity">_validateCapacity</a></li><li><a href="global.html#_validateMaxAge">_validateMaxAge</a></li><li><a href="global.html#link">link</a></li><li><a href="global.html#refresh">refresh</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-angular-cache.html">angular-cache</a></li></ul><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="angularCacheFactory.html">angularCacheFactory</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed May 22 2013 22:09:48 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu May 23 2013 21:34:14 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -10,8 +10,8 @@ files = [
     JASMINE_ADAPTER,
     'http://code.angularjs.org/1.1.4/angular.min.js',
     'http://code.angularjs.org/1.1.4/angular-mocks.js',
-    'src/ngAdvancedCache.js',
-    'test/ngAdvancedCacheSpec.js'
+    'src/angular-cache.js',
+    'test/angular-cacheSpec.js'
 ];
 
 // list of files to exclude
@@ -24,7 +24,7 @@ exclude = [
 reporters = ['progress', 'coverage'];
 
 preprocessors = {
-    'src/ngAdvancedCache.js': 'coverage'
+    'src/angular-cache.js': 'coverage'
 };
 
 coverageReporter = {

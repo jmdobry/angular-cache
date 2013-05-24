@@ -1,6 +1,6 @@
-ngAdvancedCache (0.6.0 - Alpha)
+angular-cache (0.6.0 - Alpha)
 ===============
-##### ngAdvancedCache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS.
+##### angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. With angular-cache your caches can periodically clear themselves and flush items that have expired.
 
 ##### The goal of the project is to solve a general problem, not satisfy a specific scenario.
 
@@ -13,35 +13,39 @@ ngAdvancedCache (0.6.0 - Alpha)
 - [Contributing](#contributing)
 - [License](#license)
 
+<a name='features'></a>
 ## Features
-##### Capacity
+##### Capacity (comes with $cacheFactory)
 Set maximum capacity on a cache, turning it into an LRU cache.
-##### MaxAge
+##### MaxAge (added by angular-cache)
 Set a default maximum lifetime on all items added to the cache. They will be removed when they expire. Can be configured on a per-item basis for greater specificity.
-##### CacheFlushInterval
+##### CacheFlushInterval (added by angular-cache)
 Set the cache to periodically clear itself.
 
+<a name='status'></a>
 ## Status
 | Version | Branch  | Build status                                                                                                            | Test Coverage |
 | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------- | -------- |
-| 0.6.0   | [master](https://github.com/jmdobry/ngAdvancedCache)  | [![Build Status](https://travis-ci.org/jmdobry/ngAdvancedCache.png?branch=master)](https://travis-ci.org/jmdobry/ngAdvancedCache) | [Test Coverage](http://jmdobry.github.io/ngAdvancedCache/coverage/) |
-| 0.7.0   | [develop](https://github.com/jmdobry/ngAdvancedCache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/ngAdvancedCache.png?branch=develop)](https://travis-ci.org/jmdobry/ngAdvancedCache) | |
+| 0.6.0   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
+| 0.7.0   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
 
+<a name='download'></a>
 ## Download
 | Type          | File                                                                                                                    | Size    |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------- | ------- |
-| Production    | [ngAdvancedCache-0.6.0.min.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.6.0.min.js) | 2.21 KB |
-| Development   | [ngAdvancedCache-0.6.0.js](https://raw.github.com/jmdobry/ngAdvancedCache/master/dist/ngAdvancedCache-0.6.0.js)         | 17.1 KB |
+| Production    | [angular-cache-0.6.0.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.0.min.js) | 2.21 KB |
+| Development   | [angular-cache-0.6.0.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.6.0.js)         | 17.1 KB |
 
+<a name='roadmap'></a>
 ## Roadmap
-##### 0.6.0 Alpha ([master](https://github.com/jmdobry/ngAdvancedCache))
-- Unit tests for `AdvancedCache` class.
+##### 0.6.0 Alpha ([master](https://github.com/jmdobry/angular-cache))
+- Unit tests for `Cache` class.
 - Submit project to Angular.js user groups for feedback.
 
-##### 0.7.0 Compatibility and Performance ([develop](https://github.com/jmdobry/ngAdvancedCache/tree/develop))
-- Ensure ngAdvancedCache's compatibility matches that of Angular.js's browser support.
-- Ensure ngAdvancedCache supports a reasonable number of older versions of Angular.js.
-- Ensure ngAdvancedCache does not result in memory leaks.
+##### 0.7.0 Compatibility and Performance ([develop](https://github.com/jmdobry/angular-cache/tree/develop))
+- Ensure angular-cache's compatibility matches that of Angular.js's browser support.
+- Ensure angular-cache supports a reasonable number of older versions of Angular.js.
+- Ensure angular-cache does not result in memory leaks.
 - Find a good default balance between memory use and cpu use (timeouts and intervals) and allow the user to configure it.
 
 ##### 0.8.0 Beta
@@ -55,9 +59,10 @@ Set the cache to periodically clear itself.
 ##### 1.0.0 Stable Release
 - Yay!
 
+<a name='usage'></a>
 ## Usage
 
-- [Load ngAdvancedCache](#load-ngadvancedCache)
+- [Load angular-cache](#load-angular-cache)
 - [Create a cache](#create-a-cache)
 - [Retrieve a cache](#retrieve-a-cache)
 - [Retrieve items](#retrieve-items)
@@ -66,40 +71,42 @@ Set the cache to periodically clear itself.
 - [Clear all items](#clear-all-items)
 - [Destroy a cache](#destroy-a-cache)
 - [Get info about a cache](#get-info-about-a-cache)
-- [API Documentation](http://jmdobry.github.io/ngAdvancedCache/docs/)
+- [API Documentation](http://jmdobry.github.io/angular-cache/docs/)
 
-#### Load ngAdvancedCache
-Make sure ngAdvancedCache is included on your page after Angular.
+<a name='load-angular-cache'></a>
+#### Load angular-cache
+Make sure angular-cache is included on your page after Angular.
 ```javascript
-angular.module('myApp', ['ngAdvancedCache']);
+angular.module('myApp', ['angular-cache']);
 ```
-See [ngAdvancedCache](http://jmdobry.github.io/ngAdvancedCache/docs/module-ngAdvancedCache.html)
+See [angular-cache](http://jmdobry.github.io/angular-cache/docs/module-angular-cache.html)
 
+<a name='create-a-cache'></a>
 #### Create a cache
 ```javascript
-angular.module('myApp').service('myService', ['$advancedCacheFactory',
-    function ($advancedCacheFactory) {
+angular.module('myApp').service('myService', ['$angularCacheFactory',
+    function ($angularCacheFactory) {
 
         // create a cache with default settings
-        var myCache = $advancedCacheFactory('myCache');
+        var myCache = $angularCacheFactory('myCache');
 
         // create an LRU cache with a capacity of 10
-        var myLRUCache = $advancedCacheFactory('myLRUCache', {
+        var myLRUCache = $angularCacheFactory('myLRUCache', {
             capacity: 10
         });
 
         // create a cache whose items have a maximum lifetime of 10 minutes
-        var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+        var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
             maxAge: 600000
         });
 
         // create a cache that will clear itself every 10 minutes
-        var myIntervalCache = $advancedCacheFactory('myIntervalCache', {
+        var myIntervalCache = $angularCacheFactory('myIntervalCache', {
             cacheFlushInterval: 600000
         });
 
         // create an cache with all options
-        var myAwesomeCache = $advancedCacheFactory('myAwesomeCache', {
+        var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
             capacity: 10,
             maxAge: 600000,
             cacheFlushInterval: 600000
@@ -107,19 +114,21 @@ angular.module('myApp').service('myService', ['$advancedCacheFactory',
     }
 ]);
 ```
-See [$advancedCacheFactory](http://jmdobry.github.io/ngAdvancedCache/docs/advancedCacheFactory.html)
+See [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/angularCacheFactory.html)
 
+<a name='retrieve-a-cache'></a>
 #### Retrieve a cache
 ```javascript
-angular.module('myApp').service('myOtherService', ['$advancedCacheFactory',
-    function ($advancedCacheFactory) {
+angular.module('myApp').service('myOtherService', ['$angularCacheFactory',
+    function ($angularCacheFactory) {
 
-        var myCache = $advancedCacheFactory.get('myCache');
+        var myCache = $angularCacheFactory.get('myCache');
     }
 ]);
 ```
-See [$advancedCacheFactory#get](http://jmdobry.github.io/ngAdvancedCache/docs/advancedCacheFactory.html#get)
+See [$angularCacheFactory#get](http://jmdobry.github.io/angular-cache/docs/angularCacheFactory.html#get)
 
+<a name='retrieve-items'></a>
 #### Retrieve items
 ```javascript
 myCache.get('someItem'); // { name: 'John Doe' });
@@ -127,8 +136,9 @@ myCache.get('someItem'); // { name: 'John Doe' });
 // if the item is not in the cache or has expired
 myCache.get('someMissingItem'); // undefined
 ```
-See [AdvancedCache#get](http://jmdobry.github.io/ngAdvancedCache/docs/AdvancedCache.html#get)
+See [Cache#get](http://jmdobry.github.io/angular-cache/docs/Cache.html#get)
 
+<a name='add-items'></a>
 #### Add items
 ```javascript
 myCache.put('someItem', { name: 'John Doe' });
@@ -150,8 +160,9 @@ setTimeout(function() {
 
 }, 15000); // 15 seconds
 ```
-See [AdvancedCache#put](http://jmdobry.github.io/ngAdvancedCache/docs/AdvancedCache.html#put)
+See [Cache#put](http://jmdobry.github.io/angular-cache/docs/Cache.html#put)
 
+<a name='remove-items'></a>
 #### Remove items
 ```javascript
 myCache.put('someItem', { name: 'John Doe' });
@@ -160,8 +171,9 @@ myCache.remove('someItem');
 
 myCache.get('someItem'); // undefined
 ```
-See [AdvancedCache#remove](http://jmdobry.github.io/ngAdvancedCache/docs/AdvancedCache.html#remove)
+See [Cache#remove](http://jmdobry.github.io/angular-cache/docs/Cache.html#remove)
 
+<a name='clear-all-items'></a>
 #### Clear all items
 ```javascript
 myCache.put('someItem', { name: 'John Doe' });
@@ -172,26 +184,29 @@ myCache.removeAll();
 myCache.get('someItem'); // undefined
 myCache.get('someOtherItem'); // undefined
 ```
-See [AdvancedCache#removeAll](http://jmdobry.github.io/ngAdvancedCache/docs/AdvancedCache.html#removeAll)
+See [Cache#removeAll](http://jmdobry.github.io/angular-cache/docs/Cache.html#removeAll)
 
+<a name='destroy-a-cache'></a>
 #### Destroy a cache
 ```javascript
 myCache.destroy();
 
 myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
 
-$advancedCacheFactory.get('myCache'); // undefined
+$angularCacheFactory.get('myCache'); // undefined
 ```
-See [AdvancedCache#destory](http://jmdobry.github.io/ngAdvancedCache/docs/AdvancedCache.html#destory)
+See [Cache#destory](http://jmdobry.github.io/angular-cache/docs/Cache.html#destory)
 
+<a name='get-info-about-a-cache'></a>
 #### Get info about a cache
 ```javascript
 myCache.info(); // { id: 'myCache', size: 13 }
 ```
-See [AdvancedCache#info](http://jmdobry.github.io/ngAdvancedCache/docs/AdvancedCache.html#info)
+See [Cache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#info)
 
-### [API Documentation](http://jmdobry.github.io/ngAdvancedCache/docs/)
+### [API Documentation](http://jmdobry.github.io/angular-cache/docs/)
 
+<a name='contributing'></a>
 ## Contributing
 
 #### Submitting Issues
@@ -208,8 +223,9 @@ See [AdvancedCache#info](http://jmdobry.github.io/ngAdvancedCache/docs/AdvancedC
 5. Make sure your pull request references/closes the proper issues.
 6. For hotfixes submit request to be merged into master, otherwise into develop.
 
+<a name='license'></a>
 ## License
-[MIT License](https://github.com/jmdobry/ngAdvancedCache/blob/master/LICENSE)
+[MIT License](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)
 
 Copyright (C) 2013 Jason Dobry
 

@@ -1,68 +1,68 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file ngAdvancedCache-<%= pkg.version %>.js
+ * @file angular-cache-<%= pkg.version %>.js
  * @version <%= pkg.version %>
- * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/ngAdvancedCache>
- * @license MIT <https://github.com/jmdobry/ngAdvancedCache/blob/master/LICENSE>
+ * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
+ * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
- * @overview ngAdvancedCache is a caching system that improves upon the capabilities of the
+ * @overview angular-cache is a caching system that improves upon the capabilities of the
  * $cacheFactory provided by AngularJS.
  */
 (function (window, angular, undefined) {
     'use strict';
 
     /**
-     * @module ngAdvancedCache
-     * @desc Provides an $AdvancedCacheFactoryProvider, which gives you the ability to use an
-     *       $advancedCacheFactory. The $advancedCacheFactory produces AdvancedCache objects, which
+     * @module angular-cache
+     * @desc Provides an $AngularCacheFactoryProvider, which gives you the ability to use an
+     *       $angularCacheFactory. The $angularCacheFactory produces AngularCache objects, which
      *       the same abilities as the cache objects that come with Angular, except with some added
      *       functionality.
      *
      * @example
-     angular.module('myApp', ['ngAdvancedCache']);
+     angular.module('myApp', ['angular-cache']);
      */
-    angular.module('ngAdvancedCache', []);
+    angular.module('angular-cache', []);
 
     /**
-     * @class $AdvancedCacheFactoryProvider
-     * @desc Provider for the $advancedCacheFactory.
+     * @class $AngularCacheFactoryProvider
+     * @desc Provider for the $angularCacheFactory.
      * @see {@link http://docs.angularjs.org/api/ng.$cacheFactory|ng.$cacheFactory}
      */
-    function $AdvancedCacheFactoryProvider() {
+    function $AngularCacheFactoryProvider() {
 
         /** @private= */
         this.$get = function () {
             var caches = {};
 
             /**
-             * @class AdvancedCache
-             * @desc Instantiated via <code>$advancedCacheFactory()</code>
+             * @class AngularCache
+             * @desc Instantiated via <code>$angularCacheFactory()</code>
              * @param {string} cacheId The id of the new cache.
              * @param {object} [options] { capacity: {number}, maxAge: {number}, cacheFlushInterval: {number} }
              *
              * @example
-             angular.module('myApp').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+             angular.module('myApp').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
 
                     // create a cache with default settings
-                    var myCache = $advancedCacheFactory('myCache');
+                    var myCache = $angularCacheFactory('myCache');
 
                     // create an LRU cache with a capacity of 10
-                    var myLRUCache = $advancedCacheFactory('myLRUCache', {
+                    var myLRUCache = $angularCacheFactory('myLRUCache', {
                         capacity: 10
                     });
 
                     // create a cache whose items have a maximum lifetime of 10 minutes
-                    var myTimeLimitedCache = $advancedCacheFactory('myTimeLimitedCache', {
+                    var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
                         maxAge: 600000
                     });
 
                     // create a cache that will clear itself every 10 minutes
-                    var myIntervalCache = $advancedCacheFactory('myIntervalCache', {
+                    var myIntervalCache = $angularCacheFactory('myIntervalCache', {
                         cacheFlushInterval: 600000
                     });
 
                     // create an cache with all options
-                    var myAwesomeCache = $advancedCacheFactory('myAwesomeCache', {
+                    var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
                         capacity: 10,
                         maxAge: 600000,
                         cacheFlushInterval: 600000
@@ -70,7 +70,7 @@
                 }
              ]);
              */
-            function AdvancedCache(cacheId, options) {
+            function AngularCache(cacheId, options) {
                 var size = 0,
                     config = angular.extend({}, options, {id: cacheId}),
                     data = {},
@@ -104,10 +104,11 @@
                 }
 
                 /**
-                 * @method _validateCapacity
+                 * @method validateCapacity
                  * @desc Validates the capacity.
                  * @param {number} capacity
                  * @returns {string} errorMsg
+                 * @ignore
                  * @private
                  */
                 function _validateCapacity(capacity) {
@@ -120,10 +121,11 @@
                 }
 
                 /**
-                 * @method _validateCacheFlushInterval
+                 * @method validateCacheFlushInterval
                  * @desc Validates the cacheFlushInterval.
                  * @param {number} cacheFlushInterval
                  * @returns {string} errorMsg
+                 * @ignore
                  * @private
                  */
                 function _validateCacheFlushInterval(cacheFlushInterval) {
@@ -136,10 +138,11 @@
                 }
 
                 /**
-                 * @method _validateMaxAge
+                 * @method validateMaxAge
                  * @desc Validates the maxAge.
                  * @param {number} maxAge
                  * @returns {string} errorMsg
+                 * @ignore
                  * @private
                  */
                 function _validateMaxAge(maxAge) {
@@ -155,6 +158,7 @@
                  * @method refresh
                  * @desc Makes the `entry` the freshEnd of the LRU linked list.
                  * @param {object} entry
+                 * @ignore
                  * @private
                  */
                 function _refresh(entry) {
@@ -177,6 +181,7 @@
                  * @desc Bidirectionally links two entries of the LRU linked list
                  * @param {object} nextEntry
                  * @param {object} prevEntry
+                 * @ignore
                  * @private
                  */
                 function _link(nextEntry, prevEntry) {
@@ -191,7 +196,7 @@
                 }
 
                 /**
-                 * @method AdvancedCache.put
+                 * @method AngularCache.put
                  * @desc Add a key-value pair with timestamp to the cache.
                  * @param {string} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
@@ -259,7 +264,7 @@
                 };
 
                 /**
-                 * @method AdvancedCache.get
+                 * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
                  * @param {string} key The key of the item to retrieve.
                  * @returns {*} The value of the item in the cache with the specified key.
@@ -284,7 +289,7 @@
                 };
 
                 /**
-                 * @method AdvancedCache.remove
+                 * @method AngularCache.remove
                  * @desc Remove the specified key-value pair from this cache.
                  * @param {string} key The key of the key-value pair to remove.
                  * @public
@@ -317,7 +322,7 @@
                 };
 
                 /**
-                 * @method AdvancedCache.removeAll
+                 * @method AngularCache.removeAll
                  * @desc Clear this cache.
                  * @public
                  *
@@ -338,7 +343,7 @@
                 };
 
                 /**
-                 * @method AdvancedCache.destroy
+                 * @method AngularCache.destroy
                  * @desc Completely destroy this cache.
                  * @public
                  *
@@ -347,7 +352,7 @@
 
                  myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
 
-                 $advancedCacheFactory.get('myCache'); // undefined
+                 $angularCacheFactory.get('myCache'); // undefined
                  */
                 this.destroy = function () {
                     clearInterval(config.cacheFlushIntervalId);
@@ -358,7 +363,7 @@
                 };
 
                 /**
-                 * @method AdvancedCache.info
+                 * @method AngularCache.info
                  * @desc Return an object containing information about this cache.
                  * @returns {object} stats Object containing information about this cache.
                  * @public
@@ -372,38 +377,38 @@
             }
 
             /**
-             * @class advancedCacheFactory
+             * @class angularCacheFactory
              * @param {string} cacheId The id of the new cache.
              * @param {options} [options] { capacity: {number}, maxAge: {number} }
-             * @returns {AdvancedCache}
+             * @returns {AngularCache}
              */
-            function advancedCacheFactory(cacheId, options) {
+            function angularCacheFactory(cacheId, options) {
                 if (cacheId in caches) {
                     throw new Error('cacheId ' + cacheId + ' taken!');
                 } else if (!angular.isString(cacheId)) {
                     throw new Error('cacheId must be a string!');
                 }
 
-                caches[cacheId] = new AdvancedCache(cacheId, options);
+                caches[cacheId] = new AngularCache(cacheId, options);
                 return caches[cacheId];
             }
 
             /**
-             * @method advancedCacheFactory.info
+             * @method angularCacheFactory.info
              * @desc Return an object containing information about all caches of this factory.
              * @returns {object} An object containing information about all caches of this factory.
              * @public
              *
              * @example
-             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
 
-                    var myCache = $advancedCacheFactory('myCache'),
-                        myOtherCache = $advancedCacheFactory('myOtherCache');
+                    var myCache = $angularCacheFactory('myCache'),
+                        myOtherCache = $angularCacheFactory('myOtherCache');
 
-                    $advancedCacheFactory.info(); // { {id: 'myCache', size: 0}, {id: 'myOtherCache', size: 0} }
+                    $angularCacheFactory.info(); // { {id: 'myCache', size: 0}, {id: 'myOtherCache', size: 0} }
                 });
              */
-            advancedCacheFactory.info = function () {
+            angularCacheFactory.info = function () {
                 var info = {};
                 angular.forEach(caches, function (cache, cacheId) {
                     info[cacheId] = cache.info();
@@ -412,28 +417,28 @@
             };
 
             /**
-             * @method advancedCacheFactory.get
+             * @method angularCacheFactory.get
              * @desc Return the cache with the specified cacheId.
              * @param {string} cacheId The id of the desired cache.
-             * @returns {AdvancedCache} The cache with the specified cachedId.
+             * @returns {AngularCache} The cache with the specified cachedId.
              * @public
              *
              * @example
-             angular.module('myModule').service('myService', ['$advancedCacheFactory', function ($advancedCacheFactory) {
+             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
 
-                    var myCache = $advancedCacheFactory.get('myCache');
+                    var myCache = $angularCacheFactory.get('myCache');
 
                     // you can now use myCache
                 });
              */
-            advancedCacheFactory.get = function (cacheId) {
+            angularCacheFactory.get = function (cacheId) {
                 return caches[cacheId];
             };
 
-            return advancedCacheFactory;
+            return angularCacheFactory;
         };
     }
 
     // Register the new provider with Angular.
-    angular.module('ngAdvancedCache').provider('$advancedCacheFactory', $AdvancedCacheFactoryProvider);
+    angular.module('angular-cache').provider('$angularCacheFactory', $AngularCacheFactoryProvider);
 })(window, window.angular);
