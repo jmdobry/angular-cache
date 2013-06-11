@@ -94,8 +94,11 @@
                 if (config.cacheFlushInterval) {
                     config.cacheFlushIntervalId = setInterval(function () {
                         for (var key in data) {
-                            clearTimeout(data[key].timeoutId);
+                            if (data[key].timeoutId) {
+                                clearTimeout(data[key].timeoutId);
+                            }
                         }
+                        size = 0;
                         data = {};
                         lruHash = {};
                         freshEnd = null;
