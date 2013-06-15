@@ -1,17 +1,24 @@
 'use strict';
 var app = angular.module('app', ['angular-cache']);
 
-app.controller('DemoCtrl', function ($scope, DemoService) {
+app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) {
+
+    function _getHtml(json) {
+        return hljs.highlight('json', JSON.stringify(json, null, 2)).value;
+    }
 
     /**
      * Get the latest info for each cache.
      * @private
      */
     function _updateInfo() {
+        $scope.angularCacheFactoryInfo = _getHtml($angularCacheFactory.info());
+        $scope.angularCacheFactoryKeySet = _getHtml($angularCacheFactory.keySet());
         $scope.defaultCacheInfo = DemoService.defaultCache.info();
         $scope.capacityCacheInfo = DemoService.capacityCache.info();
         $scope.maxAgeCacheInfo = DemoService.maxAgeCache.info();
         $scope.flushingCacheInfo = DemoService.flushingCache.info();
+
     }
 
     /**
@@ -36,7 +43,7 @@ app.controller('DemoCtrl', function ($scope, DemoService) {
             $scope.$apply(function () {
                 _updateInfo();
             });
-        }, 500);
+        }, 333);
     }
 
     // Kick things off
