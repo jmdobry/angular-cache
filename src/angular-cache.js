@@ -438,6 +438,37 @@
                 return caches[cacheId];
             };
 
+            /**
+             * @method angularCacheFactory.keySet
+             * @desc Return the set of keys associated with all current caches owned by this
+             * angularCacheFactory.
+             * @returns {Object} The set of keys associated with all current caches owned by this
+             * angularCacheFactory.
+             * @public
+             *
+             * @example
+             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    $angularCacheFactory('newCache');
+                    $angularCacheFactory('newCache2');
+
+                    var keySet = $angularCacheFactory.keySet(); // { newCache: 'newCache', newCache2: 'newCache2' }
+
+                    keySet.hasOwnProperty('newCache'); // true
+                    keySet.hasOwnProperty('newCache2'); // true
+                    keySet.hasOwnProperty('newCache3'); // false
+                });
+             */
+            angularCacheFactory.keySet = function () {
+                var keySet = {};
+                for (var key in caches) {
+                    if (caches.hasOwnProperty(key)) {
+                        keySet[key] = key;
+                    }
+                }
+                return keySet;
+            };
+
             return angularCacheFactory;
         };
     }
