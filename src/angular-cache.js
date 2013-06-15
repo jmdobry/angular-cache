@@ -469,6 +469,36 @@
                 return keySet;
             };
 
+            /**
+             * @method angularCacheFactory.keys
+             * @desc Return an array of the keys associated with all current caches owned by this
+             * angularCacheFactory.
+             * @returns {Array} An array of the keys associated with all current caches owned by
+             * this angularCacheFactory.
+             * @public
+             *
+             * @example
+             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    $angularCacheFactory('newCache');
+                    $angularCacheFactory('newCache2');
+
+                    var keys = $angularCacheFactory.keys(); // [ 'newCache', 'newCache2' ]
+
+                    keys[0]; // 'newCache'
+                    keys[1]; // 'newCache2'
+                });
+             */
+            angularCacheFactory.keys = function () {
+                var keys = [];
+                for (var key in caches) {
+                    if (caches.hasOwnProperty(key)) {
+                        keys.push(key);
+                    }
+                }
+                return keys;
+            };
+
             return angularCacheFactory;
         };
     }
