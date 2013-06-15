@@ -43,8 +43,11 @@ module.exports = function (grunt) {
             dev: {
                 browsers: ['Chrome']
             },
-            CI: {
-                browsers: ['Firefox', 'Chrome']
+            drone: {
+                browsers: ['Firefox', 'Chrome', 'PhantomJS']
+            },
+            travis: {
+                browsers: ['Firefox', 'PhantomJS']
             }
         },
         jsdoc : {
@@ -71,5 +74,6 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev']);
     grunt.registerTask('build:all', ['build', 'jsdoc']);
 
-    grunt.registerTask('CI', ['clean', 'jshint', 'copy', 'uglify', 'karma:CI']);
+    grunt.registerTask('drone', ['clean', 'jshint', 'copy', 'uglify', 'karma:drone']);
+    grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis']);
 };
