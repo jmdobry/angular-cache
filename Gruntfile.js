@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                 browsers: ['Chrome']
             },
             travis: {
-                browsers: ['PhantomJS', 'Firefox']
+                browsers: ['PhantomJS', 'Firefox', 'Chrome']
             }
         },
         jsdoc : {

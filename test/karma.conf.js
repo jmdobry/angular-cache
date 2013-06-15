@@ -48,6 +48,13 @@ logLevel = LOG_INFO;
 // enable / disable watching file and executing tests whenever any file changes
 autoWatch = true;
 
+var os = require('os');
+if (os.platform() !== 'win32') {
+    process.env['PHANTOMJS_BIN'] = './node_modules/phantomjs/lib/phantom/bin/phantomjs';
+} else {
+    process.env['PHANTOMJS_BIN'] = './node_modules/phantomjs/lib/phantom/phantomjs.exe';
+}
+
 // Start these browsers, currently available:
 // - Chrome
 // - ChromeCanary
