@@ -1,36 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: angular-cache-0.7.1.js</title>
-    
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-    
-    <h1 class="page-title">Source: angular-cache-0.7.1.js</h1>
-    
-    
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>/**
- * @author Jason Dobry &lt;jason.dobry@gmail.com>
- * @file angular-cache-0.7.1.js
- * @version 0.7.1
- * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/angular-cache>
- * @license MIT &lt;https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
+/**
+ * @author Jason Dobry <jason.dobry@gmail.com>
+ * @file angular-cache-0.7.2.js
+ * @version 0.7.2
+ * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
+ * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
  * @overview angular-cache is a caching system that improves upon the capabilities of the
  * $cacheFactory provided by AngularJS.
@@ -63,7 +36,7 @@
 
             /**
              * @class AngularCache
-             * @desc Instantiated via &lt;code>$angularCacheFactory()&lt;/code>
+             * @desc Instantiated via <code>$angularCacheFactory()</code>
              * @param {string} cacheId The id of the new cache.
              * @param {object} [options] { capacity: {number}, maxAge: {number}, cacheFlushInterval: {number} }
              *
@@ -145,7 +118,7 @@
                     var errorMsg = '';
                     if (config.capacity) {
                         if (!angular.isNumber(config.capacity)) errorMsg += 'capacity must be a number!;';
-                        if (config.capacity &lt; 0) errorMsg += 'capacity must be greater than zero!;';
+                        if (config.capacity < 0) errorMsg += 'capacity must be greater than zero!;';
                     }
                     return errorMsg;
                 }
@@ -162,7 +135,7 @@
                     var errorMsg = '';
                     if (config.cacheFlushInterval) {
                         if (!angular.isNumber(config.cacheFlushInterval)) errorMsg += 'cacheFlushInterval must be a number!;';
-                        if (config.cacheFlushInterval &lt; 0) errorMsg += 'cacheFlushInterval must be greater than zero!;';
+                        if (config.cacheFlushInterval < 0) errorMsg += 'cacheFlushInterval must be greater than zero!;';
                     }
                     return errorMsg;
                 }
@@ -179,7 +152,7 @@
                     var errorMsg = '';
                     if (maxAge) {
                         if (!angular.isNumber(maxAge)) errorMsg += 'maxAge must be a number!;';
-                        if (maxAge &lt; 0) errorMsg += 'maxAge must be greater than zero!;';
+                        if (maxAge < 0) errorMsg += 'maxAge must be greater than zero!;';
                     }
                     return errorMsg;
                 }
@@ -496,6 +469,36 @@
                 return keySet;
             };
 
+            /**
+             * @method angularCacheFactory.keys
+             * @desc Return an array of the keys associated with all current caches owned by this
+             * angularCacheFactory.
+             * @returns {Array} An array of the keys associated with all current caches owned by
+             * this angularCacheFactory.
+             * @public
+             *
+             * @example
+             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    $angularCacheFactory('newCache');
+                    $angularCacheFactory('newCache2');
+
+                    var keys = $angularCacheFactory.keys(); // [ 'newCache', 'newCache2' ]
+
+                    keys[0]; // 'newCache'
+                    keys[1]; // 'newCache2'
+                });
+             */
+            angularCacheFactory.keys = function () {
+                var keys = [];
+                for (var key in caches) {
+                    if (caches.hasOwnProperty(key)) {
+                        keys.push(key);
+                    }
+                }
+                return keys;
+            };
+
             return angularCacheFactory;
         };
     }
@@ -503,25 +506,3 @@
     // Register the new provider with Angular.
     angular.module('angular-cache').provider('$angularCacheFactory', $AngularCacheFactoryProvider);
 })(window, window.angular);
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-angular-cache.html">angular-cache</a></li></ul><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="angularCacheFactory.html">angularCacheFactory</a></li></ul>
-</nav>
-
-<br clear="both">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sat Jun 15 2013 12:18:15 GMT-0600 (MDT)
-</footer>
-
-<script> prettyPrint(); </script>
-</body>
-</html>
