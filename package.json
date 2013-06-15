@@ -17,8 +17,7 @@
         "karma": "~0.8.5",
         "grunt-karma": "~0.4.4",
         "grunt-jsdoc": "~0.3.2",
-        "grunt-cli": "~0.1.8",
-        "phantomjs": "1.9.1-0"
+        "grunt-cli": "~0.1.8"
     },
     "scripts": {
         "test": "node node_modules/grunt-cli/bin/grunt travis",
