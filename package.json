@@ -20,7 +20,7 @@
         "grunt-cli": "~0.1.8"
     },
     "scripts": {
-        "test": "node node_modules/grunt-cli/bin/grunt travis",
+        "test": "node node_modules/grunt-cli/bin/grunt CI",
         "test_dev": "node node_modules/grunt-cli/bin/grunt build"
     }
 }
