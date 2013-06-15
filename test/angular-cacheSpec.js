@@ -180,6 +180,38 @@ describe('angular-cache', function () {
                 $angularCacheFactory.get(cacheKeys[0]).destroy();
                 $angularCacheFactory.get(cacheKeys[1]).destroy();
                 $angularCacheFactory.get(cacheKeys[2]).destroy();
+
+                keySet = $angularCacheFactory.keySet();
+
+                expect(keySet.hasOwnProperty(cacheKeys[0])).toEqual(false);
+                expect(keySet.hasOwnProperty(cacheKeys[1])).toEqual(false);
+                expect(keySet.hasOwnProperty(cacheKeys[2])).toEqual(false);
+            });
+            it('should return \"undefined\" if the cache doesn\'t exist', function () {
+                expect($angularCacheFactory.get('someNonExistentCache')).toEqual(undefined);
+            });
+        });
+        describe('$angularCacheFactory.keys()', function () {
+            it('should return the correct array of keys associated the caches currently owned by the factory', function () {
+                var cacheKeys = ['cache', 'cache1', 'cache2'];
+
+                $angularCacheFactory(cacheKeys[0]);
+                $angularCacheFactory(cacheKeys[1]);
+                $angularCacheFactory(cacheKeys[2]);
+
+                var keys = $angularCacheFactory.keys();
+
+                expect(keys[0]).toEqual(cacheKeys[0]);
+                expect(keys[1]).toEqual(cacheKeys[1]);
+                expect(keys[2]).toEqual(cacheKeys[2]);
+
+                $angularCacheFactory.get(cacheKeys[0]).destroy();
+                $angularCacheFactory.get(cacheKeys[1]).destroy();
+                $angularCacheFactory.get(cacheKeys[2]).destroy();
+
+                keys = $angularCacheFactory.keys();
+
+                expect(keys.length).toEqual(0);
             });
             it('should return \"undefined\" if the cache doesn\'t exist', function () {
                 expect($angularCacheFactory.get('someNonExistentCache')).toEqual(undefined);
