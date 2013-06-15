@@ -4,3 +4,8 @@ npm-debug.log
 # IntelliJ IDEA
 .idea
 *.iml
+
+coverage/Chrome*/*
+coverage/Phantom*/*
+coverage/Firefox*/*
+coverage-*

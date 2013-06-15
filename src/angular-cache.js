@@ -94,8 +94,11 @@
                 if (config.cacheFlushInterval) {
                     config.cacheFlushIntervalId = setInterval(function () {
                         for (var key in data) {
-                            clearTimeout(data[key].timeoutId);
+                            if (data[key].timeoutId) {
+                                clearTimeout(data[key].timeoutId);
+                            }
                         }
+                        size = 0;
                         data = {};
                         lruHash = {};
                         freshEnd = null;
@@ -433,6 +436,67 @@
              */
             angularCacheFactory.get = function (cacheId) {
                 return caches[cacheId];
+            };
+
+            /**
+             * @method angularCacheFactory.keySet
+             * @desc Return the set of keys associated with all current caches owned by this
+             * angularCacheFactory.
+             * @returns {Object} The set of keys associated with all current caches owned by this
+             * angularCacheFactory.
+             * @public
+             *
+             * @example
+             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    $angularCacheFactory('newCache');
+                    $angularCacheFactory('newCache2');
+
+                    var keySet = $angularCacheFactory.keySet(); // { newCache: 'newCache', newCache2: 'newCache2' }
+
+                    keySet.hasOwnProperty('newCache'); // true
+                    keySet.hasOwnProperty('newCache2'); // true
+                    keySet.hasOwnProperty('newCache3'); // false
+                });
+             */
+            angularCacheFactory.keySet = function () {
+                var keySet = {};
+                for (var key in caches) {
+                    if (caches.hasOwnProperty(key)) {
+                        keySet[key] = key;
+                    }
+                }
+                return keySet;
+            };
+
+            /**
+             * @method angularCacheFactory.keys
+             * @desc Return an array of the keys associated with all current caches owned by this
+             * angularCacheFactory.
+             * @returns {Array} An array of the keys associated with all current caches owned by
+             * this angularCacheFactory.
+             * @public
+             *
+             * @example
+             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    $angularCacheFactory('newCache');
+                    $angularCacheFactory('newCache2');
+
+                    var keys = $angularCacheFactory.keys(); // [ 'newCache', 'newCache2' ]
+
+                    keys[0]; // 'newCache'
+                    keys[1]; // 'newCache2'
+                });
+             */
+            angularCacheFactory.keys = function () {
+                var keys = [];
+                for (var key in caches) {
+                    if (caches.hasOwnProperty(key)) {
+                        keys.push(key);
+                    }
+                }
+                return keys;
             };
 
             return angularCacheFactory;
