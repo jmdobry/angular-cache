@@ -35,6 +35,39 @@
             var caches = {};
 
             /**
+             * @method keySet
+             * @desc Returns an object of the keys of the given collection.
+             * @param {Object} collection
+             * @returns {Object} A hash of the keys of the given collection.
+             */
+            function keySet(collection) {
+                var keySet = {};
+                for (var key in collection) {
+                    if (collection.hasOwnProperty(key)) {
+                        keySet[key] = key;
+                    }
+                }
+                return keySet;
+            }
+
+            /**
+             * @method keys
+             * @desc Returns an array of the keys of the given collection.
+             * @param {Object} collection
+             * @returns {Array} An array of the keys of the given collection.
+             * @ignore
+             */
+            function keys(collection) {
+                var keys = [];
+                for (var key in collection) {
+                    if (collection.hasOwnProperty(key)) {
+                        keys.push(key);
+                    }
+                }
+                return keys;
+            }
+
+            /**
              * @class AngularCache
              * @desc Instantiated via <code>$angularCacheFactory()</code>
              * @param {string} cacheId The id of the new cache.
@@ -377,6 +410,55 @@
                 this.info = function () {
                     return angular.extend({}, config, {size: size});
                 };
+
+                /**
+                 * @method AngularCache.keySet
+                 * @desc Return the set of the keys of all items currently in this cache.
+                 * @returns {Object} The set of the keys of all items currently in this cache.
+                 * @public
+                 *
+                 * @example
+                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                        var newCache = $angularCacheFactory('newCache');
+
+                        newCache.put('item1', { stuff: 1 });
+                        newCache.put('item2', { stuff: 2 });
+
+                        var keySet = newCache.keySet(); // { item1: 'item1', item2: 'item2' }
+
+                        keySet.hasOwnProperty('item1'); // true
+                        keySet.hasOwnProperty('item2'); // true
+                        keySet.hasOwnProperty('item3'); // false
+                    });
+                 */
+                this.keySet = function () {
+                    return keySet(data);
+                };
+
+                /**
+                 * @method AngularCache.keys
+                 * @desc Return an array of the keys of all items currently in this cache..
+                 * @returns {Array} An array of the keys of all items currently in this cache..
+                 * @public
+                 *
+                 * @example
+                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    var newCache = $angularCacheFactory('newCache');
+
+                    newCache.put('item1', { stuff: 1 });
+                    newCache.put('item2', { stuff: 2 });
+
+                    var keys = newCache.keys(); // [ 'item1', 'item2' ]
+
+                    keys[0]; // 'item1'
+                    keys[1]; // 'item2'
+                });
+                 */
+                this.keys = function () {
+                    return keys(data);
+                };
             }
 
             /**
@@ -460,13 +542,7 @@
                 });
              */
             angularCacheFactory.keySet = function () {
-                var keySet = {};
-                for (var key in caches) {
-                    if (caches.hasOwnProperty(key)) {
-                        keySet[key] = key;
-                    }
-                }
-                return keySet;
+                return keySet(caches);
             };
 
             /**
@@ -490,13 +566,7 @@
                 });
              */
             angularCacheFactory.keys = function () {
-                var keys = [];
-                for (var key in caches) {
-                    if (caches.hasOwnProperty(key)) {
-                        keys.push(key);
-                    }
-                }
-                return keys;
+                return keys(caches);
             };
 
             return angularCacheFactory;

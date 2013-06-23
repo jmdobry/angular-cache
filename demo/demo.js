@@ -18,6 +18,14 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         $scope.capacityCacheInfo = DemoService.capacityCache.info();
         $scope.maxAgeCacheInfo = DemoService.maxAgeCache.info();
         $scope.flushingCacheInfo = DemoService.flushingCache.info();
+        $scope.defaultCacheKeySet = _getHtml(DemoService.defaultCache.keySet());
+        $scope.capacityCacheKeySet = _getHtml(DemoService.capacityCache.keySet());
+        $scope.maxAgeCacheKeySet = _getHtml(DemoService.maxAgeCache.keySet());
+        $scope.flushingCacheKeySet = _getHtml(DemoService.flushingCache.keySet());
+        $scope.defaultCacheKeys = _getHtml(DemoService.defaultCache.keys());
+        $scope.capacityCacheKeys = _getHtml(DemoService.capacityCache.keys());
+        $scope.maxAgeCacheKeys = _getHtml(DemoService.maxAgeCache.keys());
+        $scope.flushingCacheKeys = _getHtml(DemoService.flushingCache.keys());
 
     }
 
