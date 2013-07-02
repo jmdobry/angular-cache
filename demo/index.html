@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link
-        href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"
-        rel="stylesheet">
+            href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"
+            rel="stylesheet">
     <link href="github.css" rel="stylesheet">
     <style>
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -19,89 +19,145 @@
     </script>
 </head>
 <body data-ng-controller="DemoCtrl" data-ng-cloak>
-    <div class="row-fluid">
-        <div class="span5">
-            <h1>$angularCacheFactory</h1>
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>method</th>
-                    <th>output</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>info()</td>
-                    <td>
+<div class="row-fluid">
+    <div class="span5">
+        <h1>$angularCacheFactory</h1>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>method</th>
+                <th>output</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>info()</td>
+                <td>
                     <pre>
                         <code class="json"
                               data-ng-bind-html-unsafe="angularCacheFactoryInfo"></code>
                     </pre>
-                    </td>
-                </tr>
-                <tr>
-                    <td>keySet()</td>
-                    <td>
+                </td>
+            </tr>
+            <tr>
+                <td>keySet()</td>
+                <td>
                     <pre>
                         <code class="json"
                               data-ng-bind-html-unsafe="angularCacheFactoryKeySet"></code>
                     </pre>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="span7">
-            <h1>AngularCache</h1>
-            <button data-ng-click="add()">Add item to all caches</button>
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>{{defaultCacheInfo.id}}</th>
-                    <th>{{capacityCacheInfo.id}}</th>
-                    <th>{{maxAgeCacheInfo.id}}</th>
-                    <th>{{flushingCacheInfo.id}}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>size</td>
-                    <td>{{defaultCacheInfo.size}}</td>
-                    <td>{{capacityCacheInfo.size}}</td>
-                    <td>{{maxAgeCacheInfo.size}}</td>
-                    <td>{{flushingCacheInfo.size}}</td>
-                </tr>
-                <tr>
-                    <td>capacity</td>
-                    <td>{{defaultCacheInfo.capacity}}</td>
-                    <td>{{capacityCacheInfo.capacity}}</td>
-                    <td>{{maxAgeCacheInfo.capacity}}</td>
-                    <td>{{flushingCacheInfo.capacity}}</td>
-                </tr>
-                <tr>
-                    <td>maxAge</td>
-                    <td>{{defaultCacheInfo.maxAge | milliseconds}}</td>
-                    <td>{{capacityCacheInfo.maxAge | milliseconds}}</td>
-                    <td>{{maxAgeCacheInfo.maxAge | milliseconds}}</td>
-                    <td>{{flushingCacheInfo.maxAge | milliseconds}}</td>
-                </tr>
-                <tr>
-                    <td>cacheFlushInterval</td>
-                    <td>{{defaultCacheInfo.cacheFlushInterval | milliseconds}}</td>
-                    <td>{{capacityCacheInfo.cacheFlushInterval | milliseconds}}</td>
-                    <td>{{maxAgeCacheInfo.cacheFlushInterval | milliseconds}}</td>
-                    <td>{{flushingCacheInfo.cacheFlushInterval | milliseconds}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script
+    <div class="span7">
+        <h1>AngularCache</h1>
+        <button class="btn btn-primary" style="margin-bottom: 15px" data-ng-click="add()"><i class="icon-plus-sign icon-white"></i> Add item to all caches</button>
+        <button class="btn btn-warning" style="margin-bottom: 15px" data-ng-click="reset()"><i class="icon-refresh icon-white"></i> Reset all</button>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>method</th>
+                <th>{{defaultCacheInfo.id}}</th>
+                <th>{{capacityCacheInfo.id}}</th>
+                <th>{{maxAgeCacheInfo.id}}</th>
+                <th>{{flushingCacheInfo.id}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>info().size</td>
+                <td>{{defaultCacheInfo.size}}</td>
+                <td>{{capacityCacheInfo.size}}</td>
+                <td>{{maxAgeCacheInfo.size}}</td>
+                <td>{{flushingCacheInfo.size}}</td>
+            </tr>
+            <tr>
+                <td>info().capacity</td>
+                <td>{{defaultCacheInfo.capacity}}</td>
+                <td>{{capacityCacheInfo.capacity}}</td>
+                <td>{{maxAgeCacheInfo.capacity}}</td>
+                <td>{{flushingCacheInfo.capacity}}</td>
+            </tr>
+            <tr>
+                <td>info().maxAge</td>
+                <td>{{defaultCacheInfo.maxAge | milliseconds}}</td>
+                <td>{{capacityCacheInfo.maxAge | milliseconds}}</td>
+                <td>{{maxAgeCacheInfo.maxAge | milliseconds}}</td>
+                <td>{{flushingCacheInfo.maxAge | milliseconds}}</td>
+            </tr>
+            <tr>
+                <td>info().cacheFlushInterval</td>
+                <td>{{defaultCacheInfo.cacheFlushInterval | milliseconds}}</td>
+                <td>{{capacityCacheInfo.cacheFlushInterval | milliseconds}}</td>
+                <td>{{maxAgeCacheInfo.cacheFlushInterval | milliseconds}}</td>
+                <td>{{flushingCacheInfo.cacheFlushInterval | milliseconds}}</td>
+            </tr>
+            <tr>
+                <td>keySet()</td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="defaultCacheKeySet"></code>
+                    </pre>
+                </td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="capacityCacheKeySet"></code>
+                    </pre>
+                </td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="maxAgeCacheKeySet"></code>
+                    </pre>
+                </td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="flushingCacheKeySet"></code>
+                    </pre>
+                </td>
+            </tr>
+            <tr>
+                <td>keys()</td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="defaultCacheKeys"></code>
+                    </pre>
+                </td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="capacityCacheKeys"></code>
+                    </pre>
+                </td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="maxAgeCacheKeys"></code>
+                    </pre>
+                </td>
+                <td>
+                    <pre>
+                    <code class="json"
+                          data-ng-bind-html-unsafe="flushingCacheKeys"></code>
+                    </pre>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script
         src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
-    <script src="../src/angular-cache.js"></script>
-    <script src="demo.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+<script src="../../../work/dna-apps-thor/thor-web/src/main/webapp/resources/assets/js/libs/angular-1.1.5.min.js"></script>
+<script src="../src/angular-cache.js"></script>
+<script src="demo.js"></script>
 </body>
 </html>
