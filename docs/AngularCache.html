@@ -89,7 +89,7 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
             
@@ -120,7 +120,7 @@
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -140,7 +140,7 @@
             
             
             
-            <td class="description last">{ capacity: {number}, maxAge: {number}, cacheFlushInterval: {number} }</td>
+            <td class="description last">{ capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }</td>
         </tr>
 	
 	
@@ -171,7 +171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 37
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 71
     </li></ul></dd>
     
     
@@ -286,7 +286,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 348
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 382
     </li></ul></dd>
     
     
@@ -367,7 +367,7 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
             
@@ -408,7 +408,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 269
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 303
     </li></ul></dd>
     
     
@@ -462,7 +462,7 @@
         
             
 <dt>
-    <h4 class="name" id="info"><span class="type-signature">&lt;static> </span>info<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="info"><span class="type-signature">&lt;static> </span>info<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -503,7 +503,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 368
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 402
     </li></ul></dd>
     
     
@@ -535,7 +535,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
 	</dd>
@@ -547,6 +547,213 @@
         <h5>Example</h5>
         
     <pre class="prettyprint"><code>                 myCache.info(); // { id: 'myCache', size: 13 }</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="keys"><span class="type-signature">&lt;static> </span>keys<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return an array of the keys of all items currently in this cache..
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 440
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An array of the keys of all items currently in this cache..
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    var newCache = $angularCacheFactory('newCache');
+
+                    newCache.put('item1', { stuff: 1 });
+                    newCache.put('item2', { stuff: 2 });
+
+                    var keys = newCache.keys(); // [ 'item1', 'item2' ]
+
+                    keys[0]; // 'item1'
+                    keys[1]; // 'item2'
+                });</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="keySet"><span class="type-signature">&lt;static> </span>keySet<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return the set of the keys of all items currently in this cache.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 415
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The set of the keys of all items currently in this cache.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                        var newCache = $angularCacheFactory('newCache');
+
+                        newCache.put('item1', { stuff: 1 });
+                        newCache.put('item2', { stuff: 2 });
+
+                        var keySet = newCache.keySet(); // { item1: 'item1', item2: 'item2' }
+
+                        keySet.hasOwnProperty('item1'); // true
+                        keySet.hasOwnProperty('item2'); // true
+                        keySet.hasOwnProperty('item3'); // false
+                    });</code></pre>
 
     
 </dd>
@@ -604,7 +811,7 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
             
@@ -666,7 +873,7 @@
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -686,7 +893,7 @@
             
             
             
-            <td class="description last">{ maxAge: {number} }</td>
+            <td class="description last">{ maxAge: {Number} }</td>
         </tr>
 	
 	
@@ -717,7 +924,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 201
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 235
     </li></ul></dd>
     
     
@@ -830,7 +1037,7 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
             
@@ -871,7 +1078,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 294
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 328
     </li></ul></dd>
     
     
@@ -945,7 +1152,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 327
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 361
     </li></ul></dd>
     
     
@@ -999,7 +1206,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sat Jun 15 2013 13:35:05 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Jul 02 2013 00:14:39 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>
