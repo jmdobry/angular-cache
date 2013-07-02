@@ -31,7 +31,7 @@
     function $AngularCacheFactoryProvider() {
 
         /** @private= */
-        this.$get = ['$log', function ($log) {
+        this.$get = ['$log', '$timeout', function ($log, $timeout) {
             var caches = {};
 
             /**
@@ -121,18 +121,18 @@
                  * @private
                  * @ignore
                  */
-                function _setMaxAge(maxAge) {
-                    var self = this;
+                function _setMaxAge(maxAge, context) {
+                    var self = context;
                     config.maxAge = maxAge;
                     if (config.maxAge) {
                         var keySet = keySet(data);
                         for (var key in keySet) {
                             if (data[key].timeoutId && !data[key].maxAge) {
-                                clearTimeout(data[key].timeoutId);
+                                $timeout.cancel(data[key].timeoutId);
                                 var timeRemaining = new Date().getTime() - data[key].timestamp;
                                 if (timeRemaining > 0) {
                                     // Update this item's timeout
-                                    data[key].timeoutId = setTimeout(function () {
+                                    data[key].timeoutId = $timeout(function () {
                                         self.remove(key);
                                     }, config.maxAge);
                                 } else {
@@ -165,7 +165,7 @@
                             var keySet = keySet(data);
                             for (var key in keySet) {
                                 if (data[key].timeoutId) {
-                                    clearTimeout(data[key].timeoutId);
+                                    $timeout.cancel(data[key].timeoutId);
                                 }
                             }
                             size = 0;
@@ -200,10 +200,11 @@
                  * @param options
                  * @param {Boolean} strict If true then any existing configuration will be reset to default before
                  * applying the new options, otherwise only the options specified in the hash will be altered.
+                 * @param {Object} context
                  * @private
                  * @ignore
                  */
-                function _setOptions(options, strict) {
+                function _setOptions(options, strict, context) {
                     // setup capacity
                     if (!options.capacity && strict) {
                         config.capacity = Number.MAX_VALUE;
@@ -215,7 +216,7 @@
                     if (!options.maxAge && strict) {
                         _setMaxAge(null);
                     } else if (options.maxAge && _isValidNumberOption(options.maxAge, 'maxAge')) {
-                        _setMaxAge(options.maxAge);
+                        _setMaxAge(options.maxAge, context);
                     }
 
                     // setup cacheFlushInterval
@@ -321,9 +322,9 @@
                     if (config.maxAge || (options && options.maxAge)) {
                         data[key].timestamp = new Date().getTime();
                         if (data[key].timeoutId) {
-                            clearTimeout(data[key].timeoutId);
+                            $timeout.cancel(data[key].timeoutId);
                         }
-                        data[key].timeoutId = setTimeout(function () {
+                        data[key].timeoutId = $timeout(function () {
                             self.remove(key);
                         }, ((options && options.maxAge) || config.maxAge));
                     }
@@ -503,7 +504,9 @@
                  * @param {Boolean} strict If true then any existing configuration will be reset to defaults before
                  * applying the new options, otherwise only the options specified in the hash will be altered.
                  */
-                this.setOptions = _setOptions;
+                this.setOptions = function (options, strict) {
+                    _setOptions(options, strict, this);
+                }
             }
 
             /**
