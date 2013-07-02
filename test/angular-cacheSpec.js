@@ -138,19 +138,19 @@ describe('angular-cache', function () {
                     cacheFlushInterval: options.cacheFlushInterval
                 });
                 var info = $angularCacheFactory.info();
-                expect(info['cache'].id).toEqual('cache');
-                expect(info['cache'].capacity).toEqual(Number.MAX_VALUE);
-                expect(info['cache'].size).toEqual(0);
+                expect(info.cache.id).toEqual('cache');
+                expect(info.cache.capacity).toEqual(Number.MAX_VALUE);
+                expect(info.cache.size).toEqual(0);
 
-                expect(info['cache2'].id).toEqual('cache2');
-                expect(info['cache2'].capacity).toEqual(Number.MAX_VALUE);
-                expect(info['cache2'].size).toEqual(0);
+                expect(info.cache2.id).toEqual('cache2');
+                expect(info.cache2.capacity).toEqual(Number.MAX_VALUE);
+                expect(info.cache2.size).toEqual(0);
 
-                expect(info['cache3'].id).toEqual('cache3');
-                expect(info['cache3'].cacheFlushInterval).toEqual(options.cacheFlushInterval);
-                expect(info['cache3'].capacity).toEqual(options.capacity);
-                expect(info['cache3'].size).toEqual(0);
-                expect(info['cache3'].cacheFlushIntervalId).toBeDefined();
+                expect(info.cache3.id).toEqual('cache3');
+                expect(info.cache3.cacheFlushInterval).toEqual(options.cacheFlushInterval);
+                expect(info.cache3.capacity).toEqual(options.capacity);
+                expect(info.cache3.size).toEqual(0);
+                expect(info.cache3.cacheFlushIntervalId).toBeDefined();
                 cache.destroy();
                 cache2.destroy();
                 cache3.destroy();
@@ -520,7 +520,7 @@ describe('angular-cache', function () {
                 cache.remove(itemKeys[1]);
                 cache.remove(itemKeys[2]);
 
-                keys = $angularCacheFactory.keys();
+                keys = cache.keys();
 
                 expect(keys.length).toEqual(0);
             });

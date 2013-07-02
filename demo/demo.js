@@ -39,6 +39,10 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         _updateInfo();
     }
 
+    function _reset() {
+        DemoService.reset();
+    }
+
     /**
      * Setup the $scope
      * @private
@@ -46,6 +50,7 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
     function _init() {
         $scope.count = 1;
         $scope.add = _add;
+        $scope.reset = _reset;
         _updateInfo();
         $scope.intervalId = setInterval(function () {
             $scope.$apply(function () {
@@ -69,6 +74,12 @@ app.service('DemoService', function ($angularCacheFactory) {
             this.capacityCache.put(key, value);
             this.maxAgeCache.put(key, value);
             this.flushingCache.put(key, value);
+        },
+        reset: function () {
+            this.defaultCache.removeAll();
+            this.capacityCache.removeAll();
+            this.maxAgeCache.removeAll();
+            this.flushingCache.removeAll();
         }
     };
 });
