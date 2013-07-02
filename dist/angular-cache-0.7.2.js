@@ -35,10 +35,44 @@
             var caches = {};
 
             /**
+             * @method keySet
+             * @desc Returns an object of the keys of the given collection.
+             * @param {Object} collection
+             * @returns {Object} A hash of the keys of the given collection.
+             * @ignore
+             */
+            function keySet(collection) {
+                var _keySet = {};
+                for (var key in collection) {
+                    if (collection.hasOwnProperty(key)) {
+                        _keySet[key] = key;
+                    }
+                }
+                return _keySet;
+            }
+
+            /**
+             * @method keys
+             * @desc Returns an array of the keys of the given collection.
+             * @param {Object} collection
+             * @returns {Array} An array of the keys of the given collection.
+             * @ignore
+             */
+            function keys(collection) {
+                var _keys = [];
+                for (var key in collection) {
+                    if (collection.hasOwnProperty(key)) {
+                        _keys.push(key);
+                    }
+                }
+                return _keys;
+            }
+
+            /**
              * @class AngularCache
              * @desc Instantiated via <code>$angularCacheFactory()</code>
-             * @param {string} cacheId The id of the new cache.
-             * @param {object} [options] { capacity: {number}, maxAge: {number}, cacheFlushInterval: {number} }
+             * @param {String} cacheId The id of the new cache.
+             * @param {Object} [options] { capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }
              *
              * @example
              angular.module('myApp').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
@@ -109,8 +143,8 @@
                 /**
                  * @method validateCapacity
                  * @desc Validates the capacity.
-                 * @param {number} capacity
-                 * @returns {string} errorMsg
+                 * @param {Number} capacity
+                 * @returns {String} errorMsg
                  * @ignore
                  * @private
                  */
@@ -126,8 +160,8 @@
                 /**
                  * @method validateCacheFlushInterval
                  * @desc Validates the cacheFlushInterval.
-                 * @param {number} cacheFlushInterval
-                 * @returns {string} errorMsg
+                 * @param {Number} cacheFlushInterval
+                 * @returns {String} errorMsg
                  * @ignore
                  * @private
                  */
@@ -143,8 +177,8 @@
                 /**
                  * @method validateMaxAge
                  * @desc Validates the maxAge.
-                 * @param {number} maxAge
-                 * @returns {string} errorMsg
+                 * @param {Number} maxAge
+                 * @returns {String} errorMsg
                  * @ignore
                  * @private
                  */
@@ -160,7 +194,7 @@
                 /**
                  * @method refresh
                  * @desc Makes the `entry` the freshEnd of the LRU linked list.
-                 * @param {object} entry
+                 * @param {Object} entry
                  * @ignore
                  * @private
                  */
@@ -182,8 +216,8 @@
                 /**
                  * @method link
                  * @desc Bidirectionally links two entries of the LRU linked list
-                 * @param {object} nextEntry
-                 * @param {object} prevEntry
+                 * @param {Object} nextEntry
+                 * @param {Object} prevEntry
                  * @ignore
                  * @private
                  */
@@ -201,9 +235,9 @@
                 /**
                  * @method AngularCache.put
                  * @desc Add a key-value pair with timestamp to the cache.
-                 * @param {string} key The identifier for the item to add to the cache.
+                 * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {object} [options] { maxAge: {number} }
+                 * @param {Object} [options] { maxAge: {Number} }
                  * @returns {*} value The value of the item added to the cache.
                  * @public
                  *
@@ -269,7 +303,7 @@
                 /**
                  * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
-                 * @param {string} key The key of the item to retrieve.
+                 * @param {String} key The key of the item to retrieve.
                  * @returns {*} The value of the item in the cache with the specified key.
                  * @public
                  *
@@ -294,7 +328,7 @@
                 /**
                  * @method AngularCache.remove
                  * @desc Remove the specified key-value pair from this cache.
-                 * @param {string} key The key of the key-value pair to remove.
+                 * @param {String} key The key of the key-value pair to remove.
                  * @public
                  *
                  * @example
@@ -368,7 +402,7 @@
                 /**
                  * @method AngularCache.info
                  * @desc Return an object containing information about this cache.
-                 * @returns {object} stats Object containing information about this cache.
+                 * @returns {Object} stats Object containing information about this cache.
                  * @public
                  *
                  * @example
@@ -377,12 +411,61 @@
                 this.info = function () {
                     return angular.extend({}, config, {size: size});
                 };
+
+                /**
+                 * @method AngularCache.keySet
+                 * @desc Return the set of the keys of all items currently in this cache.
+                 * @returns {Object} The set of the keys of all items currently in this cache.
+                 * @public
+                 *
+                 * @example
+                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                        var newCache = $angularCacheFactory('newCache');
+
+                        newCache.put('item1', { stuff: 1 });
+                        newCache.put('item2', { stuff: 2 });
+
+                        var keySet = newCache.keySet(); // { item1: 'item1', item2: 'item2' }
+
+                        keySet.hasOwnProperty('item1'); // true
+                        keySet.hasOwnProperty('item2'); // true
+                        keySet.hasOwnProperty('item3'); // false
+                    });
+                 */
+                this.keySet = function () {
+                    return keySet(data);
+                };
+
+                /**
+                 * @method AngularCache.keys
+                 * @desc Return an array of the keys of all items currently in this cache..
+                 * @returns {Array} An array of the keys of all items currently in this cache..
+                 * @public
+                 *
+                 * @example
+                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
+
+                    var newCache = $angularCacheFactory('newCache');
+
+                    newCache.put('item1', { stuff: 1 });
+                    newCache.put('item2', { stuff: 2 });
+
+                    var keys = newCache.keys(); // [ 'item1', 'item2' ]
+
+                    keys[0]; // 'item1'
+                    keys[1]; // 'item2'
+                });
+                 */
+                this.keys = function () {
+                    return keys(data);
+                };
             }
 
             /**
              * @class angularCacheFactory
-             * @param {string} cacheId The id of the new cache.
-             * @param {options} [options] { capacity: {number}, maxAge: {number} }
+             * @param {String} cacheId The id of the new cache.
+             * @param {options} [options] { capacity: {Number}, maxAge: {Number} }
              * @returns {AngularCache}
              */
             function angularCacheFactory(cacheId, options) {
@@ -399,7 +482,7 @@
             /**
              * @method angularCacheFactory.info
              * @desc Return an object containing information about all caches of this factory.
-             * @returns {object} An object containing information about all caches of this factory.
+             * @returns {Object} An object containing information about all caches of this factory.
              * @public
              *
              * @example
@@ -422,7 +505,7 @@
             /**
              * @method angularCacheFactory.get
              * @desc Return the cache with the specified cacheId.
-             * @param {string} cacheId The id of the desired cache.
+             * @param {String} cacheId The id of the desired cache.
              * @returns {AngularCache} The cache with the specified cachedId.
              * @public
              *
@@ -460,13 +543,7 @@
                 });
              */
             angularCacheFactory.keySet = function () {
-                var keySet = {};
-                for (var key in caches) {
-                    if (caches.hasOwnProperty(key)) {
-                        keySet[key] = key;
-                    }
-                }
-                return keySet;
+                return keySet(caches);
             };
 
             /**
@@ -490,13 +567,7 @@
                 });
              */
             angularCacheFactory.keys = function () {
-                var keys = [];
-                for (var key in caches) {
-                    if (caches.hasOwnProperty(key)) {
-                        keys.push(key);
-                    }
-                }
-                return keys;
+                return keys(caches);
             };
 
             return angularCacheFactory;

@@ -138,25 +138,22 @@ describe('angular-cache', function () {
                     cacheFlushInterval: options.cacheFlushInterval
                 });
                 var info = $angularCacheFactory.info();
-                expect(info['cache'].id).toEqual('cache');
-                expect(info['cache'].capacity).toEqual(Number.MAX_VALUE);
-                expect(info['cache'].size).toEqual(0);
+                expect(info.cache.id).toEqual('cache');
+                expect(info.cache.capacity).toEqual(Number.MAX_VALUE);
+                expect(info.cache.size).toEqual(0);
 
-                expect(info['cache2'].id).toEqual('cache2');
-                expect(info['cache2'].capacity).toEqual(Number.MAX_VALUE);
-                expect(info['cache2'].size).toEqual(0);
+                expect(info.cache2.id).toEqual('cache2');
+                expect(info.cache2.capacity).toEqual(Number.MAX_VALUE);
+                expect(info.cache2.size).toEqual(0);
 
-                expect(info['cache3'].id).toEqual('cache3');
-                expect(info['cache3'].cacheFlushInterval).toEqual(options.cacheFlushInterval);
-                expect(info['cache3'].capacity).toEqual(options.capacity);
-                expect(info['cache3'].size).toEqual(0);
-                expect(info['cache3'].cacheFlushIntervalId).toBeDefined();
+                expect(info.cache3.id).toEqual('cache3');
+                expect(info.cache3.cacheFlushInterval).toEqual(options.cacheFlushInterval);
+                expect(info.cache3.capacity).toEqual(options.capacity);
+                expect(info.cache3.size).toEqual(0);
+                expect(info.cache3.cacheFlushIntervalId).toBeDefined();
                 cache.destroy();
                 cache2.destroy();
                 cache3.destroy();
-            });
-            it('should return \"undefined\" if the cache doesn\'t exist', function () {
-                expect($angularCacheFactory.get('someNonExistentCache')).toEqual(undefined);
             });
         });
         describe('$angularCacheFactory.keySet()', function () {
@@ -187,9 +184,6 @@ describe('angular-cache', function () {
                 expect(keySet.hasOwnProperty(cacheKeys[1])).toEqual(false);
                 expect(keySet.hasOwnProperty(cacheKeys[2])).toEqual(false);
             });
-            it('should return \"undefined\" if the cache doesn\'t exist', function () {
-                expect($angularCacheFactory.get('someNonExistentCache')).toEqual(undefined);
-            });
         });
         describe('$angularCacheFactory.keys()', function () {
             it('should return the correct array of keys associated the caches currently owned by the factory', function () {
@@ -212,9 +206,6 @@ describe('angular-cache', function () {
                 keys = $angularCacheFactory.keys();
 
                 expect(keys.length).toEqual(0);
-            });
-            it('should return \"undefined\" if the cache doesn\'t exist', function () {
-                expect($angularCacheFactory.get('someNonExistentCache')).toEqual(undefined);
             });
         });
     });
@@ -476,6 +467,62 @@ describe('angular-cache', function () {
                 cache2.destroy();
                 cache3.destroy();
                 cache4.destroy();
+            });
+        });
+        describe('AngularCache.keySet()', function () {
+            it('should return the correct set of keys of all items currently in a cache', function () {
+                var itemKeys = ['item1', 'item2', 'item3'];
+
+                var cache = $angularCacheFactory('cache');
+
+                cache.put(itemKeys[0], itemKeys[0]);
+                cache.put(itemKeys[1], itemKeys[1]);
+                cache.put(itemKeys[2], itemKeys[2]);
+
+                var keySet = cache.keySet();
+
+                expect(keySet.hasOwnProperty(itemKeys[0])).toEqual(true);
+                expect(keySet.hasOwnProperty(itemKeys[1])).toEqual(true);
+                expect(keySet.hasOwnProperty(itemKeys[2])).toEqual(true);
+
+                expect(keySet[itemKeys[0]]).toEqual(itemKeys[0]);
+                expect(keySet[itemKeys[1]]).toEqual(itemKeys[1]);
+                expect(keySet[itemKeys[2]]).toEqual(itemKeys[2]);
+
+                cache.remove(itemKeys[0]);
+                cache.remove(itemKeys[1]);
+                cache.remove(itemKeys[2]);
+
+                keySet = cache.keySet();
+
+                expect(keySet.hasOwnProperty(itemKeys[0])).toEqual(false);
+                expect(keySet.hasOwnProperty(itemKeys[1])).toEqual(false);
+                expect(keySet.hasOwnProperty(itemKeys[2])).toEqual(false);
+            });
+        });
+        describe('AngularCache.keys()', function () {
+            it('should return the correct array of keys of all items currently in a cache', function () {
+                var itemKeys = ['item1', 'item2', 'item3'];
+
+                var cache = $angularCacheFactory('cache');
+
+                cache.put(itemKeys[0], itemKeys[0]);
+                cache.put(itemKeys[1], itemKeys[1]);
+                cache.put(itemKeys[2], itemKeys[2]);
+
+                var keys = cache.keys();
+
+                expect(keys[0]).toEqual(itemKeys[0]);
+                expect(keys[1]).toEqual(itemKeys[1]);
+                expect(keys[2]).toEqual(itemKeys[2]);
+
+                cache.remove(itemKeys[0]);
+                cache.remove(itemKeys[1]);
+                cache.remove(itemKeys[2]);
+
+                keys = cache.keys();
+
+                expect(keys.length).toEqual(0);
             });
         });
     });
