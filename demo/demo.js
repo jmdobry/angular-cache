@@ -36,6 +36,7 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
     }
 
     function _reset() {
+        $scope.count = 1;
         DemoService.reset();
     }
 
