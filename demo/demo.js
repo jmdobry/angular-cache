@@ -14,19 +14,15 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
     function _updateInfo() {
         $scope.angularCacheFactoryInfo = _getHtml($angularCacheFactory.info());
         $scope.angularCacheFactoryKeySet = _getHtml($angularCacheFactory.keySet());
-        $scope.defaultCacheInfo = DemoService.defaultCache.info();
-        $scope.capacityCacheInfo = DemoService.capacityCache.info();
-        $scope.maxAgeCacheInfo = DemoService.maxAgeCache.info();
-        $scope.flushingCacheInfo = DemoService.flushingCache.info();
-        $scope.defaultCacheKeySet = _getHtml(DemoService.defaultCache.keySet());
-        $scope.capacityCacheKeySet = _getHtml(DemoService.capacityCache.keySet());
-        $scope.maxAgeCacheKeySet = _getHtml(DemoService.maxAgeCache.keySet());
-        $scope.flushingCacheKeySet = _getHtml(DemoService.flushingCache.keySet());
-        $scope.defaultCacheKeys = _getHtml(DemoService.defaultCache.keys());
-        $scope.capacityCacheKeys = _getHtml(DemoService.capacityCache.keys());
-        $scope.maxAgeCacheKeys = _getHtml(DemoService.maxAgeCache.keys());
-        $scope.flushingCacheKeys = _getHtml(DemoService.flushingCache.keys());
-
+        for (var i = 0; i < DemoService.caches.length; i++) {
+            $scope.infos[i] = DemoService.caches[i].info();
+        }
+        for (i = 0; i < DemoService.caches.length; i++) {
+            $scope.keySets[i] = _getHtml(DemoService.caches[i].keySet());
+        }
+        for (i = 0; i < DemoService.caches.length; i++) {
+            $scope.keys[i] = _getHtml(DemoService.caches[i].keys());
+        }
     }
 
     /**
@@ -43,14 +39,28 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         DemoService.reset();
     }
 
+    function _setOptions() {
+        console.info('_setOptions');
+        DemoService.caches[0].setOptions({
+            capacity: 10
+        });
+    }
+
     /**
      * Setup the $scope
      * @private
      */
     function _init() {
         $scope.count = 1;
+        $scope.infos = [];
+        $scope.keySets = [];
+        $scope.keys = [];
         $scope.add = _add;
         $scope.reset = _reset;
+        $scope.setOptions = _setOptions;
+        $scope.default = {
+
+        };
         _updateInfo();
         $scope.intervalId = setInterval(function () {
             $scope.$apply(function () {
@@ -65,21 +75,21 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
 
 app.service('DemoService', function ($angularCacheFactory) {
     return {
-        defaultCache: $angularCacheFactory('defaultCache'),
-        capacityCache: $angularCacheFactory('capacityCache', { capacity: 10 }),
-        maxAgeCache: $angularCacheFactory('maxAgeCache', { maxAge: 4000 }),
-        flushingCache: $angularCacheFactory('flushingCache', { cacheFlushInterval: 4000 }),
+        caches: [
+            $angularCacheFactory('defaultCache'),
+            $angularCacheFactory('capacityCache', { capacity: 10 }),
+            $angularCacheFactory('maxAgeCache', { maxAge: 4000 }),
+            $angularCacheFactory('flushingCache', { cacheFlushInterval: 4000 })
+        ],
         add: function (key, value) {
-            this.defaultCache.put(key, value);
-            this.capacityCache.put(key, value);
-            this.maxAgeCache.put(key, value);
-            this.flushingCache.put(key, value);
+            for (var i = 0; i < this.caches.length; i++) {
+                this.caches[i].put(key, value);
+            }
         },
         reset: function () {
-            this.defaultCache.removeAll();
-            this.capacityCache.removeAll();
-            this.maxAgeCache.removeAll();
-            this.flushingCache.removeAll();
+            for (var i = 0; i < this.caches.length; i++) {
+                this.caches[i].removeAll();
+            }
         }
     };
 });

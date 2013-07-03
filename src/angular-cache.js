@@ -31,41 +31,41 @@
     function $AngularCacheFactoryProvider() {
 
         /** @private= */
-        this.$get = ['$log', '$timeout', function ($log, $timeout) {
+        this.$get = ['$log', '$timeout', '$q', function ($log, $timeout, $q) {
             var caches = {};
 
             /**
-             * @method keySet
+             * @method _keySet
              * @desc Returns an object of the keys of the given collection.
              * @param {Object} collection The collection from which to get the set of keys.
              * @returns {Object} A hash of the keys of the given collection.
              * @ignore
              */
-            function keySet(collection) {
-                var _keySet = {};
+            function _keySet(collection) {
+                var keySet = {};
                 for (var key in collection) {
                     if (collection.hasOwnProperty(key)) {
-                        _keySet[key] = key;
+                        keySet[key] = key;
                     }
                 }
-                return _keySet;
+                return keySet;
             }
 
             /**
-             * @method keys
+             * @method _keys
              * @desc Returns an array of the keys of the given collection.
              * @param {Object} collection The collection from which to get the keys.
              * @returns {Array} An array of the keys of the given collection.
              * @ignore
              */
-            function keys(collection) {
-                var _keys = [];
+            function _keys(collection) {
+                var keys = [];
                 for (var key in collection) {
                     if (collection.hasOwnProperty(key)) {
-                        _keys.push(key);
+                        keys.push(key);
                     }
                 }
-                return _keys;
+                return keys;
             }
 
             /**
@@ -110,9 +110,33 @@
                     data = {},
                     lruHash = {},
                     freshEnd = null,
-                    staleEnd = null;
+                    staleEnd = null,
+                    self = this;
+
+                options = options || {};
 
                 _setOptions(options, true);
+
+                /**
+                 * @method _setCapacity
+                 * @desc Set the capacity for this cache.
+                 * @param {Number} capacity
+                 * @private
+                 * @ignore
+                 */
+                function _setCapacity(capacity) {
+                    var deferred = $q.defer();
+                    _validateNumberOption(capacity).then(function (option, msg) {
+                        config.capacity = option;
+                        while (size > config.capacity) {
+                            self.remove(staleEnd.key);
+                        }
+                        deferred.resolve(config.capacity, 'capacity set to ' + config.capacity);
+                    }, function (option, msg) {
+                        deferred.reject(option, 'capacity: ' + msg);
+                    });
+                    return deferred.promise;
+                }
 
                 /**
                  * @method _setMaxAge
@@ -121,28 +145,40 @@
                  * @private
                  * @ignore
                  */
-                function _setMaxAge(maxAge, context) {
-                    var self = context;
-                    config.maxAge = maxAge;
-                    if (config.maxAge) {
-                        var keySet = keySet(data);
-                        for (var key in keySet) {
-                            if (data[key].timeoutId && !data[key].maxAge) {
-                                $timeout.cancel(data[key].timeoutId);
-                                var timeRemaining = new Date().getTime() - data[key].timestamp;
-                                if (timeRemaining > 0) {
-                                    // Update this item's timeout
-                                    data[key].timeoutId = $timeout(function () {
+                function _setMaxAge(maxAge) {
+                    var deferred = $q.defer(),
+                        removeKey = function (key, self) {
+                            self.remove(key);
+                        };
+                    if (maxAge == null) {
+                        config.maxAge = maxAge;
+                        deferred.resolve(config.maxAge, 'maxAge cleared');
+                    } else {
+                        _validateNumberOption(maxAge).then(function (option, msg) {
+                            config.maxAge = option;
+                            var keySet = _keySet(data);
+                            for (var key in keySet) {
+                                if (data[key].timeoutId && !data[key].maxAge) {
+                                    $timeout.cancel(data[key].timeoutId);
+                                    var timeRemaining = new Date().getTime() - data[key].timestamp;
+                                    if (config.maxAge - timeRemaining > 0) {
+                                        $log.debug(key + ' has ' + config.maxAge - timeRemaining + ' time remaining. Updating timeout...');
+                                        // Update this item's timeout
+                                        data[key].timeoutId = $timeout(removeKey, config.maxAge);
+                                    } else {
+                                        $log.debug(key + ' has expired. Removing...');
+                                        // The new maxAge has cut this item's life short.
+                                        // Immediately remove the item from the cache.
                                         self.remove(key);
-                                    }, config.maxAge);
-                                } else {
-                                    // The new maxAge has cut this item's life short.
-                                    // Immediately remove the item from the cache.
-                                    self.remove(key);
+                                    }
                                 }
                             }
-                        }
+                            deferred.resolve(config.maxAge, 'maxAge set to ' + config.maxAge);
+                        }, function (option, msg) {
+                            deferred.reject(option, 'maxAge: ' + msg);
+                        });
                     }
+                    return deferred.promise;
                 }
 
                 /**
@@ -153,28 +189,36 @@
                  * @ignore
                  */
                 function _setCacheFlushInterval(cacheFlushInterval) {
+                    var deferred = $q.defer();
                     if (config.cacheFlushIntervalId) {
                         clearInterval(config.cacheFlushIntervalId);
                         config.cacheFlushIntervalId = null;
                     }
-                    if (!cacheFlushInterval) {
-                        config.cacheFlushInterval = null;
-                    } else {
+                    if (cacheFlushInterval == null) {
                         config.cacheFlushInterval = cacheFlushInterval;
-                        config.cacheFlushIntervalId = setInterval(function () {
-                            var keySet = keySet(data);
-                            for (var key in keySet) {
-                                if (data[key].timeoutId) {
-                                    $timeout.cancel(data[key].timeoutId);
+                        deferred.resolve(config.cacheFlushInterval, 'cacheFlushInterval cleared');
+                    } else {
+                        _validateNumberOption(cacheFlushInterval).then(function (option, msg) {
+                            config.cacheFlushInterval = cacheFlushInterval;
+                            config.cacheFlushIntervalId = setInterval(function () {
+                                var keySet = _keySet(data);
+                                for (var key in keySet) {
+                                    if (data[key].timeoutId) {
+                                        $timeout.cancel(data[key].timeoutId);
+                                    }
                                 }
-                            }
-                            size = 0;
-                            data = {};
-                            lruHash = {};
-                            freshEnd = null;
-                            staleEnd = null;
-                        }, config.cacheFlushInterval);
+                                size = 0;
+                                data = {};
+                                lruHash = {};
+                                freshEnd = null;
+                                staleEnd = null;
+                            }, config.cacheFlushInterval);
+                            deferred.resolve(config.cacheFlushInterval, 'cacheFlushInterval set to ' + config.cacheFlushInterval);
+                        }, function (option, msg) {
+                            deferred.reject(option, 'cacheFlushInterval: ' + msg);
+                        });
                     }
+                    return deferred.promise;
                 }
 
                 /**
@@ -185,13 +229,16 @@
                  * @ignore
                  * @private
                  */
-                function _isValidNumberOption(option, name) {
-                    try {
-                        if (!angular.isNumber(option)) throw new Error(name + ' must be a number!');
-                        if (option < 0) throw new Error(name + ' must be greater than zero!');
-                    } catch (err) {
-                        $log.error('Invalid argument: ' + name, err.message, err.stack);
+                function _validateNumberOption(option) {
+                    var deferred = $q.defer();
+                    if (!angular.isNumber(option)) {
+                        deferred.reject(option, 'must be a number!');
+                    } else if (option < 0) {
+                        deferred.reject(option, 'must be greater than zero!');
+                    } else {
+                        deferred.resolve(option);
                     }
+                    return deferred.promise;
                 }
 
                 /**
@@ -204,26 +251,35 @@
                  * @private
                  * @ignore
                  */
-                function _setOptions(options, strict, context) {
+                function _setOptions(options, strict) {
+                    strict = strict || false;
+                    console.log('_setOptions', [options, strict]);
+
                     // setup capacity
-                    if (!options.capacity && strict) {
-                        config.capacity = Number.MAX_VALUE;
-                    } else if (options.capacity && _isValidNumberOption(options.capacity, 'capacity')) {
-                        config.capacity = options.capacity;
+                    if (options.capacity || strict) {
+                        _setCapacity(options.capacity ? options.capacity : Number.MAX_VALUE).then(function (capacity) {
+                            $log.debug('capacity set to ' + capacity);
+                        }, function (capacity, msg) {
+                            $log.error(arguments);
+                        });
                     }
 
                     // setup maxAge
-                    if (!options.maxAge && strict) {
-                        _setMaxAge(null);
-                    } else if (options.maxAge && _isValidNumberOption(options.maxAge, 'maxAge')) {
-                        _setMaxAge(options.maxAge, context);
+                    if (options.maxAge || strict) {
+                        _setMaxAge(options.maxAge ? options.maxAge : null).then(function (maxAge) {
+                            $log.debug('maxAge set to ' + maxAge);
+                        }, function (maxAge, msg) {
+                            $log.error(arguments);
+                        });
                     }
 
                     // setup cacheFlushInterval
-                    if (!options.cacheFlushInterval && strict) {
-                        _setCacheFlushInterval(null);
-                    } else if (options.cacheFlushInterval && _isValidNumberOption(options.cacheFlushInterval, 'cacheFlushInterval')) {
-                        _setCacheFlushInterval(options.cacheFlushInterval);
+                    if (options.cacheFlushInterval || strict) {
+                        _setCacheFlushInterval(options.cacheFlushInterval ? options.cacheFlushInterval : null).then(function (cacheFlushInterval) {
+                            $log.debug('cacheFlushInterval set to ' + cacheFlushInterval);
+                        }, function (cacheFlushInterval, msg) {
+                            $log.error(arguments);
+                        });
                     }
                 }
 
@@ -470,7 +526,7 @@
                     });
                  */
                 this.keySet = function () {
-                    return keySet(data);
+                    return _keySet(data);
                 };
 
                 /**
@@ -494,7 +550,7 @@
                 });
                  */
                 this.keys = function () {
-                    return keys(data);
+                    return _keys(data);
                 };
 
                 /**
@@ -504,9 +560,7 @@
                  * @param {Boolean} strict If true then any existing configuration will be reset to defaults before
                  * applying the new options, otherwise only the options specified in the hash will be altered.
                  */
-                this.setOptions = function (options, strict) {
-                    _setOptions(options, strict, this);
-                }
+                this.setOptions = _setOptions;
             }
 
             /**
@@ -590,7 +644,7 @@
                 });
              */
             angularCacheFactory.keySet = function () {
-                return keySet(caches);
+                return _keySet(caches);
             };
 
             /**
@@ -614,7 +668,7 @@
                 });
              */
             angularCacheFactory.keys = function () {
-                return keys(caches);
+                return _keys(caches);
             };
 
             return angularCacheFactory;
