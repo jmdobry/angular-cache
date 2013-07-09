@@ -1,9 +1,8 @@
 {
     "name": "angular-cache",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "main": [
-        "dist/angular-cache-0.8.0.min.js",
-        "dist/angular-cache-0.8.0.js"
+        "src/angular-cache.js"
     ],
     "ignore": [
         ".idea/",
