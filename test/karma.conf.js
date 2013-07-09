@@ -8,8 +8,8 @@ basePath = '../';
 files = [
     JASMINE,
     JASMINE_ADAPTER,
-    'http://code.angularjs.org/1.1.4/angular.min.js',
-    'http://code.angularjs.org/1.1.4/angular-mocks.js',
+    'http://code.angularjs.org/1.1.5/angular.min.js',
+    'http://code.angularjs.org/1.1.5/angular-mocks.js',
     'src/angular-cache.js',
     'test/angular-cacheSpec.js'
 ];
@@ -50,9 +50,9 @@ autoWatch = true;
 
 var os = require('os');
 if (os.platform() !== 'win32') {
-    process.env['PHANTOMJS_BIN'] = './node_modules/phantomjs/lib/phantom/bin/phantomjs';
+    process.env.PHANTOMJS_BIN = './node_modules/phantomjs/lib/phantom/bin/phantomjs';
 } else {
-    process.env['PHANTOMJS_BIN'] = './node_modules/phantomjs/lib/phantom/phantomjs.exe';
+    process.env.PHANTOMJS_BIN = './node_modules/phantomjs/lib/phantom/phantomjs.exe';
 }
 
 // Start these browsers, currently available:

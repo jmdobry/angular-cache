@@ -5,16 +5,17 @@
  * Copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * Licensed under the MIT license. <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  */
-
-'use strict';
-
 module.exports = function (grunt) {
+    'use strict';
 
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        clean: ['dist/', 'docs/'],
-        jshint: ['src/angular-cache.js'],
+        clean: ['dist/', 'docs/', './CHANGELOG.md'],
+        jshint: {
+            all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+            jshintrc: '.jshintrc'
+        },
         copy: {
             options: {
                 processContent: function (contents) {

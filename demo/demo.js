@@ -12,13 +12,19 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
      * @private
      */
     function _updateInfo() {
-        $scope.angularCacheFactoryInfo = _getHtml($angularCacheFactory.info());
-        $scope.angularCacheFactoryKeySet = _getHtml($angularCacheFactory.keySet());
-        $scope.defaultCacheInfo = DemoService.defaultCache.info();
-        $scope.capacityCacheInfo = DemoService.capacityCache.info();
-        $scope.maxAgeCacheInfo = DemoService.maxAgeCache.info();
-        $scope.flushingCacheInfo = DemoService.flushingCache.info();
-
+        if (!$scope.editingDefaultCache) {
+            $scope.angularCacheFactoryInfo = _getHtml($angularCacheFactory.info());
+            $scope.angularCacheFactoryKeySet = _getHtml($angularCacheFactory.keySet());
+            for (var i = 0; i < DemoService.caches.length; i++) {
+                $scope.infos[i] = DemoService.caches[i].info();
+            }
+            for (i = 0; i < DemoService.caches.length; i++) {
+                $scope.keySets[i] = _getHtml(DemoService.caches[i].keySet());
+            }
+            for (i = 0; i < DemoService.caches.length; i++) {
+                $scope.keys[i] = _getHtml(DemoService.caches[i].keys());
+            }
+        }
     }
 
     /**
@@ -31,13 +37,57 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         _updateInfo();
     }
 
+    function _reset() {
+        $scope.count = 1;
+        $scope.defaultCacheOptions = {
+            capacity: Number.MAX_VALUE,
+            maxAge: null,
+            cacheFlushInterval: null
+        };
+        DemoService.reset();
+    }
+
+    function _editDefaultCache() {
+        $scope.editingDefaultCache = true;
+    }
+
+    function _saveDefaultCache() {
+        DemoService.caches[0].setOptions({
+            capacity: parseFloat($scope.defaultCacheOptions.capacity),
+            maxAge: parseInt($scope.defaultCacheOptions.maxAge, 10),
+            cacheFlushInterval: parseInt($scope.defaultCacheOptions.cacheFlushInterval, 10)
+        }, true);
+        $scope.editingDefaultCache = false;
+    }
+
+    function _cancelDefaultCache() {
+        $scope.editingDefaultCache = false;
+    }
+
     /**
      * Setup the $scope
      * @private
      */
     function _init() {
+        // Setup $scope data
         $scope.count = 1;
+        $scope.infos = [];
+        $scope.keySets = [];
+        $scope.keys = [];
+        $scope.editingDefaultCache = false;
+        $scope.defaultCacheOptions = {
+            capacity: Number.MAX_VALUE,
+            maxAge: null,
+            cacheFlushInterval: null
+        };
+
+        // Setup $scope methods
         $scope.add = _add;
+        $scope.reset = _reset;
+        $scope.editDefaultCache = _editDefaultCache;
+        $scope.saveDefaultCache = _saveDefaultCache;
+        $scope.cancelDefaultCache = _cancelDefaultCache;
+
         _updateInfo();
         $scope.intervalId = setInterval(function () {
             $scope.$apply(function () {
@@ -52,15 +102,22 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
 
 app.service('DemoService', function ($angularCacheFactory) {
     return {
-        defaultCache: $angularCacheFactory('defaultCache'),
-        capacityCache: $angularCacheFactory('capacityCache', { capacity: 10 }),
-        maxAgeCache: $angularCacheFactory('maxAgeCache', { maxAge: 4000 }),
-        flushingCache: $angularCacheFactory('flushingCache', { cacheFlushInterval: 4000 }),
+        caches: [
+            $angularCacheFactory('defaultCache'),
+            $angularCacheFactory('capacityCache', { capacity: 10 }),
+            $angularCacheFactory('maxAgeCache', { maxAge: 4000 }),
+            $angularCacheFactory('flushingCache', { cacheFlushInterval: 4000 })
+        ],
         add: function (key, value) {
-            this.defaultCache.put(key, value);
-            this.capacityCache.put(key, value);
-            this.maxAgeCache.put(key, value);
-            this.flushingCache.put(key, value);
+            for (var i = 0; i < this.caches.length; i++) {
+                this.caches[i].put(key, value);
+            }
+        },
+        reset: function () {
+            for (var i = 0; i < this.caches.length; i++) {
+                this.caches[i].removeAll();
+            }
+            this.caches[0].setOptions({}, true);
         }
     };
 });
