@@ -48,7 +48,7 @@
      * @example
      angular.module('myApp', ['angular-cache']);
      */
-    angular.module('angular-cache', []);
+    angular.module('angular-cache', ['ng']);
 
     /**
      * @class $AngularCacheFactoryProvider
@@ -57,49 +57,51 @@
      */
     function $AngularCacheFactoryProvider() {
 
-        /** @private= */
-        this.$get = function () {
+        /**
+         * @ignore
+         */
+        this.$get = ['$timeout', '$q', function ($timeout, $q) {
             var caches = {};
 
             /**
-             * @method keySet
+             * @method _keySet
              * @desc Returns an object of the keys of the given collection.
-             * @param {Object} collection
+             * @param {Object} collection The collection from which to get the set of keys.
              * @returns {Object} A hash of the keys of the given collection.
              * @ignore
              */
-            function keySet(collection) {
-                var _keySet = {};
+            function _keySet(collection) {
+                var keySet = {};
                 for (var key in collection) {
                     if (collection.hasOwnProperty(key)) {
-                        _keySet[key] = key;
+                        keySet[key] = key;
                     }
                 }
-                return _keySet;
+                return keySet;
             }
 
             /**
-             * @method keys
+             * @method _keys
              * @desc Returns an array of the keys of the given collection.
-             * @param {Object} collection
+             * @param {Object} collection The collection from which to get the keys.
              * @returns {Array} An array of the keys of the given collection.
              * @ignore
              */
-            function keys(collection) {
-                var _keys = [];
+            function _keys(collection) {
+                var keys = [];
                 for (var key in collection) {
                     if (collection.hasOwnProperty(key)) {
-                        _keys.push(key);
+                        keys.push(key);
                     }
                 }
-                return _keys;
+                return keys;
             }
 
             /**
              * @class AngularCache
-             * @desc Instantiated via &lt;code>$angularCacheFactory()&lt;/code>
+             * @desc Instantiated via &lt;code>$angularCacheFactory(cacheId[, options])&lt;/code>
              * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] { capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }
+             * @param {Object} [options] {{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }}
              *
              * @example
              angular.module('myApp').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
@@ -133,89 +135,202 @@
              */
             function AngularCache(cacheId, options) {
                 var size = 0,
-                    config = angular.extend({}, options, {id: cacheId}),
+                    config = angular.extend({}, { id: cacheId }),
                     data = {},
                     lruHash = {},
                     freshEnd = null,
                     staleEnd = null,
-                    errorMsg = '';
+                    self = this;
 
-                // validate options
-                errorMsg += _validateCapacity(config.capacity);
-                errorMsg += _validateMaxAge(config.maxAge);
-                errorMsg += _validateCacheFlushInterval(config.cacheFlushInterval);
-                if (errorMsg) throw new Error(errorMsg);
+                options = options || {};
 
-                // Set the default capacity
-                if (!config.capacity) {
-                    config.capacity = Number.MAX_VALUE;
+                // Initialize this cache with the default options
+                _setOptions(options, true);
+
+                /**
+                 * @method _setTimeoutToRemove
+                 * @desc Removes the item with the given key from this cache after the number of
+                 * milliseconds specified by delay.
+                 * @param {String} key The key of the item to be removed at the end of the timeout.
+                 * @param {Number} delay The delay in milliseconds.
+                 * @private
+                 * @ignore
+                 */
+                function _setTimeoutToRemove(key, delay) {
+                    data[key].timeoutId = $timeout(function () {
+                        self.remove(key);
+                    }, delay);
                 }
 
-                // Start the timer for the cacheFlushInterval
-                if (config.cacheFlushInterval) {
-                    config.cacheFlushIntervalId = setInterval(function () {
-                        for (var key in data) {
-                            if (data[key].timeoutId) {
-                                clearTimeout(data[key].timeoutId);
+                /**
+                 * @method _validateNumberOption
+                 * @desc Validates the given number option.
+                 * @param {Number} option The number option to check.
+                 * @param {Function} cb Callback function
+                 * @ignore
+                 * @private
+                 */
+                function _validateNumberOption(option, cb) {
+                    if (!angular.isNumber(option)) {
+                        cb('must be a number!', option);
+                    } else if (option &lt; 0) {
+                        cb('must be greater than zero!', option);
+                    } else {
+                        cb(null, option);
+                    }
+                }
+
+                /**
+                 * @method _setCapacity
+                 * @desc Set the capacity for this cache.
+                 * @param {Number} capacity The new capacity for this cache.
+                 * @param {Function} cb Callback function
+                 * @privates
+                 * @ignore
+                 */
+                function _setCapacity(capacity, cb) {
+                    if (capacity === Number.MAX_VALUE) {
+                        config.capacity = capacity;
+                        cb(null, config.capacity);
+                    } else {
+                        _validateNumberOption(capacity, function (err, capacity) {
+                            if (err) {
+                                cb(err, capacity);
+                            } else {
+                                config.capacity = capacity;
+                                while (size > config.capacity) {
+                                    self.remove(staleEnd.key);
+                                }
+                                cb(null, config.capacity);
+                            }
+                        });
+                    }
+                }
+
+                /**
+                 * @method _setMaxAge
+                 * @desc Set the maxAge for this cache.
+                 * @param {Number} maxAge The new maxAge for this cache.
+                 * @param {Function} cb Callback function
+                 * @private
+                 * @ignore
+                 */
+                function _setMaxAge(maxAge, cb) {
+                    var keys = _keys(data);
+
+                    if (maxAge === null) {
+                        config.maxAge = maxAge;
+                        for (var i = 0; i &lt; keys.length; i++) {
+                            var key = keys[i];
+                            if (data[key].timeoutId && !data[key].maxAge) {
+                                $timeout.cancel(data[key].timeoutId);
                             }
                         }
-                        size = 0;
-                        data = {};
-                        lruHash = {};
-                        freshEnd = null;
-                        staleEnd = null;
-                    }, config.cacheFlushInterval);
+                        cb(null, config.maxAge);
+                    } else {
+                        _validateNumberOption(maxAge, function (err, maxAge) {
+                            if (err) {
+                                cb(err, maxAge);
+                            } else {
+                                config.maxAge = maxAge;
+                                for (var i = 0; i &lt; keys.length; i++) {
+                                    var key = keys[i];
+                                    if (data[key].timeoutId && !data[key].maxAge) {
+                                        $timeout.cancel(data[key].timeoutId);
+                                        var timeRemaining = new Date().getTime() - data[key].timestamp;
+                                        if (config.maxAge - timeRemaining > 0) {
+                                            _setTimeoutToRemove(key, config.maxAge);
+                                        } else {
+                                            self.remove(key);
+                                        }
+                                    }
+                                }
+                                cb(null, config.maxAge);
+                            }
+                        });
+                    }
                 }
 
                 /**
-                 * @method validateCapacity
-                 * @desc Validates the capacity.
-                 * @param {Number} capacity
-                 * @returns {String} errorMsg
-                 * @ignore
+                 * @method _setCacheFlushInterval
+                 * @desc Set the cacheFlushInterval for this cache.
+                 * @param {Number} cacheFlushInterval The new cacheFlushInterval for this cache.
+                 * @param {Function} cb Callback function
                  * @private
+                 * @ignore
                  */
-                function _validateCapacity(capacity) {
-                    var errorMsg = '';
-                    if (config.capacity) {
-                        if (!angular.isNumber(config.capacity)) errorMsg += 'capacity must be a number!;';
-                        if (config.capacity &lt; 0) errorMsg += 'capacity must be greater than zero!;';
+                function _setCacheFlushInterval(cacheFlushInterval, cb) {
+                    if (config.cacheFlushIntervalId) {
+                        clearInterval(config.cacheFlushIntervalId);
+                        delete config.cacheFlushIntervalId;
                     }
-                    return errorMsg;
+                    if (cacheFlushInterval === null) {
+                        config.cacheFlushInterval = cacheFlushInterval;
+                        cb(null, config.cacheFlushInterval);
+                    } else {
+                        _validateNumberOption(cacheFlushInterval, function (err, cacheFlushInterval) {
+                            if (err) {
+                                cb(err, cacheFlushInterval);
+                            } else {
+                                config.cacheFlushInterval = cacheFlushInterval;
+                                config.cacheFlushIntervalId = setInterval(function () {
+                                    var keys = _keys(data);
+                                    for (var i = 0; i &lt; keys.length; i++) {
+                                        var key = keys[i];
+                                        if (data[key].timeoutId) {
+                                            $timeout.cancel(data[key].timeoutId);
+                                        }
+                                    }
+                                    size = 0;
+                                    data = {};
+                                    lruHash = {};
+                                    freshEnd = null;
+                                    staleEnd = null;
+                                }, config.cacheFlushInterval);
+                                cb(null, config.cacheFlushInterval);
+                            }
+                        });
+                    }
                 }
 
                 /**
-                 * @method validateCacheFlushInterval
-                 * @desc Validates the cacheFlushInterval.
-                 * @param {Number} cacheFlushInterval
-                 * @returns {String} errorMsg
-                 * @ignore
+                 * @method _setOptions
+                 * @desc Configure this cache with the given options.
+                 * @param {Object} options
+                 * @param {Boolean} strict If true then any existing configuration will be reset to default before
+                 * applying the new options, otherwise only the options specified in the options hash will be altered.
                  * @private
+                 * @ignore
                  */
-                function _validateCacheFlushInterval(cacheFlushInterval) {
-                    var errorMsg = '';
-                    if (config.cacheFlushInterval) {
-                        if (!angular.isNumber(config.cacheFlushInterval)) errorMsg += 'cacheFlushInterval must be a number!;';
-                        if (config.cacheFlushInterval &lt; 0) errorMsg += 'cacheFlushInterval must be greater than zero!;';
-                    }
-                    return errorMsg;
-                }
+                function _setOptions(options, strict) {
+                    strict = strict || false;
 
-                /**
-                 * @method validateMaxAge
-                 * @desc Validates the maxAge.
-                 * @param {Number} maxAge
-                 * @returns {String} errorMsg
-                 * @ignore
-                 * @private
-                 */
-                function _validateMaxAge(maxAge) {
-                    var errorMsg = '';
-                    if (maxAge) {
-                        if (!angular.isNumber(maxAge)) errorMsg += 'maxAge must be a number!;';
-                        if (maxAge &lt; 0) errorMsg += 'maxAge must be greater than zero!;';
+                    // setup capacity
+                    if (options.capacity || strict) {
+                        _setCapacity(options.capacity ? options.capacity : Number.MAX_VALUE, function (err, capacity) {
+                            if (err) {
+                                throw new Error('capacity: ' + err);
+                            }
+                        });
                     }
-                    return errorMsg;
+
+                    // setup maxAge
+                    if (options.maxAge || strict) {
+                        _setMaxAge(options.maxAge ? options.maxAge : null, function (err, capacity) {
+                            if (err) {
+                                throw new Error('maxAge: ' + err);
+                            }
+                        });
+                    }
+
+                    // setup cacheFlushInterval
+                    if (options.cacheFlushInterval || strict) {
+                        _setCacheFlushInterval(options.cacheFlushInterval ? options.cacheFlushInterval : null, function (err, capacity) {
+                            if (err) {
+                                throw new Error('cacheFlushInterval: ' + err);
+                            }
+                        });
+                    }
                 }
 
                 /**
@@ -286,16 +401,17 @@
                 }, 15000); // 15 seconds
                  */
                 this.put = function (key, value, options) {
-                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key}),
-                        self = this,
-                        errorMsg = '';
+                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
 
                     if (!angular.isString(key)) {
                         throw new Error('The key must be a string!');
                     }
                     if (options && options.maxAge) {
-                        errorMsg += _validateMaxAge(options.maxAge);
-                        if (errorMsg) throw new Error(errorMsg);
+                        _validateNumberOption(options.maxAge, function (err, maxAge) {
+                            if (err) {
+                                throw new Error('AngularCache.put(): maxAge: ' + err);
+                            }
+                        });
                     }
 
                     _refresh(lruEntry);
@@ -310,14 +426,12 @@
                         value: value
                     };
 
-                    if (config.maxAge || (options && options.maxAge)) {
+                    if ((options && options.maxAge) || config.maxAge) {
                         data[key].timestamp = new Date().getTime();
                         if (data[key].timeoutId) {
-                            clearTimeout(data[key].timeoutId);
+                            $timeout.cancel(data[key].timeoutId);
                         }
-                        data[key].timeoutId = setTimeout(function () {
-                            self.remove(key);
-                        }, ((options && options.maxAge) || config.maxAge));
+                        _setTimeoutToRemove(key, ((options && options.maxAge) || config.maxAge));
                     }
 
                     if (size > config.capacity) {
@@ -403,7 +517,8 @@
                     data = {};
                     size = 0;
                     lruHash = {};
-                    freshEnd = staleEnd = null;
+                    freshEnd = null;
+                    staleEnd = null;
                 };
 
                 /**
@@ -461,7 +576,7 @@
                     });
                  */
                 this.keySet = function () {
-                    return keySet(data);
+                    return _keySet(data);
                 };
 
                 /**
@@ -485,8 +600,17 @@
                 });
                  */
                 this.keys = function () {
-                    return keys(data);
+                    return _keys(data);
                 };
+
+                /**
+                 * @method AngularCache.setOptions
+                 * @desc Configure this cache with the given options.
+                 * @param {Object} options
+                 * @param {Boolean} strict If true then any existing configuration will be reset to defaults before
+                 * applying the new options, otherwise only the options specified in the hash will be altered.
+                 */
+                this.setOptions = _setOptions;
             }
 
             /**
@@ -523,9 +647,11 @@
              */
             angularCacheFactory.info = function () {
                 var info = {};
-                angular.forEach(caches, function (cache, cacheId) {
-                    info[cacheId] = cache.info();
-                });
+                var keys = _keys(caches);
+                for (var i = 0; i &lt; keys.length; i++) {
+                    var key = keys[i];
+                    info[key] = caches[key].info();
+                }
                 return info;
             };
 
@@ -570,7 +696,7 @@
                 });
              */
             angularCacheFactory.keySet = function () {
-                return keySet(caches);
+                return _keySet(caches);
             };
 
             /**
@@ -594,11 +720,11 @@
                 });
              */
             angularCacheFactory.keys = function () {
-                return keys(caches);
+                return _keys(caches);
             };
 
             return angularCacheFactory;
-        };
+        }];
     }
 
     // Register the new provider with Angular.
@@ -620,7 +746,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Jul 02 2013 00:14:38 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Mon Jul 08 2013 21:16:06 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,9 +1,10 @@
 describe('angular-cache', function () {
 
-    var $angularCacheFactory;
+    var $angularCacheFactory, $timeout;
     beforeEach(module('angular-cache'));
     beforeEach(inject(function ($injector) {
         $angularCacheFactory = $injector.get('$angularCacheFactory');
+        $timeout = $injector.get('$timeout');
     }));
 
     describe('$angularCacheFactory', function () {
@@ -13,15 +14,15 @@ describe('angular-cache', function () {
                 expect(cache).toBeDefined();
                 expect(cache.info().id).toEqual('cache');
                 expect(cache.info().capacity).toEqual(Number.MAX_VALUE);
-                expect(cache.info().maxAge).not.toBeDefined();
-                expect(cache.info().cacheFlushInterval).not.toBeDefined();
+                expect(cache.info().maxAge).toEqual(null);
+                expect(cache.info().cacheFlushInterval).toEqual(null);
                 cache.destroy();
             });
             it('should be able to create a cache with options', function () {
                 var options = {
-                    capacity: Math.floor((Math.random()*100000)+1),
-                    maxAge: Math.floor((Math.random()*100000)+1),
-                    cacheFlushInterval: Math.floor((Math.random()*100000)+1)
+                    capacity: Math.floor((Math.random() * 100000) + 1),
+                    maxAge: Math.floor((Math.random() * 100000) + 1),
+                    cacheFlushInterval: Math.floor((Math.random() * 100000) + 1)
                 };
                 var cache = $angularCacheFactory('cache', options);
                 expect(cache).toBeDefined();
@@ -33,52 +34,52 @@ describe('angular-cache', function () {
                 expect($angularCacheFactory.get('cache')).not.toBeDefined();
             });
             it('should validate capacity', function () {
-                var capacity = Math.floor((Math.random()*100000)+1) * -1;
+                var capacity = Math.floor((Math.random() * 100000) + 1) * -1;
                 try {
                     $angularCacheFactory('cache', { capacity: capacity });
                 } catch (err) {
                     var msg = err.message;
                 }
-                expect(msg).toEqual('capacity must be greater than zero!;');
+                expect(msg).toEqual('capacity: must be greater than zero!');
                 capacity = 'asdfasd';
                 try {
                     $angularCacheFactory('cache', { capacity: capacity });
                 } catch (err) {
                     msg = err.message;
                 }
-                expect(msg).toEqual('capacity must be a number!;');
+                expect(msg).toEqual('capacity: must be a number!');
             });
             it('should validate maxAge', function () {
-                var maxAge = Math.floor((Math.random()*100000)+1) * -1;
+                var maxAge = Math.floor((Math.random() * 100000) + 1) * -1;
                 try {
                     $angularCacheFactory('cache', { maxAge: maxAge });
                 } catch (err) {
                     var msg = err.message;
                 }
-                expect(msg).toEqual('maxAge must be greater than zero!;');
+                expect(msg).toEqual('maxAge: must be greater than zero!');
                 maxAge = 'asdfasd';
                 try {
                     $angularCacheFactory('cache', { maxAge: maxAge });
                 } catch (err) {
                     msg = err.message;
                 }
-                expect(msg).toEqual('maxAge must be a number!;');
+                expect(msg).toEqual('maxAge: must be a number!');
             });
             it('should validate cacheFlushInterval', function () {
-                var cacheFlushInterval = Math.floor((Math.random()*100000)+1) * -1;
+                var cacheFlushInterval = Math.floor((Math.random() * 100000) + 1) * -1;
                 try {
                     $angularCacheFactory('cache', { cacheFlushInterval: cacheFlushInterval });
                 } catch (err) {
                     var msg = err.message;
                 }
-                expect(msg).toEqual('cacheFlushInterval must be greater than zero!;');
+                expect(msg).toEqual('cacheFlushInterval: must be greater than zero!');
                 cacheFlushInterval = 'asdfasd';
                 try {
                     $angularCacheFactory('cache', { cacheFlushInterval: cacheFlushInterval });
                 } catch (err) {
                     msg = err.message;
                 }
-                expect(msg).toEqual('cacheFlushInterval must be a number!;');
+                expect(msg).toEqual('cacheFlushInterval: must be a number!');
             });
             it('should prevent a cache from being duplicated', function () {
                 try {
@@ -124,15 +125,15 @@ describe('angular-cache', function () {
         describe('$angularCacheFactory.info()', function () {
             it('should return the correct info for each cache produced by the factory', function () {
                 var options = {
-                    capacity: Math.floor((Math.random()*100000)+1),
-                    maxAge: Math.floor((Math.random()*100000)+1),
-                    cacheFlushInterval: Math.floor((Math.random()*100000)+1)
+                    capacity: Math.floor((Math.random() * 100000) + 1),
+                    maxAge: Math.floor((Math.random() * 100000) + 1),
+                    cacheFlushInterval: Math.floor((Math.random() * 100000) + 1)
                 };
 
                 var cache = $angularCacheFactory('cache');
                 var cache2 = $angularCacheFactory('cache2', {
-                        maxAge: options.maxAge
-                    });
+                    maxAge: options.maxAge
+                });
                 var cache3 = $angularCacheFactory('cache3', {
                     capacity: options.capacity,
                     cacheFlushInterval: options.cacheFlushInterval
@@ -263,16 +264,16 @@ describe('angular-cache', function () {
                 } catch (err) {
                     var errorMsg = err.message;
                 }
-                expect(errorMsg).toEqual('maxAge must be a number!;');
+                expect(errorMsg).toEqual('AngularCache.put(): maxAge: must be a number!');
                 try {
-                    cache.put('item', 'value', { maxAge: Math.floor((Math.random()*100000)+1) * -1 });
+                    cache.put('item', 'value', { maxAge: Math.floor((Math.random() * 100000) + 1) * -1 });
                 } catch (err) {
                     errorMsg = err.message;
                 }
-                expect(errorMsg).toEqual('maxAge must be greater than zero!;');
+                expect(errorMsg).toEqual('AngularCache.put(): maxAge: must be greater than zero!');
                 errorMsg = null;
                 try {
-                    cache.put('item', 'value', { maxAge: Math.floor((Math.random()*100000)+1) });
+                    cache.put('item', 'value', { maxAge: Math.floor((Math.random() * 100000) + 1) });
                 } catch (err) {
                     errorMsg = 'should not reach this!';
                 }
@@ -323,26 +324,29 @@ describe('angular-cache', function () {
                 expect(cache.get('item1')).toEqual('value1');
                 waits(1500);
                 runs(function () {
+                    $timeout.flush();
                     expect(cache.get('item1')).toEqual(undefined);
                     cache.destroy();
                 });
             });
             it('should set a timeout for an item to expire if maxAge for item is specified', function () {
-                var cache1 = $angularCacheFactory('cache2');
-                cache1.put('item1', 'value1', { maxAge: 1000 });
-                expect(cache1.get('item1')).toEqual('value1');
+                var cache = $angularCacheFactory('cache');
+                cache.put('item1', 'value1', { maxAge: 1000 });
+                expect(cache.get('item1')).toEqual('value1');
                 waits(1500);
                 runs(function () {
-                    expect(cache1.get('item1')).toEqual(undefined);
-                    cache1.destroy();
+                    $timeout.flush();
+                    expect(cache.get('item1')).toEqual(undefined);
+                    cache.destroy();
                 });
             });
-            it('should maxAge for a specific item should override maxAge for the cache', function () {
+            it('maxAge for a specific item should override maxAge for the cache', function () {
                 var cache = $angularCacheFactory('cache', { maxAge: 3000 });
                 cache.put('item1', 'value1', { maxAge: 1000 });
                 expect(cache.get('item1')).toEqual('value1');
                 waits(1500);
                 runs(function () {
+                    $timeout.flush();
                     expect(cache.get('item1')).toEqual(undefined);
                     cache.destroy();
                 });
@@ -432,7 +436,7 @@ describe('angular-cache', function () {
             });
         });
         describe('AngularCache.info()', function () {
-            it('should return the correct values if they exist', function () {
+            it('should return the correct values', function () {
                 var cache = $angularCacheFactory('cache');
                 var cache2 = $angularCacheFactory('cache2', { maxAge: 1000 });
                 var cache3 = $angularCacheFactory('cache3', { cacheFlushInterval: 1000 });
@@ -440,19 +444,24 @@ describe('angular-cache', function () {
                 expect(cache.info()).toEqual({
                     id: 'cache',
                     capacity: Number.MAX_VALUE,
-                    size: 0
+                    size: 0,
+                    maxAge: null,
+                    cacheFlushInterval: null
                 });
                 cache.put('item', 'value');
                 expect(cache.info()).toEqual({
                     id: 'cache',
                     capacity: Number.MAX_VALUE,
-                    size: 1
+                    size: 1,
+                    maxAge: null,
+                    cacheFlushInterval: null
                 });
                 expect(cache2.info()).toEqual({
                     id: 'cache2',
                     capacity: Number.MAX_VALUE,
                     maxAge: 1000,
-                    size: 0
+                    size: 0,
+                    cacheFlushInterval: null
                 });
                 expect(cache3.info().id).toEqual('cache3');
                 expect(cache3.info().capacity).toEqual(Number.MAX_VALUE);
@@ -461,7 +470,9 @@ describe('angular-cache', function () {
                 expect(cache4.info()).toEqual({
                     id: 'cache4',
                     capacity: 1000,
-                    size: 0
+                    size: 0,
+                    maxAge: null,
+                    cacheFlushInterval: null
                 });
                 cache.destroy();
                 cache2.destroy();
@@ -498,6 +509,7 @@ describe('angular-cache', function () {
                 expect(keySet.hasOwnProperty(itemKeys[0])).toEqual(false);
                 expect(keySet.hasOwnProperty(itemKeys[1])).toEqual(false);
                 expect(keySet.hasOwnProperty(itemKeys[2])).toEqual(false);
+                cache.destroy();
             });
         });
         describe('AngularCache.keys()', function () {
@@ -523,6 +535,95 @@ describe('angular-cache', function () {
                 keys = cache.keys();
 
                 expect(keys.length).toEqual(0);
+                cache.destroy();
+            });
+        });
+        describe('AngularCache.setOptions()', function () {
+            it('should correctly modify the capacity of a cache', function () {
+                var cache = $angularCacheFactory('cache');
+                expect(cache.info().capacity).toEqual(Number.MAX_VALUE);
+                cache.setOptions({ capacity: 5 }, false);
+                expect(cache.info().capacity).toEqual(5);
+                cache.put('item1', 1);
+                cache.put('item2', 2);
+                cache.put('item3', 3);
+                cache.put('item4', 4);
+                cache.put('item5', 5);
+                cache.put('item6', 6);
+                expect(cache.get('item1')).not.toBeDefined();
+                cache.setOptions({ capacity: 3 }, false);
+                // Least-recently used items over the new capacity should have been removed.
+                expect(cache.get('item2')).not.toBeDefined();
+                expect(cache.get('item3')).not.toBeDefined();
+                expect(cache.info().size).toEqual(3);
+                cache.destroy();
+            });
+            it('should correctly modify the maxAge of a cache', function () {
+                var cache = $angularCacheFactory('cache');
+                expect(cache.info().maxAge).toEqual(null);
+                cache.setOptions({ maxAge: 2000 }, false);
+                expect(cache.info().maxAge).toEqual(2000);
+                cache.put('item1', 1);
+                cache.put('item2', 2);
+                waits(2200);
+                // The first items should be removed after 2000 ms
+                runs(function () {
+                    $timeout.flush();
+                    expect(cache.get('item1')).not.toBeDefined();
+                    expect(cache.get('item2')).not.toBeDefined();
+                    cache.setOptions({ maxAge: 500 }, false);
+                    expect(cache.info().maxAge).toEqual(500);
+                    cache.put('item1', 1);
+                    cache.put('item2', 2);
+                    waits(700);
+                    // The new items should be removed after 500 ms (the new maxAge)
+                    runs(function () {
+                        $timeout.flush();
+                        expect(cache.get('item1')).not.toBeDefined();
+                        expect(cache.get('item2')).not.toBeDefined();
+                        cache.destroy();
+                    });
+                });
+            });
+            it('should correctly modify the cacheFlushInterval of a cache', function () {
+                var cache = $angularCacheFactory('cache');
+                expect(cache.info().cacheFlushInterval).toEqual(null);
+                cache.setOptions({ cacheFlushInterval: 2000 }, false);
+                expect(cache.info().cacheFlushInterval).toEqual(2000);
+                cache.put('item1', 1);
+                cache.put('item2', 2);
+                waits(2200);
+                // The first items should be removed after 2000 ms
+                runs(function () {
+                    expect(cache.get('item1')).not.toBeDefined();
+                    expect(cache.get('item2')).not.toBeDefined();
+                    cache.setOptions({ cacheFlushInterval: 500 }, false);
+                    expect(cache.info().cacheFlushInterval).toEqual(500);
+                    cache.put('item1', 1);
+                    cache.put('item2', 2);
+                    waits(700);
+                    // The new items should be removed after 500 ms (the new maxAge)
+                    runs(function () {
+                        expect(cache.get('item1')).not.toBeDefined();
+                        expect(cache.get('item2')).not.toBeDefined();
+                        cache.destroy();
+                    });
+                });
+            });
+            it('should correctly set configuration to default when \'strict\' is true', function () {
+                var cache = $angularCacheFactory('cache', {
+                    capacity: 10,
+                    maxAge: 1000,
+                    cacheFlushInterval: 1000
+                });
+                cache.setOptions({}, true);
+                expect(cache.info()).toEqual({
+                    capacity: Number.MAX_VALUE,
+                    maxAge: null,
+                    cacheFlushInterval: null,
+                    id: 'cache',
+                    size: 0
+                });
             });
         });
     });

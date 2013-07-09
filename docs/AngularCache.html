@@ -47,7 +47,7 @@
     
     
     <div class="description">
-        Instantiated via <code>$angularCacheFactory()</code>
+        Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
     </div>
     
 
@@ -140,7 +140,7 @@
             
             
             
-            <td class="description last">{ capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }</td>
+            <td class="description last">{{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }}</td>
         </tr>
 	
 	
@@ -171,7 +171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 71
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 73
     </li></ul></dd>
     
     
@@ -286,7 +286,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 382
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 497
     </li></ul></dd>
     
     
@@ -408,7 +408,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 303
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 417
     </li></ul></dd>
     
     
@@ -503,7 +503,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 402
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 517
     </li></ul></dd>
     
     
@@ -595,7 +595,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 440
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 555
     </li></ul></dd>
     
     
@@ -698,7 +698,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 415
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 530
     </li></ul></dd>
     
     
@@ -924,7 +924,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 235
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 350
     </li></ul></dd>
     
     
@@ -1078,7 +1078,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 328
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 442
     </li></ul></dd>
     
     
@@ -1152,7 +1152,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 361
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 475
     </li></ul></dd>
     
     
@@ -1184,6 +1184,142 @@
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="setOptions"><span class="type-signature">&lt;static> </span>setOptions<span class="signature">(options, strict)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Configure this cache with the given options.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>strict</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">If true then any existing configuration will be reset to defaults beforeapplying the new options, otherwise only the options specified in the hash will be altered.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-0.7.2.js.html">angular-cache-0.7.2.js</a>, line 579
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -1206,7 +1342,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Jul 02 2013 00:14:39 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Mon Jul 08 2013 21:16:06 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>
