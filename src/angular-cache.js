@@ -235,6 +235,7 @@
                 function _setCacheFlushInterval(cacheFlushInterval, cb) {
                     if (config.cacheFlushIntervalId) {
                         clearInterval(config.cacheFlushIntervalId);
+                        delete config.cacheFlushIntervalId;
                     }
                     if (cacheFlushInterval === null) {
                         config.cacheFlushInterval = cacheFlushInterval;
