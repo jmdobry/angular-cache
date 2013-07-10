@@ -2,10 +2,12 @@ node_modules/
 npm-debug.log
 
 # IntelliJ IDEA
-.idea
+.idea/
 *.iml
 
 coverage/Chrome*/*
 coverage/Phantom*/*
 coverage/Firefox*/*
 coverage-*
+
+bower_components/
