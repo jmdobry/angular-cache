@@ -8,8 +8,8 @@ basePath = '../';
 files = [
     JASMINE,
     JASMINE_ADAPTER,
-    'bower_components/angular/angular.min.js',
-    'bower_components/angular-mocks/angular-mocks.js',
+    'http://code.angularjs.org/1.0.7/angular.min.js',
+    'http://code.angularjs.org/1.0.7/angular-mocks.js',
     'src/angular-cache.js',
     'test/angular-cacheSpec.js'
 ];
