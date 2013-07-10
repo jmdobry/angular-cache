@@ -73,8 +73,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jsdoc');
 
     grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev']);
+    grunt.registerTask('default', ['build']);
     grunt.registerTask('build:all', ['build', 'jsdoc']);
+    grunt.registerTask('test', ['karma:dev']);
 
+    // Used by the CLI build servers
     grunt.registerTask('drone', ['clean', 'jshint', 'copy', 'uglify', 'karma:drone']);
     grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis']);
 };

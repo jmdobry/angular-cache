@@ -1,20 +1,24 @@
 {
+    "author": "Jason Dobry",
     "name": "angular-cache",
-    "version": "0.8.1",
-    "main": [
-        "src/angular-cache.js"
-    ],
+    "description": "angular-cache provides capabilities that improve upon the $cacheFactory provided by AngularJS.",
+    "version": "0.8.2",
+    "homepage": "http://jmdobry.github.io/angular-cache/",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/jmdobry/angular-cache.git"
+    },
+    "main": "./src/angular-cache.js",
+    "devDependencies": {
+        "angular-mocks": "1.0.7"
+    },
     "ignore": [
+        "dist/",
         ".idea/",
         "*.iml",
         "coverage/",
-        "demo/",
         "node_modules/",
-        "src/",
-        "test/",
         ".gitignore",
-        ".travis.yml",
-        "Gruntfile.js",
-        "package.json"
+        ".travis.yml"
     ]
 }

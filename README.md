@@ -1,5 +1,5 @@
-angular-cache (0.8.1 - Beta)
-===============
+angular-cache (0.8.2)
+=====================
 angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. With angular-cache your caches can periodically clear themselves and flush items that have expired.
 
 The goal of the project is to solve a general problem, not satisfy a specific scenario.
@@ -56,9 +56,9 @@ e.g. `$angularCacheFactory.get('someCache').setOptions({ capacity: 4500 })`
 ## Status
 | Version | Branch  | Build status                                                                                                                                                              | Test Coverage |
 | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| 0.8.1   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
-| 0.8.1   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
-| 0.8.1   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
+| 0.8.2   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
+| 0.8.2   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
+| 0.8.2   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
 
 <a name='download'></a>
 ## Download
@@ -69,8 +69,8 @@ or
 #### Latest Stable Version
 | Type          | From drone.io | From raw.github.com | Size |
 | ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-0.8.1.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.8.1.min.js) | [angular-cache-0.8.1.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.8.1.min.js) | 3.3 KB |
-| Development   | [angular-cache-0.8.1.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.8.1.js)         | [angular-cache-0.8.1.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.8.1.js) | 28.7 KB |
+| Production    | [angular-cache-0.8.2.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.8.2.min.js) | [angular-cache-0.8.2.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.8.2.min.js) | 3.3 KB |
+| Development   | [angular-cache-0.8.2.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.8.2.js)         | [angular-cache-0.8.2.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.8.2.js) | 28.7 KB |
 
 <a name='usage'></a>
 ## Usage
@@ -277,13 +277,28 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 3. Expect prompt feedback.
 
 #### Submitting Pull Requests
-1. Fork
-2. For hotfixes branch from master, otherwise from develop. Prefix name of branch with issue label. E.g. `hotfix-missing-semicolon`, `feature-my-feature`, etc.
-3. Make sure `grunt build` passes with zero warnings/errors.
-4. Make sure your code follows the [style guidelines](https://github.com/rwldrn/idiomatic.js).
-    - This project uses 4-space indentation and single-quotes.
-5. Make sure your pull request references/closes the proper issues.
-6. For hotfixes submit request to be merged into master, otherwise into develop.
+
+##### Basic Idea
+- Checkout a new branch based on `develop` and name it to what you intend to do:
+  - Example:
+    ````
+    $ git checkout -b BRANCH_NAME
+    ````
+  - Use one branch per fix/feature
+  - Prefix your branch name with `feature-` or `fix-` appropriately.
+- Make your changes
+  - Make sure to provide a spec for unit tests
+  - Run your tests with either `karma start` or `grunt test`
+  - Make sure the tests pass
+- Commit your changes
+  - Please provide a git message which explains what you've done
+  - Commit to the forked repository
+- Make a pull request
+  - Make sure you send the PR to the `develop` branch
+  - Travis CI is watching you!
+
+##### More details
+Read the detailed [Contributing Guide](https://github.com/jmdobry/angular-cache/blob/master/CONTRIBUTING.md)
 
 <a name='license'></a>
 ## License
