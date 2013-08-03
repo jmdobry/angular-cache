@@ -1,3 +1,6 @@
+##### 0.9.1 - 03 August 2013
+- Fixed #25
+
 ##### 0.9.0 - 03 August 2013
 - Added a changelog #13
 - Added documentation for installing with bower
