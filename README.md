@@ -1,76 +1,137 @@
-angular-cache (0.8.2)
+angular-cache (0.9.0-SNAPSHOT)
 =====================
 angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. With angular-cache your caches can periodically clear themselves and flush items that have expired.
 
 The goal of the project is to solve a general problem, not satisfy a specific scenario.
 
+#### [View the Demo](http://jmdobry.github.io/angular-cache/demo/)
+
+##### $cacheFactory
+```javascript
+// Angular's provided $cacheFactory
+app.service('myService', function ($cacheFactory) {
+    // This is all you can do with $cacheFactory
+    $cacheFactory('myNewCache', { capacity: 1000 }); // This cache can hold 1000 items
+});
+```
+
+#### vs
+
+##### $angularCacheFactory
+```javascript
+// Smarter caching with $angularCacheFactory
+app.service('myService', function ($angularCacheFactory) {
+    $angularCacheFactory('myNewCache', {
+        capacity: 1000,  // This cache can hold 1000 items,
+        maxAge: 90000, // Items added to this cache expire after 15 minutes
+        aggressiveDelete: true, // Items will be actively deleted when they expire
+        cacheFlushInterval: 3600000 // This cache will clear itself every hour
+     });
+});
+```
+
 ### Table of Contents
 1. [Demo](http://jmdobry.github.io/angular-cache/demo/)
-2. [Features](#features)
-3. [Status](#status)
-4. [Download](#download)
-5. [Usage](#usage)
-6. [Roadmap](#roadmap)
-7. [Contributing](#contributing)
-8. [License](#license)
-
-<a name='demo'></a>
-## Demo
-
-[View the Demo](http://jmdobry.github.io/angular-cache/demo/)
+1. [Features](#features)
+1. [Status](#status)
+1. [Download](#download)
+1. [Install](#install)
+1. [Usage](#usage)
+1. [Roadmap](#roadmap)
+1. [Changelog](#changelog)
+1. [Contributing](#contributing)
+1. [License](#license)
 
 <a name='features'></a>
 ## Features
-(These are in addition to what Angular's $cacheFactory provides.)
 
-##### option: `maxAge`
-Set a default maximum lifetime on all items added to the cache. They will be removed when they expire. Can be configured on a per-item basis for greater specificity.
+##### `maxAge`
+Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively depending on the value of `aggressiveDelete` (see below). Can be configured on a per-item basis for greater specificity.
 
-e.g. `$angularCacheFactory('newCache', { maxAge: 36000 })`:
-##### option: `cacheFlushInterval`
+```javascript
+$angularCacheFactory('newCache', { maxAge: 36000 });
+```
+
+##### `aggressiveDelete`
+If true and maxAge is set, then items will be actively deleted right when they expire, otherwise items won't be deleted until they are requested but it is discovered that they have expired and are deleted, resulting in a miss. Can be configured on a per-item basis for greater specificity.
+
+```javascript
+$angularCacheFactory('newCache', {
+    maxAge: 36000,
+    aggressiveDelete: true
+});
+```
+
+##### `cacheFlushInterval`
 Set the cache to periodically clear itself.
 
-e.g. `$angularCacheFactory('newCache', { cacheFlushInterval: 57908 })`
-##### method: `keySet()`
+```javascript
+$angularCacheFactory('newCache', { cacheFlushInterval: 57908 });
+```
+
+##### `keySet()`
 Return the set of keys associated with all current caches owned by $angularCacheFactory.
 
-e.g. `$angularCacheFactory.keySet()`
+```javascript
+$angularCacheFactory.keySet();
+```
 
 Return the set of keys associated with all current items in `someCache`.
 
-e.g. `$angularCacheFactory.get('someCache').keySet()`:
-##### method: `keys()`
+```javascript
+$angularCacheFactory.get('someCache').keySet();
+```
+
+##### `keys()`
 Return an array of the keys associated with all current caches owned by $angularCacheFactory.
 
-e.g. `$angularCacheFactory.keys()`
+```javascript
+$angularCacheFactory.keys();
+```
 
 Return an array of the keys associated with all current items in `someCache`.
 
-e.g. `$angularCacheFactory.get('someCache').keys()`
-##### method: `setOptions()`
+```javascript
+$angularCacheFactory.get('someCache').keys();
+```
+
+##### `setOptions()`
 Dynamically configure a cache.
 
-e.g. `$angularCacheFactory.get('someCache').setOptions({ capacity: 4500 })`
+```javascript
+$angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
+```
 
 <a name='status'></a>
 ## Status
 | Version | Branch  | Build status                                                                                                                                                              | Test Coverage |
 | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| 0.8.2   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
-| 0.8.2   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
-| 0.8.2   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
+| 0.9.0-SNAPSHOT   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
+| 0.9.0-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
+| 0.9.0-SNAPSHOT   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
 
 <a name='download'></a>
 ## Download
-#### [All Downloads](https://drone.io/github.com/jmdobry/angular-cache/files) (at www.drone.io)
-
-or
 
 #### Latest Stable Version
 | Type          | From drone.io | From raw.github.com | Size |
 | ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-0.8.2.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.8.2.min.js) | [angular-cache-0.8.2.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.8.2.min.js) | 3.3 KB |
-| Development   | [angular-cache-0.8.2.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.8.2.js)         | [angular-cache-0.8.2.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.8.2.js) | 28.7 KB |
+| Production    | [angular-cache-0.9.0-SNAPSHOT.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.0-SNAPSHOT.min.js) | [angular-cache-0.9.0-SNAPSHOT.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.0-SNAPSHOT.min.js) | 3.3 KB |
+| Development   | [angular-cache-0.9.0-SNAPSHOT.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.0-SNAPSHOT.js)         | [angular-cache-0.9.0-SNAPSHOT.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.0-SNAPSHOT.js) | 28.7 KB |
+
+
+<a name='install'></a>
+## Install
+
+#### Install with bower
+```javascript
+bower install angular-cache
+```
+
+Include `src/angular-cache.js` on your web page after `angular.js`.
+
+#### Manual install
+Get angular-cache from the [Download](#download) section and include it on your web page after `angular.js`.
 
 <a name='usage'></a>
 ## Usage
@@ -89,7 +150,7 @@ or
 
 <a name='load-angular-cache'></a>
 #### Load angular-cache
-Make sure angular-cache is included on your web page after Angular.
+Make sure angular-cache is included on your web page after `angular.js`.
 ```javascript
 angular.module('myApp', ['angular-cache']);
 ```
@@ -98,85 +159,79 @@ See [angular-cache](http://jmdobry.github.io/angular-cache/docs/module-angular-c
 <a name='create-a-cache'></a>
 #### Create a cache
 ```javascript
-angular.module('myApp').service('myService', ['$angularCacheFactory',
-    function ($angularCacheFactory) {
+app.service('myService', function ($angularCacheFactory) {
 
-        // create a cache with default settings
-        var myCache = $angularCacheFactory('myCache');
+    // create a cache with default settings
+    var myCache = $angularCacheFactory('myCache');
 
-        // create an LRU cache with a capacity of 10
-        var myLRUCache = $angularCacheFactory('myLRUCache', {
-            capacity: 10
-        });
+    // create an LRU cache with a capacity of 10
+    var myLRUCache = $angularCacheFactory('myLRUCache', {
+        capacity: 10
+    });
 
-        // create a cache whose items have a maximum lifetime of 10 minutes
-        var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
-            maxAge: 600000
-        });
+    // create a cache whose items have a maximum lifetime of 10 minutes
+    var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
+        maxAge: 600000
+    });
 
-        // create a cache that will clear itself every 10 minutes
-        var myIntervalCache = $angularCacheFactory('myIntervalCache', {
-            cacheFlushInterval: 600000
-        });
+    // create a cache that will clear itself every 10 minutes
+    var myIntervalCache = $angularCacheFactory('myIntervalCache', {
+        cacheFlushInterval: 600000
+    });
 
-        // create an cache with all options
-        var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
-            capacity: 10,
-            maxAge: 600000,
-            cacheFlushInterval: 600000
-        });
-    }
-]);
+    // create an cache with all options
+    var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
+        capacity: 10,
+        maxAge: 600000,
+        cacheFlushInterval: 600000
+    });
+});
 ```
 See [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/angularCacheFactory.html)
 
 <a name='dynamically-configure-a-cache'></a>
 #### Dynamically configure a cache
 ```javascript
-angular.module('myApp').service('myService', ['$angularCacheFactory',
-    function ($angularCacheFactory) {
+app.service('myService', function ($angularCacheFactory) {
 
-        // create a cache with default settings
-        var cache = $angularCacheFactory('cache', {
-            capacity: 100,
-            maxAge: 30000
-        });
+    // create a cache with default settings
+    var cache = $angularCacheFactory('cache', {
+        capacity: 100,
+        maxAge: 30000
+    });
 
-        // Add 50 items here, for example
+    // Add 50 items here, for example
 
-        cache.info(); // { ..., size: 50, capacity: 100, maxAge: 3000, ... }
+    cache.info(); // { ..., size: 50, capacity: 100, maxAge: 3000, ... }
 
-        cache.setOptions({
-            capacity: 30
-        });
+    cache.setOptions({
+        capacity: 30
+    });
 
-        cache.info(); // { ..., size: 30, capacity: 30, maxAge: 3000, ... }
-        // notice that only the 30 most recently added items remain in the cache because
-        // the capacity was reduced.
+    cache.info(); // { ..., size: 30, capacity: 30, maxAge: 3000, ... }
+    // notice that only the 30 most recently added items remain in the cache because
+    // the capacity was reduced.
 
-        // setting the second parameter to true will cause the cache's configuration to be
-        // reset to defaults before the configuration passed into setOptions() is applied to
-        // the cache
-        cache.setOptions({
-            cacheFlushInterval: 5500
-        }, true);
+    // setting the second parameter to true will cause the cache's configuration to be
+    // reset to defaults before the configuration passed into setOptions() is applied to
+    // the cache
+    cache.setOptions({
+        cacheFlushInterval: 5500
+    }, true);
 
-        cache.info(); // { ..., size: 30, cacheFlushInterval: 5500,
-                      //   capacity: 1.7976931348623157e+308, maxAge: null, ... }
-    }
-]);
+    cache.info(); // { ..., size: 30, cacheFlushInterval: 5500,
+                  //   capacity: 1.7976931348623157e+308, maxAge: null, ... }
+});
 ```
 See [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/Cache.html#setOptions)
 
 <a name='retrieve-a-cache'></a>
 #### Retrieve a cache
 ```javascript
-angular.module('myApp').service('myOtherService', ['$angularCacheFactory',
-    function ($angularCacheFactory) {
+app.service('myOtherService', function ($angularCacheFactory) {
 
-        var myCache = $angularCacheFactory.get('myCache');
-    }
-]);
+    var myCache = $angularCacheFactory.get('myCache');
+});
 ```
 See [$angularCacheFactory#get](http://jmdobry.github.io/angular-cache/docs/angularCacheFactory.html#get)
 
@@ -267,6 +322,50 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 
 ##### 1.0.0 Stable Release
 - Yay!
+
+<a name='changelog'></a>
+## Changelog
+
+##### 0.9.0 - 03 August 2013
+- Added a changelog #13
+- Added documentation for installing with bower
+- Added ability to set option `aggressiveDelete` when creating cache and when adding items
+- Cleaned up README.md
+- Switched the demo to use Bootstrap 3
+
+##### 0.8.2 - 09 July 2013
+- Added CONTRIBUTING.md #22
+- Cleaned up meta data in bower.json and package.json
+
+##### 0.8.1 - 09 July 2013
+- Added .jshintrc
+- Cleaned up the docs a bit
+- `bower.json` now uses `src/angular-cache.js` instead of the versioned output files #21
+- From now on the tags for the project will be named using [semver](http://semver.org/)
+
+##### 0.8.0 - 08 July 2013
+- Added `AngularCache.setOptions()`, the ability to dynamically change the configuration of a cache #20
+- Added `AngularCache.keys()`, which returns an array of the keys in a cache #19
+- Added `AngularCache.keySet()`, which returns a hash of the keys in a cache #19
+
+##### 0.7.2 - June 2013
+- Added `angular-cache` to bower registry #7
+- Created a working demo #9 #17
+- Fixed the size not being reset to 0 when the cache clears itself #14 #16
+- Added `$angularCacheFactory.keys()`, which returns an array of the keys (the names of the caches) in $angularCacheFactory #18
+- Added `$angularCacheFactory.keySet()`, which returns a hash of the keys (the names of the caches) in $angularCacheFactory #18
+
+##### 0.6.1 - June 2013
+- Got the project building on TravisCI
+- Renamed the project to `angular-cache` #5
+
+##### 0.5.0 - June 2013
+- Added a roadmap to README.md #4
+- Clarify usage documentation #3
+- Wrote unit tests #2
+
+##### 0.4.0 - May 2013
+- Added Grunt build tasks #1
 
 <a name='contributing'></a>
 ## Contributing

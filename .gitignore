@@ -1,6 +1,10 @@
 node_modules/
 npm-debug.log
 
+.DS_Store
+
+libpeerconnection.log
+
 # IntelliJ IDEA
 .idea/
 *.iml
