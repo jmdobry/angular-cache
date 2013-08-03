@@ -11,7 +11,7 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        clean: ['dist/', 'docs/', './CHANGELOG.md'],
+        clean: ['dist/', 'docs/'],
         jshint: {
             all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
             jshintrc: '.jshintrc'
