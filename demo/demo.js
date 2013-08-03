@@ -68,7 +68,7 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
             capacity: parseFloat($scope.defaultCacheOptions.capacity),
             maxAge: parseInt($scope.defaultCacheOptions.maxAge, 10),
             cacheFlushInterval: parseInt($scope.defaultCacheOptions.cacheFlushInterval, 10),
-            aggressiveDelete: $scope.defaultCacheOptions.aggressiveDelete
+            aggressiveDelete: !!($scope.defaultCacheOptions.aggressiveDelete == 'true')
         }, true);
         $scope.editingDefaultCache = false;
     }
