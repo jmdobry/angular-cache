@@ -22,7 +22,8 @@ describe('angular-cache', function () {
                 var options = {
                     capacity: Math.floor((Math.random() * 100000) + 1),
                     maxAge: Math.floor((Math.random() * 100000) + 1),
-                    cacheFlushInterval: Math.floor((Math.random() * 100000) + 1)
+                    cacheFlushInterval: Math.floor((Math.random() * 100000) + 1),
+                    aggressiveDelete: true
                 };
                 var cache = $angularCacheFactory('cache', options);
                 expect(cache).toBeDefined();
@@ -30,6 +31,7 @@ describe('angular-cache', function () {
                 expect(cache.info().capacity).toEqual(options.capacity);
                 expect(cache.info().maxAge).toEqual(options.maxAge);
                 expect(cache.info().cacheFlushInterval).toEqual(options.cacheFlushInterval);
+                expect(cache.info().aggressiveDelete).toEqual(options.aggressiveDelete);
                 cache.destroy();
                 expect($angularCacheFactory.get('cache')).not.toBeDefined();
             });
@@ -318,8 +320,8 @@ describe('angular-cache', function () {
                 expect(cache.get('item2')).toEqual('value2');
                 cache.destroy();
             });
-            it('should set a timeout for an item to expire if maxAge for cache is specified', function () {
-                var cache = $angularCacheFactory('cache', { maxAge: 1000 });
+            it('should set a timeout for an item to expire if maxAge and aggressiveDelete for cache are specified', function () {
+                var cache = $angularCacheFactory('cache', { maxAge: 1000, aggressiveDelete: true });
                 cache.put('item1', 'value1');
                 expect(cache.get('item1')).toEqual('value1');
                 waits(1500);
@@ -329,9 +331,19 @@ describe('angular-cache', function () {
                     cache.destroy();
                 });
             });
-            it('should set a timeout for an item to expire if maxAge for item is specified', function () {
+            it('should should lazy delete an item when maxAge is specified and aggressiveDelete is false for cache', function () {
+                var cache = $angularCacheFactory('cache', { maxAge: 1000 });
+                cache.put('item1', 'value1');
+                expect(cache.get('item1')).toEqual('value1');
+                waits(1500);
+                runs(function () {
+                    expect(cache.get('item1')).toEqual(undefined);
+                    cache.destroy();
+                });
+            });
+            it('should set a timeout for an item to expire if maxAge for item is specified and aggressiveDelete is true', function () {
                 var cache = $angularCacheFactory('cache');
-                cache.put('item1', 'value1', { maxAge: 1000 });
+                cache.put('item1', 'value1', { maxAge: 1000, aggressiveDelete: true });
                 expect(cache.get('item1')).toEqual('value1');
                 waits(1500);
                 runs(function () {
@@ -341,12 +353,22 @@ describe('angular-cache', function () {
                 });
             });
             it('maxAge for a specific item should override maxAge for the cache', function () {
-                var cache = $angularCacheFactory('cache', { maxAge: 3000 });
+                var cache = $angularCacheFactory('cache', { maxAge: 3000, aggressiveDelete: true });
                 cache.put('item1', 'value1', { maxAge: 1000 });
                 expect(cache.get('item1')).toEqual('value1');
                 waits(1500);
                 runs(function () {
                     $timeout.flush();
+                    expect(cache.get('item1')).toEqual(undefined);
+                    cache.destroy();
+                });
+            });
+            it('aggressiveDelete false for a specific item should override aggressiveDelete true for the cache', function () {
+                var cache = $angularCacheFactory('cache', { maxAge: 1000, aggressiveDelete: true });
+                cache.put('item1', 'value1', { maxAge: 1000, aggressiveDelete: false });
+                expect(cache.get('item1')).toEqual('value1');
+                waits(1500);
+                runs(function () {
                     expect(cache.get('item1')).toEqual(undefined);
                     cache.destroy();
                 });
@@ -446,7 +468,8 @@ describe('angular-cache', function () {
                     capacity: Number.MAX_VALUE,
                     size: 0,
                     maxAge: null,
-                    cacheFlushInterval: null
+                    cacheFlushInterval: null,
+                    aggressiveDelete: false
                 });
                 cache.put('item', 'value');
                 expect(cache.info()).toEqual({
@@ -454,14 +477,16 @@ describe('angular-cache', function () {
                     capacity: Number.MAX_VALUE,
                     size: 1,
                     maxAge: null,
-                    cacheFlushInterval: null
+                    cacheFlushInterval: null,
+                    aggressiveDelete: false
                 });
                 expect(cache2.info()).toEqual({
                     id: 'cache2',
                     capacity: Number.MAX_VALUE,
                     maxAge: 1000,
                     size: 0,
-                    cacheFlushInterval: null
+                    cacheFlushInterval: null,
+                    aggressiveDelete: false
                 });
                 expect(cache3.info().id).toEqual('cache3');
                 expect(cache3.info().capacity).toEqual(Number.MAX_VALUE);
@@ -472,7 +497,8 @@ describe('angular-cache', function () {
                     capacity: 1000,
                     size: 0,
                     maxAge: null,
-                    cacheFlushInterval: null
+                    cacheFlushInterval: null,
+                    aggressiveDelete: false
                 });
                 cache.destroy();
                 cache2.destroy();
@@ -561,7 +587,7 @@ describe('angular-cache', function () {
             it('should correctly modify the maxAge of a cache', function () {
                 var cache = $angularCacheFactory('cache');
                 expect(cache.info().maxAge).toEqual(null);
-                cache.setOptions({ maxAge: 2000 }, false);
+                cache.setOptions({ maxAge: 2000, aggressiveDelete: true }, false);
                 expect(cache.info().maxAge).toEqual(2000);
                 cache.put('item1', 1);
                 cache.put('item2', 2);
@@ -571,7 +597,7 @@ describe('angular-cache', function () {
                     $timeout.flush();
                     expect(cache.get('item1')).not.toBeDefined();
                     expect(cache.get('item2')).not.toBeDefined();
-                    cache.setOptions({ maxAge: 500 }, false);
+                    cache.setOptions({ maxAge: 500, aggressiveDelete: true }, false);
                     expect(cache.info().maxAge).toEqual(500);
                     cache.put('item1', 1);
                     cache.put('item2', 2);
@@ -610,11 +636,38 @@ describe('angular-cache', function () {
                     });
                 });
             });
+            it('should correctly modify the aggressiveDelete of a cache', function () {
+                var cache = $angularCacheFactory('cache', { maxAge: 2000 });
+                expect(cache.info().aggressiveDelete).toEqual(false);
+                cache.setOptions({ aggressiveDelete: true }, false);
+                expect(cache.info().aggressiveDelete).toEqual(true);
+                cache.put('item1', 1);
+                cache.put('item2', 2);
+                waits(2500);
+                // The first items should be removed after 2000 ms
+                runs(function () {
+                    $timeout.flush();
+                    expect(cache.get('item1')).not.toBeDefined();
+                    expect(cache.get('item2')).not.toBeDefined();
+                    cache.setOptions({ maxAge: 500, aggressiveDelete: false }, false);
+                    expect(cache.info().aggressiveDelete).toEqual(false);
+                    cache.put('item1', 1);
+                    cache.put('item2', 2);
+                    waits(700);
+                    // The new items should be removed after 500 ms (the new maxAge)
+                    runs(function () {
+                        expect(cache.get('item1')).not.toBeDefined();
+                        expect(cache.get('item2')).not.toBeDefined();
+                        cache.destroy();
+                    });
+                });
+            });
             it('should correctly set configuration to default when \'strict\' is true', function () {
                 var cache = $angularCacheFactory('cache', {
                     capacity: 10,
                     maxAge: 1000,
-                    cacheFlushInterval: 1000
+                    cacheFlushInterval: 1000,
+                    aggressiveDelete: true
                 });
                 cache.setOptions({}, true);
                 expect(cache.info()).toEqual({
@@ -622,7 +675,8 @@ describe('angular-cache', function () {
                     maxAge: null,
                     cacheFlushInterval: null,
                     id: 'cache',
-                    size: 0
+                    size: 0,
+                    aggressiveDelete: false
                 });
             });
         });

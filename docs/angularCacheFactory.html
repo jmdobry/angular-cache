@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: angularCacheFactory</title>
+    <title>JSDoc: Class: AngularCacheFactory</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: angularCacheFactory</h1>
+    <h1 class="page-title">Class: AngularCacheFactory</h1>
     
     
 
@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-    angularCacheFactory
+    AngularCacheFactory
     </h2>
     
 </header>  
@@ -39,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="angularCacheFactory"><span class="type-signature"></span>new angularCacheFactory<span class="signature">(cacheId, <span class="optional">options</span>)</span><span class="type-signature"> &rarr; {<a href="AngularCache.html">AngularCache</a>}</span></h4>
+    <h4 class="name" id="AngularCacheFactory"><span class="type-signature"></span>new AngularCacheFactory<span class="signature">(cacheId, <span class="optional">options</span>)</span><span class="type-signature"> &rarr; {<a href="AngularCache.html">AngularCache</a>}</span></h4>
     
     
 </dt>
@@ -116,7 +116,7 @@
             <td class="type">
             
                 
-<span class="param-type">options</span>
+<span class="param-type">Object</span>
 
 
             
@@ -167,7 +167,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.8.2.js.html">angular-cache-0.8.2.js</a>, line 589
+        <a href="angular-cache-0.9.0-SNAPSHOT.js.html">angular-cache-0.9.0-SNAPSHOT.js</a>, line 656
     </li></ul></dd>
     
     
@@ -221,456 +221,6 @@
     
     
     
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(cacheId)</span><span class="type-signature"> &rarr; {<a href="AngularCache.html">AngularCache</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Return the cache with the specified cacheId.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>cacheId</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The id of the desired cache.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.8.2.js.html">angular-cache-0.8.2.js</a>, line 631
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The cache with the specified cachedId.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="AngularCache.html">AngularCache</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
-
-                    var myCache = $angularCacheFactory.get('myCache');
-
-                    // you can now use myCache
-                });</code></pre>
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="info"><span class="type-signature">&lt;static> </span>info<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Return an object containing information about all caches of this factory.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.8.2.js.html">angular-cache-0.8.2.js</a>, line 606
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    An object containing information about all caches of this factory.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Object</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
-
-                    var myCache = $angularCacheFactory('myCache'),
-                        myOtherCache = $angularCacheFactory('myOtherCache');
-
-                    $angularCacheFactory.info(); // { {id: 'myCache', size: 0}, {id: 'myOtherCache', size: 0} }
-                });</code></pre>
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="keys"><span class="type-signature">&lt;static> </span>keys<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Return an array of the keys associated with all current caches owned by thisangularCacheFactory.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.8.2.js.html">angular-cache-0.8.2.js</a>, line 675
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    An array of the keys associated with all current caches owned bythis angularCacheFactory.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Array</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
-
-                    $angularCacheFactory('newCache');
-                    $angularCacheFactory('newCache2');
-
-                    var keys = $angularCacheFactory.keys(); // [ 'newCache', 'newCache2' ]
-
-                    keys[0]; // 'newCache'
-                    keys[1]; // 'newCache2'
-                });</code></pre>
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="keySet"><span class="type-signature">&lt;static> </span>keySet<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Return the set of keys associated with all current caches owned by thisangularCacheFactory.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.8.2.js.html">angular-cache-0.8.2.js</a>, line 650
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The set of keys associated with all current caches owned by thisangularCacheFactory.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Object</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>             angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
-
-                    $angularCacheFactory('newCache');
-                    $angularCacheFactory('newCache2');
-
-                    var keySet = $angularCacheFactory.keySet(); // { newCache: 'newCache', newCache2: 'newCache2' }
-
-                    keySet.hasOwnProperty('newCache'); // true
-                    keySet.hasOwnProperty('newCache2'); // true
-                    keySet.hasOwnProperty('newCache3'); // false
-                });</code></pre>
-
-    
-</dd>
-
-        </dl>
     
     
     
@@ -686,13 +236,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-angular-cache.html">angular-cache</a></li></ul><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="angularCacheFactory.html">angularCacheFactory</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-angular-cache.html">angular-cache</a></li></ul><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="AngularCacheFactory.html">AngularCacheFactory</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Jul 09 2013 21:30:01 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 02 2013 21:40:46 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

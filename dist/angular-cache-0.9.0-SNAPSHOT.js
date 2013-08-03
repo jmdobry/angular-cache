@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-0.8.2.js
- * @version 0.8.2 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @file angular-cache-0.9.0-SNAPSHOT.js
+ * @version 0.9.0-SNAPSHOT - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
  * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -117,6 +117,10 @@
 
                 options = options || {};
 
+                if (!options.hasOwnProperty('aggressiveDelete')) {
+                    options.aggressiveDelete = false;
+                }
+
                 // Initialize this cache with the default options
                 _setOptions(options, true);
 
@@ -181,6 +185,28 @@
                 }
 
                 /**
+                 * @method _setAggressiveDelete
+                 * @desc Set the aggressiveDelete setting for this cache.
+                 * @param {Boolean} aggressiveDelete The new aggressiveDelete for this cache.
+                 * @param {Function} cb Callback function
+                 * @private
+                 * @ignore
+                 */
+                function _setAggressiveDelete(aggressiveDelete, cb) {
+                    if (aggressiveDelete === null) {
+                        config.aggressiveDelete = false;
+                        cb(null, config.aggressiveDelete);
+                    } else {
+                        if (aggressiveDelete === true || aggressiveDelete === false) {
+                            config.aggressiveDelete = aggressiveDelete;
+                            cb(null, config.aggressiveDelete);
+                        } else {
+                            cb('must be a boolean!', aggressiveDelete);
+                        }
+                    }
+                }
+
+                /**
                  * @method _setMaxAge
                  * @desc Set the maxAge for this cache.
                  * @param {Number} maxAge The new maxAge for this cache.
@@ -211,7 +237,7 @@
                                     if (data[key].timeoutId && !data[key].maxAge) {
                                         $timeout.cancel(data[key].timeoutId);
                                         var timeRemaining = new Date().getTime() - data[key].timestamp;
-                                        if (config.maxAge - timeRemaining > 0) {
+                                        if (config.maxAge - timeRemaining > 0 && config.aggressiveDelete) {
                                             _setTimeoutToRemove(key, config.maxAge);
                                         } else {
                                             self.remove(key);
@@ -287,9 +313,22 @@
                         });
                     }
 
+                    // setup aggressiveDelete
+                    if (options.hasOwnProperty('aggressiveDelete') || strict) {
+                        _setAggressiveDelete(options.hasOwnProperty('aggressiveDelete') ? options.aggressiveDelete : null, function (err, aggressiveDelete) {
+                            if (err) {
+                                throw new Error('aggressiveDelete: ' + err);
+                            }
+                        });
+                    }
+
+                    if (!options.maxAge && !strict) {
+                        options.maxAge = config.maxAge;
+                    }
+
                     // setup maxAge
                     if (options.maxAge || strict) {
-                        _setMaxAge(options.maxAge ? options.maxAge : null, function (err, capacity) {
+                        _setMaxAge(options.maxAge ? options.maxAge : null, function (err, maxAge) {
                             if (err) {
                                 throw new Error('maxAge: ' + err);
                             }
@@ -298,7 +337,7 @@
 
                     // setup cacheFlushInterval
                     if (options.cacheFlushInterval || strict) {
-                        _setCacheFlushInterval(options.cacheFlushInterval ? options.cacheFlushInterval : null, function (err, capacity) {
+                        _setCacheFlushInterval(options.cacheFlushInterval ? options.cacheFlushInterval : null, function (err, cacheFlushInterval) {
                             if (err) {
                                 throw new Error('cacheFlushInterval: ' + err);
                             }
@@ -354,7 +393,7 @@
                  * @param {*} value The value of the item to add to the cache.
                  * @param {Object} [options] { maxAge: {Number} }
                  * @returns {*} value The value of the item added to the cache.
-                 * @public
+                 * @privileged
                  *
                  * @example
                  myCache.put('someItem', { name: 'John Doe' });
@@ -386,6 +425,11 @@
                             }
                         });
                     }
+                    if (options && options.hasOwnProperty('aggressiveDelete')) {
+                        if (options.aggressiveDelete !== true && options.aggressiveDelete !== false) {
+                            throw new Error('AngularCache.put(): aggressiveDelete must be a boolean!');
+                        }
+                    }
 
                     _refresh(lruEntry);
 
@@ -399,12 +443,18 @@
                         value: value
                     };
 
+                    if (options && options.hasOwnProperty('aggressiveDelete')) {
+                        data[key].aggressiveDelete = options.aggressiveDelete;
+                    }
+
                     if ((options && options.maxAge) || config.maxAge) {
                         data[key].timestamp = new Date().getTime();
                         if (data[key].timeoutId) {
                             $timeout.cancel(data[key].timeoutId);
                         }
-                        _setTimeoutToRemove(key, ((options && options.maxAge) || config.maxAge));
+                        if (data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete)) {
+                            _setTimeoutToRemove(key, ((options && options.maxAge) || config.maxAge));
+                        }
                     }
 
                     if (size > config.capacity) {
@@ -419,7 +469,7 @@
                  * @desc Retrieve the item from the cache with the specified key.
                  * @param {String} key The key of the item to retrieve.
                  * @returns {*} The value of the item in the cache with the specified key.
-                 * @public
+                 * @privileged
                  *
                  * @example
                  myCache.get('someItem'); // { name: 'John Doe' });
@@ -428,10 +478,26 @@
                  myCache.get('someMissingItem'); // undefined
                  */
                 this.get = function (key) {
-                    var lruEntry = lruHash[key];
+                    var lruEntry = lruHash[key],
+                        maxAge,
+                        aggressiveDelete;
 
                     if (!lruEntry) {
                         return;
+                    }
+
+                    maxAge = data[key].maxAge || config.maxAge;
+                    aggressiveDelete = data[key].hasOwnProperty('aggressiveDelete') ? data[key].aggressiveDelete : config.aggressiveDelete;
+
+                    // There is no timeout to delete this item, so we must do it here if it's expired.
+                    if (!aggressiveDelete && maxAge) {
+                        if ((new Date().getTime() - data[key].timestamp) > maxAge) {
+                            // This item is expired so remove it
+                            this.remove(key);
+                            lruEntry = null;
+                            // cache miss
+                            return;
+                        }
                     }
 
                     _refresh(lruEntry);
@@ -443,7 +509,7 @@
                  * @method AngularCache.remove
                  * @desc Remove the specified key-value pair from this cache.
                  * @param {String} key The key of the key-value pair to remove.
-                 * @public
+                 * @privileged
                  *
                  * @example
                  myCache.put('someItem', { name: 'John Doe' });
@@ -475,7 +541,7 @@
                 /**
                  * @method AngularCache.removeAll
                  * @desc Clear this cache.
-                 * @public
+                 * @privileged
                  *
                  * @example
                  myCache.put('someItem', { name: 'John Doe' });
@@ -497,7 +563,7 @@
                 /**
                  * @method AngularCache.destroy
                  * @desc Completely destroy this cache.
-                 * @public
+                 * @privileged
                  *
                  * @example
                  myCache.destroy();
@@ -518,7 +584,7 @@
                  * @method AngularCache.info
                  * @desc Return an object containing information about this cache.
                  * @returns {Object} stats Object containing information about this cache.
-                 * @public
+                 * @privileged
                  *
                  * @example
                  myCache.info(); // { id: 'myCache', size: 13 }
@@ -531,7 +597,7 @@
                  * @method AngularCache.keySet
                  * @desc Return the set of the keys of all items currently in this cache.
                  * @returns {Object} The set of the keys of all items currently in this cache.
-                 * @public
+                 * @privileged
                  *
                  * @example
                  angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
@@ -556,7 +622,7 @@
                  * @method AngularCache.keys
                  * @desc Return an array of the keys of all items currently in this cache..
                  * @returns {Array} An array of the keys of all items currently in this cache..
-                 * @public
+                 * @privileged
                  *
                  * @example
                  angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
@@ -582,14 +648,15 @@
                  * @param {Object} options
                  * @param {Boolean} strict If true then any existing configuration will be reset to defaults before
                  * applying the new options, otherwise only the options specified in the hash will be altered.
+                 * @privileged
                  */
                 this.setOptions = _setOptions;
             }
 
             /**
-             * @class angularCacheFactory
+             * @class AngularCacheFactory
              * @param {String} cacheId The id of the new cache.
-             * @param {options} [options] { capacity: {Number}, maxAge: {Number} }
+             * @param {Object} [options] { capacity: {Number}, maxAge: {Number} }
              * @returns {AngularCache}
              */
             function angularCacheFactory(cacheId, options) {

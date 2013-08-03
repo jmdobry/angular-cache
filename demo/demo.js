@@ -28,12 +28,24 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
     }
 
     /**
+     * Retrieve the value of selectedKey from all caches.
+     * @private
+     */
+    function _get() {
+        for (var i = 0; i < DemoService.caches.length; i++) {
+            $scope.selectedValues[i] = DemoService.caches[i].get($scope.selectedKey) || "undefined";
+        }
+    }
+
+    /**
      * Add an item to each cache.
      * @private
      */
     function _add() {
-        var newCount = $scope.count++;
-        DemoService.add(newCount.toString(), newCount);
+        var newCount = $scope.count++,
+            newValue = Math.floor((Math.random() * 100000) + 1);
+        console.log(newValue);
+        DemoService.add(newCount.toString(), newValue);
         _updateInfo();
     }
 
@@ -55,7 +67,8 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         DemoService.caches[0].setOptions({
             capacity: parseFloat($scope.defaultCacheOptions.capacity),
             maxAge: parseInt($scope.defaultCacheOptions.maxAge, 10),
-            cacheFlushInterval: parseInt($scope.defaultCacheOptions.cacheFlushInterval, 10)
+            cacheFlushInterval: parseInt($scope.defaultCacheOptions.cacheFlushInterval, 10),
+            aggressiveDelete: $scope.defaultCacheOptions.aggressiveDelete
         }, true);
         $scope.editingDefaultCache = false;
     }
@@ -80,9 +93,12 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
             maxAge: null,
             cacheFlushInterval: null
         };
+        $scope.selectedKey = "0";
+        $scope.selectedValues = new Array(DemoService.caches.length+1).join('0').split('');
 
         // Setup $scope methods
         $scope.add = _add;
+        $scope.get = _get;
         $scope.reset = _reset;
         $scope.editDefaultCache = _editDefaultCache;
         $scope.saveDefaultCache = _saveDefaultCache;
@@ -105,7 +121,8 @@ app.service('DemoService', function ($angularCacheFactory) {
         caches: [
             $angularCacheFactory('defaultCache'),
             $angularCacheFactory('capacityCache', { capacity: 10 }),
-            $angularCacheFactory('maxAgeCache', { maxAge: 4000 }),
+            $angularCacheFactory('maxAgeCache', { maxAge: 10000 }),
+            $angularCacheFactory('aggressiveDeleteCache', { maxAge: 4000, aggressiveDelete: true }),
             $angularCacheFactory('flushingCache', { cacheFlushInterval: 4000 })
         ],
         add: function (key, value) {
