@@ -1,4 +1,4 @@
-angular-cache (0.9.0-SNAPSHOT)
+angular-cache (0.9.1-SNAPSHOT)
 =====================
 angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. With angular-cache your caches can periodically clear themselves and flush items that have expired.
 
