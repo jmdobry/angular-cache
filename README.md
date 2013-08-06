@@ -106,9 +106,9 @@ $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
 ## Status
 | Version | Branch  | Build status                                                                                                                                                              | Test Coverage |
 | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| 0.9.0-SNAPSHOT   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
-| 0.9.0-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
-| 0.9.0-SNAPSHOT   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
+| 0.9.1   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
+| 0.9.1   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
+| 0.9.1   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
 
 <a name='download'></a>
 ## Download
@@ -116,8 +116,8 @@ $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
 #### Latest Stable Version
 | Type          | From drone.io | From raw.github.com | Size |
 | ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-0.9.0-SNAPSHOT.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.0-SNAPSHOT.min.js) | [angular-cache-0.9.0-SNAPSHOT.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.0-SNAPSHOT.min.js) | 3.3 KB |
-| Development   | [angular-cache-0.9.0-SNAPSHOT.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.0-SNAPSHOT.js)         | [angular-cache-0.9.0-SNAPSHOT.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.0-SNAPSHOT.js) | 28.7 KB |
+| Production    | [angular-cache-0.9.1.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.1.min.js) | [angular-cache-0.9.1.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.1.min.js) | 3.3 KB |
+| Development   | [angular-cache-0.9.1.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.1.js)         | [angular-cache-0.9.1.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.1.js) | 28.7 KB |
 
 
 <a name='install'></a>
