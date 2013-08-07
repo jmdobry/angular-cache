@@ -23,7 +23,7 @@ app.service('myService', function ($cacheFactory) {
 app.service('myService', function ($angularCacheFactory) {
     $angularCacheFactory('myNewCache', {
         capacity: 1000,  // This cache can hold 1000 items,
-        maxAge: 90000, // Items added to this cache expire after 15 minutes
+        maxAge: 900000, // Items added to this cache expire after 15 minutes
         aggressiveDelete: true, // Items will be actively deleted when they expire
         cacheFlushInterval: 3600000 // This cache will clear itself every hour
      });
@@ -424,5 +424,3 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/e2db52aae7932708ba8790ab395ab1ca "githalytics.com")](http://githalytics.com/jmdobry/angular-cache)
