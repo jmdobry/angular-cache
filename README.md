@@ -1,4 +1,4 @@
-angular-cache (0.9.2-SNAPSHOT)
+angular-cache (1.0.0-rc.1)
 =====================
 angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. With angular-cache your caches can periodically clear themselves and flush items that have expired.
 
@@ -47,7 +47,7 @@ app.service('myService', function ($angularCacheFactory) {
 ## Features
 
 ##### `storageMode`
-Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` and `sessionStorage` on page refresh. __Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` then that feature will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`.
+Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` and `sessionStorage` on page refresh.
 
 ```javascript
 $angularCacheFactory('newCache', { storageMode: 'localStorage' });
@@ -61,6 +61,8 @@ $angularCacheFactory('newCache', { localStorage: myLocalStorageImplementation, s
 
 $angularCacheFactory('otherCache', { sessionStorage: mySessionStorageImplementation, storageMode: 'sessionStorage' });
 ```
+
+__Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then that feature will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods.
 
 ##### `maxAge`
 Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively depending on the value of `aggressiveDelete` (see below). Can be configured on a per-item basis for greater specificity.
@@ -123,9 +125,9 @@ $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
 ## Status
 | Version | Branch  | Build status                                                                                                                                                              | Test Coverage |
 | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| 0.9.2-SNAPSHOT   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
-| 0.9.2-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
-| 0.9.2-SNAPSHOT   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
+| 1.0.0-rc.1   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
+| 1.0.0-rc.1   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
+| 1.0.0-rc.1   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
 
 <a name='download'></a>
 ## Download
@@ -133,8 +135,8 @@ $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
 #### Latest Stable Version
 | Type          | From drone.io | From raw.github.com | Size |
 | ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-0.9.2-SNAPSHOT.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.2-SNAPSHOT.min.js) | [angular-cache-0.9.2-SNAPSHOT.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.2-SNAPSHOT.min.js) | 3.3 KB |
-| Development   | [angular-cache-0.9.2-SNAPSHOT.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-0.9.2-SNAPSHOT.js)         | [angular-cache-0.9.2-SNAPSHOT.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-0.9.2-SNAPSHOT.js) | 28.7 KB |
+| Production    | [angular-cache-1.0.0-rc.1.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-1.0.0-rc.1.min.js) | [angular-cache-1.0.0-rc.1.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.1.min.js) | 3.3 KB |
+| Development   | [angular-cache-1.0.0-rc.1.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-1.0.0-rc.1.js)         | [angular-cache-1.0.0-rc.1.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.1.js) | 28.7 KB |
 
 
 <a name='install'></a>
@@ -202,7 +204,8 @@ app.service('myService', function ($angularCacheFactory) {
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
         aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
-        storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
+        storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
+        localStorageImpl: myAwesomeLSImple // This cache will use a custom implementation of localStorage.
     });
 });
 ```
@@ -332,20 +335,10 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 
 ### [API Documentation](http://jmdobry.github.io/angular-cache/docs/)
 
-<a name='roadmap'></a>
-## Roadmap
-
-##### 0.9.x Release Candidate
-- Bug fixes
-- Documentation tidy up.
-
-##### 1.0.0 Stable Release
-- Yay!
-
 <a name='changelog'></a>
 ## Changelog
 
-##### 0.9.2 - 22 August 2013
+##### 1.0.0-rc.1 - 21 August 2013
 - Added localStorage feature #26, #29
 
 ##### 0.9.1 - 03 August 2013
