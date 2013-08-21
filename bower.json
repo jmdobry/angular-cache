@@ -2,7 +2,7 @@
     "author": "Jason Dobry",
     "name": "angular-cache",
     "description": "angular-cache provides capabilities that improve upon the $cacheFactory provided by AngularJS.",
-    "version": "1.0.0-rc.1",
+    "version": "1.0.0-rc.2-SNAPSHOT",
     "homepage": "http://jmdobry.github.io/angular-cache/",
     "repository": {
         "type": "git",
