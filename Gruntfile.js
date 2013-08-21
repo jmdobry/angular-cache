@@ -13,7 +13,7 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         clean: ['dist/', 'docs/'],
         jshint: {
-            all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
+            all: ['Gruntfile.js', 'src/**/*.js', 'test/angular-cacheSpec.js'],
             jshintrc: '.jshintrc'
         },
         copy: {

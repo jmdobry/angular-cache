@@ -140,7 +140,7 @@
             
             
             
-            <td class="description last">{{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }}</td>
+            <td class="description last">{{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }, aggressiveDelete: {Boolean}, storageMode: {String}}</td>
         </tr>
 	
 	
@@ -171,7 +171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 73
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 70
     </li></ul></dd>
     
     
@@ -189,38 +189,6 @@
     
     
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>             angular.module('myApp').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
-
-                    // create a cache with default settings
-                    var myCache = $angularCacheFactory('myCache');
-
-                    // create an LRU cache with a capacity of 10
-                    var myLRUCache = $angularCacheFactory('myLRUCache', {
-                        capacity: 10
-                    });
-
-                    // create a cache whose items have a maximum lifetime of 10 minutes
-                    var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
-                        maxAge: 600000
-                    });
-
-                    // create a cache that will clear itself every 10 minutes
-                    var myIntervalCache = $angularCacheFactory('myIntervalCache', {
-                        cacheFlushInterval: 600000
-                    });
-
-                    // create an cache with all options
-                    var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
-                        capacity: 10,
-                        maxAge: 600000,
-                        cacheFlushInterval: 600000
-                    });
-                }
-             ]);</code></pre>
-
     
 </dd>
 
@@ -286,7 +254,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 563
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 633
     </li></ul></dd>
     
     
@@ -304,15 +272,6 @@
     
     
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 myCache.destroy();
-
-                 myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
-
-                 $angularCacheFactory.get('myCache'); // undefined</code></pre>
-
     
 </dd>
 
@@ -408,7 +367,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 467
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 541
     </li></ul></dd>
     
     
@@ -448,14 +407,6 @@
 
         
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 myCache.get('someItem'); // { name: 'John Doe' });
-
-                 // if the item is not in the cache or has expired
-                 myCache.get('someMissingItem'); // undefined</code></pre>
-
     
 </dd>
 
@@ -503,7 +454,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 583
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 656
     </li></ul></dd>
     
     
@@ -543,11 +494,6 @@
 
         
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 myCache.info(); // { id: 'myCache', size: 13 }</code></pre>
-
     
 </dd>
 
@@ -595,7 +541,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 621
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 676
     </li></ul></dd>
     
     
@@ -635,22 +581,6 @@
 
         
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
-
-                    var newCache = $angularCacheFactory('newCache');
-
-                    newCache.put('item1', { stuff: 1 });
-                    newCache.put('item2', { stuff: 2 });
-
-                    var keys = newCache.keys(); // [ 'item1', 'item2' ]
-
-                    keys[0]; // 'item1'
-                    keys[1]; // 'item2'
-                });</code></pre>
-
     
 </dd>
 
@@ -698,7 +628,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 596
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 666
     </li></ul></dd>
     
     
@@ -738,23 +668,6 @@
 
         
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 angular.module('myModule').service('myService', ['$angularCacheFactory', function ($angularCacheFactory) {
-
-                        var newCache = $angularCacheFactory('newCache');
-
-                        newCache.put('item1', { stuff: 1 });
-                        newCache.put('item2', { stuff: 2 });
-
-                        var keySet = newCache.keySet(); // { item1: 'item1', item2: 'item2' }
-
-                        keySet.hasOwnProperty('item1'); // true
-                        keySet.hasOwnProperty('item2'); // true
-                        keySet.hasOwnProperty('item3'); // false
-                    });</code></pre>
-
     
 </dd>
 
@@ -924,7 +837,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 389
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 472
     </li></ul></dd>
     
     
@@ -964,25 +877,6 @@
 
         
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 myCache.put('someItem', { name: 'John Doe' });
-
-                 myCache.get('someItem'); // { name: 'John Doe' });
-
-                 // Give a specific item a maximum age
-                 myCache.put('someItem', { name: 'John Doe' }, { maxAge: 10000 });
-
-                 myCache.get('someItem'); // { name: 'John Doe' });
-
-                 // wait at least ten seconds
-                 setTimeout(function() {
-
-                    myCache.get('someItem'); // undefined
-
-                }, 15000); // 15 seconds</code></pre>
-
     
 </dd>
 
@@ -1078,7 +972,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 508
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 576
     </li></ul></dd>
     
     
@@ -1096,15 +990,6 @@
     
     
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 myCache.put('someItem', { name: 'John Doe' });
-
-                 myCache.remove('someItem');
-
-                 myCache.get('someItem'); // undefined</code></pre>
-
     
 </dd>
 
@@ -1152,7 +1037,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 541
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 609
     </li></ul></dd>
     
     
@@ -1170,17 +1055,6 @@
     
     
     
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>                 myCache.put('someItem', { name: 'John Doe' });
-                 myCache.put('someOtherItem', { name: 'Sally Jean' });
-
-                 myCache.removeAll();
-
-                 myCache.get('someItem'); // undefined
-                 myCache.get('someOtherItem'); // undefined</code></pre>
-
     
 </dd>
 
@@ -1300,7 +1174,7 @@ applying the new options, otherwise only the options specified in the hash will 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-0.9.1.js.html">angular-cache-0.9.1.js</a>, line 645
+        <a href="angular-cache-1.0.0-rc.1.js.html">angular-cache-1.0.0-rc.1.js</a>, line 686
     </li></ul></dd>
     
     
@@ -1343,7 +1217,7 @@ applying the new options, otherwise only the options specified in the hash will 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sat Aug 03 2013 12:36:54 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Aug 21 2013 12:23:24 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

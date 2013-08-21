@@ -113,6 +113,114 @@ describe('angular-cache', function () {
                 }
                 expect(msg).toEqual(shouldBeAStringMsg);
             });
+            it('should load an existing cache from localStorage is storageMode was enabled', function () {
+                if (localStorage) {
+                    localStorage.setItem('angular-cache.caches.lsCache.keys', angular.toJson(['item1', 'item2']));
+                    localStorage.setItem('angular-cache.caches.lsCache.data.item1', angular.toJson({
+                        value: 'value1',
+                        timestamp: new Date().getTime()
+                    }));
+                    localStorage.setItem('angular-cache.caches.lsCache.data.item2', angular.toJson({
+                        value: 'value2',
+                        timestamp: new Date().getTime()
+                    }));
+                    var lsCache = $angularCacheFactory('lsCache', { storageMode: 'localStorage', maxAge: 300, aggressiveDelete: true });
+                    expect(lsCache.get('item1')).toEqual('value1');
+                    expect(lsCache.get('item2')).toEqual('value2');
+                    waits(600);
+                    runs(function () {
+                        $timeout.flush();
+                        expect(lsCache.get('item1')).toEqual(null);
+                        expect(lsCache.get('item2')).toEqual(null);
+                        if (sessionStorage) {
+                            sessionStorage.setItem('angular-cache.caches.ssCache.keys', angular.toJson(['item1', 'item2']));
+                            sessionStorage.setItem('angular-cache.caches.ssCache.data.item1', angular.toJson({
+                                value: 'value1',
+                                timestamp: new Date().getTime()
+                            }));
+                            sessionStorage.setItem('angular-cache.caches.ssCache.data.item2', angular.toJson({
+                                value: 'value2',
+                                timestamp: new Date().getTime()
+                            }));
+                            var ssCache = $angularCacheFactory('ssCache', { storageMode: 'sessionStorage', maxAge: 300, aggressiveDelete: true });
+                            expect(ssCache.get('item1')).toEqual('value1');
+                            expect(ssCache.get('item2')).toEqual('value2');
+                            waits(600);
+                            runs(function () {
+                                $timeout.flush();
+                                expect(ssCache.get('item1')).toEqual(null);
+                                expect(ssCache.get('item2')).toEqual(null);
+                                lsCache.destroy();
+                                ssCache.destroy();
+                            });
+                        }
+                    });
+                }
+            });
+            it('should allow use of custom localStorage/sessionStorage implementations', function () {
+                var myLocalStorage = {
+                    localData: {},
+                    setItem: function (key, value) {
+                        this.localData[key] = value;
+                    },
+                    getItem: function (key) {
+                        return this.localData[key];
+                    },
+                    removeItem: function (key) {
+                        delete this.localData[key];
+                    }
+                };
+                var mySessionStorage = {
+                    localData: {},
+                    setItem: function (key, value) {
+                        this.localData[key] = value;
+                    },
+                    getItem: function (key) {
+                        return this.localData[key];
+                    },
+                    removeItem: function (key) {
+                        delete this.localData[key];
+                    }
+                };
+                myLocalStorage.setItem('angular-cache.caches.lsCache.keys', angular.toJson(['item1', 'item2']));
+                myLocalStorage.setItem('angular-cache.caches.lsCache.data.item1', angular.toJson({
+                    value: 'value1',
+                    timestamp: new Date().getTime()
+                }));
+                myLocalStorage.setItem('angular-cache.caches.lsCache.data.item2', angular.toJson({
+                    value: 'value2',
+                    timestamp: new Date().getTime()
+                }));
+                var lsCache = $angularCacheFactory('lsCache', { localStorageImpl: myLocalStorage, storageMode: 'localStorage', maxAge: 300, aggressiveDelete: true });
+                expect(lsCache.get('item1')).toEqual('value1');
+                expect(lsCache.get('item2')).toEqual('value2');
+                waits(600);
+                runs(function () {
+                    $timeout.flush();
+                    expect(lsCache.get('item1')).toEqual(null);
+                    expect(lsCache.get('item2')).toEqual(null);
+                    mySessionStorage.setItem('angular-cache.caches.ssCache.keys', angular.toJson(['item1', 'item2']));
+                    mySessionStorage.setItem('angular-cache.caches.ssCache.data.item1', angular.toJson({
+                        value: 'value1',
+                        timestamp: new Date().getTime()
+                    }));
+                    mySessionStorage.setItem('angular-cache.caches.ssCache.data.item2', angular.toJson({
+                        value: 'value2',
+                        timestamp: new Date().getTime()
+                    }));
+                    var ssCache = $angularCacheFactory('ssCache', { sessionStorageImpl: mySessionStorage, storageMode: 'sessionStorage', maxAge: 300, aggressiveDelete: true });
+                    expect(ssCache.get('item1')).toEqual('value1');
+                    expect(ssCache.get('item2')).toEqual('value2');
+                    waits(600);
+                    runs(function () {
+                        $timeout.flush();
+                        expect(ssCache.get('item1')).toEqual(null);
+                        expect(ssCache.get('item2')).toEqual(null);
+                        lsCache.destroy();
+                        ssCache.destroy();
+                    });
+                });
+            });
         });
         describe('$angularCacheFactory.get(cachedId)', function () {
             it('should return the correct cache with the specified cacheId', function () {
@@ -373,6 +481,25 @@ describe('angular-cache', function () {
                     cache.destroy();
                 });
             });
+            it('should save data to localStorage when storageMode is used', function () {
+                var localStorageCache = $angularCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
+                    sessionStorageCache = $angularCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+
+                localStorageCache.put('item1', 'value1');
+                sessionStorageCache.put('item1', 'value1');
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).value).toEqual('value1');
+                    expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('["item1"]');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).value).toEqual('value1');
+                    expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('["item1"]');
+                }
+
+                localStorageCache.destroy();
+                sessionStorageCache.destroy();
+            });
         });
         describe('AngularCache.get(key)', function () {
             it('should return the correct value for the specified key', function () {
@@ -431,6 +558,37 @@ describe('angular-cache', function () {
                 expect(cache.info().size).toEqual(0);
                 cache.destroy();
             });
+            it('should remove items from localStorage when storageMode is used', function () {
+                var localStorageCache = $angularCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
+                    sessionStorageCache = $angularCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+
+                localStorageCache.put('item1', 'value1');
+                sessionStorageCache.put('item1', 'value1');
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).value).toEqual('value1');
+                    expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('["item1"]');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).value).toEqual('value1');
+                    expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('["item1"]');
+                }
+
+                localStorageCache.remove('item1');
+                sessionStorageCache.remove('item1');
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1'))).toEqual(null);
+                    expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('[]');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1'))).toEqual(null);
+                    expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('[]');
+                }
+
+                localStorageCache.destroy();
+                sessionStorageCache.destroy();
+            });
         });
         describe('AngularCache.removeAll()', function () {
             it('should remove all items in the cache', function () {
@@ -449,6 +607,43 @@ describe('angular-cache', function () {
                 expect(cache.get('item3')).toEqual(undefined);
                 cache.destroy();
             });
+            it('should remove items from localStorage when storageMode is used', function () {
+                var localStorageCache = $angularCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
+                    sessionStorageCache = $angularCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+
+                localStorageCache.put('item1', 'value1');
+                sessionStorageCache.put('item1', 'value1');
+                localStorageCache.put('item2', 'value2');
+                sessionStorageCache.put('item2', 'value2');
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).value).toEqual('value1');
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item2')).value).toEqual('value2');
+                    expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('["item1","item2"]');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).value).toEqual('value1');
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item2')).value).toEqual('value2');
+                    expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('["item1","item2"]');
+                }
+
+                localStorageCache.removeAll();
+                sessionStorageCache.removeAll();
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1'))).toEqual(null);
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item2'))).toEqual(null);
+                    expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('[]');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1'))).toEqual(null);
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item2'))).toEqual(null);
+                    expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('[]');
+                }
+
+                localStorageCache.destroy();
+                sessionStorageCache.destroy();
+            });
         });
         describe('AngularCache.destroy()', function () {
             it('should completely destroy the cache', function () {
@@ -456,20 +651,57 @@ describe('angular-cache', function () {
                 cache.destroy();
                 expect($angularCacheFactory.get('cache')).toEqual(undefined);
             });
+            it('should remove items from localStorage when storageMode is used', function () {
+                var localStorageCache = $angularCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
+                    sessionStorageCache = $angularCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+
+                localStorageCache.put('item1', 'value1');
+                sessionStorageCache.put('item1', 'value1');
+                localStorageCache.put('item2', 'value2');
+                sessionStorageCache.put('item2', 'value2');
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).value).toEqual('value1');
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item2')).value).toEqual('value2');
+                    expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('["item1","item2"]');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).value).toEqual('value1');
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item2')).value).toEqual('value2');
+                    expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('["item1","item2"]');
+                }
+
+                localStorageCache.destroy();
+                sessionStorageCache.destroy();
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1'))).toEqual(null);
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item2'))).toEqual(null);
+                    expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual(null);
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1'))).toEqual(null);
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item2'))).toEqual(null);
+                    expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual(null);
+                }
+            });
         });
         describe('AngularCache.info()', function () {
             it('should return the correct values', function () {
-                var cache = $angularCacheFactory('cache');
-                var cache2 = $angularCacheFactory('cache2', { maxAge: 1000 });
-                var cache3 = $angularCacheFactory('cache3', { cacheFlushInterval: 1000 });
-                var cache4 = $angularCacheFactory('cache4', { capacity: 1000 });
+                var cache = $angularCacheFactory('cache'),
+                    cache2 = $angularCacheFactory('cache2', { maxAge: 1000 }),
+                    cache3 = $angularCacheFactory('cache3', { cacheFlushInterval: 1000 }),
+                    cache4 = $angularCacheFactory('cache4', { capacity: 1000 }),
+                    cache5 = $angularCacheFactory('cache5', { storageMode: 'localStorage' }),
+                    cache6 = $angularCacheFactory('cache6', { storageMode: 'sessionStorage' });
                 expect(cache.info()).toEqual({
                     id: 'cache',
                     capacity: Number.MAX_VALUE,
                     size: 0,
                     maxAge: null,
                     cacheFlushInterval: null,
-                    aggressiveDelete: false
+                    aggressiveDelete: false,
+                    storageMode: null
                 });
                 cache.put('item', 'value');
                 expect(cache.info()).toEqual({
@@ -478,7 +710,8 @@ describe('angular-cache', function () {
                     size: 1,
                     maxAge: null,
                     cacheFlushInterval: null,
-                    aggressiveDelete: false
+                    aggressiveDelete: false,
+                    storageMode: null
                 });
                 expect(cache2.info()).toEqual({
                     id: 'cache2',
@@ -486,7 +719,8 @@ describe('angular-cache', function () {
                     maxAge: 1000,
                     size: 0,
                     cacheFlushInterval: null,
-                    aggressiveDelete: false
+                    aggressiveDelete: false,
+                    storageMode: null
                 });
                 expect(cache3.info().id).toEqual('cache3');
                 expect(cache3.info().capacity).toEqual(Number.MAX_VALUE);
@@ -498,12 +732,25 @@ describe('angular-cache', function () {
                     size: 0,
                     maxAge: null,
                     cacheFlushInterval: null,
-                    aggressiveDelete: false
+                    aggressiveDelete: false,
+                    storageMode: null
                 });
+                if (localStorage) {
+                    expect(cache5.info().storageMode).toEqual('localStorage');
+                } else {
+                    expect(cache5.info().storageMode).toEqual(null);
+                }
+                if (sessionStorage) {
+                    expect(cache6.info().storageMode).toEqual('sessionStorage');
+                } else {
+                    expect(cache6.info().storageMode).toEqual(null);
+                }
                 cache.destroy();
                 cache2.destroy();
                 cache3.destroy();
                 cache4.destroy();
+                cache5.destroy();
+                cache6.destroy();
             });
         });
         describe('AngularCache.keySet()', function () {
@@ -667,7 +914,8 @@ describe('angular-cache', function () {
                     capacity: 10,
                     maxAge: 1000,
                     cacheFlushInterval: 1000,
-                    aggressiveDelete: true
+                    aggressiveDelete: true,
+                    storageMode: null
                 });
                 cache.setOptions({}, true);
                 expect(cache.info()).toEqual({
@@ -676,8 +924,64 @@ describe('angular-cache', function () {
                     cacheFlushInterval: null,
                     id: 'cache',
                     size: 0,
-                    aggressiveDelete: false
+                    aggressiveDelete: false,
+                    storageMode: null
                 });
+            });
+            it('should correctly switch to using local/session storage when storageMode is activated', function () {
+                var cache = $angularCacheFactory('cache'),
+                    cache2 = $angularCacheFactory('cache2');
+                cache.put('item', 'value');
+                cache2.put('item', 'value');
+                cache.setOptions({ maxAge: 300, aggressiveDelete: true, storageMode: 'localStorage' });
+                cache2.setOptions({ maxAge: 300, aggressiveDelete: true, storageMode: 'sessionStorage' });
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.cache.data.item')).value).toEqual('value');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.cache2.data.item')).value).toEqual('value');
+                }
+                waits(600);
+                runs(function () {
+                    $timeout.flush();
+                    expect(cache.get('item')).toEqual(null);
+                    expect(cache2.get('item')).toEqual(null);
+                    if (localStorage) {
+                        expect(localStorage.getItem('angular-cache.caches.cache.data.item')).toEqual(null);
+                    }
+                    if (sessionStorage) {
+                        expect(sessionStorage.getItem('angular-cache.caches.cache2.data.item')).toEqual(null);
+                    }
+                    cache.destroy();
+                    cache2.destroy();
+                });
+            });
+            it('should correctly stop using local/session storage when storageMode is deactivated', function () {
+                var cache = $angularCacheFactory('cache', { storageMode: 'localStorage' }),
+                    cache2 = $angularCacheFactory('cache2', { storageMode: 'sessionStorage' });
+                cache.put('item', 'value');
+                cache2.put('item', 'value');
+
+                if (localStorage) {
+                    expect(angular.fromJson(localStorage.getItem('angular-cache.caches.cache.data.item')).value).toEqual('value');
+                }
+                if (sessionStorage) {
+                    expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.cache2.data.item')).value).toEqual('value');
+                }
+
+                cache.setOptions({ storageMode: null }, true);
+                cache2.setOptions({ storageMode: null }, true);
+
+                if (localStorage) {
+                    expect(localStorage.getItem('angular-cache.caches.cache.data.item')).toEqual(null);
+                }
+                if (sessionStorage) {
+                    expect(sessionStorage.getItem('angular-cache.caches.cache2.data.item')).toEqual(null);
+                }
+
+                cache.destroy();
+                cache2.destroy();
             });
         });
     });

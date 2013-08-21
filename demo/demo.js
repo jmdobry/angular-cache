@@ -44,7 +44,6 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
     function _add() {
         var newCount = $scope.count++,
             newValue = Math.floor((Math.random() * 100000) + 1);
-        console.log(newValue);
         DemoService.add(newCount.toString(), newValue);
         _updateInfo();
     }
@@ -54,7 +53,8 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         $scope.defaultCacheOptions = {
             capacity: Number.MAX_VALUE,
             maxAge: null,
-            cacheFlushInterval: null
+            cacheFlushInterval: null,
+            storageMode: null
         };
         DemoService.reset();
     }
@@ -68,7 +68,8 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
             capacity: parseFloat($scope.defaultCacheOptions.capacity),
             maxAge: parseInt($scope.defaultCacheOptions.maxAge, 10),
             cacheFlushInterval: parseInt($scope.defaultCacheOptions.cacheFlushInterval, 10),
-            aggressiveDelete: !!($scope.defaultCacheOptions.aggressiveDelete == 'true')
+            aggressiveDelete: !!($scope.defaultCacheOptions.aggressiveDelete == 'true'),
+            storageMode: $scope.defaultCacheOptions.storageMode
         }, true);
         $scope.editingDefaultCache = false;
     }
@@ -91,7 +92,8 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         $scope.defaultCacheOptions = {
             capacity: Number.MAX_VALUE,
             maxAge: null,
-            cacheFlushInterval: null
+            cacheFlushInterval: null,
+            storageMode: null
         };
         $scope.selectedKey = "0";
         $scope.selectedValues = new Array(DemoService.caches.length+1).join('0').split('');
@@ -120,10 +122,10 @@ app.service('DemoService', function ($angularCacheFactory) {
     return {
         caches: [
             $angularCacheFactory('defaultCache'),
-            $angularCacheFactory('capacityCache', { capacity: 10 }),
+            $angularCacheFactory('capacityCache', { capacity: 10, storageMode: 'localStorage' }),
             $angularCacheFactory('maxAgeCache', { maxAge: 10000 }),
             $angularCacheFactory('aggressiveDeleteCache', { maxAge: 4000, aggressiveDelete: true }),
-            $angularCacheFactory('flushingCache', { cacheFlushInterval: 4000 })
+            $angularCacheFactory('flushingCache', { cacheFlushInterval: 15000, storageMode: 'sessionStorage' })
         ],
         add: function (key, value) {
             for (var i = 0; i < this.caches.length; i++) {
