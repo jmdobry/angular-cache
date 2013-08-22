@@ -57,9 +57,9 @@ $angularCacheFactory('newCache', { storageMode: 'localStorage' });
 When `storageMode` is set to `"localStorage"` or `"sessionStorage"` angular-cache will default to using the global `localStorage` and `sessionStorage` objects. The angular-cache `localStorageImpl` and `sessionStorageImpl` configuration parameters allow you to tell angular-cache which implementation of `localStorage` or `sessionStorage` to use. This is useful when you don't want to override the global storage objects or when using angular-cache in a browser that doesn't support `localStorage` or `sessionStorage`.
 
 ```javascript
-$angularCacheFactory('newCache', { localStorage: myLocalStorageImplementation, storageMode: 'localStorage' });
+$angularCacheFactory('newCache', { localStorageImpl: myLocalStorageImplementation, storageMode: 'localStorage' });
 
-$angularCacheFactory('otherCache', { sessionStorage: mySessionStorageImplementation, storageMode: 'sessionStorage' });
+$angularCacheFactory('otherCache', { localStorageImpl: mySessionStorageImplementation, storageMode: 'sessionStorage' });
 ```
 
 __Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then that feature will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods.
