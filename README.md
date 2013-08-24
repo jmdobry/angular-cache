@@ -1,8 +1,10 @@
 angular-cache (1.0.0-rc.2-SNAPSHOT)
 =====================
-angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. With angular-cache your caches can periodically clear themselves and flush items that have expired.
+angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. Check out the [demo](http://jmdobry.github.io/angular-cache/demo/) for a quick introduction, or continue on down for more detailed information.
 
 The goal of the project is to solve a general problem, not satisfy a specific scenario.
+
+### Quick Introduction
 
 #### [View the Demo](http://jmdobry.github.io/angular-cache/demo/)
 
@@ -36,9 +38,8 @@ app.service('myService', function ($angularCacheFactory) {
 1. [Features](#features)
 1. [Status](#status)
 1. [Download](#download)
-1. [Install](#install)
+1. [Install](#installation)
 1. [Usage](#usage)
-1. [Roadmap](#roadmap)
 1. [Changelog](#changelog)
 1. [Contributing](#contributing)
 1. [License](#license)
@@ -46,15 +47,17 @@ app.service('myService', function ($angularCacheFactory) {
 <a name='features'></a>
 ## Features
 
+#### Configuration Parameters
+
 ##### `storageMode`
-Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` and `sessionStorage` on page refresh.
+Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` and `sessionStorage` on page refresh. See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
 
 ```javascript
 $angularCacheFactory('newCache', { storageMode: 'localStorage' });
 ```
 
 ##### `localStorageImpl` and `sessionStorageImpl`
-When `storageMode` is set to `"localStorage"` or `"sessionStorage"` angular-cache will default to using the global `localStorage` and `sessionStorage` objects. The angular-cache `localStorageImpl` and `sessionStorageImpl` configuration parameters allow you to tell angular-cache which implementation of `localStorage` or `sessionStorage` to use. This is useful when you don't want to override the global storage objects or when using angular-cache in a browser that doesn't support `localStorage` or `sessionStorage`.
+When `storageMode` is set to `"localStorage"` or `"sessionStorage"` angular-cache will default to using the global `localStorage` and `sessionStorage` objects. The angular-cache `localStorageImpl` and `sessionStorageImpl` configuration parameters allow you to tell angular-cache which implementation of `localStorage` or `sessionStorage` to use. This is useful when you don't want to override the global storage objects or when using angular-cache in a browser that doesn't support `localStorage` or `sessionStorage`. See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
 
 ```javascript
 $angularCacheFactory('newCache', { localStorageImpl: myLocalStorageImplementation, storageMode: 'localStorage' });
@@ -62,7 +65,7 @@ $angularCacheFactory('newCache', { localStorageImpl: myLocalStorageImplementatio
 $angularCacheFactory('otherCache', { localStorageImpl: mySessionStorageImplementation, storageMode: 'sessionStorage' });
 ```
 
-__Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then that feature will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods.
+__Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then that feature will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods. See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
 
 ##### `maxAge`
 Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively depending on the value of `aggressiveDelete` (see below). Can be configured on a per-item basis for greater specificity.
@@ -87,6 +90,8 @@ Set the cache to periodically clear itself.
 ```javascript
 $angularCacheFactory('newCache', { cacheFlushInterval: 57908 });
 ```
+
+#### Methods
 
 ##### `keySet()`
 Return the set of keys associated with all current caches owned by $angularCacheFactory.
@@ -133,14 +138,13 @@ $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
 ## Download
 
 #### Latest Stable Version
-| Type          | From drone.io | From raw.github.com | Size |
+| Type          | File | Size |
 | ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-1.0.0-rc.2-SNAPSHOT.min.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.min.js) | [angular-cache-1.0.0-rc.2-SNAPSHOT.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.min.js) | 3.3 KB |
-| Development   | [angular-cache-1.0.0-rc.2-SNAPSHOT.js](https://drone.io/github.com/jmdobry/angular-cache/files/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.js)         | [angular-cache-1.0.0-rc.2-SNAPSHOT.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.js) | 28.7 KB |
+| Production    | [angular-cache-1.0.0-rc.2-SNAPSHOT.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.min.js) | 6 KB |
+| Development   | [angular-cache-1.0.0-rc.2-SNAPSHOT.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.js) | 34 KB |
 
-
-<a name='install'></a>
-## Install
+<a name='installation'></a>
+## Installation
 
 #### Install with bower
 ```javascript
@@ -157,6 +161,8 @@ Get angular-cache from the [Download](#download) section and include it on your 
 
 - [Load angular-cache](#load-angular-cache)
 - [Create a cache](#create-a-cache)
+- [Using angular-cache with localStorage](#using-angular-cache-with-localStorage)
+- [Using angular-cache with $http](#using-angular-cache-with-$http)
 - [Dynamically configure a cache](#create-a-cache)
 - [Retrieve a cache](#retrieve-a-cache)
 - [Retrieve items](#retrieve-items)
@@ -205,11 +211,232 @@ app.service('myService', function ($angularCacheFactory) {
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
         aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
-        localStorageImpl: myAwesomeLSImple // This cache will use a custom implementation of localStorage.
+        localStorageImpl: myAwesomeLSImpl // This cache will use a custom implementation of localStorage.
     });
 });
 ```
 See [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/angularCacheFactory.html)
+
+<a name='using-angular-cache-with-localStorage'></a>
+#### Using angular-cache with localStorage (or sessionStorage)
+Using angular-cache in browsers that support localStorage:
+```javascript
+app.service('myService', function ($angularCacheFactory) {
+
+    // This cache will sync itself with localStorage if it exists, otherwise it won't. Every time the
+    // browser loads this app, this cache will attempt to initialize itself with any data it had
+    // already saved to localStorage (or sessionStorage if you used that).
+    var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
+        maxAge: 90000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
+        storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
+    });
+});
+```
+
+Using angular-cache in browsers that DON'T support localStorage:
+
+Option 1 - Do nothing (the localStorage sync feature will be disabled)
+
+Option 2 - Create/use a polyfill that provides the global `localStorage` and `sessionStorage` objects. angular-cache will attempt to use these if it finds them.
+
+Option 3 - Tell angular-cache exactly which polyfill to use (also useful if you just want to use your own implementation/wrapper for localStorage):
+```javascript
+app.service('myService', function ($angularCacheFactory) {
+
+    var localStoragePolyfill = {
+        getItem: function (key) { ... },
+        setItem: function (key, value) { ... },
+        removeItem: function (key) { ... }
+    };
+
+    // Always use the polyfill
+    var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
+        maxAge: 90000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
+        storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
+        localStorageImpl: localStoragePolyfill // angular-cache will use this polyfill instead of looking for localStorage
+    });
+
+    // Conditionally use the polyfill
+    var options = {
+        maxAge: 90000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
+        storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
+    };
+    if (!window.localStorage) {
+        options.localStorageImpl = localStoragePolyfill;
+    }
+    var myAwesomeCache = $angularCacheFactory('myAwesomeCache', options);
+});
+```
+
+Documentation on the interface that must be implementated by any localStorage/sessionStorage polyfill used by angular-cache can be found on the [W3C Recommendation](http://www.w3.org/TR/2013/REC-webstorage-20130730/) page for webstorage. The interface itself looks like:
+```java
+interface Storage {
+  readonly attribute unsigned long length;
+  DOMString? key(unsigned long index);
+  getter DOMString getItem(DOMString key);
+  setter creator void setItem(DOMString key, DOMString value);
+  deleter void removeItem(DOMString key);
+  void clear();
+};
+```
+
+angular-cache cares only about these three methods:
+- [setItem](http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-setitem)
+- [getItem](http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-getitem)
+- [removeItem](http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-removeitem)
+
+One developer suggested using [store.js](https://github.com/marcuswestin/store.js/)–a wrapper and polyfill for localStorage. However, store.js has its own API that doesn't match that of the webstorage spec, so if you want to use store.js or any other 3rd-party polyfill then you'll need to create a wrapper for it if it doesn't have the same API as `localStorage`. For example:
+```javascript
+var storeJsToStandard {
+  getItem: store.get,
+  setItem: store.set,
+  removeItem: store.remove
+};
+
+$angularCacheFactory('myNewCache', {
+  storageMode: 'localStorage',
+  localStorageImpl: storeJsToStandard
+});
+```
+
+<a name='using-angular-cache-with-$http'></a>
+#### Using angular-cache with $http
+
+__Note__ The downside of letting $http handle caching for you is that it caches the responses (in string form) to your requests–not the JavaScript Object parsed from the response body. This means you can't interact with the data in the cache used by `$http`. See below for how to handle the caching yourself–giving you more control and the ability to interact with the cache (use it as a data store).
+
+Configure `$http` to use a cache created by `$angularCacheFactory` by default:
+```javascript
+app.run(function ($http, $angularCacheFactory) {
+
+    $angularCacheFactory('defaultCache', {
+        maxAge: 90000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        aggressiveDelete: true // Items will be deleted from this cache right when they expire.
+    });
+
+    $http.defaults.cache = $angularCacheFactory.get('defaultCache');
+});
+
+app.service('myService', function ($http) {
+    return {
+        getDataById: function (id) {
+            var deferred = $q.defer(),
+                start = new Date().getTime();
+
+            $http.get('api/data/' + id, {
+                cache: true
+            }).success(function (data) {
+                console.log('time taken for request: ' + (new Date().getTime() - start) + 'ms');
+                deferred.resolved(data);
+            });
+            return deferred.promise;
+        }
+    };
+});
+
+app.controller('myCtrl', function (myService) {
+    myService.getDataById(1)
+        .then(function (data) {
+            // e.g. "time taken for request: 2375ms"
+            // Data returned by this next call is already cached.
+            myService.getDataById(1)
+                .then(function (data) {
+                    // e.g. "time taken for request: 1ms"
+                });
+        });
+});
+```
+
+Tell `$http` to use a cache created by `$angularCacheFactory` for a specific request:
+```javascript
+app.service('myService', function ($http, $angularCacheFactory) {
+
+    $angularCacheFactory('dataCache', {
+        maxAge: 90000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        aggressiveDelete: true // Items will be deleted from this cache right when they expire.
+    });
+
+    return {
+        getDataById: function (id) {
+            var deferred = $q.defer(),
+                start = new Date().getTime();
+
+            $http.get('api/data/' + id, {
+                cache: $angularCacheFactory.get('dataCache')
+            }).success(function (data) {
+                console.log('time taken for request: ' + (new Date().getTime() - start) + 'ms');
+                deferred.resolved(data);
+            });
+            return deferred.promise;
+        }
+    };
+});
+
+app.controller('myCtrl', function (myService) {
+    myService.getDataById(1)
+        .then(function (data) {
+            // e.g. "time taken for request: 2375ms"
+            // Data returned by this next call is already cached.
+            myService.getDataById(1)
+                .then(function (data) {
+                    // e.g. "time taken for request: 1ms"
+                });
+        });
+});
+```
+
+Do your own caching while using the $http service:
+```javascript
+app.service('myService', function ($http, $angularCacheFactory) {
+
+    $angularCacheFactory('dataCache', {
+        maxAge: 90000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        aggressiveDelete: true // Items will be deleted from this cache right when they expire.
+    });
+
+    return {
+        getDataById: function (id) {
+            var deferred = $q.defer(),
+                start = new Date().getTime(),
+                dataCache = $angularCacheFactory.get('dataCache');
+
+            // Now that control of inserting/removing from the cache is in our hands,
+            // we can interact with the data in "dataCache" outside of this context,
+            // e.g. Modify the data after it has been returned from the server and
+            // save those modifications to the cache.
+            if (dataCache.get(id)) {
+                deferred.resolve(dataCache.get(id));
+            } else {
+                $http.get('api/data/' + id).success(function (data) {
+                        console.log('time taken for request: ' + (new Date().getTime() - start) + 'ms');
+                        deferred.resolved(data);
+                    });
+            }
+            return deferred.promise;
+        }
+    };
+});
+
+app.controller('myCtrl', function (myService) {
+    myService.getDataById(1)
+        .then(function (data) {
+            // e.g. "time taken for request: 2375ms"
+            // Data returned by this next call is already cached.
+            myService.getDataById(1)
+                .then(function (data) {
+                    // e.g. "time taken for request: 1ms"
+                });
+        });
+});
+```
 
 <a name='dynamically-configure-a-cache'></a>
 #### Dynamically configure a cache
@@ -338,6 +565,10 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 <a name='changelog'></a>
 ## Changelog
 
+##### 1.0.0 - 25 August 2013
+- Closed #31 (Improved documentation)
+- Closed #32
+
 ##### 1.0.0-rc.1 - 21 August 2013
 - Added localStorage feature #26, #29
 
@@ -439,5 +670,3 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/e2db52aae7932708ba8790ab395ab1ca "githalytics.com")](http://githalytics.com/jmdobry/angular-cache)

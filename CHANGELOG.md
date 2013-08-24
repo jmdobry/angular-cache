@@ -1,4 +1,8 @@
-##### 0.9.2 - 22 August 2013
+##### 1.0.0 - 25 August 2013
+- Closed #31 (Improved documentation)
+- Closed #32
+
+##### 1.0.0-rc.1 - 21 August 2013
 - Added localStorage feature #26, #29
 
 ##### 0.9.1 - 03 August 2013
