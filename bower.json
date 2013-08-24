@@ -10,11 +10,12 @@
     },
     "main": "./src/angular-cache.js",
     "ignore": [
-        "dist/",
         ".idea/",
         "*.iml",
         "coverage/",
         "node_modules/",
+        "test/",
+        "libpeerconnection.log",
         ".gitignore",
         ".travis.yml"
     ]
