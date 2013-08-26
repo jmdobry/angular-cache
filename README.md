@@ -1,4 +1,4 @@
-angular-cache (1.0.0-rc.2-SNAPSHOT)
+angular-cache (1.0.0)
 =====================
 angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. Check out the [demo](http://jmdobry.github.io/angular-cache/demo/) for a quick introduction, or continue on down for more detailed information.
 
@@ -130,9 +130,9 @@ $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
 ## Status
 | Version | Branch  | Build status                                                                                                                                                              | Test Coverage |
 | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| 1.0.0-rc.2-SNAPSHOT   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
-| 1.0.0-rc.2-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
-| 1.0.0-rc.2-SNAPSHOT   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
+| 1.0.0   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
+| 1.0.0   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
+| 1.0.0   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
 
 <a name='download'></a>
 ## Download
@@ -140,8 +140,8 @@ $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
 #### Latest Stable Version
 | Type          | File | Size |
 | ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-1.0.0-rc.2-SNAPSHOT.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.min.js) | 6 KB |
-| Development   | [angular-cache-1.0.0-rc.2-SNAPSHOT.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0-rc.2-SNAPSHOT.js) | 34 KB |
+| Production    | [angular-cache-1.0.0.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0.min.js) | 6 KB |
+| Development   | [angular-cache-1.0.0.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-1.0.0.js) | 34 KB |
 
 <a name='installation'></a>
 ## Installation
@@ -565,7 +565,7 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 <a name='changelog'></a>
 ## Changelog
 
-##### 1.0.0 - 25 August 2013
+##### 1.0.0 - 26 August 2013
 - Closed #31 (Improved documentation)
 - Closed #32
 
