@@ -71,7 +71,7 @@
              * @class AngularCache
              * @desc Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
              * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] {{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }, aggressiveDelete: {Boolean}, storageMode: {String}}
+             * @param {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [aggressiveDelete]: Boolean, [onExpire]: Function, [storageMode]: String, [localStorageImpl]: Object}}
              */
             function AngularCache(cacheId, options) {
                 var size = 0,
@@ -102,7 +102,14 @@
                  */
                 function _setTimeoutToRemove(key, delay) {
                     data[key].timeoutId = $timeout(function () {
+                        var value;
+                        if (data[key]) {
+                            value = data[key].value;
+                        }
                         self.remove(key);
+                        if (config.onExpire) {
+                            config.onExpire(key, value);
+                        }
                     }, delay);
                 }
 
@@ -280,6 +287,8 @@
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                         storage.removeItem(prefix + '.keys');
+                        config.storageMode = null;
+                        storage = null;
                     } else {
                         switch (storageMode) {
                             case 'localStorage':
@@ -379,6 +388,17 @@
                                 throw new Error('storageMode: ' + err);
                             }
                         });
+                    }
+
+                    // Set (or remove) onExpire callback
+                    if (strict) {
+                        delete config.onExpire;
+                    }
+                    if (options.onExpire) {
+                        if (typeof options.onExpire !== 'function') {
+                            throw new Error('onExpire: Must be a function!');
+                        }
+                        config.onExpire = options.onExpire;
                     }
 
                     cacheDirty = true;
@@ -542,11 +562,14 @@
                  * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
                  * @param {String} key The key of the item to retrieve.
+                 * @param {Function} [onExpire] Callback to be executed if it is discovered the
+                 * requested item has expired.
                  * @returns {*} The value of the item in the cache with the specified key.
                  * @privileged
                  */
-                this.get = function (key) {
+                this.get = function (key, onExpire) {
                     var lruEntry = lruHash[key],
+                        item,
                         maxAge,
                         aggressiveDelete;
 
@@ -554,23 +577,33 @@
                         return;
                     }
 
-                    maxAge = data[key].maxAge || config.maxAge;
-                    aggressiveDelete = data[key].hasOwnProperty('aggressiveDelete') ? data[key].aggressiveDelete : config.aggressiveDelete;
+                    item = data[key];
+                    maxAge = item.maxAge || config.maxAge;
+                    aggressiveDelete = item.hasOwnProperty('aggressiveDelete') ? item.aggressiveDelete : config.aggressiveDelete;
 
                     // There is no timeout to delete this item, so we must do it here if it's expired.
                     if (!aggressiveDelete && maxAge) {
-                        if ((new Date().getTime() - data[key].timestamp) > maxAge) {
+                        if ((new Date().getTime() - item.timestamp) > maxAge) {
                             // This item is expired so remove it
                             this.remove(key);
                             lruEntry = null;
-                            // cache miss
-                            return;
+
+                            if (config.onExpire) {
+                                config.onExpire(key, item.value, onExpire);
+                                return;
+                            } else if (onExpire && typeof onExpire === 'function') {
+                                onExpire(key, item.value);
+                                return;
+                            } else {
+                                // cache miss
+                                return;
+                            }
                         }
                     }
 
                     _refresh(lruEntry);
 
-                    return data[key].value;
+                    return item.value;
                 };
 
                 /**

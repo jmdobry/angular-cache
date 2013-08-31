@@ -28,7 +28,12 @@ app.service('myService', function ($angularCacheFactory) {
         maxAge: 90000, // Items added to this cache expire after 15 minutes
         aggressiveDelete: true, // Items will be actively deleted when they expire
         cacheFlushInterval: 3600000, // This cache will clear itself every hour,
-        storageMode: 'localStorage' // This cache will sync itself with localStorage
+        storageMode: 'localStorage' // This cache will sync itself with localStorage,
+        onExpire: function (key, value) {
+            // This callback is executed when the item specified by "key" expires.
+            // At this point you could retrieve a fresh value for "key"
+            // from the server and re-insert it into the cache.
+        }
      });
 });
 ```
@@ -91,6 +96,104 @@ Set the cache to periodically clear itself.
 $angularCacheFactory('newCache', { cacheFlushInterval: 57908 });
 ```
 
+##### `onExpire`
+A callback function to be executed when an item expires.
+
+###### Using 'onExpire' in passive delete mode
+In passive delete mode the cache doesn't know if an item has expired until the item is requested, at which point the cache checks to see if the item has expired. If the item has expired then it is immediately removed from the cache, resulting in a "miss".
+
+If you specify a global "onExpire" callback function, the cache will execute this function when it is discovered the item has expired, passing to the callback the key and value of the expired item.
+
+When you actually request the expired item via `myCache.get('someKey')` you can also pass a second argument to `get()` specifying a callback that your cache's "onExpire" callback can execute when it finishes. For example:
+
+```javascript
+var newCache = $angularCacheFactory('newCache', {
+    maxAge: 1000, // Items expire after 1 second, but we don't know it until the item is requested
+    onExpire: function (key, value, done) {
+        // "onExpire" callback for the cache.
+        // The third optional parameter "done", is the second argument passed to `get()` as described above
+
+        console.log(key + ' expired!');
+        // Retrieve fresh value for "key" from server, of course you'll need to figure out
+        // what the url is if key != url
+        $http.get(key).success(function (data) {
+            $angularCacheFactory.get('newCache').put(key, data);
+            done(data); // Execute the "done" callback specified in the `get()` call
+        });
+    });
+});
+
+newCache.put('denver', 'broncos');
+
+// wait a few seconds
+
+var value = newCache.get('denver', function (value) {
+    // here value is defined, because we retrieved it from the server
+});
+// here value is undefined because the item with
+// the key "denver" has expired and was deleted from the
+// cache when we requested it. The callback passed to
+// "get()" will receive the new value for 'denver' which
+// will be retrieved from the server. This callback
+// is the "done" callback executed by the "onExpire"
+// callback specified when we created the cache.
+```
+
+Another usage:
+```javascript
+// We don't specify an "onExpire" callback for this cache
+var newCache = $angularCacheFactory('newCache', {
+    maxAge: 1000, // Items expire after 1 second, but we don't know it until the item is requested
+});
+
+newCache.put('denver', 'broncos');
+
+// wait a few seconds
+
+// In this cache the callback is immediately executed when
+// the cache discovers that 'denver' has expired, and the
+// callback is passed the key and value of the expired item.
+// Here you could retrieve a new value for 'denver' from
+// the server or decide to keep the old value and re-insert
+// it into the cache. Specifying an "onExpire" callback for
+// the cache is a good way to stay DRY.
+var value = newCache.get('denver', function (key, value) {
+    if (isGoodThisYear(key, value)) {
+        newCache.put(key, value);
+    } else {
+        $http.get(key).success(function (data) {
+            newCache.put(key, data);
+        });
+    }
+});
+```
+
+###### Using 'onExpire' in aggressive delete mode
+In aggressive delete mode you can't pass a second parameter to `get()` because your "onExpire" callback for the cache has already been executed for expired items.
+
+```javascript
+var newCache = $angularCacheFactory('newCache', {
+    maxAge: 1000, // Items expire after 1 second and are immediately deleted
+    onExpire: function (key, value) {
+        // "onExpire" callback for the cache.
+        // The third optional parameter "done", is the second argument passed to `get()` as described above
+
+        console.log(key + ' expired!');
+        // Retrieve fresh value for "key" from server, of course you'll need to figure out
+        // what the url is if key != url
+        $http.get(key).success(function (data) {
+            $angularCacheFactory.get('newCache').put(key, data);
+        });
+    });
+});
+
+newCache.put('denver', 'broncos');
+
+// wait a few seconds, during which time the "onExpire" callback is automatically executed
+
+newCache.get('denver'); // 'broncos' or whatever was returned by the server in the "onExpire" callback
+```
+
 #### Methods
 
 ##### `keySet()`
@@ -107,20 +210,20 @@ $angularCacheFactory.get('someCache').keySet();
 ```
 
 ##### `keys()`
-Return an array of the keys associated with all current caches owned by $angularCacheFactory.
+Return an array of the keys associated with all current caches owned by $angularCacheFactory. See [Get info about a cache](#get-info-about-a-cache).
 
 ```javascript
 $angularCacheFactory.keys();
 ```
 
-Return an array of the keys associated with all current items in `someCache`.
+Return an array of the keys associated with all current items in `someCache`. See [Get info about a cache](#get-info-about-a-cache).
 
 ```javascript
 $angularCacheFactory.get('someCache').keys();
 ```
 
 ##### `setOptions()`
-Dynamically configure a cache.
+Dynamically configure a cache. See [Dynamically configure a cache](#dynamically-configure-a-cache).
 
 ```javascript
 $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
@@ -163,7 +266,7 @@ Get angular-cache from the [Download](#download) section and include it on your 
 - [Create a cache](#create-a-cache)
 - [Using angular-cache with localStorage](#using-angular-cache-with-localStorage)
 - [Using angular-cache with $http](#using-angular-cache-with-$http)
-- [Dynamically configure a cache](#create-a-cache)
+- [Dynamically configure a cache](#dynamically-configure-a-cache)
 - [Retrieve a cache](#retrieve-a-cache)
 - [Retrieve items](#retrieve-items)
 - [Add items](#add-items)
@@ -196,7 +299,29 @@ app.service('myService', function ($angularCacheFactory) {
 
     // create a cache whose items have a maximum lifetime of 10 minutes
     var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
-        maxAge: 600000
+        maxAge: 600000,
+        onExpire: function (key, value, done) {
+            // This callback is executed during a call to "get()" and the requested item has expired.
+            // Receives the key and value of the expired item and a third argument, "done", which is
+            // a callback function passed as the second argument to "get()".
+            // See the "onExpire" configuration option discussed above.
+
+            // do something, like get a fresh value from the server and put it into the cache
+            if (done && typeof done === 'function') {
+                done(); // pass whatever you want into done()
+            }
+        }
+    });
+
+    // create a cache whose items have a maximum lifetime of 10 minutes which are immediately deleted upon expiration
+    var myAggressiveTimeLimitedCache = $angularCacheFactory('myAggressiveTimeLimitedCache', {
+        maxAge: 600000,
+        onExpire: function (key, value) {
+            // This callback is executed right when items expire. Receives the key and value of expired items.
+            // See the "onExpire" configuration option discussed above.
+
+            // do something, like get a fresh value from the server and put it into the cache
+        }
     });
 
     // create a cache that will clear itself every 10 minutes
@@ -556,7 +681,13 @@ See [AngularCache#destroy](http://jmdobry.github.io/angular-cache/docs/Cache.htm
 <a name='get-info-about-a-cache'></a>
 #### Get info about a cache
 ```javascript
-myCache.info(); // { id: 'myCache', size: 13 }
+myCache.put("1", "someValue");
+
+myCache.info(); // { id: 'myCache', size: 1 }
+
+myCache.keys(); // ["1"]
+
+myCache.keySet(); // { "1": "1" }
 ```
 See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#info)
 
