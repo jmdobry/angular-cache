@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: angular-cache-1.0.0-rc.2-SNAPSHOT.js</title>
+    <title>JSDoc: Source: angular-cache-1.1.0-SNAPSHOT.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: angular-cache-1.0.0-rc.2-SNAPSHOT.js</h1>
+    <h1 class="page-title">Source: angular-cache-1.1.0-SNAPSHOT.js</h1>
     
     
 
@@ -27,8 +27,8 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * @author Jason Dobry &lt;jason.dobry@gmail.com>
- * @file angular-cache-1.0.0-rc.2-SNAPSHOT.js
- * @version 1.0.0-rc.2-SNAPSHOT - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @file angular-cache-1.1.0-SNAPSHOT.js
+ * @version 1.1.0-SNAPSHOT - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
  * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/angular-cache>
  * @license MIT &lt;https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -98,7 +98,7 @@
              * @class AngularCache
              * @desc Instantiated via &lt;code>$angularCacheFactory(cacheId[, options])&lt;/code>
              * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] {{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }, aggressiveDelete: {Boolean}, storageMode: {String}}
+             * @param {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [aggressiveDelete]: Boolean, [onExpire]: Function, [storageMode]: String, [localStorageImpl]: Object}}
              */
             function AngularCache(cacheId, options) {
                 var size = 0,
@@ -129,7 +129,14 @@
                  */
                 function _setTimeoutToRemove(key, delay) {
                     data[key].timeoutId = $timeout(function () {
+                        var value;
+                        if (data[key]) {
+                            value = data[key].value;
+                        }
                         self.remove(key);
+                        if (config.onExpire) {
+                            config.onExpire(key, value);
+                        }
                     }, delay);
                 }
 
@@ -307,6 +314,8 @@
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                         storage.removeItem(prefix + '.keys');
+                        config.storageMode = null;
+                        storage = null;
                     } else {
                         switch (storageMode) {
                             case 'localStorage':
@@ -406,6 +415,17 @@
                                 throw new Error('storageMode: ' + err);
                             }
                         });
+                    }
+
+                    // Set (or remove) onExpire callback
+                    if (strict) {
+                        delete config.onExpire;
+                    }
+                    if (options.onExpire) {
+                        if (typeof options.onExpire !== 'function') {
+                            throw new Error('onExpire: Must be a function!');
+                        }
+                        config.onExpire = options.onExpire;
                     }
 
                     cacheDirty = true;
@@ -569,11 +589,14 @@
                  * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
                  * @param {String} key The key of the item to retrieve.
+                 * @param {Function} [onExpire] Callback to be executed if it is discovered the
+                 * requested item has expired.
                  * @returns {*} The value of the item in the cache with the specified key.
                  * @privileged
                  */
-                this.get = function (key) {
+                this.get = function (key, onExpire) {
                     var lruEntry = lruHash[key],
+                        item,
                         maxAge,
                         aggressiveDelete;
 
@@ -581,23 +604,33 @@
                         return;
                     }
 
-                    maxAge = data[key].maxAge || config.maxAge;
-                    aggressiveDelete = data[key].hasOwnProperty('aggressiveDelete') ? data[key].aggressiveDelete : config.aggressiveDelete;
+                    item = data[key];
+                    maxAge = item.maxAge || config.maxAge;
+                    aggressiveDelete = item.hasOwnProperty('aggressiveDelete') ? item.aggressiveDelete : config.aggressiveDelete;
 
                     // There is no timeout to delete this item, so we must do it here if it's expired.
                     if (!aggressiveDelete && maxAge) {
-                        if ((new Date().getTime() - data[key].timestamp) > maxAge) {
+                        if ((new Date().getTime() - item.timestamp) > maxAge) {
                             // This item is expired so remove it
                             this.remove(key);
                             lruEntry = null;
-                            // cache miss
-                            return;
+
+                            if (config.onExpire) {
+                                config.onExpire(key, item.value, onExpire);
+                                return;
+                            } else if (onExpire && typeof onExpire === 'function') {
+                                onExpire(key, item.value);
+                                return;
+                            } else {
+                                // cache miss
+                                return;
+                            }
                         }
                     }
 
                     _refresh(lruEntry);
 
-                    return data[key].value;
+                    return item.value;
                 };
 
                 /**
@@ -815,7 +848,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Aug 21 2013 12:27:23 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sat Aug 31 2013 17:05:25 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,7 +1,7 @@
-'use strict';
 var app = angular.module('app', ['angular-cache']);
 
-app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) {
+app.controller('DemoCtrl', function ($log, $scope, DemoService, $angularCacheFactory) {
+    'use strict';
 
     function _getHtml(json) {
         return hljs.highlight('json', JSON.stringify(json, null, 2)).value;
@@ -24,6 +24,12 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
             for (i = 0; i < DemoService.caches.length; i++) {
                 $scope.keys[i] = _getHtml(DemoService.caches[i].keys());
             }
+            for (i = 0; i < DemoService.caches.length; i++) {
+                var onExpire = DemoService.caches[i].info().onExpire;
+                if (onExpire) {
+                    $scope.onExpires[i] = hljs.highlight('javascript', onExpire.toString()).value.replace(/    /g, ' ');
+                }
+            }
         }
     }
 
@@ -33,7 +39,13 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
      */
     function _get() {
         for (var i = 0; i < DemoService.caches.length; i++) {
-            $scope.selectedValues[i] = DemoService.caches[i].get($scope.selectedKey) || "undefined";
+            if (i === 2) {
+                $scope.selectedValues[i] = DemoService.caches[i].get($scope.selectedKey, function (key, value) {
+                    $log.log('I am called via "done()" in the passive mode "onExpire" callback.')
+                }) || "undefined";
+            } else {
+                $scope.selectedValues[i] = DemoService.caches[i].get($scope.selectedKey) || "undefined";
+            }
         }
     }
 
@@ -88,6 +100,7 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
         $scope.infos = [];
         $scope.keySets = [];
         $scope.keys = [];
+        $scope.onExpires = [];
         $scope.editingDefaultCache = false;
         $scope.defaultCacheOptions = {
             capacity: Number.MAX_VALUE,
@@ -96,7 +109,7 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
             storageMode: null
         };
         $scope.selectedKey = "0";
-        $scope.selectedValues = new Array(DemoService.caches.length+1).join('0').split('');
+        $scope.selectedValues = new Array(DemoService.caches.length + 1).join('0').split('');
 
         // Setup $scope methods
         $scope.add = _add;
@@ -118,14 +131,35 @@ app.controller('DemoCtrl', function ($scope, DemoService, $angularCacheFactory) 
     _init();
 });
 
-app.service('DemoService', function ($angularCacheFactory) {
+app.service('DemoService', function ($log, $angularCacheFactory) {
+    'use strict';
     return {
         caches: [
             $angularCacheFactory('defaultCache'),
-            $angularCacheFactory('capacityCache', { capacity: 10, storageMode: 'localStorage' }),
-            $angularCacheFactory('maxAgeCache', { maxAge: 10000 }),
-            $angularCacheFactory('aggressiveDeleteCache', { maxAge: 4000, aggressiveDelete: true }),
-            $angularCacheFactory('flushingCache', { cacheFlushInterval: 15000, storageMode: 'sessionStorage' })
+            $angularCacheFactory('capacityCache', {
+                capacity: 10,
+                storageMode: 'localStorage'
+            }),
+            $angularCacheFactory('maxAgeCache', {
+                maxAge: 7000,
+                onExpire: function (key, value, done) {
+                    $log.log(key + ' expired');
+                    $log.log('Passive mode onExpire callback executed.');
+                    done(key, value);
+                }
+            }),
+            $angularCacheFactory('aggressiveDeleteCache', {
+                maxAge: 4000,
+                aggressiveDelete: true,
+                onExpire: function (key, value) {
+                    $log.log(key + ' expired');
+                    $log.log('Aggressive mode onExpire callback executed.');
+                }
+            }),
+            $angularCacheFactory('flushingCache', {
+                cacheFlushInterval: 15000,
+                storageMode: 'sessionStorage'
+            })
         ],
         add: function (key, value) {
             for (var i = 0; i < this.caches.length; i++) {
