@@ -798,6 +798,30 @@
                 return _keys(caches);
             };
 
+            /**
+             * @method angularCacheFactory.removeAll
+             * @desc Remove all caches owned by this $angularCacheFactory.
+             * @public
+             */
+            angularCacheFactory.removeAll = function () {
+                var keys = _keys(caches);
+                for (var i = 0; i < keys.length; i++) {
+                    caches[keys[i]].destroy();
+                }
+            };
+
+            /**
+             * @method angularCacheFactory.clearAll
+             * @desc Clears the contents of every cache owned by this $angularCacheFactory.
+             * @public
+             */
+            angularCacheFactory.clearAll = function () {
+                var keys = _keys(caches);
+                for (var i = 0; i < keys.length; i++) {
+                    caches[keys[i]].removeAll();
+                }
+            };
+
             return angularCacheFactory;
         }];
     }
