@@ -499,7 +499,6 @@
                  * @privileged
                  */
                 this.put = function (key, value, options) {
-                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
 
                     if (!angular.isString(key)) {
                         throw new Error('The key must be a string!');
@@ -516,12 +515,14 @@
                             throw new Error('AngularCache.put(): aggressiveDelete must be a boolean!');
                         }
                     }
-
-                    _refresh(lruEntry);
-
                     if (angular.isUndefined(value)) {
                         return;
                     }
+
+                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
+
+                    _refresh(lruEntry);
+
                     if (!(key in data)) {
                         size++;
                     }
@@ -569,15 +570,14 @@
                  */
                 this.get = function (key, onExpire) {
                     var lruEntry = lruHash[key],
-                        item,
+                        item = data[key],
                         maxAge,
                         aggressiveDelete;
 
-                    if (!lruEntry) {
+                    if (!lruEntry || !item) {
                         return;
                     }
 
-                    item = data[key];
                     maxAge = item.maxAge || config.maxAge;
                     aggressiveDelete = item.hasOwnProperty('aggressiveDelete') ? item.aggressiveDelete : config.aggressiveDelete;
 

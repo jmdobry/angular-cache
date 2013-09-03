@@ -4,6 +4,9 @@
 - Added `onExpire` callback hook #27
 - Added `$angularCacheFactory.removeAll()` and `$angularCacheFactory.clearAll()` convenience methods #37, #38
 
+###### Backwards compatible bug fixes
+- Fixed #36
+
 ##### 1.0.0 - 25 August 2013
 - Closed #31 (Improved documentation)
 - Closed #32
