@@ -140,7 +140,7 @@
             
             
             
-            <td class="description last">{{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }, aggressiveDelete: {Boolean}, storageMode: {String}}</td>
+            <td class="description last">{{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [aggressiveDelete]: Boolean, [onExpire]: Function, [storageMode]: String, [localStorageImpl]: Object}}</td>
         </tr>
 	
 	
@@ -171,7 +171,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 70
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 70
     </li></ul></dd>
     
     
@@ -254,7 +254,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 633
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 666
     </li></ul></dd>
     
     
@@ -278,7 +278,7 @@
         
             
 <dt>
-    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(key)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(key, <span class="optional">onExpire</span>)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
     
 </dt>
@@ -308,6 +308,8 @@
 		<th>Type</th>
 		
 		
+		<th>Argument</th>
+		
 		
 		
 		
@@ -333,10 +335,52 @@
             </td>
             
             
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
             
             
             
             <td class="description last">The key of the item to retrieve.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>onExpire</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Callback to be executed if it is discovered the
+requested item has expired.</td>
         </tr>
 	
 	
@@ -367,7 +411,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 541
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 562
     </li></ul></dd>
     
     
@@ -454,7 +498,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 656
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 689
     </li></ul></dd>
     
     
@@ -541,7 +585,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 676
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 709
     </li></ul></dd>
     
     
@@ -628,7 +672,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 666
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 699
     </li></ul></dd>
     
     
@@ -837,7 +881,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 472
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 492
     </li></ul></dd>
     
     
@@ -972,7 +1016,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 576
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 609
     </li></ul></dd>
     
     
@@ -1037,7 +1081,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 609
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 642
     </li></ul></dd>
     
     
@@ -1174,7 +1218,7 @@ applying the new options, otherwise only the options specified in the hash will 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.0.0.js.html">angular-cache-1.0.0.js</a>, line 686
+        <a href="angular-cache-1.1.0.js.html">angular-cache-1.1.0.js</a>, line 719
     </li></ul></dd>
     
     
@@ -1217,7 +1261,7 @@ applying the new options, otherwise only the options specified in the hash will 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Mon Aug 26 2013 10:46:50 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 03 2013 12:54:34 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

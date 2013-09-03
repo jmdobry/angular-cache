@@ -23,7 +23,14 @@ describe('angular-cache', function () {
                     capacity: Math.floor((Math.random() * 100000) + 1),
                     maxAge: Math.floor((Math.random() * 100000) + 1),
                     cacheFlushInterval: Math.floor((Math.random() * 100000) + 1),
-                    aggressiveDelete: true
+                    aggressiveDelete: true,
+                    storageMode: 'localStorage',
+                    localStorageImpl: {
+                        setItem: function () {},
+                        getItem: function () {},
+                        removeItem: function () {}
+                    },
+                    onExpire: function () {}
                 };
                 var cache = $angularCacheFactory('cache', options);
                 expect(cache).toBeDefined();
@@ -32,6 +39,9 @@ describe('angular-cache', function () {
                 expect(cache.info().maxAge).toEqual(options.maxAge);
                 expect(cache.info().cacheFlushInterval).toEqual(options.cacheFlushInterval);
                 expect(cache.info().aggressiveDelete).toEqual(options.aggressiveDelete);
+                expect(cache.info().storageMode).toEqual(options.storageMode);
+                expect(cache.info().localStorageImpl).not.toBeDefined(); // We don't expose this to the user
+                expect(cache.info().onExpire).toEqual(options.onExpire);
                 cache.destroy();
                 expect($angularCacheFactory.get('cache')).not.toBeDefined();
             });
@@ -319,6 +329,43 @@ describe('angular-cache', function () {
                 expect(keys.length).toEqual(0);
             });
         });
+        describe('$angularCacheFactory.removeAll()', function () {
+            it('should call "destroy()" on all caches currently owned by the factory', function () {
+                var cacheKeys = ['cache', 'cache1', 'cache2'];
+
+                $angularCacheFactory(cacheKeys[0]);
+                $angularCacheFactory(cacheKeys[1]);
+                $angularCacheFactory(cacheKeys[2]);
+
+                $angularCacheFactory.removeAll();
+
+                expect($angularCacheFactory.get(cacheKeys[0])).not.toBeDefined();
+                expect($angularCacheFactory.get(cacheKeys[1])).not.toBeDefined();
+                expect($angularCacheFactory.get(cacheKeys[2])).not.toBeDefined();
+            });
+        });
+        describe('$angularCacheFactory.clearAll()', function () {
+            it('should call "removeAll()" on all caches currently owned by the factory', function () {
+                var cacheKeys = ['cache', 'cache1', 'cache2'];
+
+                var cache = $angularCacheFactory(cacheKeys[0]);
+                cache.put('item', 'value');
+                var cache1 = $angularCacheFactory(cacheKeys[1]);
+                cache1.put('item', 'value');
+                var cache2 = $angularCacheFactory(cacheKeys[2]);
+                cache2.put('item', 'value');
+
+                $angularCacheFactory.clearAll();
+
+                expect(cache.get('item')).not.toBeDefined();
+                expect(cache1.get('item')).not.toBeDefined();
+                expect(cache2.get('item')).not.toBeDefined();
+
+                $angularCacheFactory.get(cacheKeys[0]).destroy();
+                $angularCacheFactory.get(cacheKeys[1]).destroy();
+                $angularCacheFactory.get(cacheKeys[2]).destroy();
+            });
+        });
     });
 
     describe('AngularCache', function () {
@@ -522,6 +569,54 @@ describe('angular-cache', function () {
                 expect(cache.get('item')).toEqual(undefined);
                 cache.destroy();
             });
+            it('should execute globally configured \'onExpire\' callback if the item is expired in passive mode and global \'onExpire\' callback is configured', function () {
+                var cache = $angularCacheFactory('cache', {
+                    maxAge: 300,
+                    onExpire: function (key, value, done) {
+                        done(key, value, 'executed global callback');
+                    }
+                });
+                cache.put('item', 'value');
+                waits(700);
+                runs(function () {
+                    cache.get('item', function (key, value, test) {
+                        expect(key).toEqual('item');
+                        expect(value).toEqual('value');
+                        expect(test).toEqual('executed global callback');
+                    });
+                    cache.destroy();
+                });
+            });
+            it('should execute globally configured \'onExpire\' callback when an item is aggressively deleted and global \'onExpire\' callback is configured', function () {
+                var onExpire = jasmine.createSpy();
+                var cache = $angularCacheFactory('cache', {
+                    maxAge: 300,
+                    aggressiveDelete: true,
+                    onExpire: onExpire
+                });
+                cache.put('item', 'value');
+                waits(700);
+                runs(function () {
+                    $timeout.flush();
+                    expect(onExpire).toHaveBeenCalled();
+                    expect(onExpire).toHaveBeenCalledWith('item', 'value');
+                    cache.destroy();
+                });
+            });
+            it('should execute local \'onExpire\' callback if the item is expired in passive mode and global \'onExpire\' callback is NOT configured', function () {
+                var cache = $angularCacheFactory('cache', {
+                    maxAge: 300
+                });
+                cache.put('item', 'value');
+                waits(700);
+                runs(function () {
+                    cache.get('item', function (key, value) {
+                        expect(key).toEqual('item');
+                        expect(value).toEqual('value');
+                    });
+                    cache.destroy();
+                });
+            });
         });
         describe('AngularCache.remove(key)', function () {
             it('should remove the item with the specified key', function () {
@@ -688,12 +783,14 @@ describe('angular-cache', function () {
         });
         describe('AngularCache.info()', function () {
             it('should return the correct values', function () {
+                var onExpire = function () {};
                 var cache = $angularCacheFactory('cache'),
                     cache2 = $angularCacheFactory('cache2', { maxAge: 1000 }),
                     cache3 = $angularCacheFactory('cache3', { cacheFlushInterval: 1000 }),
                     cache4 = $angularCacheFactory('cache4', { capacity: 1000 }),
                     cache5 = $angularCacheFactory('cache5', { storageMode: 'localStorage' }),
                     cache6 = $angularCacheFactory('cache6', { storageMode: 'sessionStorage' });
+                    cache7 = $angularCacheFactory('cache7', { maxAge: 100, onExpire: onExpire });
                 expect(cache.info()).toEqual({
                     id: 'cache',
                     capacity: Number.MAX_VALUE,
@@ -745,12 +842,14 @@ describe('angular-cache', function () {
                 } else {
                     expect(cache6.info().storageMode).toEqual(null);
                 }
+                expect(cache7.info().onExpire).toEqual(onExpire);
                 cache.destroy();
                 cache2.destroy();
                 cache3.destroy();
                 cache4.destroy();
                 cache5.destroy();
                 cache6.destroy();
+                cache7.destroy();
             });
         });
         describe('AngularCache.keySet()', function () {
@@ -812,6 +911,25 @@ describe('angular-cache', function () {
             });
         });
         describe('AngularCache.setOptions()', function () {
+            it('should correctly reset to defaults if strict mode is true', function () {
+                var onExpire = function () {};
+                var cache = $angularCacheFactory('cache', {
+                    maxAge: 100,
+                    cacheFlushInterval: 200,
+                    onExpire: onExpire,
+                    storageMode: 'localStorage'
+                });
+                expect(cache.info().maxAge).toEqual(100);
+                expect(cache.info().cacheFlushInterval).toEqual(200);
+                expect(cache.info().onExpire).toEqual(onExpire);
+                expect(cache.info().storageMode).toEqual('localStorage');
+                cache.setOptions({ }, true);
+                expect(cache.info().maxAge).toEqual(null);
+                expect(cache.info().cacheFlushInterval).toEqual(null);
+                expect(cache.info().onExpire).toEqual(null);
+                expect(cache.info().storageMode).toEqual(null);
+                cache.destroy();
+            });
             it('should correctly modify the capacity of a cache', function () {
                 var cache = $angularCacheFactory('cache');
                 expect(cache.info().capacity).toEqual(Number.MAX_VALUE);

@@ -71,7 +71,7 @@
              * @class AngularCache
              * @desc Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
              * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] {{capacity: {Number}, maxAge: {Number}, cacheFlushInterval: {Number} }, aggressiveDelete: {Boolean}, storageMode: {String}}
+             * @param {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [aggressiveDelete]: Boolean, [onExpire]: Function, [storageMode]: String, [localStorageImpl]: Object}}
              */
             function AngularCache(cacheId, options) {
                 var size = 0,
@@ -102,7 +102,14 @@
                  */
                 function _setTimeoutToRemove(key, delay) {
                     data[key].timeoutId = $timeout(function () {
+                        var value;
+                        if (data[key]) {
+                            value = data[key].value;
+                        }
                         self.remove(key);
+                        if (config.onExpire) {
+                            config.onExpire(key, value);
+                        }
                     }, delay);
                 }
 
@@ -280,6 +287,8 @@
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                         storage.removeItem(prefix + '.keys');
+                        config.storageMode = null;
+                        storage = null;
                     } else {
                         switch (storageMode) {
                             case 'localStorage':
@@ -381,6 +390,17 @@
                         });
                     }
 
+                    // Set (or remove) onExpire callback
+                    if (strict) {
+                        delete config.onExpire;
+                    }
+                    if (options.onExpire) {
+                        if (typeof options.onExpire !== 'function') {
+                            throw new Error('onExpire: Must be a function!');
+                        }
+                        config.onExpire = options.onExpire;
+                    }
+
                     cacheDirty = true;
                 }
 
@@ -479,7 +499,6 @@
                  * @privileged
                  */
                 this.put = function (key, value, options) {
-                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
 
                     if (!angular.isString(key)) {
                         throw new Error('The key must be a string!');
@@ -496,12 +515,14 @@
                             throw new Error('AngularCache.put(): aggressiveDelete must be a boolean!');
                         }
                     }
-
-                    _refresh(lruEntry);
-
                     if (angular.isUndefined(value)) {
                         return;
                     }
+
+                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
+
+                    _refresh(lruEntry);
+
                     if (!(key in data)) {
                         size++;
                     }
@@ -542,35 +563,47 @@
                  * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
                  * @param {String} key The key of the item to retrieve.
+                 * @param {Function} [onExpire] Callback to be executed if it is discovered the
+                 * requested item has expired.
                  * @returns {*} The value of the item in the cache with the specified key.
                  * @privileged
                  */
-                this.get = function (key) {
+                this.get = function (key, onExpire) {
                     var lruEntry = lruHash[key],
+                        item = data[key],
                         maxAge,
                         aggressiveDelete;
 
-                    if (!lruEntry) {
+                    if (!lruEntry || !item) {
                         return;
                     }
 
-                    maxAge = data[key].maxAge || config.maxAge;
-                    aggressiveDelete = data[key].hasOwnProperty('aggressiveDelete') ? data[key].aggressiveDelete : config.aggressiveDelete;
+                    maxAge = item.maxAge || config.maxAge;
+                    aggressiveDelete = item.hasOwnProperty('aggressiveDelete') ? item.aggressiveDelete : config.aggressiveDelete;
 
                     // There is no timeout to delete this item, so we must do it here if it's expired.
                     if (!aggressiveDelete && maxAge) {
-                        if ((new Date().getTime() - data[key].timestamp) > maxAge) {
+                        if ((new Date().getTime() - item.timestamp) > maxAge) {
                             // This item is expired so remove it
                             this.remove(key);
                             lruEntry = null;
-                            // cache miss
-                            return;
+
+                            if (config.onExpire) {
+                                config.onExpire(key, item.value, onExpire);
+                                return;
+                            } else if (onExpire && typeof onExpire === 'function') {
+                                onExpire(key, item.value);
+                                return;
+                            } else {
+                                // cache miss
+                                return;
+                            }
                         }
                     }
 
                     _refresh(lruEntry);
 
-                    return data[key].value;
+                    return item.value;
                 };
 
                 /**
@@ -763,6 +796,30 @@
              */
             angularCacheFactory.keys = function () {
                 return _keys(caches);
+            };
+
+            /**
+             * @method angularCacheFactory.removeAll
+             * @desc Remove all caches owned by this $angularCacheFactory.
+             * @public
+             */
+            angularCacheFactory.removeAll = function () {
+                var keys = _keys(caches);
+                for (var i = 0; i < keys.length; i++) {
+                    caches[keys[i]].destroy();
+                }
+            };
+
+            /**
+             * @method angularCacheFactory.clearAll
+             * @desc Clears the contents of every cache owned by this $angularCacheFactory.
+             * @public
+             */
+            angularCacheFactory.clearAll = function () {
+                var keys = _keys(caches);
+                for (var i = 0; i < keys.length; i++) {
+                    caches[keys[i]].removeAll();
+                }
             };
 
             return angularCacheFactory;
