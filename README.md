@@ -1,12 +1,14 @@
-angular-cache (1.1.0)
-=====================
-angular-cache is a caching system that improves upon the capabilities of the $cacheFactory provided by AngularJS. Check out the [demo](http://jmdobry.github.io/angular-cache/demo/) for a quick introduction, or continue on down for more detailed information.
+### angular-cache (1.1.0) is a very useful replacement for Angular's $cacheFactory. 
+
+Check out the [demo](http://jmdobry.github.io/angular-cache/demo/) for a quick introduction, or continue on down for more detailed information.
 
 The goal of the project is to solve a general problem, not satisfy a specific scenario.
 
 ### Quick Introduction
 
 #### [View the Demo](http://jmdobry.github.io/angular-cache/demo/)
+
+#### [Mailing List](https://groups.google.com/forum/#!forum/angular-cache)
 
 ##### $cacheFactory
 ```javascript
