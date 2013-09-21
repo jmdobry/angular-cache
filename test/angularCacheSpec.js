@@ -20,6 +20,38 @@ describe('AngularCache', function () {
             cache.destroy();
         });
     });
+    it('should clear itself and web storage if cacheFlushInterval and storageMode are specified', function () {
+        var localStorageCache = $angularCacheFactory('localStorageCache', { cacheFlushInterval: 10, storageMode: 'localStorage' }),
+            sessionStorageCache = $angularCacheFactory('sessionStorageCache', { cacheFlushInterval: 10, storageMode: 'sessionStorage' });
+
+        localStorageCache.put('item1', 'value1');
+        sessionStorageCache.put('item1', 'value1');
+
+        if (localStorage) {
+            expect(angular.fromJson(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).value).toEqual('value1');
+            expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('["item1"]');
+        }
+        if (sessionStorage) {
+            expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).value).toEqual('value1');
+            expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('["item1"]');
+        }
+
+        waits(100);
+        runs(function () {
+            expect(localStorageCache.get('item1')).toEqual(undefined);
+            expect(sessionStorageCache.get('item1')).toEqual(undefined);
+            if (localStorage) {
+                expect(localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).toEqual(null);
+                expect(localStorage.getItem('angular-cache.caches.localStorageCache.keys')).toEqual('[]');
+            }
+            if (sessionStorage) {
+                expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).toEqual(null);
+                expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('[]');
+            }
+            localStorageCache.destroy();
+            sessionStorageCache.destroy();
+        });
+    });
     describe('AngularCache.put(key, value, options)', function () {
         it('should disallow keys that aren\'t a string', function () {
             var cache = $angularCacheFactory('cache');
