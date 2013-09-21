@@ -1,7 +1,7 @@
 describe('AngularCacheFactory', function () {
 
     var $angularCacheFactory, $timeout;
-    beforeEach(module('angular-cache'));
+    beforeEach(module('jmdobry.angular-cache'));
     beforeEach(inject(function ($injector) {
         $angularCacheFactory = $injector.get('$angularCacheFactory');
         $timeout = $injector.get('$timeout');

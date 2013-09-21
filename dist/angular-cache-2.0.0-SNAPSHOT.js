@@ -18,7 +18,7 @@
      *       the same abilities as the cache objects that come with Angular, except with some added
      *       functionality.
      */
-    angular.module('angular-cache', ['ng']);
+    angular.module('jmdobry.angular-cache', ['ng']);
 
     /**
      * @class $AngularCacheFactoryProvider
@@ -843,5 +843,5 @@
     }
 
     // Register the new provider with Angular.
-    angular.module('angular-cache').provider('$angularCacheFactory', $AngularCacheFactoryProvider);
+    angular.module('jmdobry.angular-cache').provider('$angularCacheFactory', $AngularCacheFactoryProvider);
 })(window, window.angular);

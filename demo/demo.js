@@ -1,4 +1,4 @@
-var app = angular.module('app', ['angular-cache']);
+var app = angular.module('app', ['jmdobry.angular-cache']);
 
 app.controller('DemoCtrl', function ($log, $scope, DemoService, $angularCacheFactory) {
     'use strict';

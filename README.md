@@ -284,7 +284,7 @@ Get angular-cache from the [Download](#download) section and include it on your 
 #### Load angular-cache
 Make sure angular-cache is included on your web page after `angular.js`.
 ```javascript
-angular.module('myApp', ['angular-cache']);
+angular.module('myApp', ['jmdobry.angular-cache']);
 ```
 See [angular-cache](http://jmdobry.github.io/angular-cache/docs/module-angular-cache.html)
 
