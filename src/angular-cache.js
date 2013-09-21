@@ -98,7 +98,10 @@
                  */
                 function _setTimeoutToRemove(key, delay) {
                     data[key].timeoutId = $timeout(function () {
-                        var value = data[key].value;
+                        var value;
+                        if (data[key]) {
+                            value = data[key].value;
+                        }
                         self.remove(key);
                         if (config.onExpire) {
                             config.onExpire(key, value);
@@ -292,12 +295,9 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        if (config.storageMode && storage) {
-                                            storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
-                                        }
                                         keys = _keys(data);
                                         for (i = 0; i < keys.length; i++) {
-                                            storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
+                                            _syncToStorage(keys[i]);
                                         }
                                     }
                                 }
@@ -309,12 +309,9 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        if (config.storageMode && storage) {
-                                            storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
-                                        }
                                         keys = _keys(data);
                                         for (i = 0; i < keys.length; i++) {
-                                            storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
+                                            _syncToStorage(keys[i]);
                                         }
                                     }
                                 }
@@ -472,8 +469,22 @@
                                 self.put(keys[i], data.value, options);
                             }
                         }
-                        if (config.storageMode && storage) {
-                            storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                        _syncToStorage(null);
+                    }
+                }
+
+                /**
+                 * @method _syncToStorage
+                 * @desc If storageMode is set, sync to localStorage.
+                 * @param {String} key The identifier of the item to sync.
+                 * @private
+                 * @ignore
+                 */
+                function _syncToStorage(key) {
+                    if (config.storageMode && storage) {
+                        storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                        if (key) {
+                            storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
                         }
                     }
                 }
@@ -483,7 +494,7 @@
                  * @desc Add a key-value pair with timestamp to the cache.
                  * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {Object} [options] { maxAge: {Number}, deleteOnExpire: {String}, timestamp: {Number} }
+                 * @param {Object} [options] {{ maxAge: {Number}, aggressiveDelete: {Boolean}, timestamp: {Number} }}
                  * @returns {*} value The value of the item added to the cache.
                  * @privileged
                  */
@@ -533,16 +544,13 @@
                     }
 
                     if (data[key] || config.maxAge) {
-                        if (data[key].deleteOnExpire === 'aggressive' || config.deleteOnExpire === 'aggressive' &&
-                            data[key].maxAge || config.maxAge) {
+                        if ((data[key].deleteOnExpire === 'aggressive' || config.deleteOnExpire === 'aggressive') &&
+                            (data[key].maxAge || config.maxAge)) {
                             _setTimeoutToRemove(key, data[key].maxAge || config.maxAge);
                         }
                     }
 
-                    if (config.storageMode && storage) {
-                        storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
-                        storage.setItem(prefix + '.data.' + key, angular.toJson(data));
-                    }
+                    _syncToStorage(key);
 
                     if (size > config.capacity) {
                         this.remove(staleEnd.key);
@@ -595,6 +603,8 @@
 
                     _refresh(lruEntry);
 
+                    _syncToStorage(key);
+
                     return item.value;
                 };
 
@@ -622,8 +632,9 @@
                     delete lruHash[key];
                     delete data[key];
 
-                    if (config.storageMode && storage) {
-                        storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                    _syncToStorage(null);
+
+                    if (config.storageMode) {
                         storage.removeItem(prefix + '.data.' + key);
                     }
 
@@ -649,9 +660,7 @@
                     freshEnd = null;
                     staleEnd = null;
 
-                    if (config.storageMode && storage) {
-                        storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
-                    }
+                    _syncToStorage(null);
                 };
 
                 /**
@@ -686,8 +695,21 @@
                  * @returns {Object} stats Object containing information about this cache.
                  * @privileged
                  */
-                this.info = function () {
-                    return angular.extend({}, config, { size: size });
+                this.info = function (key) {
+                    if (key in data) {
+                        var info = {
+                            timestamp: data[key].timestamp,
+                            maxAge: data[key].maxAge || config.maxAge,
+                            deleteOnExpire: data[key].deleteOnExpire || config.deleteOnExpire,
+                            isExpired: false
+                        };
+                        if (info.maxAge) {
+                            info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                        }
+                        return info;
+                    } else {
+                        return angular.extend({}, config, { size: size });
+                    }
                 };
 
                 /**
