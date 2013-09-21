@@ -131,7 +131,7 @@ describe('AngularCache', function () {
             waits(100);
             runs(function () {
                 $timeout.flush();
-                // TODO: expect(cache.info('item1')).toEqual(undefined); because right now it returns the cache's info if the item isn't in the cache
+                expect(cache.info('item1')).toEqual(undefined);
                 expect(cache.get('item1')).toEqual(undefined);
                 cache.destroy();
             });
@@ -165,7 +165,7 @@ describe('AngularCache', function () {
             waits(100);
             runs(function () {
                 $timeout.flush();
-                // TODO: expect(cache.info('item1')).toEqual(undefined); because right now it returns the cache's info if the item isn't in the cache
+                expect(cache.info('item1')).toEqual(undefined);
                 expect(cache.get('item1')).toEqual(undefined);
                 cache.destroy();
             });

@@ -692,21 +692,26 @@
                 /**
                  * @method AngularCache.info
                  * @desc Return an object containing information about this cache.
+                 * @param {String} [key] The key of the item about which to retrieve information.
                  * @returns {Object} stats Object containing information about this cache.
                  * @privileged
                  */
                 this.info = function (key) {
-                    if (key in data) {
-                        var info = {
-                            timestamp: data[key].timestamp,
-                            maxAge: data[key].maxAge || config.maxAge,
-                            deleteOnExpire: data[key].deleteOnExpire || config.deleteOnExpire,
-                            isExpired: false
-                        };
-                        if (info.maxAge) {
-                            info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                    if (key) {
+                        if (data[key]) {
+                            var info = {
+                                timestamp: data[key].timestamp,
+                                maxAge: data[key].maxAge || config.maxAge,
+                                deleteOnExpire: data[key].deleteOnExpire || config.deleteOnExpire,
+                                isExpired: false
+                            };
+                            if (info.maxAge) {
+                                info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                            }
+                            return info;
+                        } else {
+                            return data[key];
                         }
-                        return info;
                     } else {
                         return angular.extend({}, config, { size: size });
                     }
