@@ -1,3 +1,12 @@
+##### 2.0.0 - xx October 2013
+
+###### Breaking API changes
+- Swapped `aggressiveDelete` option for `deleteOnExpire` option.
+
+###### Backwards compatible API changes
+
+###### Backwards compatible bug fixes
+
 ##### 1.2.0 - 20 September 2013
 
 ###### Backwards compatible API changes

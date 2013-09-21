@@ -346,7 +346,7 @@
                     }
 
                     // setup deleteOnExpire
-                    if (options.hasOwnProperty('deleteOnExpire') || strict) {
+                    if (options.deleteOnExpire || strict) {
                         _setDeleteOnExpire(options.deleteOnExpire ? options.deleteOnExpire : null, function (err, deleteOnExpire) {
                             if (err) {
                                 throw new Error('deleteOnExpire: ' + err);
