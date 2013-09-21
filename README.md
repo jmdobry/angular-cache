@@ -597,6 +597,9 @@ app.service('myService', function ($angularCacheFactory) {
 
     cache.info(); // { ..., size: 30, cacheFlushInterval: 5500,
                   //   capacity: 1.7976931348623157e+308, maxAge: null, ... }
+
+    cache.put('someItem', 'someValue', { maxAge: 12000, aggressiveDelete: true });
+    cache.info('someItem'); // { timestamp: 12345678978, maxAge: 12000, aggressiveDelete: true, isExpired: false }
 });
 ```
 See [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/Cache.html#setOptions)
