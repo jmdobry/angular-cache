@@ -2,7 +2,7 @@
     "author": "Jason Dobry",
     "name": "angular-cache",
     "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-    "version": "1.2.0-SNAPSHOT",
+    "version": "2.0.0-SNAPSHOT",
     "homepage": "http://jmdobry.github.io/angular-cache/",
     "repository": {
         "type": "git",
