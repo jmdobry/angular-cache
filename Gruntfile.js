@@ -13,7 +13,7 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         clean: ['dist/', 'docs/'],
         jshint: {
-            all: ['Gruntfile.js', 'src/**/*.js', 'test/angular-cacheSpec.js'],
+            all: ['Gruntfile.js', 'src/**/*.js', 'test/*.js'],
             jshintrc: '.jshintrc'
         },
         copy: {
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
         },
         karma: {
             options: {
-                configFile: 'test/karma.conf.js',
+                configFile: './karma.conf.js',
                 singleRun: true,
                 autoWatch: false
             },

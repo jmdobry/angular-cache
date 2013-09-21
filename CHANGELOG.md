@@ -1,3 +1,11 @@
+##### 1.2.0 - 20 September 2013
+
+###### Backwards compatible API changes
+- Added AngularCache#info(key) #43
+
+###### Backwards compatible bug fixes
+- Fixed #39, #44, #49, #50
+
 ##### 1.1.0 - 03 September 2013
 
 ###### Backwards compatible API changes
