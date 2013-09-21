@@ -4,6 +4,8 @@ Check out the [demo](http://jmdobry.github.io/angular-cache/demo/) for a quick i
 
 The goal of the project is to solve a general problem, not satisfy a specific scenario.
 
+See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for upgrading from 1.x.x to 2.x.x.
+
 ### Quick Introduction
 
 #### [View the Demo](http://jmdobry.github.io/angular-cache/demo/)
@@ -28,7 +30,7 @@ app.service('myService', function ($angularCacheFactory) {
     $angularCacheFactory('myNewCache', {
         capacity: 1000,  // This cache can hold 1000 items,
         maxAge: 90000, // Items added to this cache expire after 15 minutes
-        aggressiveDelete: true, // Items will be actively deleted when they expire
+        deleteOnExpire: 'aggressive', // Items will be actively deleted when they expire
         cacheFlushInterval: 3600000, // This cache will clear itself every hour,
         storageMode: 'localStorage' // This cache will sync itself with localStorage,
         onExpire: function (key, value) {
@@ -75,19 +77,19 @@ $angularCacheFactory('otherCache', { localStorageImpl: mySessionStorageImplement
 __Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then that feature will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods. See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
 
 ##### `maxAge`
-Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively depending on the value of `aggressiveDelete` (see below). Can be configured on a per-item basis for greater specificity.
+Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively or not at all depending on the value of `deleteOnExpire` (see below). Can be configured on a per-item basis for greater specificity.
 
 ```javascript
 $angularCacheFactory('newCache', { maxAge: 36000 });
 ```
 
-##### `aggressiveDelete`
-If true and maxAge is set, then items will be actively deleted right when they expire, otherwise items won't be deleted until they are requested but it is discovered that they have expired and are deleted, resulting in a miss. Can be configured on a per-item basis for greater specificity.
+##### `deleteOnExpire`
+If deleteOnExpire is set to 'aggressive' and maxAge is set, then items will be actively deleted right when they expire. If deleteOnExpire is set to 'passive' items won't be deleted until they are requested but it is discovered that they have expired and are deleted, resulting in a miss. Items will expire but not deleted if deleteOnExpire is set to 'none'. Can be configured on a per-item basis for greater specificity.
 
 ```javascript
 $angularCacheFactory('newCache', {
     maxAge: 36000,
-    aggressiveDelete: true
+    deleteOnExpire: 'aggressive'
 });
 ```
 
@@ -336,7 +338,7 @@ app.service('myService', function ($angularCacheFactory) {
         capacity: 10, // This cache can only hold 10 items.
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
+        deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
         localStorageImpl: myAwesomeLSImpl // This cache will use a custom implementation of localStorage.
     });
@@ -356,7 +358,7 @@ app.service('myService', function ($angularCacheFactory) {
     var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
+        deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     });
 });
@@ -382,7 +384,7 @@ app.service('myService', function ($angularCacheFactory) {
     var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
+        deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
         localStorageImpl: localStoragePolyfill // angular-cache will use this polyfill instead of looking for localStorage
     });
@@ -391,7 +393,7 @@ app.service('myService', function ($angularCacheFactory) {
     var options = {
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        aggressiveDelete: true, // Items will be deleted from this cache right when they expire.
+        deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     };
     if (!window.localStorage) {
@@ -444,7 +446,7 @@ app.run(function ($http, $angularCacheFactory) {
     $angularCacheFactory('defaultCache', {
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        aggressiveDelete: true // Items will be deleted from this cache right when they expire.
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
     });
 
     $http.defaults.cache = $angularCacheFactory.get('defaultCache');
@@ -487,7 +489,7 @@ app.service('myService', function ($http, $angularCacheFactory) {
     $angularCacheFactory('dataCache', {
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        aggressiveDelete: true // Items will be deleted from this cache right when they expire.
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
     });
 
     return {
@@ -526,7 +528,7 @@ app.service('myService', function ($http, $angularCacheFactory) {
     $angularCacheFactory('dataCache', {
         maxAge: 90000, // Items added to this cache expire after 15 minutes.
         cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        aggressiveDelete: true // Items will be deleted from this cache right when they expire.
+        deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
     });
 
     return {
@@ -598,8 +600,8 @@ app.service('myService', function ($angularCacheFactory) {
     cache.info(); // { ..., size: 30, cacheFlushInterval: 5500,
                   //   capacity: 1.7976931348623157e+308, maxAge: null, ... }
 
-    cache.put('someItem', 'someValue', { maxAge: 12000, aggressiveDelete: true });
-    cache.info('someItem'); // { timestamp: 12345678978, maxAge: 12000, aggressiveDelete: true, isExpired: false }
+    cache.put('someItem', 'someValue', { maxAge: 12000, deleteOnExpire: 'aggressive' });
+    cache.info('someItem'); // { timestamp: 12345678978, maxAge: 12000, deleteOnExpire: 'aggressive', isExpired: false }
 });
 ```
 See [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/Cache.html#setOptions)
@@ -700,6 +702,15 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 
 <a name='changelog'></a>
 ## Changelog
+
+##### 2.0.0 - xx October 2013
+
+###### Breaking API changes
+- Swapped `aggressiveDelete` option for `deleteOnExpire` option.
+
+###### Backwards compatible API changes
+
+###### Backwards compatible bug fixes
 
 ##### 1.2.0 - 20 September 2013
 
