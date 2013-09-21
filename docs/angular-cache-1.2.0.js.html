@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: angular-cache-1.1.0.js</title>
+    <title>JSDoc: Source: angular-cache-1.2.0.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: angular-cache-1.1.0.js</h1>
+    <h1 class="page-title">Source: angular-cache-1.2.0.js</h1>
     
     
 
@@ -27,8 +27,8 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * @author Jason Dobry &lt;jason.dobry@gmail.com>
- * @file angular-cache-1.1.0.js
- * @version 1.1.0 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @file angular-cache-1.2.0.js
+ * @version 1.2.0 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
  * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/angular-cache>
  * @license MIT &lt;https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -325,7 +325,7 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _saveCacheConfig();
+                                        _syncToStorage(null);
                                         keys = _keys(data);
                                         for (i = 0; i &lt; keys.length; i++) {
                                             storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
@@ -340,7 +340,7 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _saveCacheConfig();
+                                        _syncToStorage(null);
                                         keys = _keys(data);
                                         for (i = 0; i &lt; keys.length; i++) {
                                             storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
@@ -497,22 +497,26 @@
                                 if (data.hasOwnProperty('aggressiveDelete')) {
                                     options.aggressiveDelete = data.aggressiveDelete;
                                 }
-                                self.put(keys[i], data.value);
+                                self.put(keys[i], data.value, options);
                             }
                         }
-                        _saveCacheConfig();
+                        _syncToStorage(null, null);
                     }
                 }
 
                 /**
-                 * @method _saveCacheConfig
-                 * @desc If storageMode is set, save current keys of cache to localStorage.
+                 * @method _syncToStorage
+                 * @desc If storageMode is set, sync to localStorage.
+                 * @param {String} key The identifier of the item to sync.
                  * @private
                  * @ignore
                  */
-                function _saveCacheConfig() {
+                function _syncToStorage(key) {
                     if (config.storageMode && storage) {
                         storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                        if (key) {
+                            storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
+                        }
                     }
                 }
 
@@ -521,7 +525,7 @@
                  * @desc Add a key-value pair with timestamp to the cache.
                  * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {Object} [options] { maxAge: {Number} }
+                 * @param {Object} [options] {{ maxAge: {Number}, aggressiveDelete: {Boolean}, timestamp: {Number} }}
                  * @returns {*} value The value of the item added to the cache.
                  * @privileged
                  */
@@ -552,11 +556,19 @@
 
                     if (!(key in data)) {
                         size++;
+                    } else {
+                        if (data[key].timeoutId) {
+                            $timeout.cancel(data[key].timeoutId);
+                        }
                     }
 
                     data[key] = {
                         value: value
                     };
+
+                    if (options && options.maxAge) {
+                        data[key].maxAge = options.maxAge;
+                    }
 
                     if (options && options.hasOwnProperty('aggressiveDelete')) {
                         data[key].aggressiveDelete = options.aggressiveDelete;
@@ -565,19 +577,12 @@
                     data[key].timestamp = (options && options.timestamp) || new Date().getTime();
 
                     if ((options && options.maxAge) || config.maxAge) {
-                        if (data[key].timeoutId) {
-                            $timeout.cancel(data[key].timeoutId);
-                        }
                         if (data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete)) {
                             _setTimeoutToRemove(key, ((options && options.maxAge) || config.maxAge));
                         }
                     }
 
-                    _saveCacheConfig();
-
-                    if (config.storageMode) {
-                        storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
-                    }
+                    _syncToStorage(key);
 
                     if (size > config.capacity) {
                         this.remove(staleEnd.key);
@@ -630,6 +635,8 @@
 
                     _refresh(lruEntry);
 
+                    _syncToStorage(key);
+
                     return item.value;
                 };
 
@@ -657,7 +664,7 @@
                     delete lruHash[key];
                     delete data[key];
 
-                    _saveCacheConfig();
+                    _syncToStorage(null);
 
                     if (config.storageMode) {
                         storage.removeItem(prefix + '.data.' + key);
@@ -686,7 +693,7 @@
                     staleEnd = null;
 
                     if (config.storageMode) {
-                        _saveCacheConfig();
+                        _syncToStorage();
                     }
                 };
 
@@ -719,8 +726,21 @@
                  * @returns {Object} stats Object containing information about this cache.
                  * @privileged
                  */
-                this.info = function () {
-                    return angular.extend({}, config, { size: size });
+                this.info = function (key) {
+                    if (key in data) {
+                        var info = {
+                            timestamp: data[key].timestamp,
+                            maxAge: data[key].maxAge || config.maxAge,
+                            aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete) || false,
+                            isExpired: false
+                        };
+                        if (info.maxAge) {
+                            info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                        }
+                        return info;
+                    } else {
+                        return angular.extend({}, config, { size: size });
+                    }
                 };
 
                 /**
@@ -872,7 +892,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 03 2013 12:54:34 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sat Sep 21 2013 10:34:05 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

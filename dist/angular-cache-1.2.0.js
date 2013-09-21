@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-1.1.0.js
- * @version 1.1.0 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @file angular-cache-1.2.0.js
+ * @version 1.2.0 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
  * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -298,7 +298,7 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _saveCacheConfig();
+                                        _syncToStorage(null);
                                         keys = _keys(data);
                                         for (i = 0; i < keys.length; i++) {
                                             storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
@@ -313,7 +313,7 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _saveCacheConfig();
+                                        _syncToStorage(null);
                                         keys = _keys(data);
                                         for (i = 0; i < keys.length; i++) {
                                             storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
@@ -470,22 +470,26 @@
                                 if (data.hasOwnProperty('aggressiveDelete')) {
                                     options.aggressiveDelete = data.aggressiveDelete;
                                 }
-                                self.put(keys[i], data.value);
+                                self.put(keys[i], data.value, options);
                             }
                         }
-                        _saveCacheConfig();
+                        _syncToStorage(null, null);
                     }
                 }
 
                 /**
-                 * @method _saveCacheConfig
-                 * @desc If storageMode is set, save current keys of cache to localStorage.
+                 * @method _syncToStorage
+                 * @desc If storageMode is set, sync to localStorage.
+                 * @param {String} key The identifier of the item to sync.
                  * @private
                  * @ignore
                  */
-                function _saveCacheConfig() {
+                function _syncToStorage(key) {
                     if (config.storageMode && storage) {
                         storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                        if (key) {
+                            storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
+                        }
                     }
                 }
 
@@ -494,7 +498,7 @@
                  * @desc Add a key-value pair with timestamp to the cache.
                  * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {Object} [options] { maxAge: {Number} }
+                 * @param {Object} [options] {{ maxAge: {Number}, aggressiveDelete: {Boolean}, timestamp: {Number} }}
                  * @returns {*} value The value of the item added to the cache.
                  * @privileged
                  */
@@ -525,11 +529,19 @@
 
                     if (!(key in data)) {
                         size++;
+                    } else {
+                        if (data[key].timeoutId) {
+                            $timeout.cancel(data[key].timeoutId);
+                        }
                     }
 
                     data[key] = {
                         value: value
                     };
+
+                    if (options && options.maxAge) {
+                        data[key].maxAge = options.maxAge;
+                    }
 
                     if (options && options.hasOwnProperty('aggressiveDelete')) {
                         data[key].aggressiveDelete = options.aggressiveDelete;
@@ -538,19 +550,12 @@
                     data[key].timestamp = (options && options.timestamp) || new Date().getTime();
 
                     if ((options && options.maxAge) || config.maxAge) {
-                        if (data[key].timeoutId) {
-                            $timeout.cancel(data[key].timeoutId);
-                        }
                         if (data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete)) {
                             _setTimeoutToRemove(key, ((options && options.maxAge) || config.maxAge));
                         }
                     }
 
-                    _saveCacheConfig();
-
-                    if (config.storageMode) {
-                        storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
-                    }
+                    _syncToStorage(key);
 
                     if (size > config.capacity) {
                         this.remove(staleEnd.key);
@@ -603,6 +608,8 @@
 
                     _refresh(lruEntry);
 
+                    _syncToStorage(key);
+
                     return item.value;
                 };
 
@@ -630,7 +637,7 @@
                     delete lruHash[key];
                     delete data[key];
 
-                    _saveCacheConfig();
+                    _syncToStorage(null);
 
                     if (config.storageMode) {
                         storage.removeItem(prefix + '.data.' + key);
@@ -659,7 +666,7 @@
                     staleEnd = null;
 
                     if (config.storageMode) {
-                        _saveCacheConfig();
+                        _syncToStorage();
                     }
                 };
 
@@ -692,8 +699,21 @@
                  * @returns {Object} stats Object containing information about this cache.
                  * @privileged
                  */
-                this.info = function () {
-                    return angular.extend({}, config, { size: size });
+                this.info = function (key) {
+                    if (key in data) {
+                        var info = {
+                            timestamp: data[key].timestamp,
+                            maxAge: data[key].maxAge || config.maxAge,
+                            aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete) || false,
+                            isExpired: false
+                        };
+                        if (info.maxAge) {
+                            info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                        }
+                        return info;
+                    } else {
+                        return angular.extend({}, config, { size: size });
+                    }
                 };
 
                 /**
