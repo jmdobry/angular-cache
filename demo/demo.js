@@ -80,7 +80,7 @@ app.controller('DemoCtrl', function ($log, $scope, DemoService, $angularCacheFac
             capacity: parseFloat($scope.defaultCacheOptions.capacity),
             maxAge: parseInt($scope.defaultCacheOptions.maxAge, 10),
             cacheFlushInterval: parseInt($scope.defaultCacheOptions.cacheFlushInterval, 10),
-            aggressiveDelete: !!($scope.defaultCacheOptions.aggressiveDelete == 'true'),
+            deleteOnExpire: $scope.defaultCacheOptions.deleteOnExpire,
             storageMode: $scope.defaultCacheOptions.storageMode
         }, true);
         $scope.editingDefaultCache = false;
@@ -138,10 +138,12 @@ app.service('DemoService', function ($log, $angularCacheFactory) {
             $angularCacheFactory('defaultCache'),
             $angularCacheFactory('capacityCache', {
                 capacity: 10,
-                storageMode: 'localStorage'
+                storageMode: 'localStorage',
+                deleteOnExpire: 'none'
             }),
             $angularCacheFactory('maxAgeCache', {
-                maxAge: 7000,
+                maxAge: 12000,
+                deleteOnExpire: 'passive',
                 onExpire: function (key, value, done) {
                     $log.log(key + ' expired');
                     $log.log('Passive mode onExpire callback executed.');
@@ -150,7 +152,7 @@ app.service('DemoService', function ($log, $angularCacheFactory) {
             }),
             $angularCacheFactory('aggressiveDeleteCache', {
                 maxAge: 4000,
-                aggressiveDelete: true,
+                deleteOnExpire: 'aggressive',
                 onExpire: function (key, value) {
                     $log.log(key + ' expired');
                     $log.log('Aggressive mode onExpire callback executed.');

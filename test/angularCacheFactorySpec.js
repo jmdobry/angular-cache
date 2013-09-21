@@ -22,7 +22,7 @@ describe('AngularCacheFactory', function () {
                 capacity: Math.floor((Math.random() * 100000) + 1),
                 maxAge: Math.floor((Math.random() * 100000) + 1),
                 cacheFlushInterval: Math.floor((Math.random() * 100000) + 1),
-                aggressiveDelete: true,
+                deleteOnExpire: 'aggressive',
                 storageMode: 'localStorage',
                 localStorageImpl: {
                     setItem: function () {
@@ -41,7 +41,7 @@ describe('AngularCacheFactory', function () {
             expect(cache.info().capacity).toEqual(options.capacity);
             expect(cache.info().maxAge).toEqual(options.maxAge);
             expect(cache.info().cacheFlushInterval).toEqual(options.cacheFlushInterval);
-            expect(cache.info().aggressiveDelete).toEqual(options.aggressiveDelete);
+            expect(cache.info().deleteOnExpire).toEqual(options.deleteOnExpire);
             expect(cache.info().storageMode).toEqual(options.storageMode);
             expect(cache.info().localStorageImpl).not.toBeDefined(); // We don't expose this to the user
             expect(cache.info().onExpire).toEqual(options.onExpire);
@@ -138,7 +138,7 @@ describe('AngularCacheFactory', function () {
                     timestamp: new Date().getTime(),
                     maxAge: 10000
                 }));
-                var lsCache = $angularCacheFactory('lsCache', { storageMode: 'localStorage', maxAge: 10, aggressiveDelete: true });
+                var lsCache = $angularCacheFactory('lsCache', { storageMode: 'localStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
                 expect(lsCache.get('lsItem1')).toEqual('value1');
                 localStorage.removeItem('angular-cache.caches.lsCache.data.lsItem1');
                 expect(localStorage.getItem('lsItem1')).toEqual(null);
@@ -161,7 +161,7 @@ describe('AngularCacheFactory', function () {
                             value: 'value2',
                             timestamp: new Date().getTime()
                         }));
-                        var ssCache = $angularCacheFactory('ssCache', { storageMode: 'sessionStorage', maxAge: 10, aggressiveDelete: true });
+                        var ssCache = $angularCacheFactory('ssCache', { storageMode: 'sessionStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
                         expect(ssCache.get('ssItem1')).toEqual('value1');
                         expect(ssCache.get('ssItem2')).toEqual('value2');
                         waits(100);
@@ -210,7 +210,7 @@ describe('AngularCacheFactory', function () {
                 value: 'value2',
                 timestamp: new Date().getTime()
             }));
-            var lsCache = $angularCacheFactory('lsCache', { localStorageImpl: myLocalStorage, storageMode: 'localStorage', maxAge: 10, aggressiveDelete: true });
+            var lsCache = $angularCacheFactory('lsCache', { localStorageImpl: myLocalStorage, storageMode: 'localStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
             expect(lsCache.get('item1')).toEqual('value1');
             expect(lsCache.get('item2')).toEqual('value2');
             waits(100);
@@ -227,7 +227,7 @@ describe('AngularCacheFactory', function () {
                     value: 'value2',
                     timestamp: new Date().getTime()
                 }));
-                var ssCache = $angularCacheFactory('ssCache', { sessionStorageImpl: mySessionStorage, storageMode: 'sessionStorage', maxAge: 10, aggressiveDelete: true });
+                var ssCache = $angularCacheFactory('ssCache', { sessionStorageImpl: mySessionStorage, storageMode: 'sessionStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
                 expect(ssCache.get('item1')).toEqual('value1');
                 expect(ssCache.get('item2')).toEqual('value2');
                 waits(100);

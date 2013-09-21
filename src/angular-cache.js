@@ -87,10 +87,6 @@
 
                 options = options || {};
 
-                if (!options.hasOwnProperty('aggressiveDelete')) {
-                    options.aggressiveDelete = false;
-                }
-
                 /**
                  * @method _setTimeoutToRemove
                  * @desc Removes the item with the given key from this cache after the number of
@@ -159,23 +155,23 @@
                 }
 
                 /**
-                 * @method _setAggressiveDelete
-                 * @desc Set the aggressiveDelete setting for this cache.
-                 * @param {Boolean} aggressiveDelete The new aggressiveDelete for this cache.
+                 * @method _setDeleteOnExpire
+                 * @desc Set the deleteOnExpire setting for this cache.
+                 * @param {Boolean} deleteOnExpire The new deleteOnExpire for this cache.
                  * @param {Function} cb Callback function
                  * @private
                  * @ignore
                  */
-                function _setAggressiveDelete(aggressiveDelete, cb) {
-                    if (aggressiveDelete === null) {
-                        config.aggressiveDelete = false;
-                        cb(null, config.aggressiveDelete);
+                function _setDeleteOnExpire(deleteOnExpire, cb) {
+                    if (deleteOnExpire === null) {
+                        config.deleteOnExpire = 'none';
+                        cb(null, config.deleteOnExpire);
                     } else {
-                        if (aggressiveDelete === true || aggressiveDelete === false) {
-                            config.aggressiveDelete = aggressiveDelete;
-                            cb(null, config.aggressiveDelete);
+                        if (angular.isString(deleteOnExpire)) {
+                            config.deleteOnExpire = deleteOnExpire;
+                            cb(null, config.deleteOnExpire);
                         } else {
-                            cb('must be a boolean!', aggressiveDelete);
+                            cb('must be a string!', deleteOnExpire);
                         }
                     }
                 }
@@ -213,7 +209,7 @@
                                             $timeout.cancel(data[key].timeoutId);
                                         }
                                         var timeRemaining = new Date().getTime() - data[key].timestamp;
-                                        if (config.maxAge - timeRemaining > 0 && config.aggressiveDelete) {
+                                        if (config.maxAge - timeRemaining > 0 && config.deleteOnExpire === 'aggressive') {
                                             _setTimeoutToRemove(key, config.maxAge);
                                         } else {
                                             self.remove(key);
@@ -279,6 +275,7 @@
                  * @ignore
                  */
                 function _setStorageMode(localStorageImpl, sessionStorageImpl, storageMode, cb) {
+                    // TODO: Fix this function–too much duplicated code
                     var keys, i;
                     if ((config.storageMode === 'localStorage' || config.storageMode === 'sessionStorage') &&
                         (storageMode !== 'localStorage' && storageMode !== 'sessionStorage')) {
@@ -298,10 +295,9 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _syncToStorage(null);
                                         keys = _keys(data);
                                         for (i = 0; i < keys.length; i++) {
-                                            storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
+                                            _syncToStorage(keys[i]);
                                         }
                                     }
                                 }
@@ -313,10 +309,9 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _syncToStorage(null);
                                         keys = _keys(data);
                                         for (i = 0; i < keys.length; i++) {
-                                            storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
+                                            _syncToStorage(keys[i]);
                                         }
                                     }
                                 }
@@ -350,11 +345,11 @@
                         });
                     }
 
-                    // setup aggressiveDelete
-                    if (options.hasOwnProperty('aggressiveDelete') || strict) {
-                        _setAggressiveDelete(options.hasOwnProperty('aggressiveDelete') ? options.aggressiveDelete : null, function (err, aggressiveDelete) {
+                    // setup deleteOnExpire
+                    if (options.deleteOnExpire || strict) {
+                        _setDeleteOnExpire(options.deleteOnExpire ? options.deleteOnExpire : null, function (err, deleteOnExpire) {
                             if (err) {
-                                throw new Error('aggressiveDelete: ' + err);
+                                throw new Error('deleteOnExpire: ' + err);
                             }
                         });
                     }
@@ -457,8 +452,9 @@
                     if (keys && keys.length) {
                         for (var i = 0; i < keys.length; i++) {
                             var data = angular.fromJson(storage.getItem(prefix + '.data.' + keys[i])),
-                                maxAge = data.maxAge || config.maxAge;
-                            if (maxAge && ((new Date().getTime() - data.timestamp) > maxAge)) {
+                                maxAge = data.maxAge || config.maxAge,
+                                deleteOnExpire = data.deleteOnExpire || config.deleteOnExpire;
+                            if (maxAge && ((new Date().getTime() - data.timestamp) > maxAge) && deleteOnExpire === 'aggressive') {
                                 storage.removeItem(prefix + '.data.' + keys[i]);
                             } else {
                                 var options = {
@@ -467,13 +463,13 @@
                                 if (data.maxAge) {
                                     options.maxAge = data.maxAge;
                                 }
-                                if (data.hasOwnProperty('aggressiveDelete')) {
-                                    options.aggressiveDelete = data.aggressiveDelete;
+                                if (data.deleteOnExpire) {
+                                    options.deleteOnExpire = data.deleteOnExpire;
                                 }
                                 self.put(keys[i], data.value, options);
                             }
                         }
-                        _syncToStorage(null, null);
+                        _syncToStorage(null);
                     }
                 }
 
@@ -505,7 +501,7 @@
                 this.put = function (key, value, options) {
 
                     if (!angular.isString(key)) {
-                        throw new Error('The key must be a string!');
+                        throw new Error('AngularCache.put(): key: must be a string!');
                     }
                     if (options && options.maxAge) {
                         _validateNumberOption(options.maxAge, function (err, maxAge) {
@@ -514,9 +510,9 @@
                             }
                         });
                     }
-                    if (options && options.hasOwnProperty('aggressiveDelete')) {
-                        if (options.aggressiveDelete !== true && options.aggressiveDelete !== false) {
-                            throw new Error('AngularCache.put(): aggressiveDelete must be a boolean!');
+                    if (options && options.deleteOnExpire) {
+                        if (!angular.isString(options.deleteOnExpire)) {
+                            throw new Error('AngularCache.put(): deleteOnExpire: must be a string!');
                         }
                     }
                     if (angular.isUndefined(value)) {
@@ -536,22 +532,21 @@
                     }
 
                     data[key] = {
-                        value: value
+                        value: value,
+                        timestamp: (options && options.timestamp) || new Date().getTime()
                     };
 
+                    if (options && options.deleteOnExpire) {
+                        data[key].deleteOnExpire = options.deleteOnExpire;
+                    }
                     if (options && options.maxAge) {
                         data[key].maxAge = options.maxAge;
                     }
 
-                    if (options && options.hasOwnProperty('aggressiveDelete')) {
-                        data[key].aggressiveDelete = options.aggressiveDelete;
-                    }
-
-                    data[key].timestamp = (options && options.timestamp) || new Date().getTime();
-
-                    if ((options && options.maxAge) || config.maxAge) {
-                        if (data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete)) {
-                            _setTimeoutToRemove(key, ((options && options.maxAge) || config.maxAge));
+                    if (data[key] || config.maxAge) {
+                        if ((data[key].deleteOnExpire === 'aggressive' || config.deleteOnExpire === 'aggressive') &&
+                            (data[key].maxAge || config.maxAge)) {
+                            _setTimeoutToRemove(key, data[key].maxAge || config.maxAge);
                         }
                     }
 
@@ -577,17 +572,17 @@
                     var lruEntry = lruHash[key],
                         item = data[key],
                         maxAge,
-                        aggressiveDelete;
+                        deleteOnExpire;
 
                     if (!lruEntry || !item) {
                         return;
                     }
 
                     maxAge = item.maxAge || config.maxAge;
-                    aggressiveDelete = item.hasOwnProperty('aggressiveDelete') ? item.aggressiveDelete : config.aggressiveDelete;
+                    deleteOnExpire = item.deleteOnExpire || config.deleteOnExpire;
 
                     // There is no timeout to delete this item, so we must do it here if it's expired.
-                    if (!aggressiveDelete && maxAge) {
+                    if (maxAge && deleteOnExpire === 'passive') {
                         if ((new Date().getTime() - item.timestamp) > maxAge) {
                             // This item is expired so remove it
                             this.remove(key);
@@ -652,7 +647,7 @@
                  * @privileged
                  */
                 this.removeAll = function () {
-                    if (config.storageMode) {
+                    if (config.storageMode && storage) {
                         var keys = _keys(data);
                         for (var i = 0; i < keys.length; i++) {
                             storage.removeItem(prefix + '.data.' + keys[i]);
@@ -665,9 +660,7 @@
                     freshEnd = null;
                     staleEnd = null;
 
-                    if (config.storageMode) {
-                        _syncToStorage();
-                    }
+                    _syncToStorage(null);
                 };
 
                 /**
@@ -676,12 +669,15 @@
                  * @privileged
                  */
                 this.destroy = function () {
-                    clearInterval(config.cacheFlushIntervalId);
-                    if (config.storageMode) {
+                    if (config.cacheFlushIntervalId) {
+                        clearInterval(config.cacheFlushIntervalId);
+                    }
+                    if (config.storageMode && storage) {
                         this.removeAll();
                         storage.removeItem(prefix + '.keys');
                         storage.removeItem(prefix);
                     }
+                    storage = null;
                     data = null;
                     config = null;
                     lruHash = null;
@@ -704,7 +700,7 @@
                         var info = {
                             timestamp: data[key].timestamp,
                             maxAge: data[key].maxAge || config.maxAge,
-                            aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete) || false,
+                            deleteOnExpire: data[key].deleteOnExpire || config.deleteOnExpire,
                             isExpired: false
                         };
                         if (info.maxAge) {
@@ -753,7 +749,7 @@
             /**
              * @class AngularCacheFactory
              * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] { capacity: {Number}, maxAge: {Number} }
+             * @param {Object} [options] {{capacity: Number, maxAge: Number, deleteOnExpire: String, onExpire: Function, cacheFlushInterval: Number, storageMode: String, localStorageImpl: Object, sessionStorageImpl: Object}}
              * @returns {AngularCache}
              */
             function angularCacheFactory(cacheId, options) {
