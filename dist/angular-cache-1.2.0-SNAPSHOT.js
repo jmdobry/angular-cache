@@ -1,36 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: angular-cache-1.1.0.js</title>
-    
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-    
-    <h1 class="page-title">Source: angular-cache-1.1.0.js</h1>
-    
-    
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source"><code>/**
- * @author Jason Dobry &lt;jason.dobry@gmail.com>
- * @file angular-cache-1.1.0.js
- * @version 1.1.0 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
- * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/angular-cache>
- * @license MIT &lt;https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
+/**
+ * @author Jason Dobry <jason.dobry@gmail.com>
+ * @file angular-cache-1.2.0-SNAPSHOT.js
+ * @version 1.2.0-SNAPSHOT - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
+ * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
  * @overview angular-cache is a caching system that improves upon the capabilities of the
  * $cacheFactory provided by AngularJS.
@@ -96,7 +69,7 @@
 
             /**
              * @class AngularCache
-             * @desc Instantiated via &lt;code>$angularCacheFactory(cacheId[, options])&lt;/code>
+             * @desc Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
              * @param {String} cacheId The id of the new cache.
              * @param {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [aggressiveDelete]: Boolean, [onExpire]: Function, [storageMode]: String, [localStorageImpl]: Object}}
              */
@@ -151,7 +124,7 @@
                 function _validateNumberOption(option, cb) {
                     if (!angular.isNumber(option)) {
                         cb('must be a number!', option);
-                    } else if (option &lt; 0) {
+                    } else if (option < 0) {
                         cb('must be greater than zero!', option);
                     } else {
                         cb(null, option);
@@ -220,7 +193,7 @@
 
                     if (maxAge === null) {
                         config.maxAge = maxAge;
-                        for (var i = 0; i &lt; keys.length; i++) {
+                        for (var i = 0; i < keys.length; i++) {
                             var key = keys[i];
                             if (data[key].timeoutId && !data[key].maxAge) {
                                 $timeout.cancel(data[key].timeoutId);
@@ -233,7 +206,7 @@
                                 cb(err, maxAge);
                             } else {
                                 config.maxAge = maxAge;
-                                for (var i = 0; i &lt; keys.length; i++) {
+                                for (var i = 0; i < keys.length; i++) {
                                     var key = keys[i];
                                     if (!data[key].maxAge) {
                                         if (data[key].timeoutId) {
@@ -277,7 +250,7 @@
                                 config.cacheFlushInterval = cacheFlushInterval;
                                 config.cacheFlushIntervalId = setInterval(function () {
                                     var keys = _keys(data);
-                                    for (var i = 0; i &lt; keys.length; i++) {
+                                    for (var i = 0; i < keys.length; i++) {
                                         var key = keys[i];
                                         if (data[key].timeoutId) {
                                             $timeout.cancel(data[key].timeoutId);
@@ -310,7 +283,7 @@
                     if ((config.storageMode === 'localStorage' || config.storageMode === 'sessionStorage') &&
                         (storageMode !== 'localStorage' && storageMode !== 'sessionStorage')) {
                         keys = _keys(data);
-                        for (i = 0; i &lt; keys.length; i++) {
+                        for (i = 0; i < keys.length; i++) {
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                         storage.removeItem(prefix + '.keys');
@@ -325,9 +298,9 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _saveCacheConfig();
+                                        _syncToStorage(null);
                                         keys = _keys(data);
-                                        for (i = 0; i &lt; keys.length; i++) {
+                                        for (i = 0; i < keys.length; i++) {
                                             storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
                                         }
                                     }
@@ -340,9 +313,9 @@
                                     if (!cacheDirty) {
                                         _loadCacheConfig();
                                     } else {
-                                        _saveCacheConfig();
+                                        _syncToStorage(null);
                                         keys = _keys(data);
-                                        for (i = 0; i &lt; keys.length; i++) {
+                                        for (i = 0; i < keys.length; i++) {
                                             storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
                                         }
                                     }
@@ -482,7 +455,7 @@
                     var keys = angular.fromJson(storage.getItem(prefix + '.keys'));
                     storage.removeItem(prefix + '.keys');
                     if (keys && keys.length) {
-                        for (var i = 0; i &lt; keys.length; i++) {
+                        for (var i = 0; i < keys.length; i++) {
                             var data = angular.fromJson(storage.getItem(prefix + '.data.' + keys[i])),
                                 maxAge = data.maxAge || config.maxAge;
                             if (maxAge && ((new Date().getTime() - data.timestamp) > maxAge)) {
@@ -497,22 +470,26 @@
                                 if (data.hasOwnProperty('aggressiveDelete')) {
                                     options.aggressiveDelete = data.aggressiveDelete;
                                 }
-                                self.put(keys[i], data.value);
+                                self.put(keys[i], data.value, options);
                             }
                         }
-                        _saveCacheConfig();
+                        _syncToStorage(null, null);
                     }
                 }
 
                 /**
-                 * @method _saveCacheConfig
-                 * @desc If storageMode is set, save current keys of cache to localStorage.
+                 * @method _syncToStorage
+                 * @desc If storageMode is set, sync to localStorage.
+                 * @param {String} key The identifier of the item to sync.
                  * @private
                  * @ignore
                  */
-                function _saveCacheConfig() {
+                function _syncToStorage(key) {
                     if (config.storageMode && storage) {
                         storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                        if (key) {
+                            storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
+                        }
                     }
                 }
 
@@ -521,7 +498,7 @@
                  * @desc Add a key-value pair with timestamp to the cache.
                  * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {Object} [options] { maxAge: {Number} }
+                 * @param {Object} [options] {{ maxAge: {Number}, aggressiveDelete: {Boolean}, timestamp: {Number} }}
                  * @returns {*} value The value of the item added to the cache.
                  * @privileged
                  */
@@ -552,11 +529,19 @@
 
                     if (!(key in data)) {
                         size++;
+                    } else {
+                        if (data[key].timeoutId) {
+                            $timeout.cancel(data[key].timeoutId);
+                        }
                     }
 
                     data[key] = {
                         value: value
                     };
+
+                    if (options && options.maxAge) {
+                        data[key].maxAge = options.maxAge;
+                    }
 
                     if (options && options.hasOwnProperty('aggressiveDelete')) {
                         data[key].aggressiveDelete = options.aggressiveDelete;
@@ -565,19 +550,12 @@
                     data[key].timestamp = (options && options.timestamp) || new Date().getTime();
 
                     if ((options && options.maxAge) || config.maxAge) {
-                        if (data[key].timeoutId) {
-                            $timeout.cancel(data[key].timeoutId);
-                        }
                         if (data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete)) {
                             _setTimeoutToRemove(key, ((options && options.maxAge) || config.maxAge));
                         }
                     }
 
-                    _saveCacheConfig();
-
-                    if (config.storageMode) {
-                        storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
-                    }
+                    _syncToStorage(key);
 
                     if (size > config.capacity) {
                         this.remove(staleEnd.key);
@@ -630,6 +608,8 @@
 
                     _refresh(lruEntry);
 
+                    _syncToStorage(key);
+
                     return item.value;
                 };
 
@@ -657,7 +637,7 @@
                     delete lruHash[key];
                     delete data[key];
 
-                    _saveCacheConfig();
+                    _syncToStorage(null);
 
                     if (config.storageMode) {
                         storage.removeItem(prefix + '.data.' + key);
@@ -674,7 +654,7 @@
                 this.removeAll = function () {
                     if (config.storageMode) {
                         var keys = _keys(data);
-                        for (var i = 0; i &lt; keys.length; i++) {
+                        for (var i = 0; i < keys.length; i++) {
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                     }
@@ -686,7 +666,7 @@
                     staleEnd = null;
 
                     if (config.storageMode) {
-                        _saveCacheConfig();
+                        _syncToStorage();
                     }
                 };
 
@@ -719,8 +699,21 @@
                  * @returns {Object} stats Object containing information about this cache.
                  * @privileged
                  */
-                this.info = function () {
-                    return angular.extend({}, config, { size: size });
+                this.info = function (key) {
+                    if (key in data) {
+                        var info = {
+                            timestamp: data[key].timestamp,
+                            maxAge: data[key].maxAge || config.maxAge,
+                            aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete) || false,
+                            isExpired: false
+                        };
+                        if (info.maxAge) {
+                            info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                        }
+                        return info;
+                    } else {
+                        return angular.extend({}, config, { size: size });
+                    }
                 };
 
                 /**
@@ -783,7 +776,7 @@
             angularCacheFactory.info = function () {
                 var info = {};
                 var keys = _keys(caches);
-                for (var i = 0; i &lt; keys.length; i++) {
+                for (var i = 0; i < keys.length; i++) {
                     var key = keys[i];
                     info[key] = caches[key].info();
                 }
@@ -832,7 +825,7 @@
              */
             angularCacheFactory.removeAll = function () {
                 var keys = _keys(caches);
-                for (var i = 0; i &lt; keys.length; i++) {
+                for (var i = 0; i < keys.length; i++) {
                     caches[keys[i]].destroy();
                 }
             };
@@ -844,7 +837,7 @@
              */
             angularCacheFactory.clearAll = function () {
                 var keys = _keys(caches);
-                for (var i = 0; i &lt; keys.length; i++) {
+                for (var i = 0; i < keys.length; i++) {
                     caches[keys[i]].removeAll();
                 }
             };
@@ -856,25 +849,3 @@
     // Register the new provider with Angular.
     angular.module('angular-cache').provider('$angularCacheFactory', $AngularCacheFactoryProvider);
 })(window, window.angular);
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-angular-cache.html">angular-cache</a></li></ul><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="AngularCacheFactory.html">AngularCacheFactory</a></li></ul>
-</nav>
-
-<br clear="both">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 03 2013 12:54:34 GMT-0600 (MDT)
-</footer>
-
-<script> prettyPrint(); </script>
-</body>
-</html>
