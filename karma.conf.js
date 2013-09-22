@@ -6,10 +6,6 @@ module.exports = function (config) {
         browsers: ['Chrome'],
         captureTimeout: 60000,
         colors: true,
-        coverageReporter: {
-            type: 'html',
-            dir: 'coverage/'
-        },
         exclude: ['dist/'],
         files: [
             'test/vendor/angular-1.1.5.min.js',
@@ -26,10 +22,7 @@ module.exports = function (config) {
             'karma-jasmine',
             'karma-coverage'
         ],
-        preprocessors: {
-            'src/angular-cache.js': ['coverage']
-        },
-        reporters: ['progress', 'coverage'],
+        reporters: ['progress'],
         runnerPort: 9100,
         singleRun: false
     });
