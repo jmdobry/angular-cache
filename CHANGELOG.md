@@ -1,11 +1,16 @@
 ##### 2.0.0 - xx October 2013
 
 ###### Breaking API changes
-- Swapped `aggressiveDelete` option for `deleteOnExpire` option.
-
-###### Backwards compatible API changes
+- Swapped `aggressiveDelete` option for `deleteOnExpire` option. #30, #47
+- Changed `$angularCacheFactory.info()` to return an object similar to `AngularCache.info()` #45
+- Namespaced angular-cache module under `jmdobry` so it is now "jmdobry.angular-cache". #42
 
 ###### Backwards compatible bug fixes
+- cacheFlushInterval doesn't clear web storage when storageMode is used. #52
+- AngularCache#info(key) should return 'undefined' if the key isn't in the cache #53
+
+###### Other
+- Refactored angular-cache `setOptions()` internals to be less convoluted and to have better validation. #46
 
 ##### 1.2.0 - 20 September 2013
 

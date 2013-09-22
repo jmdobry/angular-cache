@@ -268,19 +268,20 @@ describe('AngularCacheFactory', function () {
                 cacheFlushInterval: options.cacheFlushInterval
             });
             var info = $angularCacheFactory.info();
-            expect(info.cache.id).toEqual('cache');
-            expect(info.cache.capacity).toEqual(Number.MAX_VALUE);
-            expect(info.cache.size).toEqual(0);
+            expect(info.size).toEqual(3);
+            expect(info.caches.cache.id).toEqual('cache');
+            expect(info.caches.cache.capacity).toEqual(Number.MAX_VALUE);
+            expect(info.caches.cache.size).toEqual(0);
 
-            expect(info.cache2.id).toEqual('cache2');
-            expect(info.cache2.capacity).toEqual(Number.MAX_VALUE);
-            expect(info.cache2.size).toEqual(0);
+            expect(info.caches.cache2.id).toEqual('cache2');
+            expect(info.caches.cache2.capacity).toEqual(Number.MAX_VALUE);
+            expect(info.caches.cache2.size).toEqual(0);
 
-            expect(info.cache3.id).toEqual('cache3');
-            expect(info.cache3.cacheFlushInterval).toEqual(options.cacheFlushInterval);
-            expect(info.cache3.capacity).toEqual(options.capacity);
-            expect(info.cache3.size).toEqual(0);
-            expect(info.cache3.cacheFlushIntervalId).toBeDefined();
+            expect(info.caches.cache3.id).toEqual('cache3');
+            expect(info.caches.cache3.cacheFlushInterval).toEqual(options.cacheFlushInterval);
+            expect(info.caches.cache3.capacity).toEqual(options.capacity);
+            expect(info.caches.cache3.size).toEqual(0);
+            expect(info.caches.cache3.cacheFlushIntervalId).toBeDefined();
             cache.destroy();
             cache2.destroy();
             cache3.destroy();

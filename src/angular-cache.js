@@ -740,11 +740,14 @@
              * @public
              */
             angularCacheFactory.info = function () {
-                var info = {};
                 var keys = _keys(caches);
+                var info = {
+                    size: keys.length,
+                    caches: {}
+                };
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i];
-                    info[key] = caches[key].info();
+                    info.caches[key] = caches[key].info();
                 }
                 return info;
             };
