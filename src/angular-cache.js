@@ -31,7 +31,17 @@
          * @ignore
          */
         this.$get = ['$timeout', '$window', function ($timeout, $window) {
-            var caches = {};
+            var caches = {},
+                defaults = {
+                    capacity: Number.MAX_VALUE,
+                    maxAge: null,
+                    deleteOnExpire: 'none',
+                    onExpire: null,
+                    cacheFlushInterval: null,
+                    storageMode: 'none',
+                    localStorageImpl: null,
+                    sessionStorageImpl: null
+                };
 
             /**
              * @method _keySet
@@ -119,11 +129,11 @@
                  */
                 function _validateNumberOption(option, cb) {
                     if (!angular.isNumber(option)) {
-                        cb('must be a number!', option);
+                        cb('must be a number!');
                     } else if (option < 0) {
-                        cb('must be greater than zero!', option);
+                        cb('must be greater than zero!');
                     } else {
-                        cb(null, option);
+                        cb(null);
                     }
                 }
 
@@ -131,48 +141,36 @@
                  * @method _setCapacity
                  * @desc Set the capacity for this cache.
                  * @param {Number} capacity The new capacity for this cache.
-                 * @param {Function} cb Callback function
-                 * @privates
+                 * @private
                  * @ignore
                  */
-                function _setCapacity(capacity, cb) {
-                    if (capacity === Number.MAX_VALUE) {
-                        config.capacity = capacity;
-                        cb(null, config.capacity);
-                    } else {
-                        _validateNumberOption(capacity, function (err, capacity) {
-                            if (err) {
-                                cb(err, capacity);
-                            } else {
-                                config.capacity = capacity;
-                                while (size > config.capacity) {
-                                    self.remove(staleEnd.key);
-                                }
-                                cb(null, config.capacity);
+                function _setCapacity(capacity) {
+                    _validateNumberOption(capacity, function (err) {
+                        if (err) {
+                            throw new Error('capacity: ' + err);
+                        } else {
+                            config.capacity = capacity;
+                            while (size > config.capacity) {
+                                self.remove(staleEnd.key);
                             }
-                        });
-                    }
+                        }
+                    });
                 }
 
                 /**
                  * @method _setDeleteOnExpire
                  * @desc Set the deleteOnExpire setting for this cache.
-                 * @param {Boolean} deleteOnExpire The new deleteOnExpire for this cache.
-                 * @param {Function} cb Callback function
+                 * @param {String} deleteOnExpire The new deleteOnExpire for this cache.
                  * @private
                  * @ignore
                  */
-                function _setDeleteOnExpire(deleteOnExpire, cb) {
-                    if (deleteOnExpire === null) {
-                        config.deleteOnExpire = 'none';
-                        cb(null, config.deleteOnExpire);
+                function _setDeleteOnExpire(deleteOnExpire) {
+                    if (!angular.isString(deleteOnExpire)) {
+                        throw new Error('deleteOnExpire: must be a string!');
+                    } else if (deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
+                        throw new Error('deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
                     } else {
-                        if (angular.isString(deleteOnExpire)) {
-                            config.deleteOnExpire = deleteOnExpire;
-                            cb(null, config.deleteOnExpire);
-                        } else {
-                            cb('must be a string!', deleteOnExpire);
-                        }
+                        config.deleteOnExpire = deleteOnExpire;
                     }
                 }
 
@@ -180,43 +178,49 @@
                  * @method _setMaxAge
                  * @desc Set the maxAge for this cache.
                  * @param {Number} maxAge The new maxAge for this cache.
-                 * @param {Function} cb Callback function
                  * @private
                  * @ignore
                  */
-                function _setMaxAge(maxAge, cb) {
+                function _setMaxAge(maxAge) {
                     var keys = _keys(data);
-
                     if (maxAge === null) {
-                        config.maxAge = maxAge;
-                        for (var i = 0; i < keys.length; i++) {
-                            var key = keys[i];
-                            if (data[key].timeoutId && !data[key].maxAge) {
-                                $timeout.cancel(data[key].timeoutId);
-                            }
-                        }
-                        cb(null, config.maxAge);
-                    } else {
-                        _validateNumberOption(maxAge, function (err, maxAge) {
-                            if (err) {
-                                cb(err, maxAge);
-                            } else {
-                                config.maxAge = maxAge;
-                                for (var i = 0; i < keys.length; i++) {
-                                    var key = keys[i];
-                                    if (!data[key].maxAge) {
-                                        if (data[key].timeoutId) {
+                        if (config.maxAge) {
+                            for (var i = 0; i < keys.length; i++) {
+                                var key = keys[i];
+                                if ((data[key].deleteOnExpire || config.deleteOnExpire) === 'aggressive') {
+                                    if (!('maxAge' in data[key])) {
+                                        if ('timeoutId' in data[key]) {
                                             $timeout.cancel(data[key].timeoutId);
-                                        }
-                                        var timeRemaining = new Date().getTime() - data[key].timestamp;
-                                        if (config.maxAge - timeRemaining > 0 && config.deleteOnExpire === 'aggressive') {
-                                            _setTimeoutToRemove(key, config.maxAge);
-                                        } else {
-                                            self.remove(key);
                                         }
                                     }
                                 }
-                                cb(null, config.maxAge);
+                            }
+                        }
+                        config.maxAge = maxAge;
+                    } else {
+                        _validateNumberOption(maxAge, function (err) {
+                            if (err) {
+                                throw new Error('maxAge: ' + err);
+                            } else {
+                                if (maxAge !== config.maxAge) {
+                                    config.maxAge = maxAge;
+                                    for (var i = 0; i < keys.length; i++) {
+                                        var key = keys[i];
+                                        if ((data[key].deleteOnExpire || config.deleteOnExpire) === 'aggressive') {
+                                            if (!('maxAge' in data[key])) {
+                                                if ('timeoutId' in data[key]) {
+                                                    $timeout.cancel(data[key].timeoutId);
+                                                }
+                                                var isExpired = new Date().getTime() - data[key].timestamp > config.maxAge;
+                                                if (!isExpired) {
+                                                    _setTimeoutToRemove(key, config.maxAge);
+                                                } else {
+                                                    self.remove(key);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         });
                     }
@@ -226,26 +230,29 @@
                  * @method _setCacheFlushInterval
                  * @desc Set the cacheFlushInterval for this cache.
                  * @param {Number} cacheFlushInterval The new cacheFlushInterval for this cache.
-                 * @param {Function} cb Callback function
                  * @private
                  * @ignore
                  */
-                function _setCacheFlushInterval(cacheFlushInterval, cb) {
-                    if (config.cacheFlushIntervalId) {
-                        clearInterval(config.cacheFlushIntervalId);
-                        delete config.cacheFlushIntervalId;
-                    }
+                function _setCacheFlushInterval(cacheFlushInterval) {
                     if (cacheFlushInterval === null) {
+                        if (config.cacheFlushIntervalId) {
+                            clearInterval(config.cacheFlushIntervalId);
+                            delete config.cacheFlushIntervalId;
+                        }
                         config.cacheFlushInterval = cacheFlushInterval;
-                        cb(null, config.cacheFlushInterval);
                     } else {
-                        _validateNumberOption(cacheFlushInterval, function (err, cacheFlushInterval) {
+                        _validateNumberOption(cacheFlushInterval, function (err) {
                             if (err) {
-                                cb(err, cacheFlushInterval);
+                                throw new Error('cacheFlushInterval: ' + err);
                             } else {
-                                config.cacheFlushInterval = cacheFlushInterval;
-                                config.cacheFlushIntervalId = setInterval(self.removeAll, config.cacheFlushInterval);
-                                cb(null, config.cacheFlushInterval);
+                                if (cacheFlushInterval !== config.cacheFlushInterval) {
+                                    if (config.cacheFlushIntervalId) {
+                                        clearInterval(config.cacheFlushIntervalId);
+                                        delete config.cacheFlushIntervalId;
+                                    }
+                                    config.cacheFlushInterval = cacheFlushInterval;
+                                    config.cacheFlushIntervalId = setInterval(self.removeAll, config.cacheFlushInterval);
+                                }
                             }
                         });
                     }
@@ -254,61 +261,54 @@
                 /**
                  * @method _setStorageMode
                  * @desc Configure the cache to use localStorage.
-                 * @param {Object} localStorageImpl The localStorage polyfill/replacement to use.
-                 * @param {Object} sessionStorageImpl The sessionStorage polyfill/replacement to use.
                  * @param {String} storageMode "localStorage"|"sessionStorage"|null
-                 * @param {Function} cb Callback function
+                 * @param {Object} storageImpl The storage polyfill/replacement to use.
                  * @private
                  * @ignore
                  */
-                function _setStorageMode(localStorageImpl, sessionStorageImpl, storageMode, cb) {
-                    // TODO: Fix this function–too much duplicated code
+                function _setStorageMode(storageMode, storageImpl) {
                     var keys, i;
+                    if (!angular.isString(storageMode)) {
+                        throw new Error('storageMode: must be a string!');
+                    } else if (storageMode !== 'none' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
+                        throw new Error('storageMode: accepted values are "none", "localStorage" or "sessionStorage"');
+                    }
                     if ((config.storageMode === 'localStorage' || config.storageMode === 'sessionStorage') &&
-                        (storageMode !== 'localStorage' && storageMode !== 'sessionStorage')) {
+                        (storageMode !== config.storageMode)) {
                         keys = _keys(data);
                         for (i = 0; i < keys.length; i++) {
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                         storage.removeItem(prefix + '.keys');
-                        config.storageMode = null;
-                        storage = null;
-                    } else {
-                        switch (storageMode) {
-                            case 'localStorage':
-                                if (localStorageImpl || $window.localStorage) {
-                                    config.storageMode = storageMode;
-                                    storage = localStorageImpl || $window.localStorage;
-                                    if (!cacheDirty) {
-                                        _loadCacheConfig();
-                                    } else {
-                                        keys = _keys(data);
-                                        for (i = 0; i < keys.length; i++) {
-                                            _syncToStorage(keys[i]);
-                                        }
-                                    }
-                                }
-                                break;
-                            case 'sessionStorage':
-                                if (sessionStorageImpl || $window.sessionStorage) {
-                                    config.storageMode = storageMode;
-                                    storage = sessionStorageImpl || $window.sessionStorage;
-                                    if (!cacheDirty) {
-                                        _loadCacheConfig();
-                                    } else {
-                                        keys = _keys(data);
-                                        for (i = 0; i < keys.length; i++) {
-                                            _syncToStorage(keys[i]);
-                                        }
-                                    }
-                                }
-                                break;
-                            default:
-                                config.storageMode = null;
-                                storage = null;
+                    }
+                    config.storageMode = storageMode;
+                    if (storageImpl) {
+                        if (!angular.isObject(storageImpl)) {
+                            throw new Error('[local|session]storageImpl: must be an object!');
+                        } else if (!('setItem' in storageImpl) || typeof storageImpl.setItem !== 'function') {
+                            throw new Error('[local|session]storageImpl: must implement "setItem(key, value)"!');
+                        } else if (!('getItem' in storageImpl) || typeof storageImpl.getItem !== 'function') {
+                            throw new Error('[local|session]storageImpl: must implement "getItem(key)"!');
+                        } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
+                            throw new Error('[local|session]storageImpl: must implement "removeItem(key)"!');
+                        }
+                        storage = storageImpl;
+                    } else if (config.storageMode === 'localStorage') {
+                        storage = $window.localStorage;
+                    } else if (config.storageMode === 'sessionStorage') {
+                        storage = $window.sessionStorage;
+                    }
+
+                    if (config.storageMode !== 'none' && storage) {
+                        if (!cacheDirty) {
+                            _loadCacheConfig();
+                        } else {
+                            keys = _keys(data);
+                            for (i = 0; i < keys.length; i++) {
+                                _syncToStorage(keys[i]);
+                            }
                         }
                     }
-                    cb(null, config.storageMode);
                 }
 
                 /**
@@ -321,63 +321,38 @@
                  * @ignore
                  */
                 function _setOptions(options, strict) {
-                    strict = strict || false;
-
-                    // setup capacity
-                    if (options.capacity || strict) {
-                        _setCapacity(options.capacity ? options.capacity : Number.MAX_VALUE, function (err, capacity) {
-                            if (err) {
-                                throw new Error('capacity: ' + err);
-                            }
-                        });
+                    options = options || {};
+                    strict = !!strict;
+                    if (!angular.isObject(options)) {
+                        throw new Error('setOptions(): options: must be an object!');
                     }
 
-                    // setup deleteOnExpire
-                    if (options.deleteOnExpire || strict) {
-                        _setDeleteOnExpire(options.deleteOnExpire ? options.deleteOnExpire : null, function (err, deleteOnExpire) {
-                            if (err) {
-                                throw new Error('deleteOnExpire: ' + err);
-                            }
-                        });
-                    }
-
-                    if (!options.maxAge && !strict) {
-                        options.maxAge = config.maxAge;
-                    }
-
-                    // setup maxAge
-                    if (options.maxAge || strict) {
-                        _setMaxAge(options.maxAge ? options.maxAge : null, function (err, maxAge) {
-                            if (err) {
-                                throw new Error('maxAge: ' + err);
-                            }
-                        });
-                    }
-
-                    // setup cacheFlushInterval
-                    if (options.cacheFlushInterval || strict) {
-                        _setCacheFlushInterval(options.cacheFlushInterval ? options.cacheFlushInterval : null, function (err, cacheFlushInterval) {
-                            if (err) {
-                                throw new Error('cacheFlushInterval: ' + err);
-                            }
-                        });
-                    }
-
-                    // setup storageMode
-                    if (options.storageMode || strict) {
-                        _setStorageMode(options.localStorageImpl ? options.localStorageImpl : null, options.sessionStorageImpl ? options.sessionStorageImpl : null, options.storageMode ? options.storageMode : null, function (err, storageMode) {
-                            if (err) {
-                                throw new Error('storageMode: ' + err);
-                            }
-                        });
-                    }
-
-                    // Set (or remove) onExpire callback
                     if (strict) {
-                        delete config.onExpire;
+                        options = angular.extend({}, defaults, options);
                     }
-                    if (options.onExpire) {
-                        if (typeof options.onExpire !== 'function') {
+
+                    if ('capacity' in options) {
+                        _setCapacity(options.capacity);
+                    }
+
+                    if ('deleteOnExpire' in options) {
+                        _setDeleteOnExpire(options.deleteOnExpire);
+                    }
+
+                    if ('maxAge' in options) {
+                        _setMaxAge(options.maxAge);
+                    }
+
+                    if ('cacheFlushInterval' in options) {
+                        _setCacheFlushInterval(options.cacheFlushInterval);
+                    }
+
+                    if ('storageMode' in options) {
+                        _setStorageMode(options.storageMode, options.localStorageImpl || options.sessionStorageImpl);
+                    }
+
+                    if ('onExpire' in options) {
+                        if (options.onExpire !== null && typeof options.onExpire !== 'function') {
                             throw new Error('onExpire: Must be a function!');
                         }
                         config.onExpire = options.onExpire;
@@ -468,7 +443,7 @@
                  * @ignore
                  */
                 function _syncToStorage(key) {
-                    if (config.storageMode && storage) {
+                    if (config.storageMode !== 'none' && storage) {
                         storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
                         if (key) {
                             storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
@@ -491,7 +466,7 @@
                         throw new Error('AngularCache.put(): key: must be a string!');
                     }
                     if (options && options.maxAge) {
-                        _validateNumberOption(options.maxAge, function (err, maxAge) {
+                        _validateNumberOption(options.maxAge, function (err) {
                             if (err) {
                                 throw new Error('AngularCache.put(): maxAge: ' + err);
                             }
@@ -621,7 +596,7 @@
 
                     _syncToStorage(null);
 
-                    if (config.storageMode) {
+                    if (config.storageMode !== 'none' && storage) {
                         storage.removeItem(prefix + '.data.' + key);
                     }
 
@@ -634,7 +609,7 @@
                  * @privileged
                  */
                 this.removeAll = function () {
-                    if (config.storageMode && storage) {
+                    if (config.storageMode !== 'none' && storage) {
                         var keys = _keys(data);
                         for (var i = 0; i < keys.length; i++) {
                             if (data[keys[i]].timeoutId) {
@@ -662,7 +637,7 @@
                     if (config.cacheFlushIntervalId) {
                         clearInterval(config.cacheFlushIntervalId);
                     }
-                    if (config.storageMode && storage) {
+                    if (config.storageMode !== 'none' && storage) {
                         this.removeAll();
                         storage.removeItem(prefix + '.keys');
                         storage.removeItem(prefix);

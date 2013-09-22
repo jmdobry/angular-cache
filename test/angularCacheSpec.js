@@ -508,7 +508,8 @@ describe('AngularCache', function () {
                 maxAge: null,
                 cacheFlushInterval: null,
                 deleteOnExpire: 'none',
-                storageMode: null
+                storageMode: 'none',
+                onExpire: null
             });
             cache.put('item', 'value');
             cache.put('item2', 'value2', { maxAge: 200, deleteOnExpire: 'aggressive' });
@@ -528,7 +529,8 @@ describe('AngularCache', function () {
                 maxAge: null,
                 cacheFlushInterval: null,
                 deleteOnExpire: 'none',
-                storageMode: null
+                storageMode: 'none',
+                onExpire: null
             });
             expect(cache2.info()).toEqual({
                 id: 'cache2',
@@ -537,7 +539,8 @@ describe('AngularCache', function () {
                 size: 0,
                 cacheFlushInterval: null,
                 deleteOnExpire: 'none',
-                storageMode: null
+                storageMode: 'none',
+                onExpire: null
             });
             expect(cache3.info().id).toEqual('cache3');
             expect(cache3.info().capacity).toEqual(Number.MAX_VALUE);
@@ -550,7 +553,8 @@ describe('AngularCache', function () {
                 maxAge: null,
                 cacheFlushInterval: null,
                 deleteOnExpire: 'none',
-                storageMode: null
+                storageMode: 'none',
+                onExpire: null
             });
             if (localStorage) {
                 expect(cache5.info().storageMode).toEqual('localStorage');
@@ -648,7 +652,7 @@ describe('AngularCache', function () {
             expect(cache.info().maxAge).toEqual(null);
             expect(cache.info().cacheFlushInterval).toEqual(null);
             expect(cache.info().onExpire).toEqual(null);
-            expect(cache.info().storageMode).toEqual(null);
+            expect(cache.info().storageMode).toEqual('none');
             cache.destroy();
         });
         it('should correctly modify the capacity of a cache', function () {
@@ -753,7 +757,7 @@ describe('AngularCache', function () {
                 maxAge: 1000,
                 cacheFlushInterval: 1000,
                 deleteOnExpire: 'aggressive',
-                storageMode: null
+                storageMode: 'none'
             });
             cache.setOptions({}, true);
             expect(cache.info()).toEqual({
@@ -763,7 +767,8 @@ describe('AngularCache', function () {
                 id: 'cache',
                 size: 0,
                 deleteOnExpire: 'none',
-                storageMode: null
+                storageMode: 'none',
+                onExpire: null
             });
         });
         it('should correctly switch to using local/session storage when storageMode is activated', function () {
@@ -808,8 +813,8 @@ describe('AngularCache', function () {
                 expect(angular.fromJson(sessionStorage.getItem('angular-cache.caches.cache2.data.item')).value).toEqual('value');
             }
 
-            cache.setOptions({ storageMode: null }, true);
-            cache2.setOptions({ storageMode: null }, true);
+            cache.setOptions({ storageMode: 'none' }, true);
+            cache2.setOptions({ storageMode: 'none' }, true);
 
             if (localStorage) {
                 expect(localStorage.getItem('angular-cache.caches.cache.data.item')).toEqual(null);

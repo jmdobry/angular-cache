@@ -44,7 +44,9 @@ app.service('myService', function ($angularCacheFactory) {
 
 ### Table of Contents
 1. [Demo](http://jmdobry.github.io/angular-cache/demo/)
-1. [Features](#features)
+1. [Configuration Parameters](#configuration)
+1. [$angularCacheFactory](#angularcachefactory)
+1. [AngularCache](#angularcache)
 1. [Status](#status)
 1. [Download](#download)
 1. [Install](#installation)
@@ -53,39 +55,79 @@ app.service('myService', function ($angularCacheFactory) {
 1. [Contributing](#contributing)
 1. [License](#license)
 
-<a name='features'></a>
-## Features
+<a name='configuration'></a>
+## Configuration Parameters
 
-#### Configuration Parameters
+#### storageMode
+__Type:__ String
 
-##### `storageMode`
-Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` and `sessionStorage` on page refresh. See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
+__Default:__ `"none"`
 
+__Possible Values__:
+- `"none"` - The cache will not sync itself with web storage.
+- `"localStorage"` - Sync with `localStorage`
+- `"sessionStorage"` - Sync with `sessionStorage`
+
+__Description:__ Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` or `sessionStorage` on page refresh. 
+
+__Usage:__
 ```javascript
-$angularCacheFactory('newCache', { storageMode: 'localStorage' });
+$angularCacheFactory('newCache', {
+    storageMode: 'localStorage'
+}); // this cache will sync itself to localStorage
 ```
 
-##### `localStorageImpl` and `sessionStorageImpl`
-When `storageMode` is set to `"localStorage"` or `"sessionStorage"` angular-cache will default to using the global `localStorage` and `sessionStorage` objects. The angular-cache `localStorageImpl` and `sessionStorageImpl` configuration parameters allow you to tell angular-cache which implementation of `localStorage` or `sessionStorage` to use. This is useful when you don't want to override the global storage objects or when using angular-cache in a browser that doesn't support `localStorage` or `sessionStorage`. See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
+See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
 
+#### localStorageImpl and sessionStorageImpl
+__Type:__ Object
+
+__Default:__ `null`
+
+__Description:__ When `storageMode` is set to `"localStorage"` or `"sessionStorage"` angular-cache will default to using the global `localStorage` and `sessionStorage` objects. The angular-cache `localStorageImpl` and `sessionStorageImpl` configuration parameters allow you to tell angular-cache which implementation of `localStorage` or `sessionStorage` to use. This is useful when you don't want to override the global storage objects or when using angular-cache in a browser that doesn't support `localStorage` or `sessionStorage`.
+
+__Usage:__
 ```javascript
-$angularCacheFactory('newCache', { localStorageImpl: myLocalStorageImplementation, storageMode: 'localStorage' });
+$angularCacheFactory('newCache', {
+    localStorageImpl: myLocalStorageImplementation,
+    storageMode: 'localStorage'
+});
 
-$angularCacheFactory('otherCache', { localStorageImpl: mySessionStorageImplementation, storageMode: 'sessionStorage' });
+$angularCacheFactory('otherCache', {
+    localStorageImpl: mySessionStorageImplementation,
+    storageMode: 'sessionStorage'
+});
 ```
 
-__Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then that feature will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods. See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
+__Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then syncing with web storage will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods.
 
-##### `maxAge`
-Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively or not at all depending on the value of `deleteOnExpire` (see below). Can be configured on a per-item basis for greater specificity.
+See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
 
+#### maxAge
+__Type:__ Number
+
+__Default:__ `null`
+
+__Description:__ Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively or not at all depending on the value of `deleteOnExpire` (see below). Can be configured on a per-item basis for greater specificity.
+
+__Usage:__
 ```javascript
 $angularCacheFactory('newCache', { maxAge: 36000 });
 ```
 
-##### `deleteOnExpire`
-If deleteOnExpire is set to 'aggressive' and maxAge is set, then items will be actively deleted right when they expire. If deleteOnExpire is set to 'passive' items won't be deleted until they are requested but it is discovered that they have expired and are deleted, resulting in a miss. Items will expire but not deleted if deleteOnExpire is set to 'none'. Can be configured on a per-item basis for greater specificity.
+#### deleteOnExpire
+__Type:__ String
 
+__Default:__ `"none"`
+
+__Possible Values:__
+- `"none"` - Items will not be removed from the cache even if they have expired.
+- `"passive"` - Items will be deleted if they are requested after they have expired, resulting in a miss.
+- `"aggressive"` - Items will be deleted as soon as they expire.
+
+__Description:__ `maxAge` must be set in order for `"passive"` or `"aggressive"` to have any effect. Can be configured on a per-item basis for greater specificity.
+
+__Usage:__
 ```javascript
 $angularCacheFactory('newCache', {
     maxAge: 36000,
@@ -93,15 +135,24 @@ $angularCacheFactory('newCache', {
 });
 ```
 
-##### `cacheFlushInterval`
-Set the cache to periodically clear itself.
+#### cacheFlushInterval
+__Type:__ Number
 
+__Default:__ `null`
+
+__Description:__ Set the cache to periodically clear itself.
+
+__Usage:__
 ```javascript
 $angularCacheFactory('newCache', { cacheFlushInterval: 57908 });
 ```
 
-##### `onExpire`
-A callback function to be executed when an item expires.
+#### onExpire
+__Type:__ Function
+
+__Default:__ `null`
+
+__Description:__ A callback function to be executed when an item expires.
 
 ###### Using 'onExpire' in passive delete mode
 In passive delete mode the cache doesn't know if an item has expired until the item is requested, at which point the cache checks to see if the item has expired. If the item has expired then it is immediately removed from the cache, resulting in a "miss".
@@ -110,6 +161,7 @@ If you specify a global "onExpire" callback function, the cache will execute thi
 
 When you actually request the expired item via `myCache.get('someKey')` you can also pass a second argument to `get()` specifying a callback that your cache's "onExpire" callback can execute when it finishes. For example:
 
+__Usage:__
 ```javascript
 var newCache = $angularCacheFactory('newCache', {
     maxAge: 1000, // Items expire after 1 second, but we don't know it until the item is requested
@@ -175,6 +227,7 @@ var value = newCache.get('denver', function (key, value) {
 ###### Using 'onExpire' in aggressive delete mode
 In aggressive delete mode you can't pass a second parameter to `get()` because your "onExpire" callback for the cache has already been executed for expired items.
 
+__Usage:__
 ```javascript
 var newCache = $angularCacheFactory('newCache', {
     maxAge: 1000, // Items expire after 1 second and are immediately deleted
@@ -198,39 +251,79 @@ newCache.put('denver', 'broncos');
 newCache.get('denver'); // 'broncos' or whatever was returned by the server in the "onExpire" callback
 ```
 
-#### Methods
+<a name='angularcachefactory'></a>
+## $angularCacheFactory
 
-##### `keySet()`
-Return the set of keys associated with all current caches owned by $angularCacheFactory.
+__Description:__ Factory function for producing instances of `AngularCache`.
 
+#### $angularCacheFactory.keySet()
+__Description:__ Return the set of keys associated with all caches in `$angularCacheFactory`.
+
+__Usage:__
 ```javascript
 $angularCacheFactory.keySet();
 ```
 
-Return the set of keys associated with all current items in `someCache`.
+#### $angularCacheFactory.keys()
+__Description:__ Return an array of the keys associated with all caches in `$angularCacheFactory`.
 
-```javascript
-$angularCacheFactory.get('someCache').keySet();
-```
+See [Get info about a cache](#get-info-about-a-cache).
 
-##### `keys()`
-Return an array of the keys associated with all current caches owned by $angularCacheFactory. See [Get info about a cache](#get-info-about-a-cache).
-
+__Usage:__
 ```javascript
 $angularCacheFactory.keys();
 ```
 
-Return an array of the keys associated with all current items in `someCache`. See [Get info about a cache](#get-info-about-a-cache).
+<a name='angularcache'></a>
+## AngularCache
 
-```javascript
-$angularCacheFactory.get('someCache').keys();
-```
+__Description:__ Object produced by invocations of `$angularCacheFactory()`.
 
-##### `setOptions()`
-Dynamically configure a cache. See [Dynamically configure a cache](#dynamically-configure-a-cache).
+#### AngularCache.setOptions(options, strict)
+__Description:__ Dynamically configure a cache.
 
+See [Dynamically configure a cache](#dynamically-configure-a-cache).
+
+__Parameters:__
+> ##### options
+> __Type:__ Object
+>
+> __Default:__ `{}`
+>
+> __Description:__ Hash of configuration options to apply to the cache.
+>
+> ##### strict
+> __Type:__ Boolean
+>
+> __Default:__ `false`
+>
+> __Description:__ If `true`, any configuration options not specified in `options` will be set to their defaults.
+
+__Usage:__
 ```javascript
 $angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
+```
+
+#### AngularCache.keySet()
+__Returns:__ Object
+
+__Description:__ Return the set of keys of all items the cache.
+
+__Usage:__
+```javascript
+$angularCacheFactory.get('someCache').keySet();
+```
+
+#### AngularCache.keys()
+__Returns:__ Array
+
+__Description:__ Return an array of the keys of all items in the cache.
+
+See [Get info about a cache](#get-info-about-a-cache).
+
+__Usage:__
+```javascript
+AngularCache.keys();
 ```
 
 <a name='status'></a>
