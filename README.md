@@ -45,6 +45,7 @@ app.service('myService', function ($angularCacheFactory) {
 ### Table of Contents
 1. [Demo](http://jmdobry.github.io/angular-cache/demo/)
 1. [Configuration Parameters](#configuration)
+1. [$angularCacheFactoryProvider](#angularcachefactoryprovider)
 1. [$angularCacheFactory](#angularcachefactory)
 1. [AngularCache](#angularcache)
 1. [Status](#status)
@@ -249,6 +250,47 @@ newCache.put('denver', 'broncos');
 // wait a few seconds, during which time the "onExpire" callback is automatically executed
 
 newCache.get('denver'); // 'broncos' or whatever was returned by the server in the "onExpire" callback
+```
+
+<a name='angularcachefactoryprovider'></a>
+## $angularCacheFactoryProvider
+
+__Description:__ Provider for `$angularCacheFactory`.
+
+#### $angularCacheFactoryProvider.setCacheDefaults()
+__Description:__ Set the default configuration for all caches created by `$angularCacheFactory`.
+
+__Usage:__
+```javascript
+app.module('app', ['jmdobry.angular-cache'])
+    .config(function ($angularCacheFactoryProvider) {
+        $angularCacheFactoryProvider.setCacheDefaults({
+            maxAge: 360000,
+            deleteOnExpire: 'aggressive'
+        });
+    })
+    .run(function ($angularCacheFactory) {
+        var info = $angularCacheFactory.info();
+
+        console.log(info.cacheDefaults); // output below
+        /*
+            {
+                capacity: Number.MAX_VALUE,
+                maxAge: 360000,
+                deleteOnExpire: 'aggressive',
+                onExpire: null,
+                cacheFlushInterval: null,
+                storageMode: 'none',
+                localStorageImpl: null,
+                sessionStorageImpl: null
+            }
+        */
+
+        var newCache = $angularCacheFactory('newCache');
+
+        newCache.info().maxAge; // 360000
+        newCache.info().deleteOnExpire; // "aggressive"
+    });
 ```
 
 <a name='angularcachefactory'></a>
@@ -802,6 +844,9 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 - Swapped `aggressiveDelete` option for `deleteOnExpire` option. #30, #47
 - Changed `$angularCacheFactory.info()` to return an object similar to `AngularCache.info()` #45
 - Namespaced angular-cache module under `jmdobry` so it is now "jmdobry.angular-cache". #42
+
+###### Backwards compatible API changes
+- Added ability to set global cache defaults in $angularCacheFactoryProvider. #55
 
 ###### Backwards compatible bug fixes
 - cacheFlushInterval doesn't clear web storage when storageMode is used. #52

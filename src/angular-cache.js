@@ -27,12 +27,9 @@
      */
     function $AngularCacheFactoryProvider() {
 
-        /**
-         * @ignore
-         */
-        this.$get = ['$timeout', '$window', function ($timeout, $window) {
-            var caches = {},
-                defaults = {
+        var cacheDefaults,
+            DEFAULTS = function () {
+                return {
                     capacity: Number.MAX_VALUE,
                     maxAge: null,
                     deleteOnExpire: 'none',
@@ -42,6 +39,25 @@
                     localStorageImpl: null,
                     sessionStorageImpl: null
                 };
+            };
+
+        /**
+         * @method setCacheDefaults
+         * @desc Set the default configuration for all caches created by $angularCacheFactory.
+         * @param {Object} options
+         */
+        this.setCacheDefaults = function (options) {
+            cacheDefaults = angular.extend({}, DEFAULTS(), options);
+        };
+
+        // Initialize cacheDefaults with the defaults
+        this.setCacheDefaults({});
+
+        /**
+         * @ignore
+         */
+        this.$get = ['$timeout', '$window', function ($timeout, $window) {
+            var caches = {};
 
             /**
              * @method _keySet
@@ -328,7 +344,7 @@
                     }
 
                     if (strict) {
-                        options = angular.extend({}, defaults, options);
+                        options = angular.extend({}, cacheDefaults, options);
                     }
 
                     if ('capacity' in options) {
@@ -749,6 +765,7 @@
                     var key = keys[i];
                     info.caches[key] = caches[key].info();
                 }
+                info.cacheDefaults = cacheDefaults;
                 return info;
             };
 

@@ -5,6 +5,9 @@
 - Changed `$angularCacheFactory.info()` to return an object similar to `AngularCache.info()` #45
 - Namespaced angular-cache module under `jmdobry` so it is now "jmdobry.angular-cache". #42
 
+###### Backwards compatible API changes
+- Added ability to set global cache defaults in $angularCacheFactoryProvider. #55
+
 ###### Backwards compatible bug fixes
 - cacheFlushInterval doesn't clear web storage when storageMode is used. #52
 - AngularCache#info(key) should return 'undefined' if the key isn't in the cache #53
