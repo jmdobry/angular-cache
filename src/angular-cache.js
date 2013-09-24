@@ -11,6 +11,173 @@
 (function (window, angular, undefined) {
     'use strict';
 
+    angular.module('jmdobry.binary-heap', []);
+
+    /**
+     * @class BinaryHeapProvider
+     * @desc Provider for the BinaryHeap.
+     */
+    function BinaryHeapProvider() {
+        this.$get = function () {
+            /**
+             * @class BinaryHeap
+             * @desc BinaryHeap implementation of a priority queue.
+             * @param {Function} weightFunc Function that determines how each node should be weighted.
+             */
+            function BinaryHeap(weightFunc) {
+                this.heap = [];
+                this.weightFunc = weightFunc;
+            }
+
+            /**
+             * @method BinaryHeap.push
+             * @desc Push an element into the binary heap.
+             * @param {*} node The element to push into the binary heap.
+             * @public
+             */
+            BinaryHeap.prototype.push = function (node) {
+                this.heap.push(node);
+                this.bubbleUp(this.heap.length - 1);
+            };
+
+            /**
+             * @method BinaryHeap.peek
+             * @desc Return, but do not remove, the minimum element in the binary heap.
+             * @returns {*}
+             * @public
+             */
+            BinaryHeap.prototype.peek = function () {
+                return this.heap[0];
+            };
+
+            /**
+             * @method BinaryHeap.pop
+             * @desc Remove and return the minimum element in the binary heap.
+             * @returns {*}
+             * @public
+             */
+            BinaryHeap.prototype.pop = function () {
+                var front = this.heap[0],
+                    end = this.heap.pop();
+                if (this.heap.length > 0) {
+                    this.heap[0] = end;
+                    this.sinkDown(0);
+                }
+                return front;
+            };
+
+            /**
+             * @method BinaryHeap.remove
+             * @desc Remove the first node in the priority queue that satisfies angular.equals comparison with
+             * the given node.
+             * @param {*} node The node to remove.
+             * @returns {*} The removed node.
+             * @public
+             */
+            BinaryHeap.prototype.remove = function (node) {
+                var length = this.heap.length;
+                for (var i = 0; i < length; i++) {
+                    if (angular.equals(this.heap[i], node)) {
+                        var removed = this.heap[i],
+                            end = this.heap.pop();
+                        if (i !== length - 1) {
+                            this.heap[i] = end;
+                            this.bubbleUp(i);
+                            this.sinkDown(i);
+                        }
+                        return removed;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * @method BinaryHeap.size
+             * @desc Return the size of the priority queue.
+             * @returns {Number} The size of the priority queue.
+             * @public
+             */
+            BinaryHeap.prototype.size = function () {
+                return this.heap.length;
+            };
+
+            /**
+             * @method BinaryHeap.bubbleUp
+             * @param {Number} n The index of the element to bubble up.
+             * @ignore
+             */
+            BinaryHeap.prototype.bubbleUp = function (n) {
+                // Fetch the element that has to be moved.
+                var element = this.heap[n],
+                    weight = this.weightFunc(element);
+                // When at 0, an element can not go up any further.
+                while (n > 0) {
+                    // Compute the parent element's index, and fetch it.
+                    var parentN = Math.floor((n + 1) / 2) - 1,
+                        parent = this.heap[parentN];
+                    // If the parent has a lesser weight, things are in order and we
+                    // are done.
+                    if (weight >= this.weightFunc(parent)) {
+                        break;
+                    } else {
+                        this.heap[parentN] = element;
+                        this.heap[n] = parent;
+                        n = parentN;
+                    }
+                }
+            };
+
+            /**
+             * @method BinaryHeap.sinkDown
+             * @param {Number} n The index of the element to sink down.
+             * @ignore
+             */
+            BinaryHeap.prototype.sinkDown = function (n) {
+                var length = this.heap.length,
+                    node = this.heap[n],
+                    nodeWeight = this.weightFunc(node);
+
+                while (true) {
+                    // Compute the indices of the child nodes.
+                    var child2N = (n + 1) * 2, child1N = child2N - 1;
+                    // This is used to store the new position of the node,
+                    // if any.
+                    var swap = null;
+                    // If the first child exists (is inside the array)...
+                    if (child1N < length) {
+                        // Look it up and compute its score.
+                        var child1 = this.heap[child1N],
+                            child1Weight = this.weightFunc(child1);
+                        // If the score is less than our node's, we need to swap.
+                        if (child1Weight < nodeWeight) {
+                            swap = child1N;
+                        }
+                    }
+                    // Do the same checks for the other child.
+                    if (child2N < length) {
+                        var child2 = this.heap[child2N],
+                            child2Weight = this.weightFunc(child2);
+                        if (child2Weight < (swap === null ? nodeWeight : child1Weight)) {
+                            swap = child2N;
+                        }
+                    }
+
+                    if (swap === null) {
+                        break;
+                    } else {
+                        this.heap[n] = this.heap[swap];
+                        this.heap[swap] = node;
+                        n = swap;
+                    }
+                }
+            };
+
+            return BinaryHeap;
+        };
+    }
+
+    angular.module('jmdobry.binary-heap').provider('BinaryHeap', BinaryHeapProvider);
+
     /**
      * @module angular-cache
      * @desc Provides an $AngularCacheFactoryProvider, which gives you the ability to use an
@@ -18,7 +185,7 @@
      *       the same abilities as the cache objects that come with Angular, except with some added
      *       functionality.
      */
-    angular.module('jmdobry.angular-cache', ['ng']);
+    angular.module('jmdobry.angular-cache', ['ng', 'jmdobry.binary-heap']);
 
     /**
      * @class $AngularCacheFactoryProvider
@@ -137,7 +304,7 @@
         /**
          * @ignore
          */
-        this.$get = ['$timeout', '$window', function ($timeout, $window) {
+        this.$get = ['$timeout', '$window', 'BinaryHeap', function ($timeout, $window, BinaryHeap) {
             var caches = {};
 
             /**
@@ -185,6 +352,9 @@
                     config = angular.extend({}, { id: cacheId }),
                     data = {},
                     lruHash = {},
+                    heap = new BinaryHeap(function (x) {
+                        return x.expires;
+                    }),
                     freshEnd = null,
                     staleEnd = null,
                     prefix = 'angular-cache.caches.' + cacheId,
@@ -209,6 +379,7 @@
                         if (data[key]) {
                             value = data[key].value;
                         }
+                        heap.remove(data[key]);
                         self.remove(key);
                         if (config.onExpire) {
                             config.onExpire(key, value);
@@ -587,6 +758,8 @@
                     if (data[key] || config.maxAge) {
                         if ((data[key].deleteOnExpire === 'aggressive' || config.deleteOnExpire === 'aggressive') &&
                             (data[key].maxAge || config.maxAge)) {
+                            data[key].expires = data[key].timestamp + (data[key].maxAge || config.maxAge);
+                            heap.push(data[key]);
                             _setTimeoutToRemove(key, data[key].maxAge || config.maxAge);
                         }
                     }
