@@ -36,17 +36,98 @@
                     onExpire: null,
                     cacheFlushInterval: null,
                     storageMode: 'none',
-                    localStorageImpl: null,
-                    sessionStorageImpl: null
+                    storageImpl: null
                 };
             };
 
         /**
-         * @method setCacheDefaults
+         * @method _validateNumberOption
+         * @desc Validates the given number option.
+         * @param {Number} option The number option to check.
+         * @param {Function} cb Callback function
+         * @private
+         * @ignore
+         */
+        function _validateNumberOption(option, cb) {
+            if (!angular.isNumber(option)) {
+                cb('must be a number!');
+            } else if (option < 0) {
+                cb('must be greater than zero!');
+            } else {
+                cb(null);
+            }
+        }
+
+        /**
+         * @method $AngularCacheFactoryProvider.setCacheDefaults
          * @desc Set the default configuration for all caches created by $angularCacheFactory.
          * @param {Object} options
+         * @privileged
          */
         this.setCacheDefaults = function (options) {
+            options = options || {};
+
+            if (!angular.isObject(options)) {
+                throw new Error('setOptions(): options: must be an object!');
+            }
+
+            if ('capacity' in options) {
+                _validateNumberOption(options.capacity, function (err) {
+                    if (err) {
+                        throw new Error('setCacheDefaults(): capacity: ' + err);
+                    }
+                });
+            }
+
+            if ('deleteOnExpire' in options) {
+                if (!angular.isString(options.deleteOnExpire)) {
+                    throw new Error('setCacheDefaults(): deleteOnExpire: must be a string!');
+                } else if (options.deleteOnExpire !== 'none' && options.deleteOnExpire !== 'passive' && options.deleteOnExpire !== 'aggressive') {
+                    throw new Error('setCacheDefaults(): deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
+                }
+            }
+
+            if ('maxAge' in options) {
+                _validateNumberOption(options.maxAge, function (err) {
+                    if (err) {
+                        throw new Error('setCacheDefaults(): maxAge: ' + err);
+                    }
+                });
+            }
+
+            if ('cacheFlushInterval' in options) {
+                _validateNumberOption(options.cacheFlushInterval, function (err) {
+                    if (err) {
+                        throw new Error('setCacheDefaults(): cacheFlushInterval: ' + err);
+                    }
+                });
+            }
+
+            if ('storageMode' in options) {
+                if (!angular.isString(options.storageMode)) {
+                    throw new Error('setCacheDefaults(): storageMode: must be a string!');
+                } else if (options.storageMode !== 'none' && options.storageMode !== 'localStorage' && options.storageMode !== 'sessionStorage') {
+                    throw new Error('setCacheDefaults(): storageMode: accepted values are "none", "localStorage" or "sessionStorage"');
+                }
+                if ('storageImpl' in options) {
+                    if (!angular.isObject(options.storageImpl)) {
+                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must be an object!');
+                    } else if (!('setItem' in options.storageImpl) || typeof options.storageImpl.setItem !== 'function') {
+                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must implement "setItem(key, value)"!');
+                    } else if (!('getItem' in options.storageImpl) || typeof options.storageImpl.getItem !== 'function') {
+                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must implement "getItem(key)"!');
+                    } else if (!('removeItem' in options.storageImpl) || typeof options.storageImpl.removeItem !== 'function') {
+                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must implement "removeItem(key)"!');
+                    }
+                }
+            }
+
+            if ('onExpire' in options) {
+                if (typeof options.onExpire !== 'function') {
+                    throw new Error('setCacheDefaults(): onExpire: Must be a function!');
+                }
+            }
+
             cacheDefaults = angular.extend({}, DEFAULTS(), options);
         };
 
@@ -97,7 +178,7 @@
              * @class AngularCache
              * @desc Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
              * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [aggressiveDelete]: Boolean, [onExpire]: Function, [storageMode]: String, [localStorageImpl]: Object}}
+             * @param {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [deleteOnExpire]: String, [onExpire]: Function, [storageMode]: String, [storageImpl]: Object}}
              */
             function AngularCache(cacheId, options) {
                 var size = 0,
@@ -133,24 +214,6 @@
                             config.onExpire(key, value);
                         }
                     }, delay);
-                }
-
-                /**
-                 * @method _validateNumberOption
-                 * @desc Validates the given number option.
-                 * @param {Number} option The number option to check.
-                 * @param {Function} cb Callback function
-                 * @private
-                 * @ignore
-                 */
-                function _validateNumberOption(option, cb) {
-                    if (!angular.isNumber(option)) {
-                        cb('must be a number!');
-                    } else if (option < 0) {
-                        cb('must be greater than zero!');
-                    } else {
-                        cb(null);
-                    }
                 }
 
                 /**
@@ -364,7 +427,7 @@
                     }
 
                     if ('storageMode' in options) {
-                        _setStorageMode(options.storageMode, options.localStorageImpl || options.sessionStorageImpl);
+                        _setStorageMode(options.storageMode, options.storageImpl);
                     }
 
                     if ('onExpire' in options) {
@@ -735,7 +798,7 @@
             /**
              * @class AngularCacheFactory
              * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] {{capacity: Number, maxAge: Number, deleteOnExpire: String, onExpire: Function, cacheFlushInterval: Number, storageMode: String, localStorageImpl: Object, sessionStorageImpl: Object}}
+             * @param  {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [deleteOnExpire]: String, [onExpire]: Function, [storageMode]: String, [storageImpl]: Object}}
              * @returns {AngularCache}
              */
             function angularCacheFactory(cacheId, options) {

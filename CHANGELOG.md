@@ -4,6 +4,7 @@
 - Swapped `aggressiveDelete` option for `deleteOnExpire` option. #30, #47
 - Changed `$angularCacheFactory.info()` to return an object similar to `AngularCache.info()` #45
 - Namespaced angular-cache module under `jmdobry` so it is now "jmdobry.angular-cache". #42
+- Substituted `localStorageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
 
 ###### Backwards compatible API changes
 - Added ability to set global cache defaults in $angularCacheFactoryProvider. #55

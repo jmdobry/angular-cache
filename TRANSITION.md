@@ -43,3 +43,31 @@ $angularCacheFactory('myNewCache', {
     deleteOnExpire: 'none' // Items will expire but not be removed
 });
 ```
+
+- Substituted `localStorageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
+
+###### 1.x.x
+```javascript
+$angularCacheFactory('myNewCache', {
+    storageMode: 'localStorage',
+    localStorageImpl: myLocalStoragePolyfill // Use custom localStorage implementation
+});
+
+$angularCacheFactory('myNewCache2', {
+    storageMode: 'sessionStorage',
+    sessionStorageImpl: mySessionStoragePolyfill // Use custom sessionStorage implementation
+});
+```
+
+###### 2.0.0
+```javascript
+$angularCacheFactory('myNewCache', {
+    storageMode: 'localStorage',
+    storageImpl: myLocalStoragePolyfill // Use custom localStorage implementation
+});
+
+$angularCacheFactory('myNewCache2', {
+    storageMode: 'sessionStorage',
+    storageImpl: mySessionStoragePolyfill // Use custom sessionStorage implementation
+});
+```

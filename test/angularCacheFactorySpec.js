@@ -210,7 +210,7 @@ describe('AngularCacheFactory', function () {
                 value: 'value2',
                 timestamp: new Date().getTime()
             }));
-            var lsCache = $angularCacheFactory('lsCache', { localStorageImpl: myLocalStorage, storageMode: 'localStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
+            var lsCache = $angularCacheFactory('lsCache', { storageImpl: myLocalStorage, storageMode: 'localStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
             expect(lsCache.get('item1')).toEqual('value1');
             expect(lsCache.get('item2')).toEqual('value2');
             waits(100);
@@ -227,7 +227,7 @@ describe('AngularCacheFactory', function () {
                     value: 'value2',
                     timestamp: new Date().getTime()
                 }));
-                var ssCache = $angularCacheFactory('ssCache', { sessionStorageImpl: mySessionStorage, storageMode: 'sessionStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
+                var ssCache = $angularCacheFactory('ssCache', { storageImpl: mySessionStorage, storageMode: 'sessionStorage', maxAge: 10, deleteOnExpire: 'aggressive' });
                 expect(ssCache.get('item1')).toEqual('value1');
                 expect(ssCache.get('item2')).toEqual('value2');
                 waits(100);
