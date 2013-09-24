@@ -23,10 +23,12 @@
              * @class BinaryHeap
              * @desc BinaryHeap implementation of a priority queue.
              * @param {Function} weightFunc Function that determines how each node should be weighted.
+             * @param {Boolean} reverse Whether to reverse the ordering of the binary heap.
              */
-            function BinaryHeap(weightFunc) {
+            function BinaryHeap(weightFunc, reverse) {
                 this.heap = [];
                 this.weightFunc = weightFunc;
+                this.reverse = reverse;
             }
 
             /**
@@ -51,12 +53,12 @@
             };
 
             /**
-             * @method BinaryHeap.pop
+             * @method BinaryHeap.removeMin
              * @desc Remove and return the minimum element in the binary heap.
              * @returns {*}
              * @public
              */
-            BinaryHeap.prototype.pop = function () {
+            BinaryHeap.prototype.removeMin = function () {
                 var front = this.heap[0],
                     end = this.heap.pop();
                 if (this.heap.length > 0) {
@@ -107,7 +109,6 @@
              * @ignore
              */
             BinaryHeap.prototype.bubbleUp = function (n) {
-                // Fetch the element that has to be moved.
                 var element = this.heap[n],
                     weight = this.weightFunc(element);
                 // When at 0, an element can not go up any further.
@@ -138,14 +139,10 @@
                     nodeWeight = this.weightFunc(node);
 
                 while (true) {
-                    // Compute the indices of the child nodes.
-                    var child2N = (n + 1) * 2, child1N = child2N - 1;
-                    // This is used to store the new position of the node,
-                    // if any.
+                    var child2N = (n + 1) * 2,
+                        child1N = child2N - 1;
                     var swap = null;
-                    // If the first child exists (is inside the array)...
                     if (child1N < length) {
-                        // Look it up and compute its score.
                         var child1 = this.heap[child1N],
                             child1Weight = this.weightFunc(child1);
                         // If the score is less than our node's, we need to swap.
@@ -352,8 +349,11 @@
                     config = angular.extend({}, { id: cacheId }),
                     data = {},
                     lruHash = {},
-                    heap = new BinaryHeap(function (x) {
+                    expiresHeap = new BinaryHeap(function (x) {
                         return x.expires;
+                    }),
+                    lruHeap = new BinaryHeap(function (x) {
+                        return x.accessed;
                     }),
                     freshEnd = null,
                     staleEnd = null,
@@ -379,7 +379,7 @@
                         if (data[key]) {
                             value = data[key].value;
                         }
-                        heap.remove(data[key]);
+                        expiresHeap.remove(data[key]);
                         self.remove(key);
                         if (config.onExpire) {
                             config.onExpire(key, value);
@@ -612,47 +612,6 @@
                 }
 
                 /**
-                 * @method refresh
-                 * @desc Makes the `entry` the freshEnd of the LRU linked list.
-                 * @param {Object} entry
-                 * @private
-                 * @ignore
-                 */
-                function _refresh(entry) {
-                    if (entry !== freshEnd) {
-                        if (!staleEnd) {
-                            staleEnd = entry;
-                        } else if (staleEnd === entry) {
-                            staleEnd = entry.n;
-                        }
-
-                        _link(entry.n, entry.p);
-                        _link(entry, freshEnd);
-                        freshEnd = entry;
-                        freshEnd.n = null;
-                    }
-                }
-
-                /**
-                 * @method link
-                 * @desc Bidirectionally links two entries of the LRU linked list
-                 * @param {Object} nextEntry
-                 * @param {Object} prevEntry
-                 * @private
-                 * @ignore
-                 */
-                function _link(nextEntry, prevEntry) {
-                    if (nextEntry !== prevEntry) {
-                        if (nextEntry) {
-                            nextEntry.p = prevEntry; //p stands for previous, 'prev' didn't minify
-                        }
-                        if (prevEntry) {
-                            prevEntry.n = nextEntry; //n stands for next, 'next' didn't minify
-                        }
-                    }
-                }
-
-                /**
                  * @method _loadCacheConfig
                  * @desc If storageMode is set, attempt to load previous cache configuration from localStorage.
                  * @private
@@ -706,68 +665,62 @@
                  * @desc Add a key-value pair with timestamp to the cache.
                  * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {Object} [options] {{ maxAge: {Number}, aggressiveDelete: {Boolean}, timestamp: {Number} }}
+                 * @param {Object} [options] {{ maxAge: {Number}, deleteOnExpire: {String} }}
                  * @returns {*} value The value of the item added to the cache.
                  * @privileged
                  */
                 this.put = function (key, value, options) {
-
                     if (!angular.isString(key)) {
-                        throw new Error('AngularCache.put(): key: must be a string!');
-                    }
-                    if (options && options.maxAge) {
+                        throw new Error('AngularCache.put(key, value, options): key: must be a string!');
+                    } else if (options && options.maxAge && options.maxAge !== null) {
                         _validateNumberOption(options.maxAge, function (err) {
                             if (err) {
-                                throw new Error('AngularCache.put(): maxAge: ' + err);
+                                throw new Error('AngularCache.put(key, value, options): maxAge: ' + err);
                             }
                         });
-                    }
-                    if (options && options.deleteOnExpire) {
-                        if (!angular.isString(options.deleteOnExpire)) {
-                            throw new Error('AngularCache.put(): deleteOnExpire: must be a string!');
-                        }
-                    }
-                    if (angular.isUndefined(value)) {
+                    } else if (options && options.deleteOnExpire && !angular.isString(options.deleteOnExpire)) {
+                        throw new Error('AngularCache.put(key, value, options): deleteOnExpire: must be a string!');
+                    } else if (angular.isUndefined(value)) {
                         return;
                     }
 
-                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
+                    var now = new Date().getTime(),
+                        deleteOnExpire, item;
 
-                    _refresh(lruEntry);
+                    data[key] = data[key] || {};
+                    item = data[key];
 
-                    if (!(key in data)) {
-                        size++;
-                    } else {
-                        if (data[key].timeoutId) {
-                            $timeout.cancel(data[key].timeoutId);
-                        }
-                    }
-
-                    data[key] = {
-                        value: value,
-                        timestamp: (options && options.timestamp) || new Date().getTime()
-                    };
+                    item.value = value;
+                    item.created = (options && parseInt(options.created, 10)) || item.created || now;
+                    item.modified = (options && parseInt(options.modified, 10)) || now;
+                    item.accessed = (options && parseInt(options.accessed, 10)) || now;
 
                     if (options && options.deleteOnExpire) {
-                        data[key].deleteOnExpire = options.deleteOnExpire;
+                        item.deleteOnExpire = options.deleteOnExpire;
                     }
                     if (options && options.maxAge) {
-                        data[key].maxAge = options.maxAge;
+                        item.maxAge = options.maxAge;
                     }
 
-                    if (data[key] || config.maxAge) {
-                        if ((data[key].deleteOnExpire === 'aggressive' || config.deleteOnExpire === 'aggressive') &&
-                            (data[key].maxAge || config.maxAge)) {
-                            data[key].expires = data[key].timestamp + (data[key].maxAge || config.maxAge);
-                            heap.push(data[key]);
-                            _setTimeoutToRemove(key, data[key].maxAge || config.maxAge);
-                        }
+                    if (item.maxAge || config.maxAge) {
+                        item.expires = item.created + (item.maxAge || config.maxAge);
                     }
 
-                    _syncToStorage(key);
+                    deleteOnExpire = item.deleteOnExpire || config.deleteOnExpire;
 
-                    if (size > config.capacity) {
-                        this.remove(staleEnd.key);
+                    if (deleteOnExpire === 'aggressive' && item.expires) {
+                        expiresHeap.push(item);
+                    }
+
+                    if (config.storageMode !== 'none' && storage) {
+                        storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                        storage.setItem(prefix + '.data.' + key, angular.toJson(item));
+                    }
+
+                    lruHeap.push(item);
+
+                    if (lruHeap.size() > config.capacity) {
+                        lruHeap.removeMin();
                     }
 
                     return value;
@@ -783,43 +736,40 @@
                  * @privileged
                  */
                 this.get = function (key, onExpire) {
-                    var lruEntry = lruHash[key],
-                        item = data[key],
-                        maxAge,
-                        deleteOnExpire;
-
-                    if (!lruEntry || !item) {
+                    if (!angular.isString(key)) {
+                        throw new Error('AngularCache.get(key, onExpire): key: must be a string!');
+                    } else if (onExpire && typeof onExpire !== 'function') {
+                        throw new Error('AngularCache.get(key, onExpire): onExpire: must be a function!');
+                    } else if (!(key in data)) {
                         return;
                     }
 
-                    maxAge = item.maxAge || config.maxAge;
-                    deleteOnExpire = item.deleteOnExpire || config.deleteOnExpire;
+                    var value = data[key].value,
+                        now = new Date().getTime();
 
-                    // There is no timeout to delete this item, so we must do it here if it's expired.
-                    if (maxAge && deleteOnExpire === 'passive') {
-                        if ((new Date().getTime() - item.timestamp) > maxAge) {
-                            // This item is expired so remove it
-                            this.remove(key);
-                            lruEntry = null;
+                    data[key].accessed = now;
 
-                            if (config.onExpire) {
-                                config.onExpire(key, item.value, onExpire);
-                                return;
-                            } else if (onExpire && typeof onExpire === 'function') {
-                                onExpire(key, item.value);
-                                return;
-                            } else {
-                                // cache miss
-                                return;
-                            }
+                    if ('expires' in data[key] && data[key].expires < now) {
+                        this.remove(key);
+                        if (config.storageMode !== 'none' && storage) {
+                            storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                            storage.removeItem(prefix + '.data.' + key);
                         }
+
+                        if (config.onExpire) {
+                            config.onExpire(key, data[key].value, onExpire);
+                        } else if (onExpire && typeof onExpire === 'function') {
+                            onExpire(key, data[key].value);
+                        }
+                        value = undefined;
                     }
 
-                    _refresh(lruEntry);
+                    if (config.storageMode !== 'none' && storage) {
+                        storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
+                        storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
+                    }
 
-                    _syncToStorage(key);
-
-                    return item.value;
+                    return value;
                 };
 
                 /**
@@ -829,21 +779,6 @@
                  * @privileged
                  */
                 this.remove = function (key) {
-                    var lruEntry = lruHash[key];
-
-                    if (!lruEntry) {
-                        return;
-                    }
-
-                    if (lruEntry === freshEnd) {
-                        freshEnd = lruEntry.p;
-                    }
-                    if (lruEntry === staleEnd) {
-                        staleEnd = lruEntry.n;
-                    }
-                    _link(lruEntry.n, lruEntry.p);
-
-                    delete lruHash[key];
                     delete data[key];
 
                     _syncToStorage(null);
