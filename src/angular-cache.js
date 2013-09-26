@@ -25,8 +25,11 @@
              * @param {Function} weightFunc Function that determines how each node should be weighted.
              */
             function BinaryHeap(weightFunc) {
-                this.heap = [];
+                weightFunc = weightFunc || function (x) {
+                    return x;
+                };
                 this.weightFunc = weightFunc;
+                this.heap = [];
             }
 
             /**
@@ -51,17 +54,17 @@
             };
 
             /**
-             * @method BinaryHeap.removeMin
+             * @method BinaryHeap.pop
              * @desc Remove and return the minimum element in the binary heap.
              * @returns {*}
              * @public
              */
-            BinaryHeap.prototype.removeMin = function () {
+            BinaryHeap.prototype.pop = function () {
                 var front = this.heap[0],
                     end = this.heap.pop();
                 if (this.heap.length > 0) {
                     this.heap[0] = end;
-                    this.sinkDown(0);
+                    this.bubbleDown(0);
                 }
                 return front;
             };
@@ -83,7 +86,7 @@
                         if (i !== length - 1) {
                             this.heap[i] = end;
                             this.bubbleUp(i);
-                            this.sinkDown(i);
+                            this.bubbleDown(i);
                         }
                         return removed;
                     }
@@ -136,11 +139,11 @@
             };
 
             /**
-             * @method BinaryHeap.sinkDown
+             * @method BinaryHeap.bubbleDown
              * @param {Number} n The index of the element to sink down.
              * @ignore
              */
-            BinaryHeap.prototype.sinkDown = function (n) {
+            BinaryHeap.prototype.bubbleDown = function (n) {
                 var length = this.heap.length,
                     node = this.heap[n],
                     nodeWeight = this.weightFunc(node);

@@ -1,0 +1,2 @@
+describe('BinaryHeap.pop()', function () {
+});

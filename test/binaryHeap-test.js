@@ -1,0 +1,2 @@
+describe('BinaryHeap(weightFunc)', function () {
+});
