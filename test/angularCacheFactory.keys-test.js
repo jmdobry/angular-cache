@@ -7,13 +7,22 @@ describe('$angularCacheFactory.keys()', function () {
         $angularCacheFactory(cacheKeys[2]);
 
         var keys = $angularCacheFactory.keys();
-
+        expect(keys.length).toEqual(3);
         expect(keys[0]).toEqual(cacheKeys[0]);
         expect(keys[1]).toEqual(cacheKeys[1]);
         expect(keys[2]).toEqual(cacheKeys[2]);
 
         $angularCacheFactory.get(cacheKeys[0]).destroy();
+        keys = $angularCacheFactory.keys();
+        expect(keys.length).toEqual(2);
+        expect(keys.indexOf(cacheKeys[1])).not.toEqual(-1);
+        expect(keys.indexOf(cacheKeys[2])).not.toEqual(-1);
+
         $angularCacheFactory.get(cacheKeys[1]).destroy();
+        keys = $angularCacheFactory.keys();
+        expect(keys.length).toEqual(1);
+        expect(keys.indexOf(cacheKeys[2])).not.toEqual(-1);
+
         $angularCacheFactory.get(cacheKeys[2]).destroy();
 
         keys = $angularCacheFactory.keys();

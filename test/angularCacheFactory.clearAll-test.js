@@ -1,22 +1,52 @@
 describe('$angularCacheFactory.clearAll()', function () {
-    it('should call "removeAll()" on all caches in $angularCacheFactory', function () {
-        var cacheKeys = ['cache', 'cache1', 'cache2'];
+    it('should call "removeAll()" on all caches in $angularCacheFactory.', function () {
+        var cacheKeys = ['cache', 'cache1', 'cache2'],
+            caches = [];
 
-        var cache = $angularCacheFactory(cacheKeys[0]);
-        cache.put('item', 'value');
-        var cache1 = $angularCacheFactory(cacheKeys[1]);
-        cache1.put('item', 'value');
-        var cache2 = $angularCacheFactory(cacheKeys[2]);
-        cache2.put('item', 'value');
+        caches.push($angularCacheFactory(cacheKeys[0]));
+        caches[0].put('item', 'value');
+        caches[0].put('item2', 'value2');
+        caches.push($angularCacheFactory(cacheKeys[1]));
+        caches[1].put('item', 'value');
+        caches[1].put('item2', 'value2');
+        caches.push($angularCacheFactory(cacheKeys[2]));
+        caches[2].put('item', 'value');
+        caches[2].put('item2', 'value2');
+
+        spyOn(caches[0], 'removeAll');
+        spyOn(caches[1], 'removeAll');
+        spyOn(caches[2], 'removeAll');
 
         $angularCacheFactory.clearAll();
 
-        expect(cache.get('item')).not.toBeDefined();
-        expect(cache1.get('item')).not.toBeDefined();
-        expect(cache2.get('item')).not.toBeDefined();
+        expect(caches[0].removeAll.callCount).toEqual(1);
+        expect(caches[1].removeAll.callCount).toEqual(1);
+        expect(caches[2].removeAll.callCount).toEqual(1);
+    });
+    it('should result in each cache being cleared.', function () {
+        var cacheKeys = ['cache', 'cache1', 'cache2'],
+            caches = [];
 
-        $angularCacheFactory.get(cacheKeys[0]).destroy();
-        $angularCacheFactory.get(cacheKeys[1]).destroy();
-        $angularCacheFactory.get(cacheKeys[2]).destroy();
+        caches.push($angularCacheFactory(cacheKeys[0]));
+        caches[0].put('item', 'value');
+        caches[0].put('item2', 'value2');
+        caches.push($angularCacheFactory(cacheKeys[1]));
+        caches[1].put('item', 'value');
+        caches[1].put('item2', 'value2');
+        caches.push($angularCacheFactory(cacheKeys[2]));
+        caches[2].put('item', 'value');
+        caches[2].put('item2', 'value2');
+
+        $angularCacheFactory.clearAll();
+
+        expect(caches[0].get('item')).not.toBeDefined();
+        expect(caches[1].get('item')).not.toBeDefined();
+        expect(caches[2].get('item')).not.toBeDefined();
+        expect(caches[0].get('item2')).not.toBeDefined();
+        expect(caches[1].get('item2')).not.toBeDefined();
+        expect(caches[2].get('item2')).not.toBeDefined();
+        expect(caches[0].info().size).toEqual(0);
+        expect(caches[1].info().size).toEqual(0);
+        expect(caches[2].info().size).toEqual(0);
     });
 });

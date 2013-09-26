@@ -49,7 +49,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     });
     it('should throw an exception if "capacity" is not a number or is less than zero.', function () {
         try {
-            $angularCacheFactory('cache', { capacity: Math.floor((Math.random() * 100000) + 1) * -1 });
+            $angularCacheFactory('capacityCache99', { capacity: Math.floor((Math.random() * 100000) + 1) * -1 });
             fail();
         } catch (err) {
             var msg = err.message;
@@ -57,7 +57,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         expect(msg).toEqual('capacity: must be greater than zero!');
         for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
             try {
-                $angularCacheFactory('cache', { capacity: TYPES_EXCEPT_NUMBER[i] });
+                $angularCacheFactory('capacityCache' + i, { capacity: TYPES_EXCEPT_NUMBER[i] });
                 fail();
             } catch (err) {
                 expect(err.message).toEqual('capacity: must be a number!');
@@ -69,82 +69,98 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate maxAge.', function () {
         var maxAge = Math.floor((Math.random() * 100000) + 1) * -1;
         try {
-            $angularCacheFactory('cache', { maxAge: maxAge });
-            expect('should not reach this!').toEqual(false);
+            $angularCacheFactory('maxAgeCache99', { maxAge: maxAge });
+            fail();
         } catch (err) {
             var msg = err.message;
         }
         expect(msg).toEqual('maxAge: must be greater than zero!');
-        maxAge = 'asdfasd';
-        try {
-            $angularCacheFactory('cache', { maxAge: maxAge });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
+            try {
+                $angularCacheFactory('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] });
+                if (TYPES_EXCEPT_NUMBER[i] !== null) {
+                    fail();
+                }
+            } catch (err) {
+                expect(err.message).toEqual('maxAge: must be a number!');
+                continue;
+            }
+            if (TYPES_EXCEPT_NUMBER[i] !== null) {
+                fail();
+            }
         }
-        expect(msg).toEqual('maxAge: must be a number!');
     });
     it('should validate cacheFlushInterval.', function () {
         var cacheFlushInterval = Math.floor((Math.random() * 100000) + 1) * -1;
         try {
-            $angularCacheFactory('cache', { cacheFlushInterval: cacheFlushInterval });
-            expect('should not reach this!').toEqual(false);
+            $angularCacheFactory('cacheFlushIntervalCache99', { cacheFlushInterval: cacheFlushInterval });
+            fail();
         } catch (err) {
             var msg = err.message;
         }
         expect(msg).toEqual('cacheFlushInterval: must be greater than zero!');
-        cacheFlushInterval = 'asdfasd';
-        try {
-            $angularCacheFactory('cache', { cacheFlushInterval: cacheFlushInterval });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
+            try {
+                $angularCacheFactory('cacheFlushIntervalCache' + i, { cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] });
+                if (TYPES_EXCEPT_NUMBER[i] !== null) {
+                    fail();
+                }
+            } catch (err) {
+                expect(err.message).toEqual('cacheFlushInterval: must be a number!');
+                continue;
+            }
+            if (TYPES_EXCEPT_NUMBER[i] !== null) {
+                fail();
+            }
         }
-        expect(msg).toEqual('cacheFlushInterval: must be a number!');
     });
     it('should validate recycleFreq.', function () {
         var recycleFreq = Math.floor((Math.random() * 100000) + 1) * -1;
         try {
-            $angularCacheFactory('cache', { recycleFreq: recycleFreq });
-            expect('should not reach this!').toEqual(false);
+            $angularCacheFactory('recycleFreqCache99', { recycleFreq: recycleFreq });
+            fail();
         } catch (err) {
             var msg = err.message;
         }
         expect(msg).toEqual('recycleFreq: must be greater than zero!');
-        recycleFreq = 'asdfasd';
-        try {
-            $angularCacheFactory('cache', { recycleFreq: recycleFreq });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
+            try {
+                $angularCacheFactory('recycleFreqCache' + i, { recycleFreq: TYPES_EXCEPT_NUMBER[i] });
+                if (TYPES_EXCEPT_NUMBER[i] !== null) {
+                    fail();
+                }
+            } catch (err) {
+                expect(err.message).toEqual('recycleFreq: must be a number!');
+                continue;
+            }
+            if (TYPES_EXCEPT_NUMBER[i] !== null) {
+                fail();
+            }
         }
-        expect(msg).toEqual('recycleFreq: must be a number!');
     });
     it('should validate onExpire.', function () {
         var onExpire = 234;
         try {
-            $angularCacheFactory('cache', { onExpire: onExpire });
+            $angularCacheFactory('onExpireCache99', { onExpire: onExpire });
             expect('should not reach this!').toEqual(false);
         } catch (err) {
             var msg = err.message;
         }
         expect(msg).toEqual('onExpire: must be a function!');
-        onExpire = {};
-        try {
-            $angularCacheFactory('cache', { onExpire: onExpire });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            var msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_FUNCTION.length; i++) {
+            try {
+                $angularCacheFactory('onExpireCache' + i, { onExpire: TYPES_EXCEPT_FUNCTION[i] });
+                if (TYPES_EXCEPT_FUNCTION[i] !== null) {
+                    fail();
+                }
+            } catch (err) {
+                expect(err.message).toEqual('onExpire: must be a function!');
+                continue;
+            }
+            if (TYPES_EXCEPT_FUNCTION[i] !== null) {
+                fail();
+            }
         }
-        expect(msg).toEqual('onExpire: must be a function!');
-        onExpire = 'asdfasd';
-        try {
-            $angularCacheFactory('cache', { onExpire: onExpire });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            msg = err.message;
-        }
-        expect(msg).toEqual('onExpire: must be a function!');
     });
     it('should validate deleteOnExpire.', function () {
         var deleteOnExpire = 'fail';
@@ -155,14 +171,16 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             var msg = err.message;
         }
         expect(msg).toEqual('deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
-        deleteOnExpire = 234;
-        try {
-            $angularCacheFactory('cache', { deleteOnExpire: deleteOnExpire });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
+            try {
+                $angularCacheFactory('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] });
+                fail();
+            } catch (err) {
+                expect(err.message).toEqual('deleteOnExpire: must be a string!');
+                continue;
+            }
+            fail();
         }
-        expect(msg).toEqual('deleteOnExpire: must be a string!');
     });
     it('should validate storageMode.', function () {
         var storageMode = 'fail';
@@ -173,34 +191,41 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             var msg = err.message;
         }
         expect(msg).toEqual('storageMode: accepted values are "none", "localStorage" or "sessionStorage"!');
-        storageMode = 234;
-        try {
-            $angularCacheFactory('cache', { storageMode: storageMode });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
+            try {
+                $angularCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
+                fail();
+            } catch (err) {
+                expect(err.message).toEqual('storageMode: must be a string!');
+                continue;
+            }
+            fail();
         }
-        expect(msg).toEqual('storageMode: must be a string!');
     });
     it('should validate storageImpl.', function () {
         var storageImpl = 'fail';
         try {
-            $angularCacheFactory('cache', { storageImpl: storageImpl });
+            $angularCacheFactory('cache', { storageMode: 'localStorage', storageImpl: storageImpl });
             expect('should not reach this!').toEqual(false);
         } catch (err) {
             var msg = err.message;
         }
         expect(msg).toEqual('[local|session]storageImpl: must be an object!');
-        storageImpl = 234;
-        try {
-            $angularCacheFactory('cache', { storageImpl: storageImpl });
-            expect('should not reach this!').toEqual(false);
-        } catch (err) {
-            msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
+            try {
+                $angularCacheFactory('storageImplCache' + i, { storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
+                if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
+                    fail(TYPES_EXCEPT_OBJECT[i]);
+                }
+            } catch (err) {
+                expect(err.message.length).not.toEqual(0);
+                continue;
+            }
+            if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
+                fail(TYPES_EXCEPT_OBJECT[i]);
+            }
         }
-        expect(msg).toEqual('[local|session]storageImpl: must be an object!');
     });
-
     it('should prevent a cache from being duplicated.', function () {
         try {
             $angularCacheFactory('cache');
@@ -211,24 +236,15 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         expect(msg).toEqual('cacheId cache taken!');
     });
     it('should require cacheId to be a string.', function () {
-        var shouldBeAStringMsg = 'cacheId must be a string!';
-        try {
-            $angularCacheFactory(3);
-        } catch (err) {
-            var msg = err.message;
+        for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
+            try {
+                $angularCacheFactory(TYPES_EXCEPT_STRING[i]);
+                fail(TYPES_EXCEPT_STRING[i]);
+            } catch (err) {
+                expect(err.message.length).not.toEqual(0);
+                continue;
+            }
+            fail(TYPES_EXCEPT_STRING[i]);
         }
-        expect(msg).toEqual(shouldBeAStringMsg);
-        try {
-            $angularCacheFactory({obj: 'obj'});
-        } catch (err) {
-            msg = err.message;
-        }
-        expect(msg).toEqual(shouldBeAStringMsg);
-        try {
-            $angularCacheFactory(['obj']);
-        } catch (err) {
-            msg = err.message;
-        }
-        expect(msg).toEqual(shouldBeAStringMsg);
     });
 });

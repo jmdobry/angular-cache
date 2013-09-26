@@ -59,9 +59,7 @@ module.exports = function (grunt) {
                 preprocessors: {
                     'src/angular-cache.js': ['coverage']
                 },
-                reporters: {
-                    reporters: ['progress', 'coverage']
-                }
+                reporters: ['progress', 'coverage']
             }
         },
         jsdoc : {
