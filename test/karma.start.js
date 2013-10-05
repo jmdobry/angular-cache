@@ -18,10 +18,11 @@ var fail = function (msg) {
         verifyIntegrity: true
     };
 
-var $angularCacheFactory;
+var $angularCacheFactory, BinaryHeap;
 beforeEach(module('jmdobry.angular-cache'));
-beforeEach(inject(function ($injector) {
-    $angularCacheFactory = $injector.get('$angularCacheFactory');
+beforeEach(inject(function (_$angularCacheFactory_, _BinaryHeap_) {
+    $angularCacheFactory = _$angularCacheFactory_;
+    BinaryHeap = _BinaryHeap_;
 }));
 afterEach(function () {
     $angularCacheFactory.removeAll();
