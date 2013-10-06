@@ -1,5 +1,16 @@
-describe('$angularCacheFactory(cacheId, options)', function () {
-    it('should be able to create a default cache.', function () {
+describe('$angularCacheFactoryProvider.setCacheDefaults(options)', function () {
+    it('should have the correct defaults.', function () {
+        expect($angularCacheFactory.info().cacheDefaults).toEqual({
+            capacity: CACHE_DEFAULTS.capacity,
+            maxAge: CACHE_DEFAULTS.maxAge,
+            cacheFlushInterval: CACHE_DEFAULTS.cacheFlushInterval,
+            deleteOnExpire: CACHE_DEFAULTS.deleteOnExpire,
+            onExpire: CACHE_DEFAULTS.onExpire,
+            recycleFreq: CACHE_DEFAULTS.recycleFreq,
+            storageMode: CACHE_DEFAULTS.storageMode,
+            storageImpl: CACHE_DEFAULTS.storageImpl,
+            verifyIntegrity: CACHE_DEFAULTS.verifyIntegrity
+        });
         var cache = $angularCacheFactory('cache');
         expect(cache).toBeDefined();
         expect(cache.info().id).toEqual('cache');
@@ -14,7 +25,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         expect(cache.info().verifyIntegrity).toEqual(CACHE_DEFAULTS.verifyIntegrity);
         cache.destroy();
     });
-    it('should be able to create a cache with options.', function () {
+    it('should set the default options.', function () {
         var options = {
             capacity: Math.floor((Math.random() * 100000) + 1),
             maxAge: Math.floor((Math.random() * 100000) + 1),
@@ -34,7 +45,8 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             onExpire: function () {
             }
         };
-        var cache = $angularCacheFactory('cache', options);
+        $angularCacheFactoryProvider.setCacheDefaults(options);
+        var cache = $angularCacheFactory('cache');
         expect(cache).toBeDefined();
         expect(cache.info().id).toEqual('cache');
         expect(cache.info().capacity).toEqual(options.capacity);
@@ -49,18 +61,18 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     });
     it('should throw an exception if "capacity" is not a number or is less than zero.', function () {
         try {
-            $angularCacheFactory('capacityCache99', { capacity: Math.floor((Math.random() * 100000) + 1) * -1 });
+            $angularCacheFactoryProvider.setCacheDefaults({ capacity: Math.floor((Math.random() * 100000) + 1) * -1 });
             fail();
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('capacity: must be greater than zero!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): capacity: must be greater than zero!');
         for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
             try {
-                $angularCacheFactory('capacityCache' + i, { capacity: TYPES_EXCEPT_NUMBER[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ capacity: TYPES_EXCEPT_NUMBER[i] });
                 fail();
             } catch (err) {
-                expect(err.message).toEqual('capacity: must be a number!');
+                expect(err.message).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): capacity: must be a number!');
                 continue;
             }
             fail();
@@ -69,20 +81,20 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate maxAge.', function () {
         var maxAge = Math.floor((Math.random() * 100000) + 1) * -1;
         try {
-            $angularCacheFactory('maxAgeCache99', { maxAge: maxAge });
+            $angularCacheFactoryProvider.setCacheDefaults({ maxAge: maxAge });
             fail();
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('maxAge: must be greater than zero!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): maxAge: must be greater than zero!');
         for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
             try {
-                $angularCacheFactory('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ maxAge: TYPES_EXCEPT_NUMBER[i] });
                 if (TYPES_EXCEPT_NUMBER[i] !== null) {
                     fail();
                 }
             } catch (err) {
-                expect(err.message).toEqual('maxAge: must be a number!');
+                expect(err.message).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): maxAge: must be a number!');
                 continue;
             }
             if (TYPES_EXCEPT_NUMBER[i] !== null) {
@@ -93,20 +105,20 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate cacheFlushInterval.', function () {
         var cacheFlushInterval = Math.floor((Math.random() * 100000) + 1) * -1;
         try {
-            $angularCacheFactory('cacheFlushIntervalCache99', { cacheFlushInterval: cacheFlushInterval });
+            $angularCacheFactoryProvider.setCacheDefaults({ cacheFlushInterval: cacheFlushInterval });
             fail();
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('cacheFlushInterval: must be greater than zero!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): cacheFlushInterval: must be greater than zero!');
         for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
             try {
-                $angularCacheFactory('cacheFlushIntervalCache' + i, { cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] });
                 if (TYPES_EXCEPT_NUMBER[i] !== null) {
                     fail();
                 }
             } catch (err) {
-                expect(err.message).toEqual('cacheFlushInterval: must be a number!');
+                expect(err.message).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): cacheFlushInterval: must be a number!');
                 continue;
             }
             if (TYPES_EXCEPT_NUMBER[i] !== null) {
@@ -117,20 +129,20 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate recycleFreq.', function () {
         var recycleFreq = Math.floor((Math.random() * 100000) + 1) * -1;
         try {
-            $angularCacheFactory('recycleFreqCache99', { recycleFreq: recycleFreq });
+            $angularCacheFactoryProvider.setCacheDefaults({ recycleFreq: recycleFreq });
             fail();
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('recycleFreq: must be greater than zero!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): recycleFreq: must be greater than zero!');
         for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
             try {
-                $angularCacheFactory('recycleFreqCache' + i, { recycleFreq: TYPES_EXCEPT_NUMBER[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ recycleFreq: TYPES_EXCEPT_NUMBER[i] });
                 if (TYPES_EXCEPT_NUMBER[i] !== null) {
                     fail();
                 }
             } catch (err) {
-                expect(err.message).toEqual('recycleFreq: must be a number!');
+                expect(err.message).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): recycleFreq: must be a number!');
                 continue;
             }
             if (TYPES_EXCEPT_NUMBER[i] !== null) {
@@ -141,20 +153,20 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate onExpire.', function () {
         var onExpire = 234;
         try {
-            $angularCacheFactory('onExpireCache99', { onExpire: onExpire });
+            $angularCacheFactoryProvider.setCacheDefaults({ onExpire: onExpire });
             expect('should not reach this!').toEqual(false);
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('onExpire: must be a function!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): onExpire: must be a function!');
         for (var i = 0; i < TYPES_EXCEPT_FUNCTION.length; i++) {
             try {
-                $angularCacheFactory('onExpireCache' + i, { onExpire: TYPES_EXCEPT_FUNCTION[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ onExpire: TYPES_EXCEPT_FUNCTION[i] });
                 if (TYPES_EXCEPT_FUNCTION[i] !== null) {
                     fail();
                 }
             } catch (err) {
-                expect(err.message).toEqual('onExpire: must be a function!');
+                expect(err.message).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): onExpire: must be a function!');
                 continue;
             }
             if (TYPES_EXCEPT_FUNCTION[i] !== null) {
@@ -165,18 +177,18 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate deleteOnExpire.', function () {
         var deleteOnExpire = 'fail';
         try {
-            $angularCacheFactory('cache', { deleteOnExpire: deleteOnExpire });
+            $angularCacheFactoryProvider.setCacheDefaults({ deleteOnExpire: deleteOnExpire });
             expect('should not reach this!').toEqual(false);
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
         for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
             try {
-                $angularCacheFactory('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ deleteOnExpire: TYPES_EXCEPT_STRING[i] });
                 fail();
             } catch (err) {
-                expect(err.message).toEqual('deleteOnExpire: must be a string!');
+                expect(err.message).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): deleteOnExpire: must be a string!');
                 continue;
             }
             fail();
@@ -185,18 +197,18 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate storageMode.', function () {
         var storageMode = 'fail';
         try {
-            $angularCacheFactory('cache', { storageMode: storageMode });
+            $angularCacheFactoryProvider.setCacheDefaults({ storageMode: storageMode });
             expect('should not reach this!').toEqual(false);
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('storageMode: accepted values are "none", "localStorage" or "sessionStorage"!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): storageMode: accepted values are "none", "localStorage" or "sessionStorage"!');
         for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
             try {
-                $angularCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ storageMode: TYPES_EXCEPT_STRING[i] });
                 fail();
             } catch (err) {
-                expect(err.message).toEqual('storageMode: must be a string!');
+                expect(err.message).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): storageMode: must be a string!');
                 continue;
             }
             fail();
@@ -205,15 +217,15 @@ describe('$angularCacheFactory(cacheId, options)', function () {
     it('should validate storageImpl.', function () {
         var storageImpl = 'fail';
         try {
-            $angularCacheFactory('cache', { storageMode: 'localStorage', storageImpl: storageImpl });
+            $angularCacheFactoryProvider.setCacheDefaults({ storageMode: 'localStorage', storageImpl: storageImpl });
             expect('should not reach this!').toEqual(false);
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('[local|session]storageImpl: must be an object!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): [local|session]storageImpl: must be an object!');
         for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
             try {
-                $angularCacheFactory('storageImplCache' + i, { storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
+                $angularCacheFactoryProvider.setCacheDefaults({ storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
                 if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
                     fail(TYPES_EXCEPT_OBJECT[i]);
                 }
@@ -226,7 +238,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             }
         }
         try {
-            $angularCacheFactory('storageImplCache-noSetItem', {
+            $angularCacheFactoryProvider.setCacheDefaults({
                 storageMode: 'localStorage',
                 storageImpl: {
                     getItem: function () {
@@ -240,7 +252,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             expect(err.message.length).not.toEqual(0);
         }
         try {
-            $angularCacheFactory('storageImplCache-noGetItem', {
+            $angularCacheFactoryProvider.setCacheDefaults({
                 storageMode: 'localStorage',
                 storageImpl: {
                     setItem: function () {
@@ -254,7 +266,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             expect(err.message.length).not.toEqual(0);
         }
         try {
-            $angularCacheFactory('storageImplCache-noRemoveItem', {
+            $angularCacheFactoryProvider.setCacheDefaults({
                 storageMode: 'localStorage',
                 storageImpl: {
                     getItem: function () {
@@ -268,7 +280,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             expect(err.message.length).not.toEqual(0);
         }
         try {
-            $angularCacheFactory('storageImplCache-stringGetItem', {
+            $angularCacheFactoryProvider.setCacheDefaults({
                 storageMode: 'localStorage',
                 storageImpl: {
                     getItem: 'should not be a string',
@@ -283,7 +295,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             expect(err.message.length).not.toEqual(0);
         }
         try {
-            $angularCacheFactory('storageImplCache-stringSetItem', {
+            $angularCacheFactoryProvider.setCacheDefaults({
                 storageMode: 'localStorage',
                 storageImpl: {
                     getItem: function () {
@@ -298,7 +310,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             expect(err.message.length).not.toEqual(0);
         }
         try {
-            $angularCacheFactory('storageImplCache-stringRemoveItem', {
+            $angularCacheFactoryProvider.setCacheDefaults({
                 storageMode: 'localStorage',
                 storageImpl: {
                     setItem: function () {
@@ -313,25 +325,20 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             expect(err.message.length).not.toEqual(0);
         }
     });
-    it('should prevent a cache from being duplicated.', function () {
-        try {
-            $angularCacheFactory('cache');
-            $angularCacheFactory('cache');
-        } catch (err) {
-            var msg = err.message;
-        }
-        expect(msg).toEqual('cacheId cache taken!');
-    });
-    it('should require cacheId to be a string.', function () {
-        for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
+    it('should require options to be an object.', function () {
+        for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
             try {
-                $angularCacheFactory(TYPES_EXCEPT_STRING[i]);
-                fail(TYPES_EXCEPT_STRING[i]);
+                $angularCacheFactoryProvider.setCacheDefaults(TYPES_EXCEPT_OBJECT[i]);
+                if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
+                    fail(TYPES_EXCEPT_OBJECT[i]);
+                }
             } catch (err) {
                 expect(err.message.length).not.toEqual(0);
                 continue;
             }
-            fail(TYPES_EXCEPT_STRING[i]);
+            if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
+                fail(TYPES_EXCEPT_OBJECT[i]);
+            }
         }
     });
 });

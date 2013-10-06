@@ -299,7 +299,7 @@
                 if (!angular.isString(options.storageMode)) {
                     throw new Error(errStr + 'storageMode: must be a string!');
                 } else if (options.storageMode !== 'none' && options.storageMode !== 'localStorage' && options.storageMode !== 'sessionStorage') {
-                    throw new Error(errStr + 'storageMode: accepted values are "none", "localStorage" or "sessionStorage"');
+                    throw new Error(errStr + 'storageMode: accepted values are "none", "localStorage" or "sessionStorage"!');
                 }
                 if ('storageImpl' in options) {
                     if (!angular.isObject(options.storageImpl)) {
@@ -316,7 +316,7 @@
 
             if ('onExpire' in options) {
                 if (typeof options.onExpire !== 'function') {
-                    throw new Error(errStr + 'onExpire: Must be a function!');
+                    throw new Error(errStr + 'onExpire: must be a function!');
                 }
             }
 
@@ -1036,7 +1036,7 @@
                     var key = keys[i];
                     info.caches[key] = caches[key].info();
                 }
-                info.cacheDefaults = cacheDefaults;
+                info.cacheDefaults = angular.extend({}, cacheDefaults);
                 return info;
             };
 

@@ -18,8 +18,10 @@ var fail = function (msg) {
         verifyIntegrity: true
     };
 
-var $angularCacheFactory, BinaryHeap;
-beforeEach(module('jmdobry.angular-cache'));
+var $angularCacheFactoryProvider, $angularCacheFactory, BinaryHeap;
+beforeEach(module('jmdobry.angular-cache', function (_$angularCacheFactoryProvider_) {
+    $angularCacheFactoryProvider = _$angularCacheFactoryProvider_;
+}));
 beforeEach(inject(function (_$angularCacheFactory_, _BinaryHeap_) {
     $angularCacheFactory = _$angularCacheFactory_;
     BinaryHeap = _BinaryHeap_;
