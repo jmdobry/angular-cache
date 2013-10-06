@@ -11,6 +11,7 @@ module.exports = function (config) {
             'test/vendor/angular-1.1.5.min.js',
             'test/vendor/angular-mocks-1.1.5.js',
             'src/angular-cache.js',
+            'test/karma.start.js',
             'test/*.js'
         ],
         logLevel: config.LOG_DEBUG,
