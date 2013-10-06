@@ -95,7 +95,7 @@
              * @param {Function} weightFunc Function that determines how each node should be weighted.
              */
             function BinaryHeap(weightFunc) {
-                if (weightFunc  && !angular.isFunction(weightFunc)) {
+                if (weightFunc && !angular.isFunction(weightFunc)) {
                     throw new Error('BinaryHeap(weightFunc): weightFunc: must be a function!');
                 }
                 weightFunc = weightFunc || function (x) {
@@ -389,29 +389,6 @@
                 options = options || {};
 
                 /**
-                 * @method _setTimeoutToRemove
-                 * @desc Removes the item with the given key from this cache after the number of
-                 * milliseconds specified by delay.
-                 * @param {String} key The key of the item to be removed at the end of the timeout.
-                 * @param {Number} delay The delay in milliseconds.
-                 * @private
-                 * @ignore
-                 */
-                function _setTimeoutToRemove(key, delay) {
-                    data[key].timeoutId = $timeout(function () {
-                        var value;
-                        if (data[key]) {
-                            value = data[key].value;
-                        }
-                        expiresHeap.remove(data[key]);
-                        self.remove(key);
-                        if (config.onExpire) {
-                            config.onExpire(key, value);
-                        }
-                    }, delay);
-                }
-
-                /**
                  * @method _setCapacity
                  * @desc Set the capacity for this cache.
                  * @param {Number} capacity The new capacity for this cache.
@@ -463,6 +440,7 @@
                                 var key = keys[i];
                                 if (!('maxAge' in data[key])) {
                                     delete data[key].expires;
+                                    expiresHeap.remove(data[key]);
                                 }
                             }
                         }
@@ -478,7 +456,9 @@
                                     for (var i = 0; i < keys.length; i++) {
                                         var key = keys[i];
                                         if (!('maxAge' in data[key])) {
+                                            expiresHeap.remove(data[key]);
                                             data[key].expires = data[key].created + config.maxAge;
+                                            expiresHeap.push(data[key]);
                                             if (data[key].expires < now) {
                                                 self.remove(key, { verifyIntegrity: false });
                                             }
@@ -504,6 +484,7 @@
                             delete config.recycleFreqId;
                         }
                         config.recycleFreq = cacheDefaults.recycleFreq;
+                        config.recycleFreqId = setInterval(self.removeExpired, config.recycleFreq);
                     } else {
                         _validateNumberOption(recycleFreq, function (err) {
                             if (err) {
@@ -678,12 +659,18 @@
                             var data = angular.fromJson(storage.getItem(prefix + '.data.' + keys[i])),
                                 maxAge = data.maxAge || config.maxAge,
                                 deleteOnExpire = data.deleteOnExpire || config.deleteOnExpire;
-                            if (maxAge && ((new Date().getTime() - data.timestamp) > maxAge) && deleteOnExpire === 'aggressive') {
+                            if (maxAge && ((new Date().getTime() - data.created) > maxAge) && deleteOnExpire === 'aggressive') {
                                 storage.removeItem(prefix + '.data.' + keys[i]);
                             } else {
                                 var options = {
-                                    timestamp: data.timestamp
+                                    created: data.created
                                 };
+                                if (data.expires) {
+                                    options.expires = data.expires;
+                                }
+                                if (data.accessed) {
+                                    options.accessed = data.accessed;
+                                }
                                 if (data.maxAge) {
                                     options.maxAge = data.maxAge;
                                 }
@@ -761,6 +748,8 @@
                     options = options || {};
                     if (!angular.isString(key)) {
                         throw new Error('AngularCache.put(key, value, options): key: must be a string!');
+                    } else if (options && !angular.isObject(options)) {
+                        throw new Error('AngularCache.put(key, value, options): options: must be an object!');
                     } else if (options.maxAge && options.maxAge !== null) {
                         _validateNumberOption(options.maxAge, function (err) {
                             if (err) {
@@ -769,6 +758,8 @@
                         });
                     } else if (options.deleteOnExpire && !angular.isString(options.deleteOnExpire)) {
                         throw new Error('AngularCache.put(key, value, options): deleteOnExpire: must be a string!');
+                    } else if (options.deleteOnExpire && options.deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
+                        throw new Error('AngularCache.put(key, value, options): deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
                     } else if (angular.isUndefined(value)) {
                         return;
                     }
@@ -831,9 +822,11 @@
                 this.get = function (key, options) {
                     options = options || {};
                     if (!angular.isString(key)) {
-                        throw new Error('AngularCache.get(key, onExpire): key: must be a string!');
-                    } else if (options.onExpire && typeof options.onExpire !== 'function') {
-                        throw new Error('AngularCache.get(key, onExpire): onExpire: must be a function!');
+                        throw new Error('AngularCache.get(key, options): key: must be a string!');
+                    } else if (options && !angular.isObject(options)) {
+                        throw new Error('AngularCache.get(key, options): options: must be an object!');
+                    } else if (options.onExpire && !angular.isFunction(options.onExpire)) {
+                        throw new Error('AngularCache.get(key, options): onExpire: must be a function!');
                     } else if (!(key in data)) {
                         return;
                     }
@@ -905,10 +898,17 @@
                 this.removeExpired = function (options) {
                     options = options || {};
                     _verifyIntegrity(options.verifyIntegrity);
-                    var now = new Date().getTime();
-                    while (expiresHeap.peek().expires < now) {
-                        this.remove(expiresHeap.peek().key, { verifyIntegrity: false });
+                    var now = new Date().getTime(),
+                        item = expiresHeap.peek();
+
+                    while (item && item.expires && item.expires < now) {
+                        self.remove(item.key, { verifyIntegrity: false });
+                        if (config.onExpire) {
+                            config.onExpire(item.key, item.value);
+                        }
+                        item = expiresHeap.peek();
                     }
+
                 };
 
                 /**
@@ -930,6 +930,8 @@
                     }
                     storage = null;
                     data = null;
+                    lruHeap = null;
+                    expiresHeap = null;
                     config = null;
                     prefix = null;
                     self = null;
@@ -957,14 +959,14 @@
                                 isExpired: false
                             };
                             if (info.maxAge) {
-                                info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                                info.isExpired = (new Date().getTime() - info.created) > info.maxAge;
                             }
                             return info;
                         } else {
                             return data[key];
                         }
                     } else {
-                        return angular.extend({}, config, { size: lruHeap.size() });
+                        return angular.extend({}, config, { size: lruHeap && lruHeap.size() || 0 });
                     }
                 };
 

@@ -2,9 +2,10 @@ describe('AngularCache.destroy()', function () {
     it('should destroy the cache and remove all traces of its existence.', function () {
         var cache = $angularCacheFactory('cache');
         cache.destroy();
+        expect(cache.info()).toEqual({ size: 0 });
         expect($angularCacheFactory.get('cache')).toEqual(undefined);
     });
-    it('should remove items from localStorage when storageMode is used', function () {
+    it('should remove items from localStorage when storageMode is used.', function () {
         var localStorageCache = $angularCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
             sessionStorageCache = $angularCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
 

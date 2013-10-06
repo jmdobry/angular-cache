@@ -79,14 +79,14 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             try {
                 $angularCacheFactory('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] });
                 if (TYPES_EXCEPT_NUMBER[i] !== null) {
-                    fail();
+                    fail(TYPES_EXCEPT_NUMBER[i]);
                 }
             } catch (err) {
                 expect(err.message).toEqual('maxAge: must be a number!');
                 continue;
             }
             if (TYPES_EXCEPT_NUMBER[i] !== null) {
-                fail();
+                fail(TYPES_EXCEPT_NUMBER[i]);
             }
         }
     });
@@ -166,7 +166,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         var deleteOnExpire = 'fail';
         try {
             $angularCacheFactory('cache', { deleteOnExpire: deleteOnExpire });
-            expect('should not reach this!').toEqual(false);
+            fail('should not reach this!');
         } catch (err) {
             var msg = err.message;
         }
@@ -174,12 +174,12 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
             try {
                 $angularCacheFactory('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] });
-                fail();
+                fail(TYPES_EXCEPT_STRING[i]);
             } catch (err) {
                 expect(err.message).toEqual('deleteOnExpire: must be a string!');
                 continue;
             }
-            fail();
+            fail(TYPES_EXCEPT_STRING[i]);
         }
     });
     it('should validate storageMode.', function () {
@@ -194,12 +194,12 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
             try {
                 $angularCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
-                fail();
+                fail(TYPES_EXCEPT_STRING[i]);
             } catch (err) {
                 expect(err.message).toEqual('storageMode: must be a string!');
                 continue;
             }
-            fail();
+            fail(TYPES_EXCEPT_STRING[i]);
         }
     });
     it('should validate storageImpl.', function () {
