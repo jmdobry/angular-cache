@@ -329,7 +329,7 @@
         /**
          * @ignore
          */
-        this.$get = ['$timeout', '$window', 'BinaryHeap', function ($timeout, $window, BinaryHeap) {
+        this.$get = ['$window', 'BinaryHeap', function ($window, BinaryHeap) {
             var caches = {};
 
             /**
