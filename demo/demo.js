@@ -141,7 +141,7 @@ app.service('DemoService', function ($log, $angularCacheFactory) {
                 storageMode: 'localStorage',
                 deleteOnExpire: 'none'
             }),
-            $angularCacheFactory('maxAgeCache', {
+            $angularCacheFactory('passiveDeleteCache', {
                 maxAge: 12000,
                 deleteOnExpire: 'passive',
                 onExpire: function (key, value, done) {

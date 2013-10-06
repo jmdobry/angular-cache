@@ -11,6 +11,187 @@
 (function (window, angular, undefined) {
     'use strict';
 
+    angular.module('jmdobry.binary-heap', []);
+
+    /**
+     * @class BinaryHeapProvider
+     * @desc Provider for the BinaryHeap.
+     */
+    function BinaryHeapProvider() {
+        this.$get = function () {
+            /**
+             * @method bubbleUp
+             * @param {Array} heap The heap.
+             * @param {Function} weightFunc The weight function.
+             * @param {Number} n The index of the element to bubble up.
+             * @ignore
+             */
+            function bubbleUp(heap, weightFunc, n) {
+                var element = heap[n],
+                    weight = weightFunc(element);
+                // When at 0, an element can not go up any further.
+                while (n > 0) {
+                    // Compute the parent element's index, and fetch it.
+                    var parentN = Math.floor((n + 1) / 2) - 1,
+                        parent = heap[parentN];
+                    // If the parent has a lesser weight, things are in order and we
+                    // are done.
+                    if (weight >= weightFunc(parent)) {
+                        break;
+                    } else {
+                        heap[parentN] = element;
+                        heap[n] = parent;
+                        n = parentN;
+                    }
+                }
+            }
+
+            /**
+             * @method bubbleDown
+             * @param {Array} heap The heap.
+             * @param {Function} weightFunc The weight function.
+             * @param {Number} n The index of the element to sink down.
+             * @ignore
+             */
+            function bubbleDown(heap, weightFunc, n) {
+                var length = heap.length,
+                    node = heap[n],
+                    nodeWeight = weightFunc(node);
+
+                while (true) {
+                    var child2N = (n + 1) * 2,
+                        child1N = child2N - 1;
+                    var swap = null;
+                    if (child1N < length) {
+                        var child1 = heap[child1N],
+                            child1Weight = weightFunc(child1);
+                        // If the score is less than our node's, we need to swap.
+                        if (child1Weight < nodeWeight) {
+                            swap = child1N;
+                        }
+                    }
+                    // Do the same checks for the other child.
+                    if (child2N < length) {
+                        var child2 = heap[child2N],
+                            child2Weight = weightFunc(child2);
+                        if (child2Weight < (swap === null ? nodeWeight : weightFunc(heap[child1N]))) {
+                            swap = child2N;
+                        }
+                    }
+
+                    if (swap === null) {
+                        break;
+                    } else {
+                        heap[n] = heap[swap];
+                        heap[swap] = node;
+                        n = swap;
+                    }
+                }
+            }
+
+            /**
+             * @class BinaryHeap
+             * @desc BinaryHeap implementation of a priority queue.
+             * @param {Function} weightFunc Function that determines how each node should be weighted.
+             */
+            function BinaryHeap(weightFunc) {
+                if (weightFunc && !angular.isFunction(weightFunc)) {
+                    throw new Error('BinaryHeap(weightFunc): weightFunc: must be a function!');
+                }
+                weightFunc = weightFunc || function (x) {
+                    return x;
+                };
+                this.weightFunc = weightFunc;
+                this.heap = [];
+            }
+
+            /**
+             * @method BinaryHeap.push
+             * @desc Push an element into the binary heap.
+             * @param {*} node The element to push into the binary heap.
+             * @public
+             */
+            BinaryHeap.prototype.push = function (node) {
+                this.heap.push(node);
+                bubbleUp(this.heap, this.weightFunc, this.heap.length - 1);
+            };
+
+            /**
+             * @method BinaryHeap.peek
+             * @desc Return, but do not remove, the minimum element in the binary heap.
+             * @returns {*}
+             * @public
+             */
+            BinaryHeap.prototype.peek = function () {
+                return this.heap[0];
+            };
+
+            /**
+             * @method BinaryHeap.pop
+             * @desc Remove and return the minimum element in the binary heap.
+             * @returns {*}
+             * @public
+             */
+            BinaryHeap.prototype.pop = function () {
+                var front = this.heap[0],
+                    end = this.heap.pop();
+                if (this.heap.length > 0) {
+                    this.heap[0] = end;
+                    bubbleDown(this.heap, this.weightFunc, 0);
+                }
+                return front;
+            };
+
+            /**
+             * @method BinaryHeap.remove
+             * @desc Remove the first node in the priority queue that satisfies angular.equals comparison with
+             * the given node.
+             * @param {*} node The node to remove.
+             * @returns {*} The removed node.
+             * @public
+             */
+            BinaryHeap.prototype.remove = function (node) {
+                var length = this.heap.length;
+                for (var i = 0; i < length; i++) {
+                    if (angular.equals(this.heap[i], node)) {
+                        var removed = this.heap[i],
+                            end = this.heap.pop();
+                        if (i !== length - 1) {
+                            this.heap[i] = end;
+                            bubbleUp(this.heap, this.weightFunc, i);
+                            bubbleDown(this.heap, this.weightFunc, i);
+                        }
+                        return removed;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * @method BinaryHeap.removeAll
+             * @desc Remove all nodes from this BinaryHeap.
+             * @public
+             */
+            BinaryHeap.prototype.removeAll = function () {
+                this.heap = [];
+            };
+
+            /**
+             * @method BinaryHeap.size
+             * @desc Return the size of the priority queue.
+             * @returns {Number} The size of the priority queue.
+             * @public
+             */
+            BinaryHeap.prototype.size = function () {
+                return this.heap.length;
+            };
+
+            return BinaryHeap;
+        };
+    }
+
+    angular.module('jmdobry.binary-heap').provider('BinaryHeap', BinaryHeapProvider);
+
     /**
      * @module angular-cache
      * @desc Provides an $AngularCacheFactoryProvider, which gives you the ability to use an
@@ -18,7 +199,7 @@
      *       the same abilities as the cache objects that come with Angular, except with some added
      *       functionality.
      */
-    angular.module('jmdobry.angular-cache', ['ng']);
+    angular.module('jmdobry.angular-cache', ['ng', 'jmdobry.binary-heap']);
 
     /**
      * @class $AngularCacheFactoryProvider
@@ -35,8 +216,10 @@
                     deleteOnExpire: 'none',
                     onExpire: null,
                     cacheFlushInterval: null,
+                    recycleFreq: 1000,
                     storageMode: 'none',
-                    storageImpl: null
+                    storageImpl: null,
+                    verifyIntegrity: true
                 };
             };
 
@@ -65,32 +248,41 @@
          * @privileged
          */
         this.setCacheDefaults = function (options) {
+            var errStr = '$angularCacheFactoryProvider.setCacheDefaults(options): ';
             options = options || {};
 
             if (!angular.isObject(options)) {
-                throw new Error('setOptions(): options: must be an object!');
+                throw new Error(errStr + 'options: must be an object!');
             }
 
             if ('capacity' in options) {
                 _validateNumberOption(options.capacity, function (err) {
                     if (err) {
-                        throw new Error('setCacheDefaults(): capacity: ' + err);
+                        throw new Error(errStr + 'capacity: ' + err);
                     }
                 });
             }
 
             if ('deleteOnExpire' in options) {
                 if (!angular.isString(options.deleteOnExpire)) {
-                    throw new Error('setCacheDefaults(): deleteOnExpire: must be a string!');
+                    throw new Error(errStr + 'deleteOnExpire: must be a string!');
                 } else if (options.deleteOnExpire !== 'none' && options.deleteOnExpire !== 'passive' && options.deleteOnExpire !== 'aggressive') {
-                    throw new Error('setCacheDefaults(): deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
+                    throw new Error(errStr + 'deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
                 }
             }
 
             if ('maxAge' in options) {
                 _validateNumberOption(options.maxAge, function (err) {
                     if (err) {
-                        throw new Error('setCacheDefaults(): maxAge: ' + err);
+                        throw new Error(errStr + 'maxAge: ' + err);
+                    }
+                });
+            }
+
+            if ('recycleFreq' in options) {
+                _validateNumberOption(options.recycleFreq, function (err) {
+                    if (err) {
+                        throw new Error(errStr + 'recycleFreq: ' + err);
                     }
                 });
             }
@@ -98,33 +290,33 @@
             if ('cacheFlushInterval' in options) {
                 _validateNumberOption(options.cacheFlushInterval, function (err) {
                     if (err) {
-                        throw new Error('setCacheDefaults(): cacheFlushInterval: ' + err);
+                        throw new Error(errStr + 'cacheFlushInterval: ' + err);
                     }
                 });
             }
 
             if ('storageMode' in options) {
                 if (!angular.isString(options.storageMode)) {
-                    throw new Error('setCacheDefaults(): storageMode: must be a string!');
+                    throw new Error(errStr + 'storageMode: must be a string!');
                 } else if (options.storageMode !== 'none' && options.storageMode !== 'localStorage' && options.storageMode !== 'sessionStorage') {
-                    throw new Error('setCacheDefaults(): storageMode: accepted values are "none", "localStorage" or "sessionStorage"');
+                    throw new Error(errStr + 'storageMode: accepted values are "none", "localStorage" or "sessionStorage"!');
                 }
                 if ('storageImpl' in options) {
                     if (!angular.isObject(options.storageImpl)) {
-                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must be an object!');
+                        throw new Error(errStr + '[local|session]storageImpl: must be an object!');
                     } else if (!('setItem' in options.storageImpl) || typeof options.storageImpl.setItem !== 'function') {
-                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must implement "setItem(key, value)"!');
+                        throw new Error(errStr + '[local|session]storageImpl: must implement "setItem(key, value)"!');
                     } else if (!('getItem' in options.storageImpl) || typeof options.storageImpl.getItem !== 'function') {
-                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must implement "getItem(key)"!');
+                        throw new Error(errStr + '[local|session]storageImpl: must implement "getItem(key)"!');
                     } else if (!('removeItem' in options.storageImpl) || typeof options.storageImpl.removeItem !== 'function') {
-                        throw new Error('setCacheDefaults(): [local|session]storageImpl: must implement "removeItem(key)"!');
+                        throw new Error(errStr + '[local|session]storageImpl: must implement "removeItem(key)"!');
                     }
                 }
             }
 
             if ('onExpire' in options) {
                 if (typeof options.onExpire !== 'function') {
-                    throw new Error('setCacheDefaults(): onExpire: Must be a function!');
+                    throw new Error(errStr + 'onExpire: must be a function!');
                 }
             }
 
@@ -137,7 +329,7 @@
         /**
          * @ignore
          */
-        this.$get = ['$timeout', '$window', function ($timeout, $window) {
+        this.$get = ['$timeout', '$window', 'BinaryHeap', function ($timeout, $window, BinaryHeap) {
             var caches = {};
 
             /**
@@ -181,40 +373,20 @@
              * @param {Object} [options] {{[capacity]: Number, [maxAge]: Number, [cacheFlushInterval]: Number, [deleteOnExpire]: String, [onExpire]: Function, [storageMode]: String, [storageImpl]: Object}}
              */
             function AngularCache(cacheId, options) {
-                var size = 0,
-                    config = angular.extend({}, { id: cacheId }),
+                var config = angular.extend({}, { id: cacheId }),
                     data = {},
-                    lruHash = {},
-                    freshEnd = null,
-                    staleEnd = null,
+                    expiresHeap = new BinaryHeap(function (x) {
+                        return x.expires;
+                    }),
+                    lruHeap = new BinaryHeap(function (x) {
+                        return x.accessed;
+                    }),
                     prefix = 'angular-cache.caches.' + cacheId,
                     cacheDirty = false,
                     self = this,
                     storage = null;
 
                 options = options || {};
-
-                /**
-                 * @method _setTimeoutToRemove
-                 * @desc Removes the item with the given key from this cache after the number of
-                 * milliseconds specified by delay.
-                 * @param {String} key The key of the item to be removed at the end of the timeout.
-                 * @param {Number} delay The delay in milliseconds.
-                 * @private
-                 * @ignore
-                 */
-                function _setTimeoutToRemove(key, delay) {
-                    data[key].timeoutId = $timeout(function () {
-                        var value;
-                        if (data[key]) {
-                            value = data[key].value;
-                        }
-                        self.remove(key);
-                        if (config.onExpire) {
-                            config.onExpire(key, value);
-                        }
-                    }, delay);
-                }
 
                 /**
                  * @method _setCapacity
@@ -229,8 +401,8 @@
                             throw new Error('capacity: ' + err);
                         } else {
                             config.capacity = capacity;
-                            while (size > config.capacity) {
-                                self.remove(staleEnd.key);
+                            while (lruHeap.size() > config.capacity) {
+                                self.remove(lruHeap.peek().key, { verifyIntegrity: false });
                             }
                         }
                     });
@@ -266,12 +438,9 @@
                         if (config.maxAge) {
                             for (var i = 0; i < keys.length; i++) {
                                 var key = keys[i];
-                                if ((data[key].deleteOnExpire || config.deleteOnExpire) === 'aggressive') {
-                                    if (!('maxAge' in data[key])) {
-                                        if ('timeoutId' in data[key]) {
-                                            $timeout.cancel(data[key].timeoutId);
-                                        }
-                                    }
+                                if (!('maxAge' in data[key])) {
+                                    delete data[key].expires;
+                                    expiresHeap.remove(data[key]);
                                 }
                             }
                         }
@@ -283,23 +452,49 @@
                             } else {
                                 if (maxAge !== config.maxAge) {
                                     config.maxAge = maxAge;
+                                    var now = new Date().getTime();
                                     for (var i = 0; i < keys.length; i++) {
                                         var key = keys[i];
-                                        if ((data[key].deleteOnExpire || config.deleteOnExpire) === 'aggressive') {
-                                            if (!('maxAge' in data[key])) {
-                                                if ('timeoutId' in data[key]) {
-                                                    $timeout.cancel(data[key].timeoutId);
-                                                }
-                                                var isExpired = new Date().getTime() - data[key].timestamp > config.maxAge;
-                                                if (!isExpired) {
-                                                    _setTimeoutToRemove(key, config.maxAge);
-                                                } else {
-                                                    self.remove(key);
-                                                }
+                                        if (!('maxAge' in data[key])) {
+                                            expiresHeap.remove(data[key]);
+                                            data[key].expires = data[key].created + config.maxAge;
+                                            expiresHeap.push(data[key]);
+                                            if (data[key].expires < now) {
+                                                self.remove(key, { verifyIntegrity: false });
                                             }
                                         }
                                     }
                                 }
+                            }
+                        });
+                    }
+                }
+
+                /**
+                 * @method _setRecycleFreq
+                 * @desc Set the recycleFreq setting for this cache.
+                 * @param {Number} recycleFreq The new recycleFreq for this cache.
+                 * @private
+                 * @ignore
+                 */
+                function _setRecycleFreq(recycleFreq) {
+                    if (recycleFreq === null) {
+                        if (config.recycleFreqId) {
+                            clearInterval(config.recycleFreqId);
+                            delete config.recycleFreqId;
+                        }
+                        config.recycleFreq = cacheDefaults.recycleFreq;
+                        config.recycleFreqId = setInterval(self.removeExpired, config.recycleFreq);
+                    } else {
+                        _validateNumberOption(recycleFreq, function (err) {
+                            if (err) {
+                                throw new Error('recycleFreq: ' + err);
+                            } else {
+                                config.recycleFreq = recycleFreq;
+                                if (config.recycleFreqId) {
+                                    clearInterval(config.recycleFreqId);
+                                }
+                                config.recycleFreqId = setInterval(self.removeExpired, config.recycleFreq);
                             }
                         });
                     }
@@ -327,7 +522,6 @@
                                 if (cacheFlushInterval !== config.cacheFlushInterval) {
                                     if (config.cacheFlushIntervalId) {
                                         clearInterval(config.cacheFlushIntervalId);
-                                        delete config.cacheFlushIntervalId;
                                     }
                                     config.cacheFlushInterval = cacheFlushInterval;
                                     config.cacheFlushIntervalId = setInterval(self.removeAll, config.cacheFlushInterval);
@@ -350,7 +544,7 @@
                     if (!angular.isString(storageMode)) {
                         throw new Error('storageMode: must be a string!');
                     } else if (storageMode !== 'none' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
-                        throw new Error('storageMode: accepted values are "none", "localStorage" or "sessionStorage"');
+                        throw new Error('storageMode: accepted values are "none", "localStorage" or "sessionStorage"!');
                     }
                     if ((config.storageMode === 'localStorage' || config.storageMode === 'sessionStorage') &&
                         (storageMode !== config.storageMode)) {
@@ -394,22 +588,29 @@
                  * @method _setOptions
                  * @desc Configure this cache with the given options.
                  * @param {Object} options
-                 * @param {Boolean} strict If true then any existing configuration will be reset to default before
+                 * @param {Boolean} [strict] If true then any existing configuration will be reset to default before
                  * applying the new options, otherwise only the options specified in the options hash will be altered.
+                 * @param {Object} [opts] Configuration.
                  * @private
                  * @ignore
                  */
-                function _setOptions(options, strict) {
+                function _setOptions(options, strict, opts) {
                     options = options || {};
+                    opts = opts || {};
                     strict = !!strict;
                     if (!angular.isObject(options)) {
-                        throw new Error('setOptions(): options: must be an object!');
+                        throw new Error('AngularCache.setOptions(options, strict): options: must be an object!');
                     }
+
+                    _verifyIntegrity(opts.verifyIntegrity);
 
                     if (strict) {
                         options = angular.extend({}, cacheDefaults, options);
                     }
 
+                    if ('verifyIntegrity' in options) {
+                        config.verifyIntegrity = options.verifyIntegrity === true;
+                    }
                     if ('capacity' in options) {
                         _setCapacity(options.capacity);
                     }
@@ -422,6 +623,10 @@
                         _setMaxAge(options.maxAge);
                     }
 
+                    if ('recycleFreq' in options) {
+                        _setRecycleFreq(options.recycleFreq);
+                    }
+
                     if ('cacheFlushInterval' in options) {
                         _setCacheFlushInterval(options.cacheFlushInterval);
                     }
@@ -432,53 +637,12 @@
 
                     if ('onExpire' in options) {
                         if (options.onExpire !== null && typeof options.onExpire !== 'function') {
-                            throw new Error('onExpire: Must be a function!');
+                            throw new Error('onExpire: must be a function!');
                         }
                         config.onExpire = options.onExpire;
                     }
 
                     cacheDirty = true;
-                }
-
-                /**
-                 * @method refresh
-                 * @desc Makes the `entry` the freshEnd of the LRU linked list.
-                 * @param {Object} entry
-                 * @private
-                 * @ignore
-                 */
-                function _refresh(entry) {
-                    if (entry !== freshEnd) {
-                        if (!staleEnd) {
-                            staleEnd = entry;
-                        } else if (staleEnd === entry) {
-                            staleEnd = entry.n;
-                        }
-
-                        _link(entry.n, entry.p);
-                        _link(entry, freshEnd);
-                        freshEnd = entry;
-                        freshEnd.n = null;
-                    }
-                }
-
-                /**
-                 * @method link
-                 * @desc Bidirectionally links two entries of the LRU linked list
-                 * @param {Object} nextEntry
-                 * @param {Object} prevEntry
-                 * @private
-                 * @ignore
-                 */
-                function _link(nextEntry, prevEntry) {
-                    if (nextEntry !== prevEntry) {
-                        if (nextEntry) {
-                            nextEntry.p = prevEntry; //p stands for previous, 'prev' didn't minify
-                        }
-                        if (prevEntry) {
-                            prevEntry.n = nextEntry; //n stands for next, 'next' didn't minify
-                        }
-                    }
                 }
 
                 /**
@@ -495,12 +659,18 @@
                             var data = angular.fromJson(storage.getItem(prefix + '.data.' + keys[i])),
                                 maxAge = data.maxAge || config.maxAge,
                                 deleteOnExpire = data.deleteOnExpire || config.deleteOnExpire;
-                            if (maxAge && ((new Date().getTime() - data.timestamp) > maxAge) && deleteOnExpire === 'aggressive') {
+                            if (maxAge && ((new Date().getTime() - data.created) > maxAge) && deleteOnExpire === 'aggressive') {
                                 storage.removeItem(prefix + '.data.' + keys[i]);
                             } else {
                                 var options = {
-                                    timestamp: data.timestamp
+                                    created: data.created
                                 };
+                                if (data.expires) {
+                                    options.expires = data.expires;
+                                }
+                                if (data.accessed) {
+                                    options.accessed = data.accessed;
+                                }
                                 if (data.maxAge) {
                                     options.maxAge = data.maxAge;
                                 }
@@ -530,71 +700,112 @@
                     }
                 }
 
+                function _verifyIntegrity(verifyIntegrity) {
+                    if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
+                        if (config.storageMode !== 'none' && storage) {
+                            var keys = _keys(data);
+                            storage.setItem(prefix + '.keys', angular.toJson(keys));
+                            for (var i = 0; i < keys.length; i++) {
+                                storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
+                            }
+                        }
+                    }
+                }
+
+                function _saveKeysToStorage(keys) {
+                    if (config.storageMode !== 'none' && storage) {
+                        var keysToSave = keys || _keys(data);
+                        storage.setItem(prefix + '.keys', angular.toJson(keysToSave));
+                    }
+                }
+
+                function _saveItemToStorage(key) {
+                    if (config.storageMode !== 'none' && storage) {
+                        storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
+                    }
+                }
+
+                function _removeAllFromStorage() {
+                    if (config.storageMode !== 'none' && storage) {
+                        var keys = _keys(data);
+                        for (var i = 0; i < keys.length; i++) {
+                            storage.removeItem(prefix + '.data.' + keys[i]);
+                        }
+                        storage.setItem(prefix + '.keys', angular.toJson([]));
+                    }
+                }
+
                 /**
                  * @method AngularCache.put
                  * @desc Add a key-value pair with timestamp to the cache.
                  * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {Object} [options] {{ maxAge: {Number}, aggressiveDelete: {Boolean}, timestamp: {Number} }}
+                 * @param {Object} [options] {{ maxAge: {Number}, deleteOnExpire: {String} }}
                  * @returns {*} value The value of the item added to the cache.
                  * @privileged
                  */
                 this.put = function (key, value, options) {
-
+                    options = options || {};
                     if (!angular.isString(key)) {
-                        throw new Error('AngularCache.put(): key: must be a string!');
-                    }
-                    if (options && options.maxAge) {
+                        throw new Error('AngularCache.put(key, value, options): key: must be a string!');
+                    } else if (options && !angular.isObject(options)) {
+                        throw new Error('AngularCache.put(key, value, options): options: must be an object!');
+                    } else if (options.maxAge && options.maxAge !== null) {
                         _validateNumberOption(options.maxAge, function (err) {
                             if (err) {
-                                throw new Error('AngularCache.put(): maxAge: ' + err);
+                                throw new Error('AngularCache.put(key, value, options): maxAge: ' + err);
                             }
                         });
-                    }
-                    if (options && options.deleteOnExpire) {
-                        if (!angular.isString(options.deleteOnExpire)) {
-                            throw new Error('AngularCache.put(): deleteOnExpire: must be a string!');
-                        }
-                    }
-                    if (angular.isUndefined(value)) {
+                    } else if (options.deleteOnExpire && !angular.isString(options.deleteOnExpire)) {
+                        throw new Error('AngularCache.put(key, value, options): deleteOnExpire: must be a string!');
+                    } else if (options.deleteOnExpire && options.deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
+                        throw new Error('AngularCache.put(key, value, options): deleteOnExpire: accepted values are "none", "passive" or "aggressive"!');
+                    } else if (angular.isUndefined(value)) {
                         return;
                     }
 
-                    var lruEntry = lruHash[key] || (lruHash[key] = {key: key});
+                    var now = new Date().getTime(),
+                        deleteOnExpire, item;
 
-                    _refresh(lruEntry);
+                    _verifyIntegrity(options.verifyIntegrity);
 
-                    if (!(key in data)) {
-                        size++;
+                    if (data[key]) {
+                        expiresHeap.remove(data[key]);
+                        lruHeap.remove(data[key]);
                     } else {
-                        if (data[key].timeoutId) {
-                            $timeout.cancel(data[key].timeoutId);
-                        }
+                        data[key] = { key: key };
                     }
 
-                    data[key] = {
-                        value: value,
-                        timestamp: (options && options.timestamp) || new Date().getTime()
-                    };
+                    item = data[key];
+                    item.value = value;
+                    item.created = (parseInt(options.created, 10)) || item.created || now;
+                    item.accessed = (parseInt(options.accessed, 10)) || now;
 
-                    if (options && options.deleteOnExpire) {
-                        data[key].deleteOnExpire = options.deleteOnExpire;
+                    if (options.deleteOnExpire) {
+                        item.deleteOnExpire = options.deleteOnExpire;
                     }
-                    if (options && options.maxAge) {
-                        data[key].maxAge = options.maxAge;
-                    }
-
-                    if (data[key] || config.maxAge) {
-                        if ((data[key].deleteOnExpire === 'aggressive' || config.deleteOnExpire === 'aggressive') &&
-                            (data[key].maxAge || config.maxAge)) {
-                            _setTimeoutToRemove(key, data[key].maxAge || config.maxAge);
-                        }
+                    if (options.maxAge) {
+                        item.maxAge = options.maxAge;
                     }
 
-                    _syncToStorage(key);
+                    if (item.maxAge || config.maxAge) {
+                        item.expires = item.created + (item.maxAge || config.maxAge);
+                    }
 
-                    if (size > config.capacity) {
-                        this.remove(staleEnd.key);
+                    deleteOnExpire = item.deleteOnExpire || config.deleteOnExpire;
+
+                    if (item.expires && deleteOnExpire === 'aggressive') {
+                        expiresHeap.push(item);
+                    }
+
+                    // Sync with localStorage, etc.
+                    _saveKeysToStorage();
+                    _saveItemToStorage(key);
+
+                    lruHeap.push(item);
+
+                    if (lruHeap.size() > config.capacity) {
+                        this.remove(lruHeap.peek().key, { verifyIntegrity: false });
                     }
 
                     return value;
@@ -604,82 +815,66 @@
                  * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
                  * @param {String} key The key of the item to retrieve.
-                 * @param {Function} [onExpire] Callback to be executed if it is discovered the
-                 * requested item has expired.
+                 * @param {Object} [options] Configuration.
                  * @returns {*} The value of the item in the cache with the specified key.
                  * @privileged
                  */
-                this.get = function (key, onExpire) {
-                    var lruEntry = lruHash[key],
-                        item = data[key],
-                        maxAge,
-                        deleteOnExpire;
-
-                    if (!lruEntry || !item) {
+                this.get = function (key, options) {
+                    options = options || {};
+                    if (!angular.isString(key)) {
+                        throw new Error('AngularCache.get(key, options): key: must be a string!');
+                    } else if (options && !angular.isObject(options)) {
+                        throw new Error('AngularCache.get(key, options): options: must be an object!');
+                    } else if (options.onExpire && !angular.isFunction(options.onExpire)) {
+                        throw new Error('AngularCache.get(key, options): onExpire: must be a function!');
+                    } else if (!(key in data)) {
                         return;
                     }
 
-                    maxAge = item.maxAge || config.maxAge;
-                    deleteOnExpire = item.deleteOnExpire || config.deleteOnExpire;
+                    _verifyIntegrity(options.verifyIntegrity);
 
-                    // There is no timeout to delete this item, so we must do it here if it's expired.
-                    if (maxAge && deleteOnExpire === 'passive') {
-                        if ((new Date().getTime() - item.timestamp) > maxAge) {
-                            // This item is expired so remove it
-                            this.remove(key);
-                            lruEntry = null;
+                    var item = data[key],
+                        value = item.value,
+                        now = new Date().getTime(),
+                        deleteOnExpire = item.deleteOnExpire || config.deleteOnExpire;
 
-                            if (config.onExpire) {
-                                config.onExpire(key, item.value, onExpire);
-                                return;
-                            } else if (onExpire && typeof onExpire === 'function') {
-                                onExpire(key, item.value);
-                                return;
-                            } else {
-                                // cache miss
-                                return;
-                            }
+                    lruHeap.remove(item);
+                    item.accessed = now;
+                    lruHeap.push(item);
+
+                    if (deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
+                        this.remove(key, { verifyIntegrity: false });
+
+                        if (config.onExpire) {
+                            config.onExpire(key, item.value, (options.onExpire));
+                        } else if (options.onExpire) {
+                            options.onExpire(key, item.value);
                         }
+                        value = undefined;
                     }
 
-                    _refresh(lruEntry);
+                    _saveItemToStorage(key);
 
-                    _syncToStorage(key);
-
-                    return item.value;
+                    return value;
                 };
 
                 /**
                  * @method AngularCache.remove
-                 * @desc Remove the specified key-value pair from this cache.
-                 * @param {String} key The key of the key-value pair to remove.
+                 * @desc Remove the item with the specified key from this cache.
+                 * @param {String} key The key of the item to remove.
+                 * @param {Object} [options] Configuration.
                  * @privileged
                  */
-                this.remove = function (key) {
-                    var lruEntry = lruHash[key];
-
-                    if (!lruEntry) {
-                        return;
-                    }
-
-                    if (lruEntry === freshEnd) {
-                        freshEnd = lruEntry.p;
-                    }
-                    if (lruEntry === staleEnd) {
-                        staleEnd = lruEntry.n;
-                    }
-                    _link(lruEntry.n, lruEntry.p);
-
-                    delete lruHash[key];
-                    delete data[key];
-
-                    _syncToStorage(null);
-
+                this.remove = function (key, options) {
+                    options = options || {};
+                    _verifyIntegrity(options.verifyIntegrity);
+                    lruHeap.remove(data[key]);
+                    expiresHeap.remove(data[key]);
                     if (config.storageMode !== 'none' && storage) {
                         storage.removeItem(prefix + '.data.' + key);
                     }
-
-                    size--;
+                    delete data[key];
+                    _saveKeysToStorage();
                 };
 
                 /**
@@ -688,23 +883,32 @@
                  * @privileged
                  */
                 this.removeAll = function () {
-                    if (config.storageMode !== 'none' && storage) {
-                        var keys = _keys(data);
-                        for (var i = 0; i < keys.length; i++) {
-                            if (data[keys[i]].timeoutId) {
-                                $timeout.cancel(data[keys[i]].timeoutId);
-                            }
-                            storage.removeItem(prefix + '.data.' + keys[i]);
+                    _removeAllFromStorage();
+                    lruHeap.removeAll();
+                    expiresHeap.removeAll();
+                    data = {};
+                };
+
+                /**
+                 * @method AngularCache.removeExpired
+                 * @desc Remove all items from this cache that have expired.
+                 * @param {Object} [options] Configuration.
+                 * @privileged
+                 */
+                this.removeExpired = function (options) {
+                    options = options || {};
+                    _verifyIntegrity(options.verifyIntegrity);
+                    var now = new Date().getTime(),
+                        item = expiresHeap.peek();
+
+                    while (item && item.expires && item.expires < now) {
+                        self.remove(item.key, { verifyIntegrity: false });
+                        if (config.onExpire) {
+                            config.onExpire(item.key, item.value);
                         }
+                        item = expiresHeap.peek();
                     }
 
-                    data = {};
-                    size = 0;
-                    lruHash = {};
-                    freshEnd = null;
-                    staleEnd = null;
-
-                    _syncToStorage(null);
                 };
 
                 /**
@@ -716,20 +920,22 @@
                     if (config.cacheFlushIntervalId) {
                         clearInterval(config.cacheFlushIntervalId);
                     }
+                    if (config.recycleFreqId) {
+                        clearInterval(config.recycleFreqId);
+                    }
+                    this.removeAll();
                     if (config.storageMode !== 'none' && storage) {
-                        this.removeAll();
                         storage.removeItem(prefix + '.keys');
                         storage.removeItem(prefix);
                     }
                     storage = null;
                     data = null;
+                    lruHeap = null;
+                    expiresHeap = null;
                     config = null;
-                    lruHash = null;
-                    size = null;
-                    freshEnd = null;
-                    staleEnd = null;
                     prefix = null;
                     self = null;
+                    caches[cacheId] = null;
                     delete caches[cacheId];
                 };
 
@@ -737,27 +943,30 @@
                  * @method AngularCache.info
                  * @desc Return an object containing information about this cache.
                  * @param {String} [key] The key of the item about which to retrieve information.
-                 * @returns {Object} stats Object containing information about this cache.
+                 * @returns {Object} stats Object containing information about this cache or the item with the
+                 * specified key.
                  * @privileged
                  */
                 this.info = function (key) {
                     if (key) {
                         if (data[key]) {
                             var info = {
-                                timestamp: data[key].timestamp,
+                                created: data[key].created,
+                                accessed: data[key].accessed,
+                                expires: data[key].expires,
                                 maxAge: data[key].maxAge || config.maxAge,
                                 deleteOnExpire: data[key].deleteOnExpire || config.deleteOnExpire,
                                 isExpired: false
                             };
                             if (info.maxAge) {
-                                info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                                info.isExpired = (new Date().getTime() - info.created) > info.maxAge;
                             }
                             return info;
                         } else {
                             return data[key];
                         }
                     } else {
-                        return angular.extend({}, config, { size: size });
+                        return angular.extend({}, config, { size: lruHeap && lruHeap.size() || 0 });
                     }
                 };
 
@@ -785,14 +994,15 @@
                  * @method AngularCache.setOptions
                  * @desc Configure this cache with the given options.
                  * @param {Object} options
-                 * @param {Boolean} strict If true then any existing configuration will be reset to defaults before
+                 * @param {Boolean} [strict] If true then any existing configuration will be reset to defaults before
                  * applying the new options, otherwise only the options specified in the hash will be altered.
+                 * @param {Object} [opts] Configuration.
                  * @privileged
                  */
                 this.setOptions = _setOptions;
 
                 // Initialize this cache with the default and given options
-                _setOptions(options, true);
+                _setOptions(options, true, { verifyIntegrity: false });
             }
 
             /**
@@ -828,7 +1038,7 @@
                     var key = keys[i];
                     info.caches[key] = caches[key].info();
                 }
-                info.cacheDefaults = cacheDefaults;
+                info.cacheDefaults = angular.extend({}, cacheDefaults);
                 return info;
             };
 
@@ -840,6 +1050,9 @@
              * @public
              */
             angularCacheFactory.get = function (cacheId) {
+                if (!angular.isString(cacheId)) {
+                    throw new Error('$angularCacheFactory.get(cacheId): cacheId: must be a string!');
+                }
                 return caches[cacheId];
             };
 
