@@ -136,7 +136,7 @@
             
             
             
-            <td class="description last">{ capacity: {Number}, maxAge: {Number} }</td>
+            <td class="description last">See <a href="https://github.com/jmdobry/angular-cache#configuration">Configuration Options</a>.</td>
         </tr>
 	
 	
@@ -167,7 +167,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="angular-cache-1.2.0.js.html">angular-cache-1.2.0.js</a>, line 753
+        <a href="angular-cache-2.0.0-rc.1.js.html">angular-cache-2.0.0-rc.1.js</a>, line 1096
     </li></ul></dd>
     
     
@@ -204,6 +204,19 @@
         
     
     
+        <h5>Examples</h5>
+        
+    <pre class="prettyprint"><code>// create a cache with default settingsvar myCache = $angularCacheFactory('myCache');</code></pre>
+
+    <pre class="prettyprint"><code>// create an LRU cache with a capacity of 10var myLRUCache = $angularCacheFactory('myLRUCache', {     capacity: 10});</code></pre>
+
+    <pre class="prettyprint"><code>// create a cache whose items expire after 10 minutes (but are not deleted)var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {     maxAge: 600000,     onExpire: function (key, value, done) {         // This callback is executed during a call to "get()" and the requested item has expired.         // Receives the key and value of the expired item and a third argument, "done", which is         // a callback function passed as the second argument to "get()".         // See the "onExpire" configuration option discussed above.         // do something, like get a fresh value from the server and put it into the cache         if (done && typeof done === 'function') {             done(); // pass whatever you want into done()         }     }});</code></pre>
+
+    <pre class="prettyprint"><code>// create a cache whose items have a maximum lifetime of 10 minutes which are immediately deleted upon expirationvar myAggressiveTimeLimitedCache = $angularCacheFactory('myAggressiveTimeLimitedCache', {     maxAge: 600000,     deleteOnExpire: 'aggressive',     onExpire: function (key, value) {         // This callback is executed right when items expire. Receives the key and value of expired items.         // See the "onExpire" configuration option discussed above.         // do something, like get a fresh value from the server and put it into the cache     }});</code></pre>
+
+    <pre class="prettyprint"><code>// create a cache that will clear itself every 10 minutesvar myIntervalCache = $angularCacheFactory('myIntervalCache', {     cacheFlushInterval: 600000});</code></pre>
+
+    
 </dd>
 
     
@@ -222,6 +235,566 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="clearAll"><span class="type-signature">&lt;static> </span>clearAll<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Clears the contents of every cache owned by this $angularCacheFactory.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-2.0.0-rc.1.js.html">angular-cache-2.0.0-rc.1.js</a>, line 1236
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>$angularCacheFactory.get('someCache').put('someKey', 'someValue');$angularCacheFactory.get('someCache').info().size; // 1$angularCacheFactory.clearAll();$angularCacheFactory.get('someCache').info().size; // 0</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>get<span class="signature">(cacheId)</span><span class="type-signature"> &rarr; {<a href="AngularCache.html">AngularCache</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return the cache with the specified cacheId.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>cacheId</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The id of the desired cache.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-2.0.0-rc.1.js.html">angular-cache-2.0.0-rc.1.js</a>, line 1175
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The cache with the specified cachedId.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="AngularCache.html">AngularCache</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>var someCache = $angularCacheFactory.get('someCache');someCache.put('someKey', 'someValue');</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="info"><span class="type-signature">&lt;static> </span>info<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return an object containing information about all caches of this factory.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-2.0.0-rc.1.js.html">angular-cache-2.0.0-rc.1.js</a>, line 1154
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An object containing information about all caches of this factory.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>$angularCacheFactory.info(); // { size: 3, cacheDefaults: { ... } }</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="keys"><span class="type-signature">&lt;static> </span>keys<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return an array of the keys associated with all current caches owned by thisangularCacheFactory.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-2.0.0-rc.1.js.html">angular-cache-2.0.0-rc.1.js</a>, line 1206
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An array of the keys associated with all current caches owned bythis angularCacheFactory.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>$angularCacheFactory('newCache');$angularCacheFactory.keys(); // ["newCache"]</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="keySet"><span class="type-signature">&lt;static> </span>keySet<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return the set of keys associated with all current caches owned by thisangularCacheFactory.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-2.0.0-rc.1.js.html">angular-cache-2.0.0-rc.1.js</a>, line 1191
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The set of keys associated with all current caches owned by thisangularCacheFactory.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>$angularCacheFactory('newCache');$angularCacheFactory.keySet(); // { newCache: "newCache" }</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="removeAll"><span class="type-signature">&lt;static> </span>removeAll<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Remove all caches owned by this $angularCacheFactory.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="angular-cache-2.0.0-rc.1.js.html">angular-cache-2.0.0-rc.1.js</a>, line 1221
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>$angularCacheFactory.removeAll();$angularCacheFactory.info().size; // 0</code></pre>
+
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -236,13 +809,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-angular-cache.html">angular-cache</a></li></ul><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="AngularCacheFactory.html">AngularCacheFactory</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="AngularCacheFactory.html">AngularCacheFactory</a></li><li><a href="BinaryHeap.html">BinaryHeap</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sat Sep 21 2013 10:34:05 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Oct 13 2013 22:37:13 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>
