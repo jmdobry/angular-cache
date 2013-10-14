@@ -1,6 +1,6 @@
 ## angular-cache
 #### A very useful replacement for Angular's $cacheFactory.
-#### Version: 2.0.0-SNAPSHOT
+#### Version: 2.0.0-rc.1
 
 - View the [demo](http://jmdobry.github.io/angular-cache/demo/). 
 - Ask questions on the [mailing list](https://groups.google.com/forum/#!forum/angular-cache). 
@@ -147,7 +147,7 @@ __Description:__ Set a default maximum lifetime on all items added to the cache.
 
 __Usage:__
 ```javascript
-$angularCacheFactory('newCache', { maxAge: 36000 });
+$angularCacheFactory('newCache', { maxAge: 3600000 });
 ```
 
 #### deleteOnExpire
@@ -165,7 +165,7 @@ __Description:__ `maxAge` must be set in order for `"passive"` or `"aggressive"`
 __Usage:__
 ```javascript
 $angularCacheFactory('newCache', {
-    maxAge: 36000,
+    maxAge: 3600000,
     deleteOnExpire: 'aggressive'
 });
 ```
@@ -290,8 +290,8 @@ newCache.get('denver'); // 'broncos' or whatever was returned by the server in t
 ## Status
 | Version | Branch  | Build status                                                                                                                                                              |
 | ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.2.1   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) |
-| 2.0.0-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) |
+| 1.2.0   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) |
+| 2.0.0-rc.1   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) |
 
 [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/)
 
@@ -301,8 +301,8 @@ newCache.get('denver'); // 'broncos' or whatever was returned by the server in t
 #### Latest Stable Version
 | Type          | File | Size |
 | ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-2.0.0-SNAPSHOT.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-2.0.0-SNAPSHOT.min.js) | 6 KB |
-| Development   | [angular-cache-2.0.0-SNAPSHOT.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-2.0.0-SNAPSHOT.js) | 34 KB |
+| Production    | [angular-cache-2.0.0-rc.1.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-2.0.0-rc.1.min.js) | 6 KB |
+| Development   | [angular-cache-2.0.0-rc.1.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-2.0.0-rc.1.js) | 34 KB |
 
 <a name='installation'></a>
 ## Installation
@@ -590,7 +590,7 @@ See [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/Cache.
 <a name='changelog'></a>
 ## Changelog
 
-##### 2.0.0 - xx October 2013
+##### 2.0.0-rc.1 - 14 October 2013
 
 ###### Breaking API changes
 - Swapped `aggressiveDelete` option for `deleteOnExpire` option. #30, #47

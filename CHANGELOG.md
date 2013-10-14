@@ -1,4 +1,4 @@
-##### 2.0.0 - xx October 2013
+##### 2.0.0-rc.1 - 14 October 2013
 
 ###### Breaking API changes
 - Swapped `aggressiveDelete` option for `deleteOnExpire` option. #30, #47
