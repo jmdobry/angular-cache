@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-<%= pkg.version %>.js
- * @version <%= pkg.version %> - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @file angular-cache-2.0.0-rc.1.js
+ * @version 2.0.0-rc.1 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
  * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *

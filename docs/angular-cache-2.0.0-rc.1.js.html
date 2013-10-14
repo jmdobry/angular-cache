@@ -1,9 +1,36 @@
-/**
- * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-<%= pkg.version %>.js
- * @version <%= pkg.version %> - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
- * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
- * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: angular-cache-2.0.0-rc.1.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: angular-cache-2.0.0-rc.1.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * @author Jason Dobry &lt;jason.dobry@gmail.com>
+ * @file angular-cache-2.0.0-rc.1.js
+ * @version 2.0.0-rc.1 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @copyright (c) 2013 Jason Dobry &lt;http://jmdobry.github.io/angular-cache>
+ * @license MIT &lt;https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
  * @overview angular-cache is a caching system that improves upon the capabilities of the
  * $cacheFactory provided by AngularJS.
@@ -61,19 +88,19 @@
                     var child2N = (n + 1) * 2,
                         child1N = child2N - 1;
                     var swap = null;
-                    if (child1N < length) {
+                    if (child1N &lt; length) {
                         var child1 = heap[child1N],
                             child1Weight = weightFunc(child1);
                         // If the score is less than our node's, we need to swap.
-                        if (child1Weight < nodeWeight) {
+                        if (child1Weight &lt; nodeWeight) {
                             swap = child1N;
                         }
                     }
                     // Do the same checks for the other child.
-                    if (child2N < length) {
+                    if (child2N &lt; length) {
                         var child2 = heap[child2N],
                             child2Weight = weightFunc(child2);
-                        if (child2Weight < (swap === null ? nodeWeight : weightFunc(heap[child1N]))) {
+                        if (child2Weight &lt; (swap === null ? nodeWeight : weightFunc(heap[child1N]))) {
                             swap = child2N;
                         }
                     }
@@ -153,7 +180,7 @@
              */
             BinaryHeap.prototype.remove = function (node) {
                 var length = this.heap.length;
-                for (var i = 0; i < length; i++) {
+                for (var i = 0; i &lt; length; i++) {
                     if (angular.equals(this.heap[i], node)) {
                         var removed = this.heap[i],
                             end = this.heap.pop();
@@ -232,7 +259,7 @@
         function _validateNumberOption(option, cb) {
             if (!angular.isNumber(option)) {
                 cb('must be a number!');
-            } else if (option < 0) {
+            } else if (option &lt; 0) {
                 cb('must be greater than zero!');
             } else {
                 cb(null);
@@ -395,7 +422,7 @@
 
             /**
              * @class AngularCache
-             * @desc Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
+             * @desc Instantiated via &lt;code>$angularCacheFactory(cacheId[, options])&lt;/code>
              * @param {String} cacheId The id of the new cache.
              * @param {Object} [options] See [Configuration Options]{@link https://github.com/jmdobry/angular-cache#configuration}.
              * @example
@@ -465,7 +492,7 @@
                     var keys = _keys(data);
                     if (maxAge === null) {
                         if (config.maxAge) {
-                            for (var i = 0; i < keys.length; i++) {
+                            for (var i = 0; i &lt; keys.length; i++) {
                                 var key = keys[i];
                                 if (!('maxAge' in data[key])) {
                                     delete data[key].expires;
@@ -482,13 +509,13 @@
                                 if (maxAge !== config.maxAge) {
                                     config.maxAge = maxAge;
                                     var now = new Date().getTime();
-                                    for (var i = 0; i < keys.length; i++) {
+                                    for (var i = 0; i &lt; keys.length; i++) {
                                         var key = keys[i];
                                         if (!('maxAge' in data[key])) {
                                             expiresHeap.remove(data[key]);
                                             data[key].expires = data[key].created + config.maxAge;
                                             expiresHeap.push(data[key]);
-                                            if (data[key].expires < now) {
+                                            if (data[key].expires &lt; now) {
                                                 self.remove(key, { verifyIntegrity: false });
                                             }
                                         }
@@ -578,7 +605,7 @@
                     if ((config.storageMode === 'localStorage' || config.storageMode === 'sessionStorage') &&
                         (storageMode !== config.storageMode)) {
                         keys = _keys(data);
-                        for (i = 0; i < keys.length; i++) {
+                        for (i = 0; i &lt; keys.length; i++) {
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                         storage.removeItem(prefix + '.keys');
@@ -606,7 +633,7 @@
                             _loadCacheConfig();
                         } else {
                             keys = _keys(data);
-                            for (i = 0; i < keys.length; i++) {
+                            for (i = 0; i &lt; keys.length; i++) {
                                 _syncToStorage(keys[i]);
                             }
                         }
@@ -684,7 +711,7 @@
                     var keys = angular.fromJson(storage.getItem(prefix + '.keys'));
                     storage.removeItem(prefix + '.keys');
                     if (keys && keys.length) {
-                        for (var i = 0; i < keys.length; i++) {
+                        for (var i = 0; i &lt; keys.length; i++) {
                             var data = angular.fromJson(storage.getItem(prefix + '.data.' + keys[i])),
                                 maxAge = data.maxAge || config.maxAge,
                                 deleteOnExpire = data.deleteOnExpire || config.deleteOnExpire;
@@ -734,7 +761,7 @@
                         if (config.storageMode !== 'none' && storage) {
                             var keys = _keys(data);
                             storage.setItem(prefix + '.keys', angular.toJson(keys));
-                            for (var i = 0; i < keys.length; i++) {
+                            for (var i = 0; i &lt; keys.length; i++) {
                                 storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
                             }
                         }
@@ -757,7 +784,7 @@
                 function _removeAllFromStorage() {
                     if (config.storageMode !== 'none' && storage) {
                         var keys = _keys(data);
-                        for (var i = 0; i < keys.length; i++) {
+                        for (var i = 0; i &lt; keys.length; i++) {
                             storage.removeItem(prefix + '.data.' + keys[i]);
                         }
                         storage.setItem(prefix + '.keys', angular.toJson([]));
@@ -869,7 +896,7 @@
                     item.accessed = now;
                     lruHeap.push(item);
 
-                    if (deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
+                    if (deleteOnExpire === 'passive' && 'expires' in item && item.expires &lt; now) {
                         this.remove(key, { verifyIntegrity: false });
 
                         if (config.onExpire) {
@@ -941,7 +968,7 @@
                     var now = new Date().getTime(),
                         item = expiresHeap.peek();
 
-                    while (item && item.expires && item.expires < now) {
+                    while (item && item.expires && item.expires &lt; now) {
                         self.remove(item.key, { verifyIntegrity: false });
                         if (config.onExpire) {
                             config.onExpire(item.key, item.value);
@@ -984,7 +1011,7 @@
                     var methodKeys = _keys(this);
 
                     // Prevent this cache from being used after it has been destroyed
-                    for (var i = 0; i < methodKeys.length; i++) {
+                    for (var i = 0; i &lt; methodKeys.length; i++) {
                         if (this.hasOwnProperty(methodKeys[i])) {
                             delete this[methodKeys[i]];
                         }
@@ -1164,7 +1191,7 @@
                     size: keys.length,
                     caches: {}
                 };
-                for (var i = 0; i < keys.length; i++) {
+                for (var i = 0; i &lt; keys.length; i++) {
                     var key = keys[i];
                     info.caches[key] = caches[key].info();
                 }
@@ -1228,7 +1255,7 @@
              */
             angularCacheFactory.removeAll = function () {
                 var keys = _keys(caches);
-                for (var i = 0; i < keys.length; i++) {
+                for (var i = 0; i &lt; keys.length; i++) {
                     caches[keys[i]].destroy();
                 }
             };
@@ -1246,7 +1273,7 @@
              */
             angularCacheFactory.clearAll = function () {
                 var keys = _keys(caches);
-                for (var i = 0; i < keys.length; i++) {
+                for (var i = 0; i &lt; keys.length; i++) {
                     caches[keys[i]].removeAll();
                 }
             };
@@ -1258,3 +1285,25 @@
     // Register the new provider with Angular.
     angular.module('jmdobry.angular-cache').provider('$angularCacheFactory', $AngularCacheFactoryProvider);
 })(window, window.angular);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="$AngularCacheFactoryProvider.html">$AngularCacheFactoryProvider</a></li><li><a href="AngularCache.html">AngularCache</a></li><li><a href="AngularCacheFactory.html">AngularCacheFactory</a></li><li><a href="BinaryHeap.html">BinaryHeap</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Oct 13 2013 22:37:13 GMT-0600 (MDT)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>
