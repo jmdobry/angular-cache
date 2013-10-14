@@ -252,6 +252,9 @@
                                     var keys = _keys(data);
                                     for (var i = 0; i < keys.length; i++) {
                                         var key = keys[i];
+                                        if (config.storageMode) {
+                                            storage.removeItem(prefix + '.data.' + key);
+                                        }
                                         if (data[key].timeoutId) {
                                             $timeout.cancel(data[key].timeoutId);
                                         }
@@ -261,6 +264,7 @@
                                     lruHash = {};
                                     freshEnd = null;
                                     staleEnd = null;
+                                    _syncToStorage(null);
                                 }, config.cacheFlushInterval);
                                 cb(null, config.cacheFlushInterval);
                             }
@@ -700,17 +704,21 @@
                  * @privileged
                  */
                 this.info = function (key) {
-                    if (key in data) {
-                        var info = {
-                            timestamp: data[key].timestamp,
-                            maxAge: data[key].maxAge || config.maxAge,
-                            aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete) || false,
-                            isExpired: false
-                        };
-                        if (info.maxAge) {
-                            info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                    if (key) {
+                        if (data[key]) {
+                            var info = {
+                                timestamp: data[key].timestamp,
+                                maxAge: data[key].maxAge || config.maxAge,
+                                aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') && config.aggressiveDelete) || false,
+                                isExpired: false
+                            };
+                            if (info.maxAge) {
+                                info.isExpired = (new Date().getTime() - info.timestamp) > info.maxAge;
+                            }
+                            return info;
+                        } else {
+                            return data[key];
                         }
-                        return info;
                     } else {
                         return angular.extend({}, config, { size: size });
                     }
