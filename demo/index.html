@@ -105,13 +105,13 @@
                 </td>
             </tr>
             <tr>
-                <td>info().aggressiveDelete</td>
+                <td>info().deleteOnExpire</td>
                 <td data-ng-repeat="info in infos">
                     <input type="text" data-ng-if="$first && editingDefaultCache"
-                           placeholder="Enter aggressiveDelete (true || false)"
-                           data-ng-model="defaultCacheOptions.aggressiveDelete">
+                           placeholder="Enter deleteOnExpire ('none' || 'passive' || 'aggressive')"
+                           data-ng-model="defaultCacheOptions.deleteOnExpire">
                     <span
-                        data-ng-if="!editingDefaultCache || !$first">{{info.aggressiveDelete}}</span>
+                        data-ng-if="!editingDefaultCache || !$first">"{{info.deleteOnExpire}}"</span>
                 </td>
             </tr>
             <tr>

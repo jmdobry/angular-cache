@@ -11,7 +11,8 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        clean: ['dist/', 'docs/'],
+        // these folders will no longer be checked into development branches
+        clean: ['dist/', 'docs/', 'coverage/'],
         jshint: {
             all: ['Gruntfile.js', 'src/**/*.js', 'test/*.js'],
             jshintrc: '.jshintrc'
@@ -49,6 +50,16 @@ module.exports = function (grunt) {
             },
             travis: {
                 browsers: ['Firefox', 'PhantomJS']
+            },
+            release: {
+                coverageReporter: {
+                    type: 'html',
+                    dir: 'coverage/'
+                },
+                preprocessors: {
+                    'src/angular-cache.js': ['coverage']
+                },
+                reporters: ['progress', 'coverage']
             }
         },
         jsdoc : {
@@ -72,12 +83,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jsdoc');
 
-    grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev']);
+    grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev', 'jsdoc', 'clean']);
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('build:all', ['build', 'jsdoc']);
     grunt.registerTask('test', ['karma:dev']);
 
     // Used by the CLI build servers
     grunt.registerTask('drone', ['clean', 'jshint', 'copy', 'uglify', 'karma:drone']);
     grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis']);
+
+    // Only used on the develop branch
+    grunt.registerTask('release', ['clean', 'jshint', 'build', 'copy', 'uglify', 'karma:release', 'jsdoc']);
 };
