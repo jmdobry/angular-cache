@@ -1,7 +1,7 @@
 {
   "name": "angular-cache",
   "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-  "version": "1.2.1-SNAPSHOT",
+  "version": "1.2.1",
   "homepage": "https://github.com/jmdobry/angular-cache",
   "repository": {
     "type": "git",

@@ -183,16 +183,16 @@
     <h1>Code coverage report for <span class="entity">./src/angular-cache.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">96.44% <small>(325 / 337)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">95.91% <small>(328 / 342)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Branches: <span class="metric">91.95% <small>(240 / 261)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">91.32% <small>(242 / 265)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Functions: <span class="metric">100% <small>(44 / 44)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">96.44% <small>(325 / 337)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">95.91% <small>(328 / 342)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
     </h2>
     <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">./src\</a> &#187; angular-cache.js</div>
@@ -1050,7 +1050,15 @@
 849
 850
 851
-852</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+852
+853
+854
+855
+856
+857
+858
+859
+860</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1307,7 +1315,11 @@
 <span class="cline-any cline-yes">6</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27</span>
 <span class="cline-any cline-yes">27</span>
 <span class="cline-any cline-yes">27</span>
 <span class="cline-any cline-yes">27</span>
@@ -1537,7 +1549,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">180</span>
+<span class="cline-any cline-yes">207</span>
 <span class="cline-any cline-yes">68</span>
 <span class="cline-any cline-yes">68</span>
 <span class="cline-any cline-yes">31</span>
@@ -1754,6 +1766,7 @@
 <span class="cline-any cline-yes">77</span>
 <span class="cline-any cline-yes">70</span>
 <span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-yes">7</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1763,6 +1776,9 @@
 <span class="cline-any cline-yes">4</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">63</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2155,6 +2171,9 @@
                                     var keys = _keys(data);
                                     for (var i = 0; i &lt; keys.length; i++) {
                                         var key = keys[i];
+                                        <span class="missing-if-branch" title="if path not taken"" >I</span>if (config.storageMode) {
+<span class="cstat-no" title="statement not covered" >                                            storage.removeItem(prefix + '.data.' + key);</span>
+                                        }
                                         <span class="missing-if-branch" title="if path not taken"" >I</span>if (data[key].timeoutId) {
 <span class="cstat-no" title="statement not covered" >                                            $timeout.cancel(data[key].timeoutId);</span>
                                         }
@@ -2164,6 +2183,7 @@
                                     lruHash = {};
                                     freshEnd = null;
                                     staleEnd = null;
+                                    _syncToStorage(null);
                                 }, config.cacheFlushInterval);
                                 cb(null, config.cacheFlushInterval);
                             }
@@ -2603,17 +2623,21 @@
                  * @privileged
                  */
                 this.info = function (key) {
-                    if (key in data) {
-                        var info = {
-                            timestamp: data[key].timestamp,
-                            maxAge: data[key].maxAge || config.maxAge,
-                            aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') &amp;&amp; config.aggressiveDelete) || false,
-                            isExpired: false
-                        };
-                        if (info.maxAge) {
-                            info.isExpired = (new Date().getTime() - info.timestamp) &gt; info.maxAge;
+                    if (key) {
+                        <span class="missing-if-branch" title="else path not taken"" >E</span>if (data[key]) {
+                            var info = {
+                                timestamp: data[key].timestamp,
+                                maxAge: data[key].maxAge || config.maxAge,
+                                aggressiveDelete: data[key].aggressiveDelete || (!data[key].hasOwnProperty('aggressiveDelete') &amp;&amp; config.aggressiveDelete) || false,
+                                isExpired: false
+                            };
+                            if (info.maxAge) {
+                                info.isExpired = (new Date().getTime() - info.timestamp) &gt; info.maxAge;
+                            }
+                            return info;
+                        } else {
+<span class="cstat-no" title="statement not covered" >                            return data[key];</span>
                         }
-                        return info;
                     } else {
                         return angular.extend({}, config, { size: size });
                     }
@@ -2757,7 +2781,7 @@
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Sep 21 2013 19:20:24 GMT-0600 (Mountain Daylight Time)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Oct 13 2013 22:26:14 GMT-0600 (Mountain Daylight Time)</div>
 </div>
 
 <script src="../prettify.js"></script>

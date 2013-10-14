@@ -1,3 +1,9 @@
+##### 1.2.1 - 13 October 2013
+
+###### Backwards compatible bug fixes
+- cacheFlushInterval doesn't clear web storage when storageMode is used. #52
+- AngularCache#info(key) should return 'undefined' if the key isn't in the cache #53
+
 ##### 1.2.0 - 20 September 2013
 
 ###### Backwards compatible API changes
