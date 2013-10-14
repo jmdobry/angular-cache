@@ -222,7 +222,7 @@ describe('$angularCacheFactoryProvider.setCacheDefaults(options)', function () {
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): [local|session]storageImpl: must be an object!');
+        expect(msg).toEqual('$angularCacheFactoryProvider.setCacheDefaults(options): storageImpl: must be an object!');
         for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
             try {
                 $angularCacheFactoryProvider.setCacheDefaults({ storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });

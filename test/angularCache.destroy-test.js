@@ -2,7 +2,12 @@ describe('AngularCache.destroy()', function () {
     it('should destroy the cache and remove all traces of its existence.', function () {
         var cache = $angularCacheFactory('cache');
         cache.destroy();
-        expect(cache.info()).toEqual({ size: 0 });
+        try {
+            expect(cache.info()).toEqual({ size: 0 });
+            fail('should not be able to use a cache after destroying it');
+        } catch (err) {
+
+        }
         expect($angularCacheFactory.get('cache')).toEqual(undefined);
     });
     it('should remove items from localStorage when storageMode is used.', function () {

@@ -1,16 +1,12 @@
-### angular-cache (2.0.0-SNAPSHOT) is a very useful replacement for Angular's $cacheFactory.
+## angular-cache
+#### A very useful replacement for Angular's $cacheFactory.
+#### Version: 2.0.0-SNAPSHOT
 
-Check out the [demo](http://jmdobry.github.io/angular-cache/demo/) for a quick introduction, or continue on down for more detailed information.
+- View the [demo](http://jmdobry.github.io/angular-cache/demo/). 
+- Ask questions on the [mailing list](https://groups.google.com/forum/#!forum/angular-cache). 
+- See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for upgrading from 1.x.x to 2.x.x.
 
-The goal of the project is to solve a general problem, not satisfy a specific scenario.
-
-See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for upgrading from 1.x.x to 2.x.x.
-
-### Quick Introduction
-
-#### [View the Demo](http://jmdobry.github.io/angular-cache/demo/)
-
-#### [Mailing List](https://groups.google.com/forum/#!forum/angular-cache)
+### $cacheFactory vs $angularCacheFactory
 
 ##### $cacheFactory
 ```javascript
@@ -21,18 +17,19 @@ app.service('myService', function ($cacheFactory) {
 });
 ```
 
-#### vs
-
 ##### $angularCacheFactory
 ```javascript
 // Smarter caching with $angularCacheFactory
 app.service('myService', function ($angularCacheFactory) {
     $angularCacheFactory('myNewCache', {
-        capacity: 1000,  // This cache can hold 1000 items,
-        maxAge: 90000, // Items added to this cache expire after 15 minutes
+        capacity: 1000,  // This cache can hold 1000 items
+        maxAge: 900000, // Items added to this cache expire after 15 minutes
         deleteOnExpire: 'aggressive', // Items will be actively deleted when they expire
-        cacheFlushInterval: 3600000, // This cache will clear itself every hour,
-        storageMode: 'localStorage' // This cache will sync itself with localStorage,
+        cacheFlushInterval: 3600000, // This cache will clear itself every hour
+        storageMode: 'localStorage', // This cache will sync itself with localStorage
+        storageImpl: myLocalStoragePolyfill, // Custom implementation of localStorage
+        verifyIntegrity: true, // Full synchronization with localStorage on every operation
+        recycleFreq: 60000, // Frequency for checking the cache for expired items
         onExpire: function (key, value) {
             // This callback is executed when the item specified by "key" expires.
             // At this point you could retrieve a fresh value for "key"
@@ -42,22 +39,59 @@ app.service('myService', function ($angularCacheFactory) {
 });
 ```
 
-### Table of Contents
+### Documentation
 1. [Demo](http://jmdobry.github.io/angular-cache/demo/)
-1. [Configuration Parameters](#configuration)
 1. [$angularCacheFactoryProvider](#angularcachefactoryprovider)
 1. [$angularCacheFactory](#angularcachefactory)
 1. [AngularCache](#angularcache)
+1. [Configuration Options](#configuration)
 1. [Status](#status)
 1. [Download](#download)
 1. [Install](#installation)
-1. [Usage](#usage)
+1. [Usage Patterns](#usage)
 1. [Changelog](#changelog)
 1. [Contributing](#contributing)
 1. [License](#license)
 
+<a name='angularcachefactoryprovider'></a>
+## $angularCacheFactoryProvider
+__Description:__ Provider for `$angularCacheFactory`. [$angularCacheFactoryProvider](http://jmdobry.github.io/angular-cache/docs/$AngularCacheFactoryProvider.html) API documentation.
+
+#### $angularCacheFactoryProvider.setCacheDefaults()
+__Description:__ Set the default configuration for all caches created by `$angularCacheFactory`. [$angularCacheFactoryProvider#setCacheDefaults](http://jmdobry.github.io/angular-cache/docs/$AngularCacheFactoryProvider.html#setCacheDefaults) API documentation.
+
+<a name='angularcachefactory'></a>
+## $angularCacheFactory
+__Description:__ Produces instances of  `AngularCache`. [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html) API documentation.
+
+#### $angularCacheFactory(cacheId, options)
+__Description:__ Create a new cache with the given cacheId and configuration options. See [Configuration Options](#configuration). [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html) API documentation.
+
+#### $angularCacheFactory.keySet()
+__Description:__ Return the set of cacheIds of all caches in `$angularCacheFactory`. [$angularCacheFactory#keySet](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#keySet) API documentation.
+
+#### $angularCacheFactory.keys()
+__Description:__ Return an array of the cacheIds of all caches in `$angularCacheFactory`. [$angularCacheFactory#keys](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#keys) API documentation.
+
+<a name='angularcache'></a>
+## AngularCache
+__Description:__ Object produced by invocations of `$angularCacheFactory(cacheId, options)`. [AngularCache](http://jmdobry.github.io/angular-cache/docs/AngularCache.html) API documentation.
+
+#### AngularCache.setOptions(options, strict)
+__Description:__ Dynamically configure the cache. See [Configuration Options](#configuration). [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#setOptions) API documentation.
+
+#### AngularCache.info(key)
+__Description:__ Returns an object containing information about the cache or the item with the specified key. [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#info) API documentation.
+
+#### AngularCache.keySet()
+__Description:__ Return the set of keys of all items in the cache. [AngularCache#keySet](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keySet) API documentation.
+
+#### AngularCache.keys()
+__Description:__ Return an array of the keys of all items in the cache. [AngularCache#keys](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keys) API documentation.
+
 <a name='configuration'></a>
-## Configuration Parameters
+## Configuration Options
+__Description:__ Available configuration options for use with [$angularCacheFactoryProvider.setCacheDefaults(options)](http://jmdobry.github.io/angular-cache/docs/$AngularCacheFactoryProvider.html#setCacheDefaults), [$angularCacheFactory(cacheId, options)](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html), and [AngularCache.setOptions(options, strict)](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#setOptions).
 
 #### storageMode
 __Type:__ String
@@ -80,22 +114,22 @@ $angularCacheFactory('newCache', {
 
 See [Using angular-cache with localStorage](#using-angular-cache-with-localStorage).
 
-#### localStorageImpl and sessionStorageImpl
+#### storageImpl
 __Type:__ Object
 
 __Default:__ `null`
 
-__Description:__ When `storageMode` is set to `"localStorage"` or `"sessionStorage"` angular-cache will default to using the global `localStorage` and `sessionStorage` objects. The angular-cache `localStorageImpl` and `sessionStorageImpl` configuration parameters allow you to tell angular-cache which implementation of `localStorage` or `sessionStorage` to use. This is useful when you don't want to override the global storage objects or when using angular-cache in a browser that doesn't support `localStorage` or `sessionStorage`.
+__Description:__ When `storageMode` is set to `"localStorage"` or `"sessionStorage"` angular-cache will default to using the global `localStorage` and `sessionStorage` objects. The angular-cache `storageImpl` and `sessionStorageImpl` configuration parameters allow you to tell angular-cache which implementation of `localStorage` or `sessionStorage` to use. This is useful when you don't want to override the global storage objects or when using angular-cache in a browser that doesn't support `localStorage` or `sessionStorage`.
 
 __Usage:__
 ```javascript
 $angularCacheFactory('newCache', {
-    localStorageImpl: myLocalStorageImplementation,
+    storageImpl: mystorageImplementation,
     storageMode: 'localStorage'
 });
 
 $angularCacheFactory('otherCache', {
-    localStorageImpl: mySessionStorageImplementation,
+    storageImpl: mySessionStorageImplementation,
     storageMode: 'sessionStorage'
 });
 ```
@@ -252,129 +286,14 @@ newCache.put('denver', 'broncos');
 newCache.get('denver'); // 'broncos' or whatever was returned by the server in the "onExpire" callback
 ```
 
-<a name='angularcachefactoryprovider'></a>
-## $angularCacheFactoryProvider
-
-__Description:__ Provider for `$angularCacheFactory`.
-
-#### $angularCacheFactoryProvider.setCacheDefaults()
-__Description:__ Set the default configuration for all caches created by `$angularCacheFactory`.
-
-__Usage:__
-```javascript
-app.module('app', ['jmdobry.angular-cache'])
-    .config(function ($angularCacheFactoryProvider) {
-        $angularCacheFactoryProvider.setCacheDefaults({
-            maxAge: 360000,
-            deleteOnExpire: 'aggressive'
-        });
-    })
-    .run(function ($angularCacheFactory) {
-        var info = $angularCacheFactory.info();
-
-        console.log(info.cacheDefaults); // output below
-        /*
-            {
-                capacity: Number.MAX_VALUE,
-                maxAge: 360000,
-                deleteOnExpire: 'aggressive',
-                onExpire: null,
-                cacheFlushInterval: null,
-                storageMode: 'none',
-                localStorageImpl: null,
-                sessionStorageImpl: null
-            }
-        */
-
-        var newCache = $angularCacheFactory('newCache');
-
-        newCache.info().maxAge; // 360000
-        newCache.info().deleteOnExpire; // "aggressive"
-    });
-```
-
-<a name='angularcachefactory'></a>
-## $angularCacheFactory
-
-__Description:__ Factory function for producing instances of `AngularCache`.
-
-#### $angularCacheFactory.keySet()
-__Description:__ Return the set of keys associated with all caches in `$angularCacheFactory`.
-
-__Usage:__
-```javascript
-$angularCacheFactory.keySet();
-```
-
-#### $angularCacheFactory.keys()
-__Description:__ Return an array of the keys associated with all caches in `$angularCacheFactory`.
-
-See [Get info about a cache](#get-info-about-a-cache).
-
-__Usage:__
-```javascript
-$angularCacheFactory.keys();
-```
-
-<a name='angularcache'></a>
-## AngularCache
-
-__Description:__ Object produced by invocations of `$angularCacheFactory()`.
-
-#### AngularCache.setOptions(options, strict)
-__Description:__ Dynamically configure a cache.
-
-See [Dynamically configure a cache](#dynamically-configure-a-cache).
-
-__Parameters:__
-> ##### options
-> __Type:__ Object
->
-> __Default:__ `{}`
->
-> __Description:__ Hash of configuration options to apply to the cache.
->
-> ##### strict
-> __Type:__ Boolean
->
-> __Default:__ `false`
->
-> __Description:__ If `true`, any configuration options not specified in `options` will be set to their defaults.
-
-__Usage:__
-```javascript
-$angularCacheFactory.get('someCache').setOptions({ capacity: 4500 });
-```
-
-#### AngularCache.keySet()
-__Returns:__ Object
-
-__Description:__ Return the set of keys of all items the cache.
-
-__Usage:__
-```javascript
-$angularCacheFactory.get('someCache').keySet();
-```
-
-#### AngularCache.keys()
-__Returns:__ Array
-
-__Description:__ Return an array of the keys of all items in the cache.
-
-See [Get info about a cache](#get-info-about-a-cache).
-
-__Usage:__
-```javascript
-AngularCache.keys();
-```
-
 <a name='status'></a>
 ## Status
-| Version | Branch  | Build status                                                                                                                                                              | Test Coverage |
-| ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| 2.0.0-SNAPSHOT   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [Test Coverage](http://jmdobry.github.io/angular-cache/coverage/) |
-| 2.0.0-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | |
-| 2.0.0-SNAPSHOT   | [all](https://drone.io/github.com/jmdobry/angular-cache) | [![Build Status](https://drone.io/github.com/jmdobry/angular-cache/status.png)](https://drone.io/github.com/jmdobry/angular-cache/latest)
+| Version | Branch  | Build status                                                                                                                                                              |
+| ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.2.1   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) |
+| 2.0.0-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) |
+
+[Test Coverage](http://jmdobry.github.io/angular-cache/coverage/)
 
 <a name='download'></a>
 ## Download
@@ -393,93 +312,19 @@ AngularCache.keys();
 bower install angular-cache
 ```
 
-Include `src/angular-cache.js` on your web page after `angular.js`.
+Include `src/angular-cache.js` on your web page after `angular.js` and activate it via `angular.module('myApp', ['jmdobry.angular-cache']);`
 
 #### Manual install
-Get angular-cache from the [Download](#download) section and include it on your web page after `angular.js`.
+Get angular-cache from the [Download](#download) section, include it on your web page after `angular.js`, and activate it via `angular.module('myApp', ['jmdobry.angular-cache']);`
 
 <a name='usage'></a>
-## Usage
+## Usage Patterns
+Examples of uses for angular-cache.
 
-- [Load angular-cache](#load-angular-cache)
-- [Create a cache](#create-a-cache)
 - [Using angular-cache with localStorage](#using-angular-cache-with-localStorage)
 - [Using angular-cache with $http](#using-angular-cache-with-$http)
 - [Dynamically configure a cache](#dynamically-configure-a-cache)
-- [Retrieve a cache](#retrieve-a-cache)
-- [Retrieve items](#retrieve-items)
-- [Add items](#add-items)
-- [Remove items](#remove-items)
-- [Clear all items](#clear-all-items)
-- [Destroy a cache](#destroy-a-cache)
-- [Get info about a cache](#get-info-about-a-cache)
 - [API Documentation](http://jmdobry.github.io/angular-cache/docs/)
-
-<a name='load-angular-cache'></a>
-#### Load angular-cache
-Make sure angular-cache is included on your web page after `angular.js`.
-```javascript
-angular.module('myApp', ['jmdobry.angular-cache']);
-```
-See [angular-cache](http://jmdobry.github.io/angular-cache/docs/module-angular-cache.html)
-
-<a name='create-a-cache'></a>
-#### Create a cache
-```javascript
-app.service('myService', function ($angularCacheFactory) {
-
-    // create a cache with default settings
-    var myCache = $angularCacheFactory('myCache');
-
-    // create an LRU cache with a capacity of 10
-    var myLRUCache = $angularCacheFactory('myLRUCache', {
-        capacity: 10
-    });
-
-    // create a cache whose items have a maximum lifetime of 10 minutes
-    var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
-        maxAge: 600000,
-        onExpire: function (key, value, done) {
-            // This callback is executed during a call to "get()" and the requested item has expired.
-            // Receives the key and value of the expired item and a third argument, "done", which is
-            // a callback function passed as the second argument to "get()".
-            // See the "onExpire" configuration option discussed above.
-
-            // do something, like get a fresh value from the server and put it into the cache
-            if (done && typeof done === 'function') {
-                done(); // pass whatever you want into done()
-            }
-        }
-    });
-
-    // create a cache whose items have a maximum lifetime of 10 minutes which are immediately deleted upon expiration
-    var myAggressiveTimeLimitedCache = $angularCacheFactory('myAggressiveTimeLimitedCache', {
-        maxAge: 600000,
-        onExpire: function (key, value) {
-            // This callback is executed right when items expire. Receives the key and value of expired items.
-            // See the "onExpire" configuration option discussed above.
-
-            // do something, like get a fresh value from the server and put it into the cache
-        }
-    });
-
-    // create a cache that will clear itself every 10 minutes
-    var myIntervalCache = $angularCacheFactory('myIntervalCache', {
-        cacheFlushInterval: 600000
-    });
-
-    // create an cache with all options
-    var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
-        capacity: 10, // This cache can only hold 10 items.
-        maxAge: 90000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 600000, // This cache will clear itself every hour.
-        deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
-        storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
-        localStorageImpl: myAwesomeLSImpl // This cache will use a custom implementation of localStorage.
-    });
-});
-```
-See [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/angularCacheFactory.html)
 
 <a name='using-angular-cache-with-localStorage'></a>
 #### Using angular-cache with localStorage (or sessionStorage)
@@ -491,8 +336,8 @@ app.service('myService', function ($angularCacheFactory) {
     // browser loads this app, this cache will attempt to initialize itself with any data it had
     // already saved to localStorage (or sessionStorage if you used that).
     var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
-        maxAge: 90000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        maxAge: 900000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 6000000, // This cache will clear itself every hour.
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     });
@@ -517,11 +362,11 @@ app.service('myService', function ($angularCacheFactory) {
 
     // Always use the polyfill
     var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
-        maxAge: 90000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        maxAge: 900000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 6000000, // This cache will clear itself every hour.
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
-        localStorageImpl: localStoragePolyfill // angular-cache will use this polyfill instead of looking for localStorage
+        storageImpl: localStoragePolyfill // angular-cache will use this polyfill instead of looking for localStorage
     });
 
     // Conditionally use the polyfill
@@ -532,13 +377,13 @@ app.service('myService', function ($angularCacheFactory) {
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     };
     if (!window.localStorage) {
-        options.localStorageImpl = localStoragePolyfill;
+        options.storageImpl = localStoragePolyfill;
     }
     var myAwesomeCache = $angularCacheFactory('myAwesomeCache', options);
 });
 ```
 
-Documentation on the interface that must be implementated by any localStorage/sessionStorage polyfill used by angular-cache can be found on the [W3C Recommendation](http://www.w3.org/TR/2013/REC-webstorage-20130730/) page for webstorage. The interface itself looks like:
+Documentation on the interface that must be implemented by any `storageImpl` polyfill used by angular-cache can be found on the [W3C Recommendation](http://www.w3.org/TR/2013/REC-webstorage-20130730/) page for webstorage. The interface itself looks like:
 ```java
 interface Storage {
   readonly attribute unsigned long length;
@@ -565,7 +410,7 @@ var storeJsToStandard {
 
 $angularCacheFactory('myNewCache', {
   storageMode: 'localStorage',
-  localStorageImpl: storeJsToStandard
+  storageImpl: storeJsToStandard
 });
 ```
 
@@ -579,8 +424,8 @@ Configure `$http` to use a cache created by `$angularCacheFactory` by default:
 app.run(function ($http, $angularCacheFactory) {
 
     $angularCacheFactory('defaultCache', {
-        maxAge: 90000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        maxAge: 900000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 6000000, // This cache will clear itself every hour.
         deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
     });
 
@@ -661,8 +506,8 @@ Do your own caching while using the $http service:
 app.service('myService', function ($http, $angularCacheFactory) {
 
     $angularCacheFactory('dataCache', {
-        maxAge: 90000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        maxAge: 900000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 6000000, // This cache will clear itself every hour.
         deleteOnExpire: 'aggressive' // Items will be deleted from this cache right when they expire.
     });
 
@@ -707,15 +552,14 @@ app.controller('myCtrl', function (myService) {
 ```javascript
 app.service('myService', function ($angularCacheFactory) {
 
-    // create a cache with default settings
     var cache = $angularCacheFactory('cache', {
         capacity: 100,
-        maxAge: 30000
+        maxAge: 300000
     });
 
     // Add 50 items here, for example
 
-    cache.info(); // { ..., size: 50, capacity: 100, maxAge: 3000, ... }
+    cache.info(); // { ..., size: 50, capacity: 100, maxAge: 300000, ... }
 
     cache.setOptions({
         capacity: 30
@@ -741,98 +585,6 @@ app.service('myService', function ($angularCacheFactory) {
 ```
 See [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/Cache.html#setOptions)
 
-<a name='retrieve-a-cache'></a>
-#### Retrieve a cache
-```javascript
-app.service('myOtherService', function ($angularCacheFactory) {
-
-    var myCache = $angularCacheFactory.get('myCache');
-});
-```
-See [$angularCacheFactory#get](http://jmdobry.github.io/angular-cache/docs/angularCacheFactory.html#get)
-
-<a name='retrieve-items'></a>
-#### Retrieve items
-```javascript
-myCache.get('someItem'); // { name: 'John Doe' });
-
-// if the item is not in the cache or has expired
-myCache.get('someMissingItem'); // undefined
-```
-See [AngularCache#get](http://jmdobry.github.io/angular-cache/docs/Cache.html#get)
-
-<a name='add-items'></a>
-#### Add items
-```javascript
-myCache.put('someItem', { name: 'John Doe' });
-
-myCache.get('someItem'); // { name: 'John Doe' });
-```
-
-Give a specific item a maximum age
-```javascript
-// The maxAge given to this item will override the maxAge of the cache, if any was set
-myCache.put('someItem', { name: 'John Doe' }, { maxAge: 10000 });
-
-myCache.get('someItem'); // { name: 'John Doe' });
-
-// wait at least ten seconds
-setTimeout(function() {
-
-    myCache.get('someItem'); // undefined
-
-}, 15000); // 15 seconds
-```
-See [AngularCache#put](http://jmdobry.github.io/angular-cache/docs/Cache.html#put)
-
-<a name='remove-items'></a>
-#### Remove items
-```javascript
-myCache.put('someItem', { name: 'John Doe' });
-
-myCache.remove('someItem');
-
-myCache.get('someItem'); // undefined
-```
-See [AngularCache#remove](http://jmdobry.github.io/angular-cache/docs/Cache.html#remove)
-
-<a name='clear-all-items'></a>
-#### Clear all items
-```javascript
-myCache.put('someItem', { name: 'John Doe' });
-myCache.put('someOtherItem', { name: 'Sally Jean' });
-
-myCache.removeAll();
-
-myCache.get('someItem'); // undefined
-myCache.get('someOtherItem'); // undefined
-```
-See [AngularCache#removeAll](http://jmdobry.github.io/angular-cache/docs/Cache.html#removeAll)
-
-<a name='destroy-a-cache'></a>
-#### Destroy a cache
-```javascript
-myCache.destroy();
-
-myCache.get('someItem'); // Will throw an error - Don't try to use a cache after destroying it!
-
-$angularCacheFactory.get('myCache'); // undefined
-```
-See [AngularCache#destroy](http://jmdobry.github.io/angular-cache/docs/Cache.html#destroy)
-
-<a name='get-info-about-a-cache'></a>
-#### Get info about a cache
-```javascript
-myCache.put("1", "someValue");
-
-myCache.info(); // { id: 'myCache', size: 1 }
-
-myCache.keys(); // ["1"]
-
-myCache.keySet(); // { "1": "1" }
-```
-See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#info)
-
 ### [API Documentation](http://jmdobry.github.io/angular-cache/docs/)
 
 <a name='changelog'></a>
@@ -844,7 +596,7 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 - Swapped `aggressiveDelete` option for `deleteOnExpire` option. #30, #47
 - Changed `$angularCacheFactory.info()` to return an object similar to `AngularCache.info()` #45
 - Namespaced angular-cache module under `jmdobry` so it is now "jmdobry.angular-cache". #42
-- Substituted `localStorageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
+- Substituted `storageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
 
 ###### Backwards compatible API changes
 - Added ability to set global cache defaults in $angularCacheFactoryProvider. #55
@@ -855,6 +607,8 @@ See [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/Cache.html#i
 
 ###### Other
 - Refactored angular-cache `setOptions()` internals to be less convoluted and to have better validation. #46
+- Re-wrote documentation to be clearer and more organized. #56
+- Fixed documentation where time spans were incorrectly labeled. #59
 
 ##### 1.2.0 - 20 September 2013
 

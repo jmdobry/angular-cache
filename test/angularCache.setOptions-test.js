@@ -8,7 +8,7 @@ describe('AngularCache.setOptions()', function () {
                     fail(TYPES_EXCEPT_OBJECT[i]);
                 }
             } catch (err) {
-                expect(err.message).toEqual('AngularCache.setOptions(options, strict): options: must be an object!');
+                expect(err.message).toEqual('AngularCache.setOptions(cacheOptions, strict, options): cacheOptions: must be an object!');
                 continue;
             }
             if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {

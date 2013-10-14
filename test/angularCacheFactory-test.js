@@ -210,7 +210,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         } catch (err) {
             var msg = err.message;
         }
-        expect(msg).toEqual('[local|session]storageImpl: must be an object!');
+        expect(msg).toEqual('storageImpl: must be an object!');
         for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
             try {
                 $angularCacheFactory('storageImplCache' + i, { storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
