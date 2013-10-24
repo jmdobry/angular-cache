@@ -7,11 +7,13 @@
 - Substituted `storageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
 
 ###### Backwards compatible API changes
+- Added `recycleFreq` to specify how frequently to check for expired items (no more $timeout). #28, #57
 - Added ability to set global cache defaults in $angularCacheFactoryProvider. #55
 
 ###### Backwards compatible bug fixes
 - cacheFlushInterval doesn't clear web storage when storageMode is used. #52
 - AngularCache#info(key) should return 'undefined' if the key isn't in the cache #53
+- Fixed timespan issues in README.md. #59
 
 ###### Other
 - Refactored angular-cache `setOptions()` internals to be less convoluted and to have better validation. #46

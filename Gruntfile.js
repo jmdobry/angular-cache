@@ -8,6 +8,9 @@
 module.exports = function (grunt) {
     'use strict';
 
+    require('load-grunt-tasks')(grunt);
+    require('time-grunt')(grunt);
+
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -26,13 +29,13 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: ['src/angular-cache.js'],
-                dest: 'dist/angular-cache-<%= pkg.version %>.js'
+                dest: 'dist/angular-cache.js'
             }
         },
         uglify: {
             main: {
                 files: {
-                    'dist/angular-cache-<%= pkg.version %>.min.js': ['dist/angular-cache-<%= pkg.version %>.js']
+                    'dist/angular-cache.min.js': ['dist/angular-cache.js']
                 }
             }
         },
@@ -62,9 +65,9 @@ module.exports = function (grunt) {
                 reporters: ['progress', 'coverage']
             }
         },
-        jsdoc : {
-            dist : {
-                src: ['dist/angular-cache-<%= pkg.version %>.js'],
+        jsdoc: {
+            dist: {
+                src: ['dist/angular-cache.js'],
                 options: {
                     destination: 'docs',
                     lenient: true,
@@ -75,14 +78,7 @@ module.exports = function (grunt) {
         }
     });
 
-    // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-jsdoc');
-
+    grunt.registerTask('release', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev']);
     grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev', 'jsdoc', 'clean']);
     grunt.registerTask('default', ['build']);
     grunt.registerTask('test', ['karma:dev']);
@@ -91,6 +87,6 @@ module.exports = function (grunt) {
     grunt.registerTask('drone', ['clean', 'jshint', 'copy', 'uglify', 'karma:drone']);
     grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis']);
 
-    // Only used on the develop branch
-    grunt.registerTask('release', ['clean', 'jshint', 'build', 'copy', 'uglify', 'karma:release', 'jsdoc']);
+    // Only used on the gh-pages branch
+    grunt.registerTask('pages', ['clean', 'jshint', 'build', 'copy', 'uglify', 'karma:release', 'jsdoc']);
 };
