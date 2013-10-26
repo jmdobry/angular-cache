@@ -48,21 +48,31 @@ module.exports = function (grunt) {
             dev: {
                 browsers: ['Chrome']
             },
-            drone: {
-                browsers: ['Firefox', 'Chrome', 'PhantomJS']
-            },
             travis: {
-                browsers: ['Firefox', 'PhantomJS']
-            },
-            release: {
+                browsers: ['Firefox', 'PhantomJS'],
                 coverageReporter: {
-                    type: 'html',
+                    type: 'lcov',
                     dir: 'coverage/'
                 },
                 preprocessors: {
                     'src/angular-cache.js': ['coverage']
                 },
                 reporters: ['progress', 'coverage']
+            },
+            release: {
+                coverageReporter: {
+                    type: 'lcov',
+                    dir: 'coverage/'
+                },
+                preprocessors: {
+                    'src/angular-cache.js': ['coverage']
+                },
+                reporters: ['progress', 'coverage']
+            }
+        },
+        coveralls: {
+            options: {
+                coverage_dir: 'coverage'
             }
         },
         jsdoc: {
@@ -84,8 +94,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['karma:dev']);
 
     // Used by the CLI build servers
-    grunt.registerTask('drone', ['clean', 'jshint', 'copy', 'uglify', 'karma:drone']);
-    grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis']);
+    grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis', 'coveralls']);
 
     // Only used on the gh-pages branch
     grunt.registerTask('pages', ['clean', 'jshint', 'build', 'copy', 'uglify', 'karma:release', 'jsdoc']);
