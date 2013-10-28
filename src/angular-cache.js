@@ -766,7 +766,7 @@
 
                 /**
                  * @method AngularCache.put
-                 * @desc Add a key-value pair with timestamp to the cache.
+                 * @desc Add a key-value pair to the cache.
                  * @param {String} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
                  * @param {Object} [options] {{ maxAge: {Number}, deleteOnExpire: {String} }}
@@ -887,7 +887,7 @@
 
                 /**
                  * @method AngularCache.remove
-                 * @desc Remove the item with the specified key from this cache.
+                 * @desc Remove the item with the specified key from the cache.
                  * @param {String} key The key of the item to remove.
                  * @param {Object} [options] Configuration.
                  */
@@ -905,7 +905,7 @@
 
                 /**
                  * @method AngularCache.removeAll
-                 * @desc Clear this cache.
+                 * @desc Clear the cache.
                  * @example
                  * var someCache = $angularCacheFactory.get('someCache');
                  * someCache.get('someKey'); // "someValue"
@@ -925,7 +925,7 @@
 
                 /**
                  * @method AngularCache.removeExpired
-                 * @desc Remove all items from this cache that have expired.
+                 * @desc Remove all expired items from the cache.
                  * @param {Object} [options] Configuration.
                  * @example
                  * var someCache = $angularCacheFactory.get('someCache');
@@ -953,7 +953,7 @@
 
                 /**
                  * @method AngularCache.destroy
-                 * @desc Completely destroy this cache.
+                 * @desc Completely destroy the cache.
                  * @example
                  * var someCache = $angularCacheFactory.get('someCache');
                  *
@@ -996,7 +996,7 @@
 
                 /**
                  * @method AngularCache.info
-                 * @desc Return an object containing information about this cache.
+                 * @desc Return an object containing information about the cache.
                  * @param {String} [key] The key of the item about which to retrieve information.
                  * @returns {Object} stats Object containing information about this cache or the item with the
                  * specified key.
@@ -1042,7 +1042,7 @@
 
                 /**
                  * @method AngularCache.keySet
-                 * @desc Return the set of the keys of all items currently in this cache.
+                 * @desc Return the set of the keys of all items in the cache.
                  * @returns {Object} The set of the keys of all items currently in this cache.
                  * @example
                  * var someCache = $angularCacheFactory('someCache');
@@ -1153,7 +1153,7 @@
 
             /**
              * @method AngularCacheFactory.info
-             * @desc Return an object containing information about all caches of this factory.
+             * @desc Return an object containing information about all caches in $angularCacheFactory.
              * @returns {Object} An object containing information about all caches of this factory.
              * @example
              * $angularCacheFactory.info(); // { size: 3, cacheDefaults: { ... } }
@@ -1190,8 +1190,7 @@
 
             /**
              * @method AngularCacheFactory.keySet
-             * @desc Return the set of keys associated with all current caches owned by this
-             * angularCacheFactory.
+             * @desc Return the set of keys of all current caches owned by angularCacheFactory.
              * @returns {Object} The set of keys associated with all current caches owned by this
              * angularCacheFactory.
              * @example
@@ -1205,8 +1204,7 @@
 
             /**
              * @method AngularCacheFactory.keys
-             * @desc Return an array of the keys associated with all current caches owned by this
-             * angularCacheFactory.
+             * @desc Return an array of the keys of all caches owned by angularCacheFactory.
              * @returns {Array} An array of the keys associated with all current caches owned by
              * this angularCacheFactory.
              * @example
@@ -1220,7 +1218,7 @@
 
             /**
              * @method AngularCacheFactory.removeAll
-             * @desc Remove all caches owned by this $angularCacheFactory.
+             * @desc Destroy all caches in $angularCacheFactory.
              * @example
              * $angularCacheFactory.removeAll();
              *
@@ -1235,7 +1233,7 @@
 
             /**
              * @method AngularCacheFactory.clearAll
-             * @desc Clears the contents of every cache owned by this $angularCacheFactory.
+             * @desc Clears the contents of every cache in $angularCacheFactory.
              * @example
              * $angularCacheFactory.get('someCache').put('someKey', 'someValue');
              * $angularCacheFactory.get('someCache').info().size; // 1

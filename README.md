@@ -1,10 +1,37 @@
-## angular-cache
+# angular-cache
 #### A very useful replacement for Angular's $cacheFactory.
-#### Version: 2.0.0-rc.1
+#### Version: 2.0.0
 
-- View the [demo](http://jmdobry.github.io/angular-cache/demo/). 
-- Ask questions on the [mailing list](https://groups.google.com/forum/#!forum/angular-cache). 
-- See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for upgrading from 1.x.x to 2.x.x.
+<a name='status'></a>
+## Status
+| Version          | Branch  | Build status                                                                                                                                                              | Coverage | Code Climate | Dependency Status |
+| ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | -------- | ----------------- |
+| 2.0.0            | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) | [![Coverage Status](https://coveralls.io/repos/jmdobry/angular-cache/badge.png?branch=master)](https://coveralls.io/r/jmdobry/angular-cache?branch=master) | [![Code Climate](https://codeclimate.com/github/jmdobry/angular-cache.png)](https://codeclimate.com/github/jmdobry/angular-cache) | [![Dependency Status](https://gemnasium.com/jmdobry/angular-cache.png)](https://gemnasium.com/jmdobry/angular-cache) |
+| 2.0.1-SNAPSHOT   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) | [![Coverage Status](https://coveralls.io/repos/jmdobry/angular-cache/badge.png?branch=develop)](https://coveralls.io/r/jmdobry/angular-cache?branch=develop) |   |
+
+1. [Installation](#installation).
+1. [Demo](http://jmdobry.github.io/angular-cache/demo/).
+1. [Documentation](#documentation).
+1. [Mailing list](https://groups.google.com/forum/#!forum/angular-cache).
+1. [Changelog](https://github.com/jmdobry/angular-cache/blob/master/CHANGELOG.md)
+1. [Contributing Guide](https://github.com/jmdobry/angular-cache/blob/master/CONTRIBUTING.md)
+1. See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for upgrading from 1.x.x to 2.x.x.
+1. [License](#license)
+
+<a name='installation'></a>
+## Installation
+`bower install angular-cache` or download angular-cache from [Downloads](https://github.com/jmdobry/angular-cache/releases).
+
+Angular-cache must be loaded _after_ `angular.js`. Load angular-cache into your angular app via `angular.module('myApp', ['jmdobry.angular-cache']);`.
+
+<a name='documentation'></a>
+## Documentation
+1. [Demo](http://jmdobry.github.io/angular-cache/demo/)
+1. [$angularCacheFactoryProvider](#angularcachefactoryprovider)
+1. [$angularCacheFactory](#angularcachefactory)
+1. [AngularCache](#angularcache)
+1. [Configuration Options](#configuration)
+1. [Usage Patterns](#usage)
 
 ### $cacheFactory vs $angularCacheFactory
 
@@ -39,54 +66,70 @@ app.service('myService', function ($angularCacheFactory) {
 });
 ```
 
-### Documentation
-1. [Demo](http://jmdobry.github.io/angular-cache/demo/)
-1. [$angularCacheFactoryProvider](#angularcachefactoryprovider)
-1. [$angularCacheFactory](#angularcachefactory)
-1. [AngularCache](#angularcache)
-1. [Configuration Options](#configuration)
-1. [Status](#status)
-1. [Download](#download)
-1. [Install](#installation)
-1. [Usage Patterns](#usage)
-1. [Changelog](#changelog)
-1. [Contributing](#contributing)
-1. [License](#license)
-
 <a name='angularcachefactoryprovider'></a>
 ## $angularCacheFactoryProvider
 __Description:__ Provider for `$angularCacheFactory`. [$angularCacheFactoryProvider](http://jmdobry.github.io/angular-cache/docs/$AngularCacheFactoryProvider.html) API documentation.
 
-#### $angularCacheFactoryProvider.setCacheDefaults()
+#### _setCacheDefaults()_
 __Description:__ Set the default configuration for all caches created by `$angularCacheFactory`. [$angularCacheFactoryProvider#setCacheDefaults](http://jmdobry.github.io/angular-cache/docs/$AngularCacheFactoryProvider.html#setCacheDefaults) API documentation.
 
 <a name='angularcachefactory'></a>
 ## $angularCacheFactory
 __Description:__ Produces instances of  `AngularCache`. [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html) API documentation.
 
-#### $angularCacheFactory(cacheId, options)
+#### _$angularCacheFactory(cacheId, options)_
 __Description:__ Create a new cache with the given cacheId and configuration options. See [Configuration Options](#configuration). [$angularCacheFactory](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html) API documentation.
 
-#### $angularCacheFactory.keySet()
+#### _get(cacheId)_
+__Description:__ Return the cache with the specified cacheId. [$angularCacheFactory#get](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#get) API documentation.
+
+#### _clearAll()_
+__Description:__ Clears the contents of every cache owned by `$angularCacheFactory`. [$angularCacheFactory#clearAll](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#clearAll) API documentation.
+
+#### _removeAll()_
+__Description:__ Destroy all caches owned by `$angularCacheFactory`. [$angularCacheFactory#removeAll](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#removeAll) API documentation.
+
+#### _info()_
+__Description:__ Return an object containing information about all caches in `$angularCacheFactory`. [$angularCacheFactory#keySet](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#keySet) API documentation.
+
+#### _keySet()_
 __Description:__ Return the set of cacheIds of all caches in `$angularCacheFactory`. [$angularCacheFactory#keySet](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#keySet) API documentation.
 
-#### $angularCacheFactory.keys()
+#### _keys()_
 __Description:__ Return an array of the cacheIds of all caches in `$angularCacheFactory`. [$angularCacheFactory#keys](http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html#keys) API documentation.
 
 <a name='angularcache'></a>
 ## AngularCache
 __Description:__ Object produced by invocations of `$angularCacheFactory(cacheId, options)`. [AngularCache](http://jmdobry.github.io/angular-cache/docs/AngularCache.html) API documentation.
 
-#### AngularCache.setOptions(options, strict)
+#### _setOptions(options, strict)_
 __Description:__ Dynamically configure the cache. See [Configuration Options](#configuration). [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#setOptions) API documentation.
 
-#### AngularCache.info(key)
+#### _put(key, value, options)_
+__Description:__ Add a key-value pair to the cache. [AngularCache#put](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#put) API documentation.
+
+#### _get(key, options)_
+__Description:__ Retrieve the item from the cache with the specified key. [AngularCache#get](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#get) API documentation.
+
+#### _info(key)_
 __Description:__ Returns an object containing information about the cache or the item with the specified key. [AngularCache#info](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#info) API documentation.
 
-#### AngularCache.keySet()
+#### _remove(key, options)_
+__Description:__ Remove the item with the specified key from the cache. [AngularCache#remove](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#remove) API documentation.
+
+#### _removeAll()_
+__Description:__ Clear the cache. [AngularCache#removeAll](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#removeAll) API documentation.
+
+#### _destroy()_
+__Description:__ Completely destroy the cache. [AngularCache#destroy](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#destroy) API documentation.
+
+#### _removeExpired(options)_
+__Description:__ Remove all expired items from the cache. [AngularCache#removeExpired](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#removeExpired) API documentation.
+
+#### _keySet()_
 __Description:__ Return the set of keys of all items in the cache. [AngularCache#keySet](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keySet) API documentation.
 
-#### AngularCache.keys()
+#### _keys()_
 __Description:__ Return an array of the keys of all items in the cache. [AngularCache#keys](http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keys) API documentation.
 
 <a name='configuration'></a>
@@ -176,6 +219,30 @@ __Type:__ Number
 __Default:__ `null`
 
 __Description:__ Set the cache to periodically clear itself.
+
+__Usage:__
+```javascript
+$angularCacheFactory('newCache', { cacheFlushInterval: 57908 });
+```
+
+#### verifyIntegrity
+__Type:__ Boolean
+
+__Default:__ false
+
+__Description:__ Specify whether to verify integrity of data saved in `localStorage` on every operation. If true, angular-cache will perform a full sync with `localStorage` on every operation. Increases reliability of data synchronization, but may incur a performance penalty. Has no effect if `storageMode` is set to "none".
+
+__Usage:__
+```javascript
+$angularCacheFactory('newCache', { cacheFlushInterval: 57908 });
+```
+
+#### recycleFreq
+__Type:__ Number
+
+__Default:__ 1000
+
+__Description:__ How often the cache should check for expired items. Only used when `maxAge` is set.
 
 __Usage:__
 ```javascript
@@ -285,37 +352,6 @@ newCache.put('denver', 'broncos');
 
 newCache.get('denver'); // 'broncos' or whatever was returned by the server in the "onExpire" callback
 ```
-
-<a name='status'></a>
-## Status
-| Version | Branch  | Build status                                                                                                                                                              |
-| ------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.2.0   | [master](https://github.com/jmdobry/angular-cache)  | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache) |
-| 2.0.0-rc.1   | [develop](https://github.com/jmdobry/angular-cache/tree/develop) | [![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=develop)](https://travis-ci.org/jmdobry/angular-cache) |
-
-[Test Coverage](http://jmdobry.github.io/angular-cache/coverage/)
-
-<a name='download'></a>
-## Download
-
-#### Latest Stable Version
-| Type          | File | Size |
-| ------------- | ----------------- | ------------------- | ---- |
-| Production    | [angular-cache-2.0.0-rc.1.min.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-2.0.0-rc.1.min.js) | 6 KB |
-| Development   | [angular-cache-2.0.0-rc.1.js](https://raw.github.com/jmdobry/angular-cache/master/dist/angular-cache-2.0.0-rc.1.js) | 34 KB |
-
-<a name='installation'></a>
-## Installation
-
-#### Install with bower
-```javascript
-bower install angular-cache
-```
-
-Include `src/angular-cache.js` on your web page after `angular.js` and activate it via `angular.module('myApp', ['jmdobry.angular-cache']);`
-
-#### Manual install
-Get angular-cache from the [Download](#download) section, include it on your web page after `angular.js`, and activate it via `angular.module('myApp', ['jmdobry.angular-cache']);`
 
 <a name='usage'></a>
 ## Usage Patterns
@@ -586,129 +622,6 @@ app.service('myService', function ($angularCacheFactory) {
 See [AngularCache#setOptions](http://jmdobry.github.io/angular-cache/docs/Cache.html#setOptions)
 
 ### [API Documentation](http://jmdobry.github.io/angular-cache/docs/)
-
-<a name='changelog'></a>
-## Changelog
-
-##### 2.0.0-rc.1 - 14 October 2013
-
-###### Breaking API changes
-- Swapped `aggressiveDelete` option for `deleteOnExpire` option. #30, #47
-- Changed `$angularCacheFactory.info()` to return an object similar to `AngularCache.info()` #45
-- Namespaced angular-cache module under `jmdobry` so it is now "jmdobry.angular-cache". #42
-- Substituted `storageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
-
-###### Backwards compatible API changes
-- Added ability to set global cache defaults in $angularCacheFactoryProvider. #55
-
-###### Backwards compatible bug fixes
-- cacheFlushInterval doesn't clear web storage when storageMode is used. #52
-- AngularCache#info(key) should return 'undefined' if the key isn't in the cache #53
-
-###### Other
-- Refactored angular-cache `setOptions()` internals to be less convoluted and to have better validation. #46
-- Re-wrote documentation to be clearer and more organized. #56
-- Fixed documentation where time spans were incorrectly labeled. #59
-
-##### 1.2.0 - 20 September 2013
-
-###### Backwards compatible API changes
-- Added AngularCache#info(key) #43
-
-###### Backwards compatible bug fixes
-- Fixed #39, #44, #49, #50
-
-##### 1.1.0 - 03 September 2013
-
-###### Backwards compatible API changes
-- Added onExpire callback hook #27
-- Added `$angularCacheFactory.removeAll()` and `$angularCacheFactory.clearAll()` convenience methods #37, #38
-
-###### Backwards compatible bug fixes
-- Fixed #36
-
-##### 1.0.0 - 26 August 2013
-- Closed #31 (Improved documentation)
-- Closed #32
-
-##### 1.0.0-rc.1 - 21 August 2013
-- Added localStorage feature #26, #29
-
-##### 0.9.1 - 03 August 2013
-- Fixed #25
-
-##### 0.9.0 - 03 August 2013
-- Added a changelog #13
-- Added documentation for installing with bower
-- Added ability to set option `aggressiveDelete` when creating cache and when adding items
-- Cleaned up README.md
-- Switched the demo to use Bootstrap 3
-
-##### 0.8.2 - 09 July 2013
-- Added CONTRIBUTING.md #22
-- Cleaned up meta data in bower.json and package.json
-
-##### 0.8.1 - 09 July 2013
-- Added .jshintrc
-- Cleaned up the docs a bit
-- `bower.json` now uses `src/angular-cache.js` instead of the versioned output files #21
-- From now on the tags for the project will be named using [semver](http://semver.org/)
-
-##### 0.8.0 - 08 July 2013
-- Added `AngularCache.setOptions()`, the ability to dynamically change the configuration of a cache #20
-- Added `AngularCache.keys()`, which returns an array of the keys in a cache #19
-- Added `AngularCache.keySet()`, which returns a hash of the keys in a cache #19
-
-##### 0.7.2 - June 2013
-- Added `angular-cache` to bower registry #7
-- Created a working demo #9 #17
-- Fixed the size not being reset to 0 when the cache clears itself #14 #16
-- Added `$angularCacheFactory.keys()`, which returns an array of the keys (the names of the caches) in $angularCacheFactory #18
-- Added `$angularCacheFactory.keySet()`, which returns a hash of the keys (the names of the caches) in $angularCacheFactory #18
-
-##### 0.6.1 - June 2013
-- Got the project building on TravisCI
-- Renamed the project to `angular-cache` #5
-
-##### 0.5.0 - June 2013
-- Added a roadmap to README.md #4
-- Clarify usage documentation #3
-- Wrote unit tests #2
-
-##### 0.4.0 - May 2013
-- Added Grunt build tasks #1
-
-<a name='contributing'></a>
-## Contributing
-
-#### Submitting Issues
-1. Make sure you aren't submitting a duplicate issue.
-2. Carefully describe how to reproduce the problem.
-3. Expect prompt feedback.
-
-#### Submitting Pull Requests
-
-##### Basic Idea
-- Checkout a new branch based on `develop` and name it to what you intend to do:
-  - Example:
-    ````
-    $ git checkout -b BRANCH_NAME
-    ````
-  - Use one branch per fix/feature
-  - Prefix your branch name with `feature-` or `fix-` appropriately.
-- Make your changes
-  - Make sure to provide a spec for unit tests
-  - Run your tests with either `karma start` or `grunt test`
-  - Make sure the tests pass
-- Commit your changes
-  - Please provide a git message which explains what you've done
-  - Commit to the forked repository
-- Make a pull request
-  - Make sure you send the PR to the `develop` branch
-  - Travis CI is watching you!
-
-##### More details
-Read the detailed [Contributing Guide](https://github.com/jmdobry/angular-cache/blob/master/CONTRIBUTING.md)
 
 <a name='license'></a>
 ## License

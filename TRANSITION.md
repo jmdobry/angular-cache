@@ -1,7 +1,7 @@
-#### 1.x.x. ---> 2.0.0 - xx October 2013
+### 1.x.x. ---> 2.0.0 - xx October 2013
 
-##### Breaking API changes
-- Swapped `aggressiveDelete` option for `deleteOnExpire` option.
+#### Breaking API changes
+##### Swapped `aggressiveDelete` option for `deleteOnExpire` option.
 
 ###### 1.x.x
 Aggressively delete expiring items.
@@ -44,7 +44,7 @@ $angularCacheFactory('myNewCache', {
 });
 ```
 
-- Substituted `localStorageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
+##### Substituted `localStorageImpl` and `sessionStorageImpl` options for just `storageImpl` option.
 
 ###### 1.x.x
 ```javascript
@@ -69,5 +69,26 @@ $angularCacheFactory('myNewCache', {
 $angularCacheFactory('myNewCache2', {
     storageMode: 'sessionStorage',
     storageImpl: mySessionStoragePolyfill // Use custom sessionStorage implementation
+});
+```
+
+##### Installation
+The Bower package now contains only `dist/angular-cache.js` and dist/angular-cache.min.js`.
+
+##### onExpire
+
+###### 1.x.x
+```javascript
+cache.get('someKey', function (key, value) {
+    // do something with expired item
+});
+```
+
+###### 2.0.0
+```javascript
+cache.get('someKey', {
+    onExpire: function (key, value) {
+        // do something with expired item
+    }
 });
 ```

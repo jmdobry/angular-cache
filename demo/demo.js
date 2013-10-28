@@ -40,8 +40,10 @@ app.controller('DemoCtrl', function ($log, $scope, DemoService, $angularCacheFac
     function _get() {
         for (var i = 0; i < DemoService.caches.length; i++) {
             if (i === 2) {
-                $scope.selectedValues[i] = DemoService.caches[i].get($scope.selectedKey, function (key, value) {
-                    $log.log('I am called via "done()" in the passive mode "onExpire" callback.')
+                $scope.selectedValues[i] = DemoService.caches[i].get($scope.selectedKey, {
+                    onExpire: function (key, value) {
+                        $log.log('I am called via "done()" in the passive mode "onExpire" callback.');
+                    }
                 }) || "undefined";
             } else {
                 $scope.selectedValues[i] = DemoService.caches[i].get($scope.selectedKey) || "undefined";
