@@ -3,6 +3,7 @@ sectionHeader: Project Status
 sectionName: Project Status
 sectionLinkName: status
 gfm: true
+index: 2
 ---
 | Version          | Branch  | Build status                                                                                                                                                              | Coverage | Code Climate | Dependency Status |
 | ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | -------- | ----------------- |

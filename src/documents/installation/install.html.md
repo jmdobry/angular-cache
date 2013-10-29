@@ -3,6 +3,7 @@ sectionHeader: Installation
 sectionName: Installation
 sectionLinkName: install
 gfm: true
+index: 2
 ---
 ## With Bower
 Angular-cache should have installed to `path/to/bower_components/angular-cache/`. You can reference the files in the `dist/` folder, which contains development and minified versions of angular-cache.

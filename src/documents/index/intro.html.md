@@ -2,6 +2,8 @@
 sectionHeader: Introduction
 sectionName: Introduction
 sectionLinkName: introduction
+gfm: true
+index: 1
 ---
 ## What is angular-cache?
 Angular's $cacheFactory is woefully insufficient for the needs of many single-page applications. Angular-cache provides the features necessary for single-page apps to be as efficient at caching as possible.

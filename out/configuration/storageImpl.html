@@ -1,0 +1,16 @@
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Default:</strong> <code>null</code></p>
+<p><strong>Description:</strong> When <code>storageMode</code> is set to <code>&quot;localStorage&quot;</code> or <code>&quot;sessionStorage&quot;</code> angular-cache will default to using the global <code>localStorage</code> or <code>sessionStorage</code> object.</p>
+<p><code>storageImpl</code> provides angular-cache an implementation of <code>localStorage</code> or <code>sessionStorage</code>. This is useful when you don&#39;t want to override the global storage objects or when using angular-cache in a browser that doesn&#39;t support <code>localStorage</code> or <code>sessionStorage</code>.</p>
+<p><strong>Note:</strong> If angular-cache doesn&#39;t detect a global <code>localStorage</code> or <code>sessionStorage</code> and you don&#39;t provide a polyfill, then syncing with web storage will be disabled. It is up to the developer to provide a polyfill for browsers that don&#39;t support <code>localStorage</code> and <code>sessionStorage</code>. Any implementation of <code>localStorage</code> and <code>sessionStorage</code> provided to angular-cache must implement at least the <code>setItem</code>, <code>getItem</code>, and <code>removeItem</code> methods.</p>
+<p>See <a href="/guide.html#using-angular-cache-with-localStorage">Using angular-cache with localStorage</a>.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    storageImpl: mystorageImplementation,
+    storageMode: <span class="string">'localStorage'</span>
+});
+
+$angularCacheFactory(<span class="string">'otherCache'</span>, {
+    storageImpl: mySessionStorageImplementation,
+    storageMode: <span class="string">'sessionStorage'</span>
+});</code></pre>

@@ -3,6 +3,7 @@ sectionHeader: Get Started
 sectionName: Get Started
 sectionLinkName: getstarted
 gfm: true
+index: 3
 ---
 ## Installation
 [Installation](/installation.html) - Read how to install angular-cache and get it running in your application.

@@ -2,6 +2,6 @@
 layout: "default"
 pageName: angular-cache
 displayName: angular-cache
-description: Angular-cache is a very useful replacement for Angular's $cacheFactory
+description: Angular-cache is a very useful replacement for Angular's $cacheFactory.
 sections: 'index'
 ---

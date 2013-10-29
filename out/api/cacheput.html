@@ -1,0 +1,23 @@
+<h2>Description</h2>
+<p>Add a key-value pair to the cache.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The key of the item to be added to the cache.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>*</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The item to be added to the cache.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> The configuration options for the item to be added.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.put(<span class="string">'key'</span>, <span class="string">'value'</span>);
+
+someCache.put(<span class="string">'ageLimit'</span>, <span class="number">55</span>);
+
+someCache.put(<span class="string">'things'</span>, { stuff: <span class="string">'lots of stuff'</span> });
+
+someCache.put(<span class="string">'isIt'</span>, <span class="literal">true</span>);</code></pre>

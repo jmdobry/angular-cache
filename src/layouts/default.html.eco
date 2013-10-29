@@ -40,6 +40,9 @@
                     <li class="<%= "active" if @document.basename=='guide' %>">
                         <a href="/guide.html">Guide</a>
                     </li>
+                    <li class="<%= "active" if @document.basename=='configuration' %>">
+                        <a href="/configuration.html">Configuration Options</a>
+                    </li>
                     <li class="<%= "active" if @document.basename=='api' %>">
                         <a href="/api.html">API</a>
                     </li>
@@ -63,15 +66,23 @@
 		</div>
 	</header>
 	<div class="container">
+        <% files = @getFilesAtPath(@document.sections).toJSON(); %>
+        <% sortFiles = (a, b) -> return if a.meta.index and b.meta.index then a.meta.index - b.meta.index else return 0; %>
+        <% theseFiles = []; %>
+        <% for file in files: %>
+            <% if file.meta.sectionName and file.meta.index and file.relativeDirPath == @document.basename then theseFiles.push(file) %>
+        <% end %>
+        <% theseFiles.sort(sortFiles) %>
 
 		<!-- Docs nav
 		================================================== -->
 		<div class="row">
 			<div class="col-lg-3" id="sidebar">
 				<ul class="list-group nav" id="sidenav">
-				    <% for file in @getFilesAtPath(@document.sections).toJSON(): %>
+				    <% for file in theseFiles: %>
+                        <% console.log(file.meta.index); %>
                         <% if file.meta.sectionName: %>
-                            <li class="list-group-item">
+                            <li class="list-group-item <%= "active" if file.meta.index == 1 %>">
                                 <a href="#<%= file.meta.sectionLinkName %>"><i class="icon-chevron-right"></i> <%- file.meta.sectionName %></a>
                             </li>
                         <% end %>
@@ -79,7 +90,7 @@
 				</ul>
 			</div>
 			<div class="col-lg-9">
-				<% for file in @getFilesAtPath(@document.sections).toJSON(): %>
+				<% for file in theseFiles: %>
 				    <% if file.meta.sectionName: %>
 				        <section id="<%= file.meta.sectionLinkName %>">
                             <div class="page-header"><h1><%= file.meta.sectionHeader %></h1></div>

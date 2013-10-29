@@ -1,0 +1,17 @@
+<h2>Description</h2>
+<p>Retrieve the item from the cache with the specified key.</p>
+<h2>Parameters</h2>
+<h4>key</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Description:</strong> The key of the item to retrieve.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>onExpire: Function</code> is the only option available for this method.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.get(<span class="string">'key'</span>); <span class="comment">// 'value'</span>
+
+someCache.get(<span class="string">'ageLimit'</span>); <span class="comment">// 55</span>
+
+someCache.get(<span class="string">'things'</span>); <span class="comment">// { stuff: 'lots of stuff' }</span>
+
+someCache.get(<span class="string">'isIt'</span>); <span class="comment">// true</span></code></pre>

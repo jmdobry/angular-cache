@@ -3,6 +3,7 @@ sectionHeader: Upgrade
 sectionName: Upgrade
 sectionLinkName: upgrade
 gfm: true
+index: 3
 ---
 ## Transition Details
 See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for details on breaking changes between versions.

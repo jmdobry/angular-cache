@@ -2,6 +2,8 @@
 sectionHeader: Introduction
 sectionName: Introduction
 sectionLinkName: introduction
+gfm: true
+index: 1
 ---
 blah
 blah

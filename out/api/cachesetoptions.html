@@ -1,0 +1,20 @@
+<h2>Description</h2>
+<p>Dynamically set the configuration for the cache. See <a href="/configuration.html">Configuration Options</a>.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> The configuration options for the cache. See <a href="/configuration.html">Configuration Options</a>.</p>
+<h4>strict</h4>
+<p><strong>Type:</strong> <code>boolean</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> If true, the cache&#39;s configuration will be reset to default before applying the new configuration.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ maxAge: <span class="number">900000</span> });
+
+$angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ verifyIntegrity: <span class="literal">false</span> }, <span class="literal">true</span>);</code></pre>
+<h4><em>destroy()</em></h4>
+<p><strong>Description:</strong> Completely destroy the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#destroy">AngularCache#destroy</a> API documentation.</p>
+<h4><em>keySet()</em></h4>
+<p><strong>Description:</strong> Return the set of keys of all items in the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keySet">AngularCache#keySet</a> API documentation.</p>
+<h4><em>keys()</em></h4>
+<p><strong>Description:</strong> Return an array of the keys of all items in the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keys">AngularCache#keys</a> API documentation.</p>

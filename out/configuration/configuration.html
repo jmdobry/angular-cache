@@ -1,0 +1,19 @@
+<p>These are the configuration options available for customizing each instance of <code>AngularCache</code>. They can be used in three places:</p>
+<p><br></p>
+<h4>Setting the default options for all caches</h4>
+<pre class="highlighted"><code class="javascript">$angularCacheFactoryProvider.setCacheDefaults({
+    <span class="comment">// configuration options</span>
+});</code></pre>
+<p>See <a href="/api.html#setcachedefaults">$angularCacheFactoryProvider.setCacheDefaults(options)</a></p>
+<p><br></p>
+<h4>Creating a cache</h4>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    <span class="comment">// configuration options</span>
+});</code></pre>
+<p>See <a href="/api.html#factory">$angularCacheFactory(cacheId, options)</a></p>
+<p><br></p>
+<h4>Dynamically configuring a cache</h4>
+<pre class="highlighted"><code class="javascript">newCache.setOptions({
+    <span class="comment">// configuration options</span>
+});</code></pre>
+<p>See <a href="/api.html#cachesetoptions">AngularCache.setOptions(options, strict)</a></p>

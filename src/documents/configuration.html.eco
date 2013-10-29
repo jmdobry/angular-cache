@@ -1,0 +1,7 @@
+---
+layout: "default"
+pageName: configuration
+displayName: Configuration Options
+description: Options for configuring angular-cache.
+sections: 'configuration'
+---

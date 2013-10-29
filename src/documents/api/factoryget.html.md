@@ -2,6 +2,8 @@
 sectionHeader: '.get(cacheId)'
 sectionName: '&emsp;.get(cacheId)'
 sectionLinkName: factoryget
+gfm: true
+index: 4
 ---
 ## Description
 Return the cache with the specified cacheId.

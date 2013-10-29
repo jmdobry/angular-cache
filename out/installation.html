@@ -41,6 +41,9 @@
                         <a href="/guide.html">Guide</a>
                     </li>
                     <li class="">
+                        <a href="/configuration.html">Configuration Options</a>
+                    </li>
+                    <li class="">
                         <a href="/api.html">API</a>
                     </li>
 					<li class="dropdown">
@@ -59,10 +62,23 @@
 	<header class="jumbotron subhead" id="overview">
 		<div class="container">
 			<h1>Installation</h1>
-			<p class="lead">Set up angular-cache</p>
+			<p class="lead">Set up angular-cache.</p>
 		</div>
 	</header>
 	<div class="container">
+        
+        
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
 
 		<!-- Docs nav
 		================================================== -->
@@ -71,21 +87,22 @@
 				<ul class="list-group nav" id="sidenav">
 				    
                         
-                    
                         
-                            <li class="list-group-item">
-                                <a href="#install"><i class="icon-chevron-right"></i> Installation</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
+                            <li class="list-group-item active">
                                 <a href="#download"><i class="icon-chevron-right"></i> Download</a>
                             </li>
                         
                     
                         
-                            <li class="list-group-item">
+                        
+                            <li class="list-group-item ">
+                                <a href="#install"><i class="icon-chevron-right"></i> Installation</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
                                 <a href="#upgrade"><i class="icon-chevron-right"></i> Upgrade</a>
                             </li>
                         
@@ -95,6 +112,28 @@
 			<div class="col-lg-9">
 				
 				    
+				        <section id="download">
+                            <div class="page-header"><h1>Download</h1></div>
+                            <h2>With Bower</h2>
+<p>Angular-cache is registered in the Bower package repository. With Bower you can install angular-cache and manage your app&#39;s dependency on angular-cache.</p>
+<p><br>
+To install angular-cache, open a terminal in your project&#39;s directory and enter the command:</p>
+<p><code>bower install angular-cache --save</code></p>
+<p>This command will install the latest stable version of angular-cache.</p>
+<p><br>
+Enter the following command to install a specific version:</p>
+<p><code>bower install angular-cache#x.x.x --save</code></p>
+<p>where <code>x.x.x</code> is the version of angular-cache you want to install.</p>
+<h2>Download Manually</h2>
+<p>Download angular-cache manually here: <a href="https://github.com/jmdobry/angular-cache/releases">Downloads</a>.</p>
+<p><br>
+Each release has a development version of angular-cache and a minified version.</p>
+<h3>An example release:</h3>
+<p><br>
+<img src="/img/release.png" alt="Example Release"></p>
+
+                        </section>
+                    
                 
 				    
 				        <section id="install">
@@ -121,30 +160,6 @@
     <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { options... });
 
 });</code></pre>
-
-                        </section>
-                    
-                
-				    
-				        <section id="download">
-                            <div class="page-header"><h1>Download</h1></div>
-                            <h2>With Bower</h2>
-<p>Angular-cache is registered in the Bower package repository. With Bower you can install angular-cache and manage your app&#39;s dependency on angular-cache.</p>
-<p><br>
-To install angular-cache, open a terminal in your project&#39;s directory and enter the command:</p>
-<p><code>bower install angular-cache --save</code></p>
-<p>This command will install the latest stable version of angular-cache.</p>
-<p><br>
-Enter the following command to install a specific version:</p>
-<p><code>bower install angular-cache#x.x.x --save</code></p>
-<p>where <code>x.x.x</code> is the version of angular-cache you want to install.</p>
-<h2>Download Manually</h2>
-<p>Download angular-cache manually here: <a href="https://github.com/jmdobry/angular-cache/releases">Downloads</a>.</p>
-<p><br>
-Each release has a development version of angular-cache and a minified version.</p>
-<h3>An example release:</h3>
-<p><br>
-<img src="/img/release.png" alt="Example Release"></p>
 
                         </section>
                     

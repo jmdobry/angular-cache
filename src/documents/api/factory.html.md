@@ -2,6 +2,8 @@
 sectionHeader: '$angularCacheFactory(cacheId, options)'
 sectionName: '$angularCacheFactory(cacheId, options)'
 sectionLinkName: factory
+gfm: true
+index: 3
 ---
 ## Description
 Angular Factory Service. Produces instances of  `AngularCache`.

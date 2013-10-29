@@ -3,6 +3,7 @@ sectionHeader: Download
 sectionName: Download
 sectionLinkName: download
 gfm: true
+index: 1
 ---
 
 ## With Bower

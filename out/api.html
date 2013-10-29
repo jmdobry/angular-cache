@@ -40,6 +40,9 @@
                     <li class="">
                         <a href="/guide.html">Guide</a>
                     </li>
+                    <li class="">
+                        <a href="/configuration.html">Configuration Options</a>
+                    </li>
                     <li class="active">
                         <a href="/api.html">API</a>
                     </li>
@@ -59,10 +62,57 @@
 	<header class="jumbotron subhead" id="overview">
 		<div class="container">
 			<h1>API</h1>
-			<p class="lead">Reference API documentation for angular-cache</p>
+			<p class="lead">Reference API documentation for angular-cache.</p>
 		</div>
 	</header>
 	<div class="container">
+        
+        
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
 
 		<!-- Docs nav
 		================================================== -->
@@ -71,58 +121,142 @@
 				<ul class="list-group nav" id="sidenav">
 				    
                         
-                    
                         
-                            <li class="list-group-item">
-                                <a href="#factory"><i class="icon-chevron-right"></i> $angularCacheFactory(cacheId, options)</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
-                                <a href="#factoryclearall"><i class="icon-chevron-right"></i> &emsp;.clearAll()</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
-                                <a href="#factoryget"><i class="icon-chevron-right"></i> &emsp;.get(cacheId)</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
-                                <a href="#factoryinfo"><i class="icon-chevron-right"></i> &emsp;.info()</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
-                                <a href="#factorykeys"><i class="icon-chevron-right"></i> &emsp;.keys()</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
-                                <a href="#factorykeyset"><i class="icon-chevron-right"></i> &emsp;.keySet()</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
-                                <a href="#factoryremoveall"><i class="icon-chevron-right"></i> &emsp;.removeAll()</a>
-                            </li>
-                        
-                    
-                        
-                            <li class="list-group-item">
+                            <li class="list-group-item active">
                                 <a href="#provider"><i class="icon-chevron-right"></i> $angularCacheFactoryProvider</a>
                             </li>
                         
                     
                         
-                            <li class="list-group-item">
+                        
+                            <li class="list-group-item ">
                                 <a href="#setcachedefaults"><i class="icon-chevron-right"></i> &emsp;.setCacheDefaults(options)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#factory"><i class="icon-chevron-right"></i> $angularCacheFactory(cacheId, options)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryget"><i class="icon-chevron-right"></i> &emsp;.get(cacheId)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryinfo"><i class="icon-chevron-right"></i> &emsp;.info()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryclearall"><i class="icon-chevron-right"></i> &emsp;.clearAll()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryremoveall"><i class="icon-chevron-right"></i> &emsp;.removeAll()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#factorykeyset"><i class="icon-chevron-right"></i> &emsp;.keySet()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#factorykeys"><i class="icon-chevron-right"></i> &emsp;.keys()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cache"><i class="icon-chevron-right"></i> AngularCache</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cachesetoptions"><i class="icon-chevron-right"></i> &emsp;.setOptions(options, strict)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheput"><i class="icon-chevron-right"></i> &emsp;.put(key, value, options)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheget"><i class="icon-chevron-right"></i> &emsp;.get(key, options)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheremove"><i class="icon-chevron-right"></i> &emsp;.remove(key, options)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheremoveexpired"><i class="icon-chevron-right"></i> &emsp;.removeExpired(options)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheremoveall"><i class="icon-chevron-right"></i> &emsp;.removeAll()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cachedestroy"><i class="icon-chevron-right"></i> &emsp;.destroy()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheinfo"><i class="icon-chevron-right"></i> &emsp;.info(key)</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cachekeyset"><i class="icon-chevron-right"></i> &emsp;.keySet()</a>
+                            </li>
+                        
+                    
+                        
+                        
+                            <li class="list-group-item ">
+                                <a href="#cachekeys"><i class="icon-chevron-right"></i> &emsp;.keys()</a>
                             </li>
                         
                     
@@ -130,281 +264,6 @@
 			</div>
 			<div class="col-lg-9">
 				
-				    
-                
-				    
-				        <section id="factory">
-                            <div class="page-header"><h1>$angularCacheFactory(cacheId, options)</h1></div>
-                            <h2>Description</h2>
-<p>Angular Factory Service. Produces instances of  <code>AngularCache</code>.</p>
-<h2>Parameters</h2>
-<h4>cacheId</h4>
-<p><strong>Type:</strong> <code>string</code></p>
-<p><strong>Required:</strong> Yes</p>
-<p><strong>Description:</strong> The name of the new cache. Must be unique.</p>
-<h4>options</h4>
-<p><strong>Type:</strong> <code>object</code></p>
-<p><strong>Required:</strong> No</p>
-<p><strong>Description:</strong> The configuration options for the new cache. See <a href="/configuration.html">Configuration Options</a>;</p>
-<h2>Usage</h2>
-<pre class="highlighted"><code class="javascript">angular.module(<span class="string">'app'</span>).controller(<span class="string">'myCtrl'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
-    <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { options... });
-});</code></pre>
-
-                        </section>
-                    
-                
-				    
-				        <section id="factoryclearall">
-                            <div class="page-header"><h1>.clearAll()</h1></div>
-                            <h2>Description</h2>
-<p>Clear the contents of every cache in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory.clearAll();</code></pre>
-
-                        </section>
-                    
-                
-				    
-				        <section id="factoryget">
-                            <div class="page-header"><h1>.get(cacheId)</h1></div>
-                            <h2>Description</h2>
-<p>Return the cache with the specified cacheId.</p>
-<h2>Parameters</h2>
-<h4>cacheId</h4>
-<p><strong>Type:</strong> <code>string</code></p>
-<p><strong>Required:</strong> Yes</p>
-<p><strong>Description:</strong> The cacheId of the cache to retrieve.</p>
-<h2>Usage</h2>
-<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> someCache = $angularCacheFactory.get(<span class="string">'someCache'</span>);</code></pre>
-
-                        </section>
-                    
-                
-				    
-				        <section id="factoryinfo">
-                            <div class="page-header"><h1>.info()</h1></div>
-                            <h2>Description</h2>
-<p>Return an object containing information about <code>$angularCacheFactory</code> and all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory.info(); <span class="comment">// { info...}</span></code></pre>
-
-                        </section>
-                    
-                
-				    
-				        <section id="factorykeys">
-                            <div class="page-header"><h1>.keys()</h1></div>
-                            <h2>Description</h2>
-<p>Return an array of the cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory.keys();</code></pre>
-<p><a name='angularcache'></a></p>
-<h2>AngularCache</h2>
-<p><strong>Description:</strong> Object produced by invocations of <code>$angularCacheFactory(cacheId, options)</code>. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html">AngularCache</a> API documentation.</p>
-<h4><em>setOptions(options, strict)</em></h4>
-<p><strong>Description:</strong> Dynamically configure the cache. See <a href="#configuration">Configuration Options</a>. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#setOptions">AngularCache#setOptions</a> API documentation.</p>
-<h4><em>put(key, value, options)</em></h4>
-<p><strong>Description:</strong> Add a key-value pair to the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#put">AngularCache#put</a> API documentation.</p>
-<h4><em>get(key, options)</em></h4>
-<p><strong>Description:</strong> Retrieve the item from the cache with the specified key. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#get">AngularCache#get</a> API documentation.</p>
-<h4><em>info(key)</em></h4>
-<p><strong>Description:</strong> Returns an object containing information about the cache or the item with the specified key. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#info">AngularCache#info</a> API documentation.</p>
-<h4><em>remove(key, options)</em></h4>
-<p><strong>Description:</strong> Remove the item with the specified key from the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#remove">AngularCache#remove</a> API documentation.</p>
-<h4><em>removeAll()</em></h4>
-<p><strong>Description:</strong> Clear the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#removeAll">AngularCache#removeAll</a> API documentation.</p>
-<h4><em>destroy()</em></h4>
-<p><strong>Description:</strong> Completely destroy the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#destroy">AngularCache#destroy</a> API documentation.</p>
-<h4><em>removeExpired(options)</em></h4>
-<p><strong>Description:</strong> Remove all expired items from the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#removeExpired">AngularCache#removeExpired</a> API documentation.</p>
-<h4><em>keySet()</em></h4>
-<p><strong>Description:</strong> Return the set of keys of all items in the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keySet">AngularCache#keySet</a> API documentation.</p>
-<h4><em>keys()</em></h4>
-<p><strong>Description:</strong> Return an array of the keys of all items in the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keys">AngularCache#keys</a> API documentation.</p>
-<p><a name='configuration'></a></p>
-<h2>Configuration Options</h2>
-<p><strong>Description:</strong> Available configuration options for use with <a href="http://jmdobry.github.io/angular-cache/docs/$AngularCacheFactoryProvider.html#setCacheDefaults">$angularCacheFactoryProvider.setCacheDefaults(options)</a>, <a href="http://jmdobry.github.io/angular-cache/docs/AngularCacheFactory.html">$angularCacheFactory(cacheId, options)</a>, and <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#setOptions">AngularCache.setOptions(options, strict)</a>.</p>
-<h4>storageMode</h4>
-<p><strong>Type:</strong> String</p>
-<p><strong>Default:</strong> <code>&quot;none&quot;</code></p>
-<p><strong>Possible Values</strong>:
-- <code>&quot;none&quot;</code> - The cache will not sync itself with web storage.
-- <code>&quot;localStorage&quot;</code> - Sync with <code>localStorage</code>
-- <code>&quot;sessionStorage&quot;</code> - Sync with <code>sessionStorage</code></p>
-<p><strong>Description:</strong> Configure the cache to sync itself with <code>localStorage</code> or <code>sessionStorage</code>. The cache will re-initialize itself from <code>localStorage</code> or <code>sessionStorage</code> on page refresh.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
-    storageMode: <span class="string">'localStorage'</span>
-}); <span class="comment">// this cache will sync itself to localStorage</span></code></pre>
-<p>See <a href="#using-angular-cache-with-localStorage">Using angular-cache with localStorage</a>.</p>
-<h4>storageImpl</h4>
-<p><strong>Type:</strong> Object</p>
-<p><strong>Default:</strong> <code>null</code></p>
-<p><strong>Description:</strong> When <code>storageMode</code> is set to <code>&quot;localStorage&quot;</code> or <code>&quot;sessionStorage&quot;</code> angular-cache will default to using the global <code>localStorage</code> and <code>sessionStorage</code> objects. The angular-cache <code>storageImpl</code> and <code>sessionStorageImpl</code> configuration parameters allow you to tell angular-cache which implementation of <code>localStorage</code> or <code>sessionStorage</code> to use. This is useful when you don&#39;t want to override the global storage objects or when using angular-cache in a browser that doesn&#39;t support <code>localStorage</code> or <code>sessionStorage</code>.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
-    storageImpl: mystorageImplementation,
-    storageMode: <span class="string">'localStorage'</span>
-});
-
-$angularCacheFactory(<span class="string">'otherCache'</span>, {
-    storageImpl: mySessionStorageImplementation,
-    storageMode: <span class="string">'sessionStorage'</span>
-});</code></pre>
-<p><strong>Note:</strong> If angular-cache doesn&#39;t detect a global <code>localStorage</code> or <code>sessionStorage</code> and you don&#39;t provide a polyfill, then syncing with web storage will be disabled. It is up to the developer to provide a polyfill for browsers that don&#39;t support <code>localStorage</code> and <code>sessionStorage</code>. Any implementation of <code>localStorage</code> and <code>sessionStorage</code> provided to angular-cache must implement at least the <code>setItem</code>, <code>getItem</code>, and <code>removeItem</code> methods.</p>
-<p>See <a href="#using-angular-cache-with-localStorage">Using angular-cache with localStorage</a>.</p>
-<h4>maxAge</h4>
-<p><strong>Type:</strong> Number</p>
-<p><strong>Default:</strong> <code>null</code></p>
-<p><strong>Description:</strong> Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively or not at all depending on the value of <code>deleteOnExpire</code> (see below). Can be configured on a per-item basis for greater specificity.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, { maxAge: <span class="number">3600000</span> });</code></pre>
-<h4>deleteOnExpire</h4>
-<p><strong>Type:</strong> String</p>
-<p><strong>Default:</strong> <code>&quot;none&quot;</code></p>
-<p><strong>Possible Values:</strong>
-- <code>&quot;none&quot;</code> - Items will not be removed from the cache even if they have expired.
-- <code>&quot;passive&quot;</code> - Items will be deleted if they are requested after they have expired, resulting in a miss.
-- <code>&quot;aggressive&quot;</code> - Items will be deleted as soon as they expire.</p>
-<p><strong>Description:</strong> <code>maxAge</code> must be set in order for <code>&quot;passive&quot;</code> or <code>&quot;aggressive&quot;</code> to have any effect. Can be configured on a per-item basis for greater specificity.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
-    maxAge: <span class="number">3600000</span>,
-    deleteOnExpire: <span class="string">'aggressive'</span>
-});</code></pre>
-<h4>cacheFlushInterval</h4>
-<p><strong>Type:</strong> Number</p>
-<p><strong>Default:</strong> <code>null</code></p>
-<p><strong>Description:</strong> Set the cache to periodically clear itself.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, { cacheFlushInterval: <span class="number">57908</span> });</code></pre>
-<h4>verifyIntegrity</h4>
-<p><strong>Type:</strong> Boolean</p>
-<p><strong>Default:</strong> false</p>
-<p><strong>Description:</strong> Specify whether to verify integrity of data saved in <code>localStorage</code> on every operation. If true, angular-cache will perform a full sync with <code>localStorage</code> on every operation. Increases reliability of data synchronization, but may incur a performance penalty. Has no effect if <code>storageMode</code> is set to &quot;none&quot;.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, { cacheFlushInterval: <span class="number">57908</span> });</code></pre>
-<h4>recycleFreq</h4>
-<p><strong>Type:</strong> Number</p>
-<p><strong>Default:</strong> 1000</p>
-<p><strong>Description:</strong> How often the cache should check for expired items. Only used when <code>maxAge</code> is set.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, { cacheFlushInterval: <span class="number">57908</span> });</code></pre>
-<h4>onExpire</h4>
-<p><strong>Type:</strong> Function</p>
-<p><strong>Default:</strong> <code>null</code></p>
-<p><strong>Description:</strong> A callback function to be executed when an item expires.</p>
-<h6>Using &#39;onExpire&#39; in passive delete mode</h6>
-<p>In passive delete mode the cache doesn&#39;t know if an item has expired until the item is requested, at which point the cache checks to see if the item has expired. If the item has expired then it is immediately removed from the cache, resulting in a &quot;miss&quot;.</p>
-<p>If you specify a global &quot;onExpire&quot; callback function, the cache will execute this function when it is discovered the item has expired, passing to the callback the key and value of the expired item.</p>
-<p>When you actually request the expired item via <code>myCache.get(&#39;someKey&#39;)</code> you can also pass a second argument to <code>get()</code> specifying a callback that your cache&#39;s &quot;onExpire&quot; callback can execute when it finishes. For example:</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
-    maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second, but we don't know it until the item is requested</span>
-    onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value, done)</span> {</span>
-        <span class="comment">// "onExpire" callback for the cache.</span>
-        <span class="comment">// The third optional parameter "done", is the second argument passed to `get()` as described above</span>
-
-        console.log(key + <span class="string">' expired!'</span>);
-        <span class="comment">// Retrieve fresh value for "key" from server, of course you'll need to figure out</span>
-        <span class="comment">// what the url is if key != url</span>
-        $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
-            $angularCacheFactory.get(<span class="string">'newCache'</span>).put(key, data);
-            done(data); <span class="comment">// Execute the "done" callback specified in the `get()` call</span>
-        });
-    });
-});
-
-newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos'</span>);
-
-<span class="comment">// wait a few seconds</span>
-
-<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(value)</span> {</span>
-    <span class="comment">// here value is defined, because we retrieved it from the server</span>
-});
-<span class="comment">// here value is undefined because the item with</span>
-<span class="comment">// the key "denver" has expired and was deleted from the</span>
-<span class="comment">// cache when we requested it. The callback passed to</span>
-<span class="comment">// "get()" will receive the new value for 'denver' which</span>
-<span class="comment">// will be retrieved from the server. This callback</span>
-<span class="comment">// is the "done" callback executed by the "onExpire"</span>
-<span class="comment">// callback specified when we created the cache.</span></code></pre>
-<p>Another usage:</p>
-<pre class="highlighted"><code class="javascript"><span class="comment">// We don't specify an "onExpire" callback for this cache</span>
-<span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
-    maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second, but we don't know it until the item is requested</span>
-});
-
-newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos'</span>);
-
-<span class="comment">// wait a few seconds</span>
-
-<span class="comment">// In this cache the callback is immediately executed when</span>
-<span class="comment">// the cache discovers that 'denver' has expired, and the</span>
-<span class="comment">// callback is passed the key and value of the expired item.</span>
-<span class="comment">// Here you could retrieve a new value for 'denver' from</span>
-<span class="comment">// the server or decide to keep the old value and re-insert</span>
-<span class="comment">// it into the cache. Specifying an "onExpire" callback for</span>
-<span class="comment">// the cache is a good way to stay DRY.</span>
-<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
-    <span class="keyword">if</span> (isGoodThisYear(key, value)) {
-        newCache.put(key, value);
-    } <span class="keyword">else</span> {
-        $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
-            newCache.put(key, data);
-        });
-    }
-});</code></pre>
-<h6>Using &#39;onExpire&#39; in aggressive delete mode</h6>
-<p>In aggressive delete mode you can&#39;t pass a second parameter to <code>get()</code> because your &quot;onExpire&quot; callback for the cache has already been executed for expired items.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
-    maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second and are immediately deleted</span>
-    onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
-        <span class="comment">// "onExpire" callback for the cache.</span>
-        <span class="comment">// The third optional parameter "done", is the second argument passed to `get()` as described above</span>
-
-        console.log(key + <span class="string">' expired!'</span>);
-        <span class="comment">// Retrieve fresh value for "key" from server, of course you'll need to figure out</span>
-        <span class="comment">// what the url is if key != url</span>
-        $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
-            $angularCacheFactory.get(<span class="string">'newCache'</span>).put(key, data);
-        });
-    });
-});
-
-newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos'</span>);
-
-<span class="comment">// wait a few seconds, during which time the "onExpire" callback is automatically executed</span>
-
-newCache.get(<span class="string">'denver'</span>); <span class="comment">// 'broncos' or whatever was returned by the server in the "onExpire" callback</span></code></pre>
-
-                        </section>
-                    
-                
-				    
-				        <section id="factorykeyset">
-                            <div class="page-header"><h1>.keySet()</h1></div>
-                            <h2>Description</h2>
-<p>Return the set of cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory.keySet();</code></pre>
-
-                        </section>
-                    
-                
-				    
-				        <section id="factoryremoveall">
-                            <div class="page-header"><h1>.removeAll()</h1></div>
-                            <h2>Description</h2>
-<p>Destroy all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory.removeAll();</code></pre>
-
-                        </section>
-                    
-                
 				    
 				        <section id="provider">
                             <div class="page-header"><h1>$angularCacheFactoryProvider</h1></div>
@@ -458,6 +317,285 @@ newCache.get(<span class="string">'denver'</span>); <span class="comment">// 'br
         newCache.info().maxAge; <span class="comment">// 3600000</span>
         newCache.info().deleteOnExpire; <span class="comment">// "aggressive"</span>
     });</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factory">
+                            <div class="page-header"><h1>$angularCacheFactory(cacheId, options)</h1></div>
+                            <h2>Description</h2>
+<p>Angular Factory Service. Produces instances of  <code>AngularCache</code>.</p>
+<h2>Parameters</h2>
+<h4>cacheId</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The name of the new cache. Must be unique.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> The configuration options for the new cache. See <a href="/configuration.html">Configuration Options</a>;</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">angular.module(<span class="string">'app'</span>).controller(<span class="string">'myCtrl'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
+    <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { options... });
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryget">
+                            <div class="page-header"><h1>.get(cacheId)</h1></div>
+                            <h2>Description</h2>
+<p>Return the cache with the specified cacheId.</p>
+<h2>Parameters</h2>
+<h4>cacheId</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The cacheId of the cache to retrieve.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> someCache = $angularCacheFactory.get(<span class="string">'someCache'</span>);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryinfo">
+                            <div class="page-header"><h1>.info()</h1></div>
+                            <h2>Description</h2>
+<p>Return an object containing information about <code>$angularCacheFactory</code> and all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.info(); <span class="comment">// { info...}</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryclearall">
+                            <div class="page-header"><h1>.clearAll()</h1></div>
+                            <h2>Description</h2>
+<p>Clear the contents of every cache in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.clearAll();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryremoveall">
+                            <div class="page-header"><h1>.removeAll()</h1></div>
+                            <h2>Description</h2>
+<p>Destroy all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.removeAll();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factorykeyset">
+                            <div class="page-header"><h1>.keySet()</h1></div>
+                            <h2>Description</h2>
+<p>Return the set of cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.keySet();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factorykeys">
+                            <div class="page-header"><h1>.keys()</h1></div>
+                            <h2>Description</h2>
+<p>Return an array of the cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.keys();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cache">
+                            <div class="page-header"><h1>AngularCache</h1></div>
+                            <h2>Description</h2>
+<p>Object produced by invocations of <code>$angularCacheFactory(cacheId, options)</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>);
+
+newCache; <span class="comment">// instance of AngularCache</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cachesetoptions">
+                            <div class="page-header"><h1>.setOptions(options, strict)</h1></div>
+                            <h2>Description</h2>
+<p>Dynamically set the configuration for the cache. See <a href="/configuration.html">Configuration Options</a>.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> The configuration options for the cache. See <a href="/configuration.html">Configuration Options</a>.</p>
+<h4>strict</h4>
+<p><strong>Type:</strong> <code>boolean</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> If true, the cache&#39;s configuration will be reset to default before applying the new configuration.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ maxAge: <span class="number">900000</span> });
+
+$angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ verifyIntegrity: <span class="literal">false</span> }, <span class="literal">true</span>);</code></pre>
+<h4><em>destroy()</em></h4>
+<p><strong>Description:</strong> Completely destroy the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#destroy">AngularCache#destroy</a> API documentation.</p>
+<h4><em>keySet()</em></h4>
+<p><strong>Description:</strong> Return the set of keys of all items in the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keySet">AngularCache#keySet</a> API documentation.</p>
+<h4><em>keys()</em></h4>
+<p><strong>Description:</strong> Return an array of the keys of all items in the cache. <a href="http://jmdobry.github.io/angular-cache/docs/AngularCache.html#keys">AngularCache#keys</a> API documentation.</p>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheput">
+                            <div class="page-header"><h1>.put(key, value, options)</h1></div>
+                            <h2>Description</h2>
+<p>Add a key-value pair to the cache.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The key of the item to be added to the cache.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>*</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The item to be added to the cache.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> The configuration options for the item to be added.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.put(<span class="string">'key'</span>, <span class="string">'value'</span>);
+
+someCache.put(<span class="string">'ageLimit'</span>, <span class="number">55</span>);
+
+someCache.put(<span class="string">'things'</span>, { stuff: <span class="string">'lots of stuff'</span> });
+
+someCache.put(<span class="string">'isIt'</span>, <span class="literal">true</span>);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheget">
+                            <div class="page-header"><h1>.get(key, options)</h1></div>
+                            <h2>Description</h2>
+<p>Retrieve the item from the cache with the specified key.</p>
+<h2>Parameters</h2>
+<h4>key</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Description:</strong> The key of the item to retrieve.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>onExpire: Function</code> is the only option available for this method.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.get(<span class="string">'key'</span>); <span class="comment">// 'value'</span>
+
+someCache.get(<span class="string">'ageLimit'</span>); <span class="comment">// 55</span>
+
+someCache.get(<span class="string">'things'</span>); <span class="comment">// { stuff: 'lots of stuff' }</span>
+
+someCache.get(<span class="string">'isIt'</span>); <span class="comment">// true</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheremove">
+                            <div class="page-header"><h1>.remove(key, options)</h1></div>
+                            <h2>Description</h2>
+<p>Remove the item with the specified key from the cache.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is the only option available for this method.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.remove(<span class="string">'someKey'</span>);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheremoveexpired">
+                            <div class="page-header"><h1>.removeExpired(options)</h1></div>
+                            <h2>Description</h2>
+<p>Remove all expired items from the cache.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is the only option available for this method.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.removeExpired(options);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheremoveall">
+                            <div class="page-header"><h1>.removeAll()</h1></div>
+                            <h2>Description</h2>
+<p>Clear the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.removeAll();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cachedestroy">
+                            <div class="page-header"><h1>.destroy()</h1></div>
+                            <h2>Description</h2>
+<p>Completely destroy the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.destroy();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheinfo">
+                            <div class="page-header"><h1>.info(key)</h1></div>
+                            <h2>Description</h2>
+<p>Return an object containing information about the item with the specified key, or if no key is specified, return information about the cache itself.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> The key of the item about which to retrieve information.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.info(<span class="string">'someKey'</span>); <span class="comment">// { // info about 'someKey'... }</span>
+
+someCache.info(); <span class="comment">// { // info about 'someCache'... }</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cachekeyset">
+                            <div class="page-header"><h1>.keySet()</h1></div>
+                            <h2>Description</h2>
+<p>Return the set of keys of all items in the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.keySet();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cachekeys">
+                            <div class="page-header"><h1>.keys()</h1></div>
+                            <h2>Description</h2>
+<p>Return an array of the keys of all items in the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.keys();</code></pre>
 
                         </section>
                     

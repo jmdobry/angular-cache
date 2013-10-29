@@ -2,6 +2,8 @@
 sectionHeader: '.setCacheDefaults(options)'
 sectionName: '&emsp;.setCacheDefaults(options)'
 sectionLinkName: setcachedefaults
+gfm: true
+index: 2
 ---
 ## Description
 Set the default configuration for all caches created by `$angularCacheFactory`.

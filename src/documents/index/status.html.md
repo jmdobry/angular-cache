@@ -3,6 +3,7 @@ sectionHeader: Project Status
 sectionName: Project Status
 sectionLinkName: status
 gfm: true
+index: 2
 ---
 <table class="table">
 <thead>
