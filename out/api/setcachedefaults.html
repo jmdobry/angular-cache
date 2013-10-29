@@ -1,0 +1,36 @@
+<h2>Description</h2>
+<p>Set the default configuration for all caches created by <code>$angularCacheFactory</code>.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration object for global cache defaults. See <a href="/configuration.html">Configuration Options</a>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">app.module(<span class="string">'app'</span>, [<span class="string">'jmdobry.angular-cache'</span>])
+    .config(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactoryProvider)</span> {</span>
+        $angularCacheFactoryProvider.setCacheDefaults({
+            maxAge: <span class="number">3600000</span>,
+            deleteOnExpire: <span class="string">'aggressive'</span>
+        });
+    })
+    .run(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
+        <span class="keyword">var</span> info = $angularCacheFactory.info();
+
+        console.log(info.cacheDefaults); <span class="comment">// output below</span>
+
+        <span class="comment">// {</span>
+        <span class="comment">//    capacity: Number.MAX_VALUE,</span>
+        <span class="comment">//    maxAge: 3600000,</span>
+        <span class="comment">//    deleteOnExpire: 'aggressive',</span>
+        <span class="comment">//    onExpire: null,</span>
+        <span class="comment">//    cacheFlushInterval: null,</span>
+        <span class="comment">//    storageMode: 'none',</span>
+        <span class="comment">//    storageImpl: null,</span>
+        <span class="comment">//    recycleFreq: 1000,</span>
+        <span class="comment">//    verifyIntegrity: false</span>
+        <span class="comment">// }</span>
+
+        <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>);
+
+        newCache.info().maxAge; <span class="comment">// 3600000</span>
+        newCache.info().deleteOnExpire; <span class="comment">// "aggressive"</span>
+    });</code></pre>

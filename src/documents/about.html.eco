@@ -1,0 +1,6 @@
+---
+layout: "default"
+pageName: about
+displayName: About
+sections: 'about'
+---

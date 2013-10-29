@@ -1,0 +1,7 @@
+---
+layout: "default"
+pageName: installation
+displayName: Installation
+description: Set up angular-cache
+sections: 'installation'
+---

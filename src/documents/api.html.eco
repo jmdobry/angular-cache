@@ -1,0 +1,7 @@
+---
+layout: "default"
+pageName: api
+displayName: API
+description: Reference API documentation for angular-cache
+sections: 'api'
+---

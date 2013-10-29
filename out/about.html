@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="angular-cache : A vey useful replacement for Angular's $cacheFactory.">
+	<meta name="author" content="Jason Dobry">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="css/github.css">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"
+				type="text/css">
+
+	<title>angular-cache</title>
+</head>
+<body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="/">
+					<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAAAyCAYAAACqGbz7AAAFDklEQVR42u2bS2sUQRDH/QK5esopBw8ePHgK+AlEchUPiqIgJCReRL1FyEkQFfGViAqalaAgiIggQQ/iIYIgCImal5hI8BGT+IiJJtm1Gmal0/SjerpntsX/D4rdzcxU1/y7Z7pqerJhAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID0qNVqnWTnVKtWq5fp84jluA6yXrJNzHaayM6S9ZEdzBlPjyOePuW4Zmn7FrKL0rZLZHt8fJSkaZ/uWK6PksZFT5E6JD4e1lmoyKKBLzU3w+IC0hw/ITaSGDO67QYx64zljYfa+0of203xKHTVt2edpvp65uOjLE2ZDHN0L2pcmPohhg6Jj4d15BaaGjvl0dkiuLtKcM1kP6VdRhide0favxIYz0tHPILfZFulfV5oXJ3x8VGypt4+Qgnthxg6JD4e4lyEJud0Ip/oo59sXtPWqGZWqyr7PHZ08Hi9KbJ2ZjzXsjThPNl7n3jo+Clp+0ayOaWJNbI2ro9GaCqOFwMyu2svuHwEzoAx+iGGDimPh7/9Ube8Yt/UCDHhuMBGLbOaTL+rgynw73Id6YpH2q+tHhf5eMuI5760fSfZqqZTm7g+GqTpfR8fgRdhjH6IocM/Px44Kce4epMhO2bLlYkhhw/Z13FDPVjVpa6ueJQHO1eFOOJuxPBxNPCc1vlogKbe51DkuAjohxg6/FPjIU/KETtXFtP6bk49GFqHpVAPltU+fX9u81H0uEi9H1KLw/WEUk0HJkNzZU3+/kMO2FIP5q7DEqoHi9JU9tFC9kuJ7zt3eShUw0bqkEocso9QsXV57mCEXLlmKKSbHfVgcN6dQD1YlKaD2bYDykOIOlci1oNF9cNgWf1QVn8UkfdzGArwIdaBdnnWg12G4rzOrcTrwaI1FbH1Rl6aCK5/CtIhlTh0nI72CJqBKVdeFFM0c9D41IObyd5Z/F1IvB4M0ZS7LjZQ8NJEjDoshg6pxKEb0+2x6sFl6tBX4g2WzGoeufKImMKzqZx7B2fVg/T1kXjs7BlPKvVgiKbrfCgaLJOtZN9/Kml9R5ZirTDso/L6VlF1WLAOqcSh+hAvB+R5nVGb58pvK9DPbZ65ciX7WyvZEuPu7VUP5ogniXowUFOdjweGervJto+lH6bLqAdj6JBKHNHeTIpcO6mz2n715DSMFBhPSuuDUdun79cZPgbIPtPfP9iM9pklu1FCHdaQdbn/an1Q93icfp90XIQV5ZF70LpYJB//+/pgSy2NdblU4ih3fTCwdhox3IkGmPXgPs3MOamIseiIJ4aPqPVg7HqU4yNwXFg1VN5OEbXQLH2+9qkpmTqkEkdwXVrmWlrF0tYTVz1o+DeSKWn7Q028k8oFr/MxY4tD9WHQ5XYq65McH4ElilVDab97eWtKzjmkEkfIeGhoPWho742tHsxqyDVNm+JONW+YTbu5Pqj9b4bZ+LBrPSg7dlR6mjaWPaU8lGJNG3hzNmm4IJ3/nBJfd+xzSCWOkPEQnPf75Oyc16XE1K8sXVTU7ZrUwMZjXRuePm4xdLHRXZSmeX1EuAh9NXwae2ylEkfIeOAIvUOTb8v/XiLW+qYdubLsY5jZbmt2wWpnzqxmG7Oc5Gp2Z+p0FOMuH2JW3svUxcSS0qGxNc3lI+Ji/Zjj/MXT1RNFjK1U4ggZDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAG8Ac7NumYSaPNAQAAAABJRU5ErkJggg==" alt="angular-cache" width="225" height="50">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+                    <li class="">
+                        <a href="/">Home</a>
+                    </li>
+                    <li class="">
+                        <a href="/installation.html">Installation</a>
+                    </li>
+                    <li class="">
+                        <a href="/guide.html">Guide</a>
+                    </li>
+                    <li class="">
+                        <a href="/api.html">API</a>
+                    </li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="https://groups.google.com/forum/#!forum/angular-cache">Mailing List</a></li>
+							<li class="divider"></li>
+							<li><a href="https://github.com/jmdobry/angular-cache/issues?state=open">Issues</a></li>
+							<li><a href="https://github.com/jmdobry/angular-cache">GitHub</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+	<header class="jumbotron subhead" id="overview">
+		<div class="container">
+			<h1>About</h1>
+			<p class="lead"></p>
+		</div>
+	</header>
+	<div class="container">
+
+		<!-- Docs nav
+		================================================== -->
+		<div class="row">
+			<div class="col-lg-3" id="sidebar">
+				<ul class="list-group nav" id="sidenav">
+				    
+                        
+                    
+				</ul>
+			</div>
+			<div class="col-lg-9">
+				
+				    
+                
+			</div>
+		</div>
+	</div>
+	<footer id="footer-main" class="navbar navbar-default">
+        <div class="container">
+            <ul class="nav navbar-nav row">
+                <li class="col-lg-5">
+                    <a href="http://www.pseudobry.com/">© 2013 Jason Dobry</a>
+                </li>
+                <li class="col-lg-4">
+                    <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></span>
+                    <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=fork&count=true"allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe></span>
+                </li>
+                <li class="col-lg-3 pull-right">
+                    <a href="JavaScript:void(0)" onclick="window.scrollTo(0, 0);" class="pull-right" style="margin-right: 30px;">
+                        <span class="glyphicon glyphicon-arrow-up"></span>&nbsp;&nbsp;Back to top
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('#sidenav').affix({
+				offset: {
+					top: function () { return $(window).width() <= 980 ? 290 : 154 },
+			  		bottom: 0
+				}
+			})
+		});
+	</script>
+</body>
+</html>

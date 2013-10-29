@@ -1,0 +1,7 @@
+---
+layout: "default"
+pageName: guide
+displayName: Guide
+description: Learn how to use angular-cache and read about common usage patterns
+sections: 'guide'
+---
