@@ -8,12 +8,7 @@
 	<meta name="author" content="Jason Dobry">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="css/github.css">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"
-				type="text/css">
-
+	<link rel="stylesheet" type="text/css" media="screen" href="css/styles.min.css">
 	<title>angular-cache</title>
 </head>
 <body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
@@ -117,152 +112,132 @@
 		<!-- Docs nav
 		================================================== -->
 		<div class="row">
-			<div class="col-lg-3" id="sidebar">
+			<div class="col-md-3" id="sidebar">
 				<ul class="list-group nav" id="sidenav">
 				    
                         
-                        
                             <li class="list-group-item active">
-                                <a href="#provider"><i class="icon-chevron-right"></i> $angularCacheFactoryProvider</a>
+                                <a href="#provider"><i class="glyphicon glyphicon-chevron-right"></i> $angularCacheFactoryProvider</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#setcachedefaults"><i class="icon-chevron-right"></i> &emsp;.setCacheDefaults(options)</a>
+                                <a href="#setcachedefaults"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.setCacheDefaults(options)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#factory"><i class="icon-chevron-right"></i> $angularCacheFactory(cacheId, options)</a>
+                                <a href="#factory"><i class="glyphicon glyphicon-chevron-right"></i> $angularCacheFactory(cacheId, options)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#factoryget"><i class="icon-chevron-right"></i> &emsp;.get(cacheId)</a>
+                                <a href="#factoryget"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.get(cacheId)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#factoryinfo"><i class="icon-chevron-right"></i> &emsp;.info()</a>
+                                <a href="#factoryinfo"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.info()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#factoryclearall"><i class="icon-chevron-right"></i> &emsp;.clearAll()</a>
+                                <a href="#factoryclearall"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.clearAll()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#factoryremoveall"><i class="icon-chevron-right"></i> &emsp;.removeAll()</a>
+                                <a href="#factoryremoveall"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeAll()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#factorykeyset"><i class="icon-chevron-right"></i> &emsp;.keySet()</a>
+                                <a href="#factorykeyset"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.keySet()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#factorykeys"><i class="icon-chevron-right"></i> &emsp;.keys()</a>
+                                <a href="#factorykeys"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.keys()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cache"><i class="icon-chevron-right"></i> AngularCache</a>
+                                <a href="#cache"><i class="glyphicon glyphicon-chevron-right"></i> AngularCache</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cachesetoptions"><i class="icon-chevron-right"></i> &emsp;.setOptions(options, strict)</a>
+                                <a href="#cachesetoptions"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.setOptions(options, strict)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cacheput"><i class="icon-chevron-right"></i> &emsp;.put(key, value, options)</a>
+                                <a href="#cacheput"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.put(key, value, options)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cacheget"><i class="icon-chevron-right"></i> &emsp;.get(key, options)</a>
+                                <a href="#cacheget"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.get(key, options)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cacheremove"><i class="icon-chevron-right"></i> &emsp;.remove(key, options)</a>
+                                <a href="#cacheremove"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.remove(key, options)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cacheremoveexpired"><i class="icon-chevron-right"></i> &emsp;.removeExpired(options)</a>
+                                <a href="#cacheremoveexpired"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeExpired(options)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cacheremoveall"><i class="icon-chevron-right"></i> &emsp;.removeAll()</a>
+                                <a href="#cacheremoveall"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeAll()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cachedestroy"><i class="icon-chevron-right"></i> &emsp;.destroy()</a>
+                                <a href="#cachedestroy"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.destroy()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cacheinfo"><i class="icon-chevron-right"></i> &emsp;.info(key)</a>
+                                <a href="#cacheinfo"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.info(key)</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cachekeyset"><i class="icon-chevron-right"></i> &emsp;.keySet()</a>
+                                <a href="#cachekeyset"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.keySet()</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cachekeys"><i class="icon-chevron-right"></i> &emsp;.keys()</a>
+                                <a href="#cachekeys"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.keys()</a>
                             </li>
                         
                     
 				</ul>
 			</div>
-			<div class="col-lg-9">
+			<div class="col-md-9">
 				
 				    
 				        <section id="provider">
@@ -621,13 +596,12 @@ someCache.info(); <span class="comment">// { // info about 'someCache'... }</spa
             </ul>
         </div>
     </footer>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="js/scripts.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('#sidenav').affix({
 				offset: {
-					top: function () { return $(window).width() <= 980 ? 290 : 154 },
+					top: function () { return $(window).width() <= 768 ? 290 : 154 },
 			  		bottom: 0
 				}
 			})

@@ -8,12 +8,7 @@
 	<meta name="author" content="Jason Dobry">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="css/github.css">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"
-				type="text/css">
-
+	<link rel="stylesheet" type="text/css" media="screen" href="css/styles.min.css">
 	<title>angular-cache</title>
 </head>
 <body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
@@ -95,75 +90,66 @@
 		<!-- Docs nav
 		================================================== -->
 		<div class="row">
-			<div class="col-lg-3" id="sidebar">
+			<div class="col-md-3" id="sidebar">
 				<ul class="list-group nav" id="sidenav">
 				    
                         
-                        
                             <li class="list-group-item active">
-                                <a href="#configuration"><i class="icon-chevron-right"></i> Using these options</a>
+                                <a href="#configuration"><i class="glyphicon glyphicon-chevron-right"></i> Using these options</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#maxage"><i class="icon-chevron-right"></i> maxAge</a>
+                                <a href="#maxage"><i class="glyphicon glyphicon-chevron-right"></i> maxAge</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#deleteonexpire"><i class="icon-chevron-right"></i> deleteOnExpire</a>
+                                <a href="#deleteonexpire"><i class="glyphicon glyphicon-chevron-right"></i> deleteOnExpire</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#recyclefreq"><i class="icon-chevron-right"></i> recycleFreq</a>
+                                <a href="#recyclefreq"><i class="glyphicon glyphicon-chevron-right"></i> recycleFreq</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#onexpire"><i class="icon-chevron-right"></i> onExpire</a>
+                                <a href="#onexpire"><i class="glyphicon glyphicon-chevron-right"></i> onExpire</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#cacheflushinterval"><i class="icon-chevron-right"></i> cacheFlushInterval</a>
+                                <a href="#cacheflushinterval"><i class="glyphicon glyphicon-chevron-right"></i> cacheFlushInterval</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#storagemode"><i class="icon-chevron-right"></i> storageMode</a>
+                                <a href="#storagemode"><i class="glyphicon glyphicon-chevron-right"></i> storageMode</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#storageimpl"><i class="icon-chevron-right"></i> storageImpl</a>
+                                <a href="#storageimpl"><i class="glyphicon glyphicon-chevron-right"></i> storageImpl</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#verifyintegrity"><i class="icon-chevron-right"></i> verifyIntegrity</a>
+                                <a href="#verifyintegrity"><i class="glyphicon glyphicon-chevron-right"></i> verifyIntegrity</a>
                             </li>
                         
                     
 				</ul>
 			</div>
-			<div class="col-lg-9">
+			<div class="col-md-9">
 				
 				    
 				        <section id="configuration">
@@ -444,13 +430,12 @@ $angularCacheFactory(<span class="string">'otherCache'</span>, {
             </ul>
         </div>
     </footer>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="js/scripts.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('#sidenav').affix({
 				offset: {
-					top: function () { return $(window).width() <= 980 ? 290 : 154 },
+					top: function () { return $(window).width() <= 768 ? 290 : 154 },
 			  		bottom: 0
 				}
 			})

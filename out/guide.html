@@ -8,12 +8,7 @@
 	<meta name="author" content="Jason Dobry">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 
-	<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="css/main.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="css/github.css">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"
-				type="text/css">
-
+	<link rel="stylesheet" type="text/css" media="screen" href="css/styles.min.css">
 	<title>angular-cache</title>
 </head>
 <body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
@@ -81,26 +76,24 @@
 		<!-- Docs nav
 		================================================== -->
 		<div class="row">
-			<div class="col-lg-3" id="sidebar">
+			<div class="col-md-3" id="sidebar">
 				<ul class="list-group nav" id="sidenav">
 				    
                         
-                        
                             <li class="list-group-item active">
-                                <a href="#introduction"><i class="icon-chevron-right"></i> Introduction</a>
+                                <a href="#introduction"><i class="glyphicon glyphicon-chevron-right"></i> Introduction</a>
                             </li>
                         
                     
                         
-                        
                             <li class="list-group-item ">
-                                <a href="#status"><i class="icon-chevron-right"></i> Project Status</a>
+                                <a href="#status"><i class="glyphicon glyphicon-chevron-right"></i> Project Status</a>
                             </li>
                         
                     
 				</ul>
 			</div>
-			<div class="col-lg-9">
+			<div class="col-md-9">
 				
 				    
 				        <section id="introduction">
@@ -188,13 +181,12 @@ blah</p>
             </ul>
         </div>
     </footer>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="js/scripts.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('#sidenav').affix({
 				offset: {
-					top: function () { return $(window).width() <= 980 ? 290 : 154 },
+					top: function () { return $(window).width() <= 768 ? 290 : 154 },
 			  		bottom: 0
 				}
 			})

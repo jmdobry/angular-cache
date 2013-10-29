@@ -1,8 +1,0 @@
-<p><strong>Type:</strong> <code>boolean</code></p>
-<p><strong>Default:</strong> <code>false</code></p>
-<p><strong>Description:</strong> Specify whether to verify integrity of data saved in <code>localStorage</code> on every operation. If true, angular-cache will perform a full sync with <code>localStorage</code> on every operation. Increases reliability of data synchronization, but may incur a performance penalty. Has no effect if <code>storageMode</code> is set to &quot;none&quot;.</p>
-<p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
-    storageMode: <span class="string">'localStorage'</span>,
-    verifyIntegrity: <span class="literal">true</span>
-});</code></pre>

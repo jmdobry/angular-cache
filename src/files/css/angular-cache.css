@@ -144,20 +144,19 @@ code {
 }
 
 /* Chevrons */
-#sidenav .icon-chevron-right {
+#sidenav .glyphicon-chevron-right {
     float: right;
     margin-top: 2px;
     margin-right: -6px;
     opacity: .25;
 }
 
-#sidenav a:hover .icon-chevron-right {
+#sidenav a:hover .glyphicon-chevron-right {
     opacity: .5;
 }
 
-#sidenav .active .icon-chevron-right,
-#sidenav .active a:hover .icon-chevron-right {
-    background-image: url(../img/glyphicons-halflings-white.png);
+#sidenav .active .glyphicon-chevron-right,
+#sidenav .active a:hover .glyphicon-chevron-right {
     opacity: 1;
 }
 
@@ -226,16 +225,12 @@ section {
 /* Desktop large
 ------------------------- */
 @media (min-width: 1200px) {
-    .bs-docs-container {
-        max-width: 970px;
-    }
-
     #sidenav {
         width: 258px;
     }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1200px) {
     /* Unfloat brand */
     body > .navbar-fixed-top .brand {
         float: left;
@@ -258,33 +253,97 @@ section {
         margin-top: 30px;
         margin-right: 0;
     }
-
-    .jumbotron {
-        padding-top: 20px;
-    }
 }
 
 /* Tablet to desktop
 ------------------------- */
-@media (min-width: 768px) and (max-width: 980px) {
+@media (min-width: 992px) and (max-width: 1200px) {
     /* Remove any padding from the body */
     body {
         padding-top: 0;
     }
 
-    /* Widen masthead and social buttons to fill body padding */
-    .jumbotron {
-        margin-top: -20px; /* Offset bottom margin on .navbar */
-    }
-
     /* Adjust sidenav width */
     #sidenav {
-        width: 166px;
+        width: 230px;
         margin-top: 20px;
     }
+}
 
+@media (min-width: 768px) and (max-width: 992px) {
+    /* Remove any padding from the body */
+    body {
+        padding-top: 0;
+    }
+
+    .jumbotron h1 {
+        font-size: 45px;
+        line-height: 80px;
+    }
+
+    #sidenav {
+        width: auto;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+}
+
+
+@media (max-width: 1200px) {
+    .jumbotron h1 {
+        font-size: 45px;
+        line-height: 80px;
+    }
+}
+
+@media (max-width: 992px) {
     #sidenav.affix {
-        top: 0;
+        position: relative;
+        width: auto;
+        top: 0px;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar-toggle {
+        display: block;
+        float: right;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar-collapse.collapse {
+        display: none !important;
+        height: auto !important;
+        padding-bottom: 0;
+        overflow: visible !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-collapse.collapse {
+        display: block !important;
+        height: auto !important;
+        padding-bottom: 0;
+        overflow: visible !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-toggle {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar-header {
+        float: none;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-header {
+        float: left;
     }
 }
 
@@ -296,34 +355,9 @@ section {
         padding-top: 0;
     }
 
-    /* Widen masthead and social buttons to fill body padding */
-    .jumbotron {
-        padding: 40px 20px;
-        margin-top: -20px; /* Offset bottom margin on .navbar */
-        margin-right: -20px;
-        margin-left: -20px;
-    }
-
-    .masthead h1 {
-        font-size: 90px;
-    }
-
-    .masthead p,
-    .masthead .btn {
+    h1 {
+        padding: 10px 10px;
         font-size: 24px;
-    }
-
-    .marketing .span4 {
-        margin-bottom: 40px;
-    }
-
-    .bs-docs-social {
-        margin: 0 -20px;
-    }
-
-    /* Space out the show-grid examples */
-    .show-grid [class*="span"] {
-        margin-bottom: 5px;
     }
 
     /* Sidenav */
@@ -334,20 +368,7 @@ section {
     }
 
     #sidenav.affix {
-        position: static;
+        position: relative;
         width: auto;
-        top: 0;
-    }
-
-    /* Unfloat the back to top link in footer */
-    .footer {
-        margin-left: -20px;
-        margin-right: -20px;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    .footer p {
-        margin-bottom: 9px;
     }
 }
