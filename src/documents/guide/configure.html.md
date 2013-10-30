@@ -5,6 +5,8 @@ sectionLinkName: configure
 gfm: true
 index: 4
 ---
+See [Configuration Options](configuration.html) for information on the available configuration options.
+
 #### Dynamically configure a cache
 ```javascript
 app.service('myService', function ($angularCacheFactory) {
@@ -22,7 +24,7 @@ app.service('myService', function ($angularCacheFactory) {
         capacity: 30
     });
 
-    cache.info(); // { ..., size: 30, capacity: 30, maxAge: 3000, ... }
+    cache.info(); // { ..., size: 30, capacity: 30, maxAge: 300000, ... }
     // notice that only the 30 most recently added items remain in the cache because
     // the capacity was reduced.
 
@@ -37,7 +39,7 @@ app.service('myService', function ($angularCacheFactory) {
                   //   capacity: 1.7976931348623157e+308, maxAge: null, ... }
 
     cache.put('someItem', 'someValue', { maxAge: 12000, deleteOnExpire: 'aggressive' });
-    cache.info('someItem'); // { timestamp: 12345678978, maxAge: 12000, deleteOnExpire: 'aggressive', isExpired: false }
+    cache.info('someItem'); // { maxAge: 12000, deleteOnExpire: 'aggressive', isExpired: false, ... }
 });
 ```
-See [AngularCache.setOptions(options)](/api.html#cachesetoptions)
+See [AngularCache.setOptions(options)](api.html#cachesetoptions).

@@ -22,7 +22,7 @@ __Type:__ `object`
 
 __Required:__ No
 
-__Description:__ The configuration options for the new cache. See [Configuration Options](/configuration.html);
+__Description:__ The configuration options for the new cache. See [Configuration Options](configuration.html);
 
 ## Usage
 

@@ -14,7 +14,7 @@ $angularCacheFactoryProvider.setCacheDefaults({
     // configuration options
 });
 ```
-See [$angularCacheFactoryProvider.setCacheDefaults(options)](/api.html#setcachedefaults)
+See [$angularCacheFactoryProvider.setCacheDefaults(options)](api.html#setcachedefaults)
 
 <br>
 #### Creating a cache
@@ -23,7 +23,7 @@ $angularCacheFactory('newCache', {
     // configuration options
 });
 ```
-See [$angularCacheFactory(cacheId, options)](/api.html#factory)
+See [$angularCacheFactory(cacheId, options)](api.html#factory)
 
 <br>
 #### Dynamically configuring a cache
@@ -32,4 +32,4 @@ newCache.setOptions({
     // configuration options
 });
 ```
-See [AngularCache.setOptions(options, strict)](/api.html#cachesetoptions)
+See [AngularCache.setOptions(options, strict)](api.html#cachesetoptions)

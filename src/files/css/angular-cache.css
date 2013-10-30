@@ -1,5 +1,5 @@
 body {
-    background-image: url(/img/cream_dust.png);
+    background-image: url(../img/cream_dust.png);
     background-size: auto;
     background-repeat: repeat repeat;
 }
@@ -17,6 +17,24 @@ code {
     background-color: #f8f8ff;
     border-radius: 3px;
     color: #333333;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: #fff;
+    border-color: #fd9d4a;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #fff;
+    background-color: #fd9d4a;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+
+.navbar-default .navbar-toggle:hover .icon-bar {
+    background-color: #fd9d4a;
 }
 
 .footer-button {
@@ -317,6 +335,9 @@ section {
         height: auto !important;
         padding-bottom: 0;
         overflow: visible !important;
+    }
+    #github-ribbon {
+        display: none;
     }
 }
 

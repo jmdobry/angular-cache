@@ -15,7 +15,7 @@ __Description:__ When `storageMode` is set to `"localStorage"` or `"sessionStora
 
 __Note:__ If angular-cache doesn't detect a global `localStorage` or `sessionStorage` and you don't provide a polyfill, then syncing with web storage will be disabled. It is up to the developer to provide a polyfill for browsers that don't support `localStorage` and `sessionStorage`. Any implementation of `localStorage` and `sessionStorage` provided to angular-cache must implement at least the `setItem`, `getItem`, and `removeItem` methods.
 
-See [Using angular-cache with localStorage](/guide.html#using-angular-cache-with-localStorage).
+See [Using angular-cache with localStorage](guide.html#using-angular-cache-with-localStorage).
 
 __Usage:__
 ```javascript

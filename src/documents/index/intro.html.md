@@ -6,7 +6,7 @@ gfm: true
 index: 1
 ---
 ## What is angular-cache?
-Angular's $cacheFactory is woefully insufficient for the needs of many single-page applications. Angular-cache provides the features necessary for single-page apps to be as efficient at caching as possible.
+Angular-cache is a feature-packed drop-in replacement for Angular's $cacheFactory. $cacheFactory is small and useful, but it's missing many needed features that today's single-page apps require. Check it out:
 
 ## $cacheFactory vs $angularCacheFactory
 
@@ -14,8 +14,14 @@ Angular's $cacheFactory is woefully insufficient for the needs of many single-pa
 ```javascript
 // Angular's $cacheFactory
 app.service('myService', function ($cacheFactory) {
-    // This is all you can do with $cacheFactory
-    $cacheFactory('myNewCache', { capacity: 1000 }); // This cache can hold 1000 items
+
+    // This is the extent of $cacheFactory's configuration
+    $cacheFactory('myNewCache', {
+
+        // This cache can hold 1000 items
+        capacity: 1000
+    });
+
 });
 ```
 
@@ -23,20 +29,40 @@ app.service('myService', function ($cacheFactory) {
 ```javascript
 // Smarter caching with $angularCacheFactory
 app.service('myService', function ($angularCacheFactory) {
+
     $angularCacheFactory('myNewCache', {
-        capacity: 1000,  // This cache can hold 1000 items
-        maxAge: 900000, // Items added to this cache expire after 15 minutes
-        deleteOnExpire: 'aggressive', // Items will be actively deleted when they expire
-        cacheFlushInterval: 3600000, // This cache will clear itself every hour
-        storageMode: 'localStorage', // This cache will sync itself with localStorage
-        storageImpl: myLocalStoragePolyfill, // Custom implementation of localStorage
-        verifyIntegrity: true, // Full synchronization with localStorage on every operation
-        recycleFreq: 60000, // Frequency for checking the cache for expired items
+
+        // This cache can hold 1000 items
+        capacity: 1000,
+
+        // Items added to this cache expire after 15 minutes
+        maxAge: 900000,
+
+        // Items will be actively deleted when they expire
+        deleteOnExpire: 'aggressive',
+
+        // This cache will check for expired items every minute
+        recycleFreq: 60000,
+
+        // This cache will clear itself every hour
+        cacheFlushInterval: 3600000,
+
+        // This cache will sync itself with localStorage
+        storageMode: 'localStorage',
+
+        // Custom implementation of localStorage
+        storageImpl: myLocalStoragePolyfill,
+
+        // Full synchronization with localStorage on every operation
+        verifyIntegrity: true,
+
+        // This callback is executed when the item specified by "key" expires.
+        // At this point you could retrieve a fresh value for "key"
+        // from the server and re-insert it into the cache.
         onExpire: function (key, value) {
-            // This callback is executed when the item specified by "key" expires.
-            // At this point you could retrieve a fresh value for "key"
-            // from the server and re-insert it into the cache.
+
         }
      });
+
 });
 ```

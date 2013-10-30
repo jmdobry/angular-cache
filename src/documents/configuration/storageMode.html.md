@@ -9,7 +9,7 @@ __Type:__ `string`
 
 __Default:__ `"none"`
 
-__Description:__ Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` or `sessionStorage` on page refresh. See [Using angular-cache with localStorage](/guide.html#using-angular-cache-with-localStorage).
+__Description:__ Configure the cache to sync itself with `localStorage` or `sessionStorage`. The cache will re-initialize itself from `localStorage` or `sessionStorage` on page refresh. See [Using angular-cache with localStorage](guide.html#using-angular-cache-with-localStorage).
 
 __Possible Values:__
 

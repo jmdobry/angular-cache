@@ -13,7 +13,7 @@ Set the default configuration for all caches created by `$angularCacheFactory`.
 #### options
 __Type:__ `object`
 
-__Description:__ Configuration object for global cache defaults. See [Configuration Options](/configuration.html).
+__Description:__ Configuration object for global cache defaults. See [Configuration Options](configuration.html).
 
 ## Usage
 

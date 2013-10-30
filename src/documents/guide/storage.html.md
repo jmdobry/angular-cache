@@ -15,7 +15,7 @@ app.service('myService', function ($angularCacheFactory) {
     // already saved to localStorage (or sessionStorage if you used that).
     var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
         maxAge: 900000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 6000000, // This cache will clear itself every hour.
+        cacheFlushInterval: 3600000, // This cache will clear itself every hour.
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     });
@@ -41,7 +41,7 @@ app.service('myService', function ($angularCacheFactory) {
     // Always use the polyfill
     var myAwesomeCache = $angularCacheFactory('myAwesomeCache', {
         maxAge: 900000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 6000000, // This cache will clear itself every hour.
+        cacheFlushInterval: 3600000, // This cache will clear itself every hour.
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage', // This cache will sync itself with `localStorage`.
         storageImpl: localStoragePolyfill // angular-cache will use this polyfill instead of looking for localStorage
@@ -49,8 +49,8 @@ app.service('myService', function ($angularCacheFactory) {
 
     // Conditionally use the polyfill
     var options = {
-        maxAge: 90000, // Items added to this cache expire after 15 minutes.
-        cacheFlushInterval: 600000, // This cache will clear itself every hour.
+        maxAge: 900000, // Items added to this cache expire after 15 minutes.
+        cacheFlushInterval: 3600000, // This cache will clear itself every hour.
         deleteOnExpire: 'aggressive', // Items will be deleted from this cache right when they expire.
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     };

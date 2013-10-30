@@ -1,6 +1,6 @@
 ---
 sectionHeader: '.info(key)'
-sectionName: '&emsp;.info(key)'
+sectionName: '&emsp;.info(key), .keySet() & .keys()'
 sectionLinkName: cacheinfo
 gfm: true
 index: 18
@@ -23,4 +23,26 @@ __Description:__ The key of the item about which to retrieve information.
 someCache.info('someKey'); // { // info about 'someKey'... }
 
 someCache.info(); // { // info about 'someCache'... }
+```
+
+# .keySet()
+
+## Description
+Return the set of keys of all items in the cache.
+
+## Usage
+
+```javascript
+someCache.keySet();
+```
+
+# .keys()
+
+## Description
+Return an array of the keys of all items in the cache.
+
+## Usage
+
+```javascript
+someCache.keys();
 ```
