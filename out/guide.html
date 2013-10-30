@@ -36,7 +36,7 @@
                         <a href="/guide.html">Guide</a>
                     </li>
                     <li class="">
-                        <a href="/configuration.html">Configuration Options</a>
+                        <a href="/configuration.html">Configuration</a>
                     </li>
                     <li class="">
                         <a href="/api.html">API</a>
@@ -71,6 +71,10 @@
         
             
         
+            
+        
+            
+        
         
 
 		<!-- Docs nav
@@ -81,13 +85,25 @@
 				    
                         
                             <li class="list-group-item active">
-                                <a href="#introduction"><i class="glyphicon glyphicon-chevron-right"></i> Introduction</a>
+                                <a href="#basics"><i class="glyphicon glyphicon-chevron-right"></i> Basics</a>
                             </li>
                         
                     
                         
                             <li class="list-group-item ">
-                                <a href="#status"><i class="glyphicon glyphicon-chevron-right"></i> Project Status</a>
+                                <a href="#http"><i class="glyphicon glyphicon-chevron-right"></i> angular-cache w/$http</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#storage"><i class="glyphicon glyphicon-chevron-right"></i> angular-cache w/Web Storage</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#configure"><i class="glyphicon glyphicon-chevron-right"></i> Configure a cache</a>
                             </li>
                         
                     
@@ -96,66 +112,255 @@
 			<div class="col-md-9">
 				
 				    
-				        <section id="introduction">
-                            <div class="page-header"><h1>Introduction</h1></div>
-                            <p>blah
-blah</p>
-<ol>
-<li>a</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-<li>list</li>
-</ol>
+				        <section id="basics">
+                            <div class="page-header"><h1>Basics</h1></div>
+                            
+                        </section>
+                    
+                
+				    
+				        <section id="http">
+                            <div class="page-header"><h1>angular-cache w/$http</h1></div>
+                            <h4>Using angular-cache with $http</h4>
+<p><strong>Note</strong> The downside of letting $http handle caching for you is that it caches the responses (in string form) to your requests–not the JavaScript Object parsed from the response body. This means you can&#39;t interact with the data in the cache used by <code>$http</code>. See below for how to handle the caching yourself–giving you more control and the ability to interact with the cache (use it as a data store).</p>
+<p>Configure <code>$http</code> to use a cache created by <code>$angularCacheFactory</code> by default:</p>
+<pre class="highlighted"><code class="javascript">app.run(<span class="function"><span class="keyword">function</span> <span class="params">($http, $angularCacheFactory)</span> {</span>
+
+    $angularCacheFactory(<span class="string">'defaultCache'</span>, {
+        maxAge: <span class="number">900000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
+        cacheFlushInterval: <span class="number">6000000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        deleteOnExpire: <span class="string">'aggressive'</span> <span class="comment">// Items will be deleted from this cache right when they expire.</span>
+    });
+
+    $http.defaults.cache = $angularCacheFactory.get(<span class="string">'defaultCache'</span>);
+});
+
+app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($http)</span> {</span>
+    <span class="keyword">return</span> {
+        getDataById: <span class="function"><span class="keyword">function</span> <span class="params">(id)</span> {</span>
+            <span class="keyword">var</span> deferred = $q.defer(),
+                start = <span class="keyword">new</span> Date().getTime();
+
+            $http.get(<span class="string">'api/data/'</span> + id, {
+                cache: <span class="literal">true</span>
+            }).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+                console.log(<span class="string">'time taken for request: '</span> + (<span class="keyword">new</span> Date().getTime() - start) + <span class="string">'ms'</span>);
+                deferred.resolved(data);
+            });
+            <span class="keyword">return</span> deferred.promise;
+        }
+    };
+});
+
+app.controller(<span class="string">'myCtrl'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(myService)</span> {</span>
+    myService.getDataById(<span class="number">1</span>)
+        .then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+            <span class="comment">// e.g. "time taken for request: 2375ms"</span>
+            <span class="comment">// Data returned by this next call is already cached.</span>
+            myService.getDataById(<span class="number">1</span>)
+                .then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+                    <span class="comment">// e.g. "time taken for request: 1ms"</span>
+                });
+        });
+});</code></pre>
+<p>Tell <code>$http</code> to use a cache created by <code>$angularCacheFactory</code> for a specific request:</p>
+<pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($http, $angularCacheFactory)</span> {</span>
+
+    $angularCacheFactory(<span class="string">'dataCache'</span>, {
+        maxAge: <span class="number">90000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
+        cacheFlushInterval: <span class="number">600000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        deleteOnExpire: <span class="string">'aggressive'</span> <span class="comment">// Items will be deleted from this cache right when they expire.</span>
+    });
+
+    <span class="keyword">return</span> {
+        getDataById: <span class="function"><span class="keyword">function</span> <span class="params">(id)</span> {</span>
+            <span class="keyword">var</span> deferred = $q.defer(),
+                start = <span class="keyword">new</span> Date().getTime();
+
+            $http.get(<span class="string">'api/data/'</span> + id, {
+                cache: $angularCacheFactory.get(<span class="string">'dataCache'</span>)
+            }).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+                console.log(<span class="string">'time taken for request: '</span> + (<span class="keyword">new</span> Date().getTime() - start) + <span class="string">'ms'</span>);
+                deferred.resolved(data);
+            });
+            <span class="keyword">return</span> deferred.promise;
+        }
+    };
+});
+
+app.controller(<span class="string">'myCtrl'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(myService)</span> {</span>
+    myService.getDataById(<span class="number">1</span>)
+        .then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+            <span class="comment">// e.g. "time taken for request: 2375ms"</span>
+            <span class="comment">// Data returned by this next call is already cached.</span>
+            myService.getDataById(<span class="number">1</span>)
+                .then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+                    <span class="comment">// e.g. "time taken for request: 1ms"</span>
+                });
+        });
+});</code></pre>
+<p>Do your own caching while using the $http service:</p>
+<pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($http, $angularCacheFactory)</span> {</span>
+
+    $angularCacheFactory(<span class="string">'dataCache'</span>, {
+        maxAge: <span class="number">900000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
+        cacheFlushInterval: <span class="number">6000000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        deleteOnExpire: <span class="string">'aggressive'</span> <span class="comment">// Items will be deleted from this cache right when they expire.</span>
+    });
+
+    <span class="keyword">return</span> {
+        getDataById: <span class="function"><span class="keyword">function</span> <span class="params">(id)</span> {</span>
+            <span class="keyword">var</span> deferred = $q.defer(),
+                start = <span class="keyword">new</span> Date().getTime(),
+                dataCache = $angularCacheFactory.get(<span class="string">'dataCache'</span>);
+
+            <span class="comment">// Now that control of inserting/removing from the cache is in our hands,</span>
+            <span class="comment">// we can interact with the data in "dataCache" outside of this context,</span>
+            <span class="comment">// e.g. Modify the data after it has been returned from the server and</span>
+            <span class="comment">// save those modifications to the cache.</span>
+            <span class="keyword">if</span> (dataCache.get(id)) {
+                deferred.resolve(dataCache.get(id));
+            } <span class="keyword">else</span> {
+                $http.get(<span class="string">'api/data/'</span> + id).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+                        console.log(<span class="string">'time taken for request: '</span> + (<span class="keyword">new</span> Date().getTime() - start) + <span class="string">'ms'</span>);
+                        deferred.resolved(data);
+                    });
+            }
+            <span class="keyword">return</span> deferred.promise;
+        }
+    };
+});
+
+app.controller(<span class="string">'myCtrl'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(myService)</span> {</span>
+    myService.getDataById(<span class="number">1</span>)
+        .then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+            <span class="comment">// e.g. "time taken for request: 2375ms"</span>
+            <span class="comment">// Data returned by this next call is already cached.</span>
+            myService.getDataById(<span class="number">1</span>)
+                .then(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+                    <span class="comment">// e.g. "time taken for request: 1ms"</span>
+                });
+        });
+});</code></pre>
 
                         </section>
                     
                 
 				    
-				        <section id="status">
-                            <div class="page-header"><h1>Project Status</h1></div>
-                            <table>
-<thead>
-<tr>
-<th>Version</th>
-<th>Branch</th>
-<th>Build status</th>
-<th>Coverage</th>
-<th>Code Climate</th>
-<th>Dependency Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2.0.0</td>
-<td><a href="https://github.com/jmdobry/angular-cache">master</a></td>
-<td><a href="https://travis-ci.org/jmdobry/angular-cache"><img src="https://travis-ci.org/jmdobry/angular-cache.png?branch=master" alt="Build Status"></a></td>
-<td><a href="https://coveralls.io/r/jmdobry/angular-cache?branch=master"><img src="https://coveralls.io/repos/jmdobry/angular-cache/badge.png?branch=master" alt="Coverage Status"></a></td>
-<td><a href="https://codeclimate.com/github/jmdobry/angular-cache"><img src="https://codeclimate.com/github/jmdobry/angular-cache.png" alt="Code Climate"></a></td>
-<td><a href="https://gemnasium.com/jmdobry/angular-cache"><img src="https://gemnasium.com/jmdobry/angular-cache.png" alt="Dependency Status"></a></td>
-</tr>
-<tr>
-<td>2.0.1-SNAPSHOT</td>
-<td><a href="https://github.com/jmdobry/angular-cache/tree/develop">develop</a></td>
-<td><a href="https://travis-ci.org/jmdobry/angular-cache"><img src="https://travis-ci.org/jmdobry/angular-cache.png?branch=develop" alt="Build Status"></a></td>
-<td><a href="https://coveralls.io/r/jmdobry/angular-cache?branch=develop"><img src="https://coveralls.io/repos/jmdobry/angular-cache/badge.png?branch=develop" alt="Coverage Status"></a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+				        <section id="storage">
+                            <div class="page-header"><h1>angular-cache w/Web Storage</h1></div>
+                            <h4>Using angular-cache with localStorage (or sessionStorage)</h4>
+<p>Using angular-cache in browsers that support localStorage:</p>
+<pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
+
+    <span class="comment">// This cache will sync itself with localStorage if it exists, otherwise it won't. Every time the</span>
+    <span class="comment">// browser loads this app, this cache will attempt to initialize itself with any data it had</span>
+    <span class="comment">// already saved to localStorage (or sessionStorage if you used that).</span>
+    <span class="keyword">var</span> myAwesomeCache = $angularCacheFactory(<span class="string">'myAwesomeCache'</span>, {
+        maxAge: <span class="number">900000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
+        cacheFlushInterval: <span class="number">6000000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        deleteOnExpire: <span class="string">'aggressive'</span>, <span class="comment">// Items will be deleted from this cache right when they expire.</span>
+        storageMode: <span class="string">'localStorage'</span> <span class="comment">// This cache will sync itself with `localStorage`.</span>
+    });
+});</code></pre>
+<p>Using angular-cache in browsers that DON&#39;T support localStorage:</p>
+<p>Option 1 - Do nothing (the localStorage sync feature will be disabled)</p>
+<p>Option 2 - Create/use a polyfill that provides the global <code>localStorage</code> and <code>sessionStorage</code> objects. angular-cache will attempt to use these if it finds them.</p>
+<p>Option 3 - Tell angular-cache exactly which polyfill to use (also useful if you just want to use your own implementation/wrapper for localStorage):</p>
+<pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
+
+    <span class="keyword">var</span> localStoragePolyfill = {
+        getItem: <span class="function"><span class="keyword">function</span> <span class="params">(key)</span> {</span> ... },
+        setItem: <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span> ... },
+        removeItem: <span class="function"><span class="keyword">function</span> <span class="params">(key)</span> {</span> ... }
+    };
+
+    <span class="comment">// Always use the polyfill</span>
+    <span class="keyword">var</span> myAwesomeCache = $angularCacheFactory(<span class="string">'myAwesomeCache'</span>, {
+        maxAge: <span class="number">900000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
+        cacheFlushInterval: <span class="number">6000000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        deleteOnExpire: <span class="string">'aggressive'</span>, <span class="comment">// Items will be deleted from this cache right when they expire.</span>
+        storageMode: <span class="string">'localStorage'</span>, <span class="comment">// This cache will sync itself with `localStorage`.</span>
+        storageImpl: localStoragePolyfill <span class="comment">// angular-cache will use this polyfill instead of looking for localStorage</span>
+    });
+
+    <span class="comment">// Conditionally use the polyfill</span>
+    <span class="keyword">var</span> options = {
+        maxAge: <span class="number">90000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
+        cacheFlushInterval: <span class="number">600000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        deleteOnExpire: <span class="string">'aggressive'</span>, <span class="comment">// Items will be deleted from this cache right when they expire.</span>
+        storageMode: <span class="string">'localStorage'</span> <span class="comment">// This cache will sync itself with `localStorage`.</span>
+    };
+    <span class="keyword">if</span> (!window.localStorage) {
+        options.storageImpl = localStoragePolyfill;
+    }
+    <span class="keyword">var</span> myAwesomeCache = $angularCacheFactory(<span class="string">'myAwesomeCache'</span>, options);
+});</code></pre>
+<p>Documentation on the interface that must be implemented by any <code>storageImpl</code> polyfill used by angular-cache can be found on the <a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/">W3C Recommendation</a> page for webstorage. The interface itself looks like:</p>
+<pre class="highlighted"><code class="java"><span class="class"><span class="keyword">interface</span> <span class="title">Storage</span> {</span>
+  readonly attribute unsigned <span class="keyword">long</span> length;
+  DOMString? key(unsigned <span class="keyword">long</span> index);
+  getter DOMString getItem(DOMString key);
+  setter creator <span class="keyword">void</span> setItem(DOMString key, DOMString value);
+  deleter <span class="keyword">void</span> removeItem(DOMString key);
+  <span class="keyword">void</span> clear();
+};</code></pre>
+<p>angular-cache cares only about these three methods:
+- <a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-setitem">setItem</a>
+- <a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-getitem">getItem</a>
+- <a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-removeitem">removeItem</a></p>
+<p>One developer suggested using <a href="https://github.com/marcuswestin/store.js/">store.js</a>–a wrapper and polyfill for localStorage. However, store.js has its own API that doesn&#39;t match that of the webstorage spec, so if you want to use store.js or any other 3rd-party polyfill then you&#39;ll need to create a wrapper for it if it doesn&#39;t have the same API as <code>localStorage</code>. For example:</p>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> storeJsToStandard {
+  getItem: store.get,
+  setItem: store.set,
+  removeItem: store.remove
+};
+
+$angularCacheFactory(<span class="string">'myNewCache'</span>, {
+  storageMode: <span class="string">'localStorage'</span>,
+  storageImpl: storeJsToStandard
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="configure">
+                            <div class="page-header"><h1>Configure a cache</h1></div>
+                            <h4>Dynamically configure a cache</h4>
+<pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
+
+    <span class="keyword">var</span> cache = $angularCacheFactory(<span class="string">'cache'</span>, {
+        capacity: <span class="number">100</span>,
+        maxAge: <span class="number">300000</span>
+    });
+
+    <span class="comment">// Add 50 items here, for example</span>
+
+    cache.info(); <span class="comment">// { ..., size: 50, capacity: 100, maxAge: 300000, ... }</span>
+
+    cache.setOptions({
+        capacity: <span class="number">30</span>
+    });
+
+    cache.info(); <span class="comment">// { ..., size: 30, capacity: 30, maxAge: 3000, ... }</span>
+    <span class="comment">// notice that only the 30 most recently added items remain in the cache because</span>
+    <span class="comment">// the capacity was reduced.</span>
+
+    <span class="comment">// setting the second parameter to true will cause the cache's configuration to be</span>
+    <span class="comment">// reset to defaults before the configuration passed into setOptions() is applied to</span>
+    <span class="comment">// the cache</span>
+    cache.setOptions({
+        cacheFlushInterval: <span class="number">5500</span>
+    }, <span class="literal">true</span>);
+
+    cache.info(); <span class="comment">// { ..., size: 30, cacheFlushInterval: 5500,</span>
+                  <span class="comment">//   capacity: 1.7976931348623157e+308, maxAge: null, ... }</span>
+
+    cache.put(<span class="string">'someItem'</span>, <span class="string">'someValue'</span>, { maxAge: <span class="number">12000</span>, deleteOnExpire: <span class="string">'aggressive'</span> });
+    cache.info(<span class="string">'someItem'</span>); <span class="comment">// { timestamp: 12345678978, maxAge: 12000, deleteOnExpire: 'aggressive', isExpired: false }</span>
+});</code></pre>
+<p>See <a href="/api.html#cachesetoptions">AngularCache.setOptions(options)</a></p>
 
                         </section>
                     
@@ -166,8 +371,11 @@ blah</p>
 	<footer id="footer-main" class="navbar navbar-default">
         <div class="container">
             <ul class="nav navbar-nav row">
-                <li class="col-lg-5">
+                <li class="col-lg-3">
                     <a href="http://www.pseudobry.com/">© 2013 Jason Dobry</a>
+                </li>
+                <li class="col-lg-2">
+                    <a href="https://github.com/jmdobry/angular-cache/blob/master/LICENSE">MIT Licensed</a>
                 </li>
                 <li class="col-lg-4">
                     <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></span>
@@ -192,5 +400,9 @@ blah</p>
 			})
 		});
 	</script>
+	<script type="text/javascript">
+      var analytics=analytics||[];(function(){var e=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group","on","once","off"],t=function(e){return function(){analytics.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var n=0;n<e.length;n++)analytics[e[n]]=t(e[n])})(),analytics.load=function(e){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+e+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)};
+      analytics.load("cnao3w6o9h");
+    </script>
 </body>
 </html>

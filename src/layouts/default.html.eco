@@ -36,7 +36,7 @@
                         <a href="/guide.html">Guide</a>
                     </li>
                     <li class="<%= "active" if @document.basename=='configuration' %>">
-                        <a href="/configuration.html">Configuration Options</a>
+                        <a href="/configuration.html">Configuration</a>
                     </li>
                     <li class="<%= "active" if @document.basename=='api' %>">
                         <a href="/api.html">API</a>
@@ -98,8 +98,11 @@
 	<footer id="footer-main" class="navbar navbar-default">
         <div class="container">
             <ul class="nav navbar-nav row">
-                <li class="col-lg-5">
+                <li class="col-lg-3">
                     <a href="http://www.pseudobry.com/">© 2013 Jason Dobry</a>
+                </li>
+                <li class="col-lg-2">
+                    <a href="https://github.com/jmdobry/angular-cache/blob/master/LICENSE">MIT Licensed</a>
                 </li>
                 <li class="col-lg-4">
                     <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></span>

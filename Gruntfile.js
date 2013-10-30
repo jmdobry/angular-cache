@@ -16,8 +16,8 @@ module.exports = function (grunt) {
                 'out/css/angular-cache.css',
                 'out/css/main.css',
                 'out/css/styles.css',
-                'out/js/bootstrap.js',
-                'out/js/jquery.js',
+                'out/js/bootstrap.min.js',
+                'out/js/jquery.min.js',
                 'out/api/',
                 'out/configuration/',
                 'out/guide/',
@@ -41,16 +41,16 @@ module.exports = function (grunt) {
                 ext: '.min.css'
             }
         },
-        uglify: {
+        concat: {
             default: {
                 files: {
-                    'out/js/scripts.js': ['src/files/js/bootstrap.js', 'src/files/js/jquery']
+                    'out/js/scripts.js': ['src/files/js/jquery.min.js', 'src/files/js/bootstrap.min.js']
                 }
             }
         }
     });
 
     // Default task(s).
-    grunt.registerTask('default', ['clean:pre', 'cssmin', 'uglify', 'clean:post']);
+    grunt.registerTask('default', ['clean:pre', 'cssmin', 'concat', 'clean:post']);
 
 };

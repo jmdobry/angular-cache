@@ -1,7 +1,7 @@
 ---
 layout: "default"
 pageName: configuration
-displayName: Configuration Options
+displayName: Configuration
 description: Options for configuring angular-cache.
 sections: 'configuration'
 ---
