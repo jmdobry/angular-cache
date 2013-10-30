@@ -8,6 +8,9 @@
 	<meta name="author" content="Jason Dobry">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+    <link rel="icon" href="img/favicon.png" type="image/x-icon">
+
 	<link rel="stylesheet" type="text/css" media="screen" href="css/styles.min.css">
 	<title>angular-cache</title>
 </head>
@@ -98,13 +101,13 @@
                     
                         
                             <li class="list-group-item ">
-                                <a href="#http"><i class="glyphicon glyphicon-chevron-right"></i> angular-cache w/$http</a>
+                                <a href="#http"><i class="glyphicon glyphicon-chevron-right"></i> Angular-cache w/$http</a>
                             </li>
                         
                     
                         
                             <li class="list-group-item ">
-                                <a href="#storage"><i class="glyphicon glyphicon-chevron-right"></i> angular-cache w/Web Storage</a>
+                                <a href="#storage"><i class="glyphicon glyphicon-chevron-right"></i> Angular-cache w/Web Storage</a>
                             </li>
                         
                     
@@ -211,7 +214,7 @@ $angularCacheFactory.get(<span class="string">'profileCache'</span>); <span clas
                 
 				    
 				        <section id="http">
-                            <div class="page-header"><h1>angular-cache w/$http</h1></div>
+                            <div class="page-header"><h1>Angular-cache w/$http</h1></div>
                             <h4>Using angular-cache with $http</h4>
 <p><strong>Note</strong> The downside of letting $http handle caching for you is that it caches the responses (in string form) to your requests–not the JavaScript Object parsed from the response body. This means you can&#39;t interact with the data in the cache used by <code>$http</code>. See below for how to handle the caching yourself–giving you more control and the ability to interact with the cache (use it as a data store).</p>
 <p>Configure <code>$http</code> to use a cache created by <code>$angularCacheFactory</code> by default:</p>
@@ -339,7 +342,7 @@ app.controller(<span class="string">'myCtrl'</span>, <span class="function"><spa
                 
 				    
 				        <section id="storage">
-                            <div class="page-header"><h1>angular-cache w/Web Storage</h1></div>
+                            <div class="page-header"><h1>Angular-cache w/Web Storage</h1></div>
                             <h4>Using angular-cache with localStorage (or sessionStorage)</h4>
 <p>Using angular-cache in browsers that support localStorage:</p>
 <pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>

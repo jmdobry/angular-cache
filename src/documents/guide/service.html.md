@@ -1,6 +1,6 @@
 ---
-sectionHeader: angular-cache w/$http
-sectionName: angular-cache w/$http
+sectionHeader: Angular-cache w/$http
+sectionName: Angular-cache w/$http
 sectionLinkName: http
 gfm: true
 index: 2

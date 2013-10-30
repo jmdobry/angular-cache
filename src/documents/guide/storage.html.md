@@ -1,6 +1,6 @@
 ---
-sectionHeader: angular-cache w/Web Storage
-sectionName: angular-cache w/Web Storage
+sectionHeader: Angular-cache w/Web Storage
+sectionName: Angular-cache w/Web Storage
 sectionLinkName: storage
 gfm: true
 index: 3
