@@ -74,22 +74,11 @@ module.exports = function (grunt) {
             options: {
                 coverage_dir: 'coverage'
             }
-        },
-        jsdoc: {
-            dist: {
-                src: ['dist/angular-cache.js'],
-                options: {
-                    destination: 'docs',
-                    lenient: true,
-                    verbose: true,
-                    private: true
-                }
-            }
         }
     });
 
     grunt.registerTask('release', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev']);
-    grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev', 'jsdoc', 'clean']);
+    grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev', 'clean']);
     grunt.registerTask('default', ['build']);
     grunt.registerTask('test', ['karma:dev']);
 
@@ -97,5 +86,5 @@ module.exports = function (grunt) {
     grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis', 'coveralls']);
 
     // Only used on the gh-pages branch
-    grunt.registerTask('pages', ['clean', 'jshint', 'build', 'copy', 'uglify', 'karma:release', 'jsdoc']);
+    grunt.registerTask('pages', ['clean', 'jshint', 'build', 'copy', 'uglify', 'karma:release']);
 };

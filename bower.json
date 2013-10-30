@@ -26,7 +26,6 @@
         "karma.conf.js",
         "libpeerconnection.log",
         ".gitignore",
-        ".travis.yml",
-        "docs/"
+        ".travis.yml"
     ]
 }

@@ -12,7 +12,6 @@ libpeerconnection.log
 coverage/Chrome*/*
 coverage/Phantom*/*
 coverage/Firefox*/*
-coverage-*
+coverage/
 
 bower_components/
-dist/
