@@ -7,10 +7,15 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         clean: {
             pre: [
+                'css/',
+                'fonts/',
+                'js/',
+                'img/',
+                '*.html',
                 'out/css/styles.min.css',
                 'out/js/scripts.js'
             ],
-            post: [
+            mid: [
                 'out/css/bootstrap.css',
                 'out/css/github.css',
                 'out/css/angular-cache.css',
@@ -23,7 +28,8 @@ module.exports = function (grunt) {
                 'out/guide/',
                 'out/index/',
                 'out/installation/'
-            ]
+            ],
+            post: ['out/']
         },
         cssmin: {
             combine: {
@@ -47,10 +53,28 @@ module.exports = function (grunt) {
                     'out/js/scripts.js': ['src/files/js/jquery.min.js', 'src/files/js/bootstrap.min.js']
                 }
             }
+        },
+        copy: {
+            default: {
+                expand: true,
+                cwd: 'out/',
+                src: '**/*',
+                dest: './'
+            }
+        },
+        shell: {
+            default: {
+                options: {
+                    stdout: true,
+                    stderr: true,
+                    failOnError: true
+                },
+                command: 'node node_modules/docpad/bin/docpad-compile generate'
+            }
         }
     });
 
-    // Default task(s).
-    grunt.registerTask('default', ['clean:pre', 'cssmin', 'concat', 'clean:post']);
+    grunt.registerTask('default', ['clean:pre', 'cssmin', 'concat', 'clean:mid', 'copy', 'clean:post']);
 
+    grunt.registerTask('build', ['shell', 'default']);
 };
