@@ -847,6 +847,20 @@
                  * @returns {*} The value of the item in the cache with the specified key.
                  */
                 this.get = function (key, options) {
+                    if (angular.isArray(key)) {
+                        var keys = key,
+                            values = [];
+
+                        angular.forEach(keys, function(key) {
+                            var value = self.get(key, options);
+                            if (angular.isDefined(value)) {
+                                values.push(value);
+                            }
+                        });
+
+                        return values;
+                    }
+
                     options = options || {};
                     if (!angular.isString(key)) {
                         throw new Error('AngularCache.get(key, options): key: must be a string!');
