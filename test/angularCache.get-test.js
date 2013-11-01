@@ -1,15 +1,15 @@
 describe('AngularCache.get(key)', function () {
-    it('should throw an error if "key" is not a string.', function () {
+    it('should throw an error if "key" is not a string or array.', function () {
         var cache = $angularCacheFactory('cache');
-        for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
+        for (var i = 0; i < TYPES_EXCEPT_STRING_OR_ARRAY.length; i++) {
             try {
-                cache.get(TYPES_EXCEPT_STRING[i]);
-                fail(TYPES_EXCEPT_STRING[i]);
+                cache.get(TYPES_EXCEPT_STRING_OR_ARRAY[i]);
+                fail(TYPES_EXCEPT_STRING_OR_ARRAY[i]);
             } catch (err) {
                 expect(err.message).toEqual('AngularCache.get(key, options): key: must be a string!');
                 continue;
             }
-            fail(TYPES_EXCEPT_STRING[i]);
+            fail(TYPES_EXCEPT_STRING_OR_ARRAY[i]);
         }
     });
     it('should throw an error if "options" is not an object.', function () {
@@ -112,5 +112,25 @@ describe('AngularCache.get(key)', function () {
                 expect(value).toEqual('value');
             }});
         });
+    });
+    it('should return the correct values for multiple keys.', function () {
+        var cache = $angularCacheFactory('cache');
+        var value1 = 'value1',
+            value2 = 2,
+            value3 = {
+                value3: 'stuff'
+            };
+        cache.put('item1', value1);
+        cache.put('item2', value2);
+        cache.put('item3', value3);
+        expect(cache.get(['item1', 'item2', 'item3'])).toEqual([value1, value2, value3]);
+    });
+    it('should not return undefined values for multiple keys.', function () {
+        var cache = $angularCacheFactory('cache');
+        var value1 = 'value1',
+            value2 = 2;
+        cache.put('item1', value1);
+        cache.put('item2', value2);
+        expect(cache.get(['item1', 'item2', 'item3'])).toEqual([value1, value2]);
     });
 });
