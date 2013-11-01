@@ -2,6 +2,7 @@ var fail = function (msg) {
         expect('should not reach this!: ' + msg).toEqual('failure');
     },
     TYPES_EXCEPT_STRING = [123, 123.123, null, undefined, {}, [], true, false, function () {}],
+    TYPES_EXCEPT_STRING_OR_ARRAY = [123, 123.123, null, undefined, {}, true, false, function () {}],
     TYPES_EXCEPT_NUMBER = ['string', null, undefined, {}, [], true, false, function () {}],
     TYPES_EXCEPT_OBJECT = ['string', 123, 123.123, null, undefined, true, false, function () {}],
     TYPES_EXCEPT_BOOLEAN = ['string', 123, 123.123, null, undefined, {}, [], function () {}],
