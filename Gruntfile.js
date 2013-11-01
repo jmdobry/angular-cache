@@ -34,6 +34,17 @@ module.exports = function (grunt) {
         },
         uglify: {
             main: {
+                options: {
+                    banner: '/**\n' +
+                    '* @author Jason Dobry <jason.dobry@gmail.com>\n' +
+                    '* @file angular-cache.min.js\n' +
+                    '* @version <%= pkg.version %> - Homepage <http://jmdobry.github.io/angular-cache/>\n' +
+                    '* @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>\n' +
+                    '* @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>\n' +
+                    '*\n' +
+                    '* @overview angular-cache is a very useful replacement for Angular\'s $cacheFactory.\n' +
+                    '*/\n'
+                },
                 files: {
                     'dist/angular-cache.min.js': ['dist/angular-cache.js']
                 }
