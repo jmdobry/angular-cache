@@ -35,6 +35,7 @@ $angularCacheFactory('myNewCache', {
     maxAge: 90000, // Items added to this cache expire after 15 minutes
     deleteOnExpire: 'passive' // Items will be passively deleted when requested after expiration
 });
+```
 
 Do nothing with expired items (not in 1.x.x).
 ```javascript
