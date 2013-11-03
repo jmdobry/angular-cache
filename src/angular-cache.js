@@ -786,7 +786,7 @@
                 /**
                  * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
-                 * @param {string} key The key of the item to retrieve.
+                 * @param {string|Array} key The key of the item to retrieve or an array of keys of items to retrieve.
                  * @param {object} [options] Configuration.
                  * @returns {*} The value of the item in the cache with the specified key.
                  */
