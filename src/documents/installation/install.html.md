@@ -20,7 +20,7 @@ Include the version of angular-cache you downloaded on your web page _after_ you
 
 ```html
 <!-- After angular.js -->
-<script src="/js/plugins/angular-cache-2.0.0.min.js"></script>
+<script src="/js/plugins/angular-cache-2.1.0.min.js"></script>
 ```
 
 ## Load the angular-cache module

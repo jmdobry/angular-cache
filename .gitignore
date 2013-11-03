@@ -8,3 +8,6 @@ libpeerconnection.log
 # IntelliJ IDEA
 .idea/
 *.iml
+
+coverage/
+bower_components/

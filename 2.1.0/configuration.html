@@ -1,0 +1,479 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="angular-cache : A vey useful replacement for Angular's $cacheFactory.">
+	<meta name="author" content="Jason Dobry">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+    <link rel="icon" href="img/favicon.png" type="image/x-icon">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="css/styles.min.css">
+	<title>angular-cache</title>
+</head>
+<body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
+    <a href="https://github.com/jmdobry/angular-cache" id="github-ribbon">
+        <img style="z-index: 2000; position: fixed; top: 0; right: 0; border: 0;" width="120" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="./">
+					<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAAAyCAYAAACqGbz7AAAFDklEQVR42u2bS2sUQRDH/QK5esopBw8ePHgK+AlEchUPiqIgJCReRL1FyEkQFfGViAqalaAgiIggQQ/iIYIgCImal5hI8BGT+IiJJtm1Gmal0/SjerpntsX/D4rdzcxU1/y7Z7pqerJhAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID0qNVqnWTnVKtWq5fp84jluA6yXrJNzHaayM6S9ZEdzBlPjyOePuW4Zmn7FrKL0rZLZHt8fJSkaZ/uWK6PksZFT5E6JD4e1lmoyKKBLzU3w+IC0hw/ITaSGDO67QYx64zljYfa+0of203xKHTVt2edpvp65uOjLE2ZDHN0L2pcmPohhg6Jj4d15BaaGjvl0dkiuLtKcM1kP6VdRhide0favxIYz0tHPILfZFulfV5oXJ3x8VGypt4+Qgnthxg6JD4e4lyEJud0Ip/oo59sXtPWqGZWqyr7PHZ08Hi9KbJ2ZjzXsjThPNl7n3jo+Clp+0ayOaWJNbI2ro9GaCqOFwMyu2svuHwEzoAx+iGGDimPh7/9Ube8Yt/UCDHhuMBGLbOaTL+rgynw73Id6YpH2q+tHhf5eMuI5760fSfZqqZTm7g+GqTpfR8fgRdhjH6IocM/Px44Kce4epMhO2bLlYkhhw/Z13FDPVjVpa6ueJQHO1eFOOJuxPBxNPCc1vlogKbe51DkuAjohxg6/FPjIU/KETtXFtP6bk49GFqHpVAPltU+fX9u81H0uEi9H1KLw/WEUk0HJkNzZU3+/kMO2FIP5q7DEqoHi9JU9tFC9kuJ7zt3eShUw0bqkEocso9QsXV57mCEXLlmKKSbHfVgcN6dQD1YlKaD2bYDykOIOlci1oNF9cNgWf1QVn8UkfdzGArwIdaBdnnWg12G4rzOrcTrwaI1FbH1Rl6aCK5/CtIhlTh0nI72CJqBKVdeFFM0c9D41IObyd5Z/F1IvB4M0ZS7LjZQ8NJEjDoshg6pxKEb0+2x6sFl6tBX4g2WzGoeufKImMKzqZx7B2fVg/T1kXjs7BlPKvVgiKbrfCgaLJOtZN9/Kml9R5ZirTDso/L6VlF1WLAOqcSh+hAvB+R5nVGb58pvK9DPbZ65ciX7WyvZEuPu7VUP5ogniXowUFOdjweGervJto+lH6bLqAdj6JBKHNHeTIpcO6mz2n715DSMFBhPSuuDUdun79cZPgbIPtPfP9iM9pklu1FCHdaQdbn/an1Q93icfp90XIQV5ZF70LpYJB//+/pgSy2NdblU4ih3fTCwdhox3IkGmPXgPs3MOamIseiIJ4aPqPVg7HqU4yNwXFg1VN5OEbXQLH2+9qkpmTqkEkdwXVrmWlrF0tYTVz1o+DeSKWn7Q028k8oFr/MxY4tD9WHQ5XYq65McH4ElilVDab97eWtKzjmkEkfIeGhoPWho742tHsxqyDVNm+JONW+YTbu5Pqj9b4bZ+LBrPSg7dlR6mjaWPaU8lGJNG3hzNmm4IJ3/nBJfd+xzSCWOkPEQnPf75Oyc16XE1K8sXVTU7ZrUwMZjXRuePm4xdLHRXZSmeX1EuAh9NXwae2ylEkfIeOAIvUOTb8v/XiLW+qYdubLsY5jZbmt2wWpnzqxmG7Oc5Gp2Z+p0FOMuH2JW3svUxcSS0qGxNc3lI+Ji/Zjj/MXT1RNFjK1U4ggZDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAG8Ac7NumYSaPNAQAAAABJRU5ErkJggg==" alt="angular-cache" width="225" height="50">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+                    <li class="">
+                        <a href="./">Home</a>
+                    </li>
+                    <li class="">
+                        <a href="installation.html">Installation</a>
+                    </li>
+                    <li class="">
+                        <a href="guide.html">Guide</a>
+                    </li>
+                    <li class="active">
+                        <a href="configuration.html">Configuration</a>
+                    </li>
+                    <li class="">
+                        <a href="api.html">API</a>
+                    </li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li>
+							    <a href="https://groups.google.com/forum/#!forum/angular-cache">
+							    <i class="glyphicon glyphicon-envelope"></i> Mailing List
+							    </a>
+                            </li>
+							<li class="divider"></li>
+							<li><a href="https://github.com/jmdobry/angular-cache/issues?state=open">Issues</a></li>
+							<li><a href="https://github.com/jmdobry/angular-cache">GitHub</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+	<header class="jumbotron subhead" id="overview">
+		<div class="container">
+			<h1>Configuration</h1>
+			<p class="lead">Options for configuring angular-cache.</p>
+		</div>
+	</header>
+	<div class="container">
+        
+        
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+
+		<!-- Docs nav
+		================================================== -->
+		<div class="row">
+			<div class="col-md-3" id="sidebar">
+				<ul class="list-group nav" id="sidenav">
+				    
+                        
+                            <li class="list-group-item active">
+                                <a href="#configuration"><i class="glyphicon glyphicon-chevron-right"></i> Using these options</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#maxage"><i class="glyphicon glyphicon-chevron-right"></i> maxAge</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#deleteonexpire"><i class="glyphicon glyphicon-chevron-right"></i> deleteOnExpire</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#recyclefreq"><i class="glyphicon glyphicon-chevron-right"></i> recycleFreq</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#onexpire"><i class="glyphicon glyphicon-chevron-right"></i> onExpire</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheflushinterval"><i class="glyphicon glyphicon-chevron-right"></i> cacheFlushInterval</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#storagemode"><i class="glyphicon glyphicon-chevron-right"></i> storageMode</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#storageimpl"><i class="glyphicon glyphicon-chevron-right"></i> storageImpl</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#verifyintegrity"><i class="glyphicon glyphicon-chevron-right"></i> verifyIntegrity</a>
+                            </li>
+                        
+                    
+				</ul>
+			</div>
+			<div class="col-md-9">
+				
+				    
+				        <section id="configuration">
+                            <div class="page-header"><h1>Using these options</h1></div>
+                            <p>These are the configuration options available for customizing each instance of <code>AngularCache</code>. They can be used in three places:</p>
+<p><br></p>
+<h4>Setting the default options for all caches</h4>
+<pre class="highlighted"><code class="javascript">$angularCacheFactoryProvider.setCacheDefaults({
+    <span class="comment">// configuration options</span>
+});</code></pre>
+<p>See <a href="api.html#setcachedefaults">$angularCacheFactoryProvider.setCacheDefaults(options)</a></p>
+<p><br></p>
+<h4>Creating a cache</h4>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    <span class="comment">// configuration options</span>
+});</code></pre>
+<p>See <a href="api.html#factory">$angularCacheFactory(cacheId, options)</a></p>
+<p><br></p>
+<h4>Dynamically configuring a cache</h4>
+<pre class="highlighted"><code class="javascript">newCache.setOptions({
+    <span class="comment">// configuration options</span>
+});</code></pre>
+<p>See <a href="api.html#cachesetoptions">AngularCache.setOptions(options, strict)</a></p>
+
+                        </section>
+                    
+                
+				    
+				        <section id="maxage">
+                            <div class="page-header"><h1>maxAge</h1></div>
+                            <p><strong>Type:</strong> <code>number</code> (milliseconds)</p>
+<p><strong>Default:</strong> <code>null</code></p>
+<p><strong>Description:</strong> Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively or not at all depending on the value of <code>deleteOnExpire</code> (see below). Can be configured on a per-item basis for greater specificity.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    maxAge: <span class="number">3600000</span>
+});</code></pre>
+<p><br>
+Can be configured on a per-item basis:</p>
+<pre class="highlighted"><code class="javascript">newCache.put(<span class="string">'someKey'</span>, <span class="string">'someValue'</span>, {
+    maxAge: <span class="number">90000</span> <span class="comment">// overrides the maxAge for "newCache"</span>
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="deleteonexpire">
+                            <div class="page-header"><h1>deleteOnExpire</h1></div>
+                            <p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Default:</strong> <code>&quot;none&quot;</code></p>
+<p><strong>Description:</strong> Specifies what should happen when an item expires. <code>maxAge</code> must be set in order for <code>&quot;passive&quot;</code> or <code>&quot;aggressive&quot;</code> to have any effect. Can be configured on a per-item basis for greater specificity.</p>
+<p><strong>Possible Values:</strong></p>
+<ul>
+<li><p><code>&quot;none&quot;</code> - Items will not be removed from the cache even if they have expired.</p>
+</li>
+<li><p><code>&quot;passive&quot;</code> - Items will be deleted if they are requested after they have expired, resulting in a miss.</p>
+</li>
+<li><p><code>&quot;aggressive&quot;</code> - Items will be deleted as soon as they expire.</p>
+</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    maxAge: <span class="number">3600000</span>,
+    deleteOnExpire: <span class="string">'aggressive'</span>
+});</code></pre>
+<p><br>
+Can be configured on a per-item basis:</p>
+<pre class="highlighted"><code class="javascript">newCache.put(<span class="string">'someKey'</span>, <span class="string">'someValue'</span>, {
+    maxAge: <span class="number">90000</span>,
+    deleteOnExpire: <span class="string">'passive'</span> <span class="comment">// overrides the maxAge for "newCache"</span>
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="recyclefreq">
+                            <div class="page-header"><h1>recycleFreq</h1></div>
+                            <p><strong>Type:</strong> <code>number</code> (milliseconds)</p>
+<p><strong>Default:</strong> <code>1000</code></p>
+<p><strong>Description:</strong> How often the cache should check for expired items. Only used when <code>maxAge</code> is set.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    maxAge: <span class="number">3600000</span>,
+    recycleFreq: <span class="number">10000</span> <span class="comment">// check for expired items every 10 seconds</span>
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="onexpire">
+                            <div class="page-header"><h1>onExpire</h1></div>
+                            <p><strong>Type:</strong> <code>function</code></p>
+<p><strong>Default:</strong> <code>null</code></p>
+<p><strong>Description:</strong> A callback function to be executed when an item expires.</p>
+<p><strong>Usage:</strong></p>
+<h4>Using &#39;onExpire&#39; in passive delete mode</h4>
+<p>In passive delete mode the cache doesn&#39;t know if an item has expired until the item is requested, at which point the cache checks to see if the item has expired. If the item has expired then it is immediately removed from the cache, resulting in a &quot;miss&quot;.</p>
+<p>If you specify a global &quot;onExpire&quot; callback function, the cache will execute this function when it is discovered the item has expired, passing to the callback the key and value of the expired item.</p>
+<p>When you actually request the expired item via <code>myCache.get(&#39;someKey&#39;)</code> you can also pass a second argument to <code>get()</code> specifying a callback that your cache&#39;s &quot;onExpire&quot; callback can execute when it finishes. For example:</p>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
+    maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second, but we don't know it until the item is requested</span>
+    onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value, done)</span> {</span>
+        <span class="comment">// "onExpire" callback for the cache.</span>
+        <span class="comment">// The third optional parameter "done", is the second argument passed to `get()` as described above</span>
+
+        console.log(key + <span class="string">' expired!'</span>);
+        <span class="comment">// Retrieve fresh value for "key" from server, of course you'll need to figure out</span>
+        <span class="comment">// what the url is if key != url</span>
+        $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+            $angularCacheFactory.get(<span class="string">'newCache'</span>).put(key, data);
+            done(data); <span class="comment">// Execute the "done" callback specified in the `get()` call</span>
+        });
+    });
+});
+
+newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos'</span>);
+
+<span class="comment">// wait a few seconds</span>
+
+<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(value)</span> {</span>
+    <span class="comment">// here value is defined, because we retrieved it from the server</span>
+});
+<span class="comment">// here value is undefined because the item with</span>
+<span class="comment">// the key "denver" has expired and was deleted from the</span>
+<span class="comment">// cache when we requested it. The callback passed to</span>
+<span class="comment">// "get()" will receive the new value for 'denver' which</span>
+<span class="comment">// will be retrieved from the server. This callback</span>
+<span class="comment">// is the "done" callback executed by the "onExpire"</span>
+<span class="comment">// callback specified when we created the cache.</span></code></pre>
+<p>Another example:</p>
+<pre class="highlighted"><code class="javascript"><span class="comment">// We don't specify an "onExpire" callback for this cache</span>
+<span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
+    maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second, but we don't know it until the item is requested</span>
+});
+
+newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos'</span>);
+
+<span class="comment">// wait a few seconds</span>
+
+<span class="comment">// In this cache the callback is immediately executed when</span>
+<span class="comment">// the cache discovers that 'denver' has expired, and the</span>
+<span class="comment">// callback is passed the key and value of the expired item.</span>
+<span class="comment">// Here you could retrieve a new value for 'denver' from</span>
+<span class="comment">// the server or decide to keep the old value and re-insert</span>
+<span class="comment">// it into the cache. Specifying an "onExpire" callback for</span>
+<span class="comment">// the cache is a good way to stay DRY.</span>
+<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
+    <span class="keyword">if</span> (isGoodThisYear(key, value)) {
+        newCache.put(key, value);
+    } <span class="keyword">else</span> {
+        $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+            newCache.put(key, data);
+        });
+    }
+});</code></pre>
+<h4>Using &#39;onExpire&#39; in aggressive delete mode</h4>
+<p>In aggressive delete mode you can&#39;t pass a second parameter to <code>get()</code> because your &quot;onExpire&quot; callback for the cache has already been executed for expired items.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
+    maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second and are immediately deleted</span>
+    onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
+        <span class="comment">// "onExpire" callback for the cache.</span>
+        <span class="comment">// The third optional parameter "done", is the second argument passed to `get()` as described above</span>
+
+        console.log(key + <span class="string">' expired!'</span>);
+        <span class="comment">// Retrieve fresh value for "key" from server, of course you'll need to figure out</span>
+        <span class="comment">// what the url is if key != url</span>
+        $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+            $angularCacheFactory.get(<span class="string">'newCache'</span>).put(key, data);
+        });
+    });
+});
+
+newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos'</span>);
+
+<span class="comment">// wait a few seconds, during which time the "onExpire" callback is automatically executed</span>
+
+newCache.get(<span class="string">'denver'</span>); <span class="comment">// 'broncos' or whatever was returned by the server in the "onExpire" callback</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheflushinterval">
+                            <div class="page-header"><h1>cacheFlushInterval</h1></div>
+                            <p><strong>Type:</strong> <code>number</code> (milliseconds)</p>
+<p><strong>Default:</strong> <code>null</code></p>
+<p><strong>Description:</strong> Set the cache to periodically clear itself.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, { cacheFlushInterval: <span class="number">3600000</span> }); <span class="comment">// clear the cache every hour</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="storagemode">
+                            <div class="page-header"><h1>storageMode</h1></div>
+                            <p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Default:</strong> <code>&quot;none&quot;</code></p>
+<p><strong>Description:</strong> Configure the cache to sync itself with <code>localStorage</code> or <code>sessionStorage</code>. The cache will re-initialize itself from <code>localStorage</code> or <code>sessionStorage</code> on page refresh. See <a href="guide.html#using-angular-cache-with-localStorage">Using angular-cache with localStorage</a>.</p>
+<p><strong>Possible Values:</strong></p>
+<ul>
+<li><p><code>&quot;none&quot;</code> - The cache will not sync itself with web storage.</p>
+</li>
+<li><p><code>&quot;localStorage&quot;</code> - Sync with <code>localStorage</code></p>
+</li>
+<li><p><code>&quot;sessionStorage&quot;</code> - Sync with <code>sessionStorage</code></p>
+</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    storageMode: <span class="string">'localStorage'</span>, <span class="comment">// this cache will sync itself to localStorage</span>
+    verifyIntegrity: <span class="literal">true</span>
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="storageimpl">
+                            <div class="page-header"><h1>storageImpl</h1></div>
+                            <p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Default:</strong> <code>null</code></p>
+<p><strong>Description:</strong> When <code>storageMode</code> is set to <code>&quot;localStorage&quot;</code> or <code>&quot;sessionStorage&quot;</code> angular-cache will default to using the global <code>localStorage</code> or <code>sessionStorage</code> object.</p>
+<p><code>storageImpl</code> provides angular-cache an implementation of <code>localStorage</code> or <code>sessionStorage</code>. This is useful when you don&#39;t want to override the global storage objects or when using angular-cache in a browser that doesn&#39;t support <code>localStorage</code> or <code>sessionStorage</code>.</p>
+<p><strong>Note:</strong> If angular-cache doesn&#39;t detect a global <code>localStorage</code> or <code>sessionStorage</code> and you don&#39;t provide a polyfill, then syncing with web storage will be disabled. It is up to the developer to provide a polyfill for browsers that don&#39;t support <code>localStorage</code> and <code>sessionStorage</code>. Any implementation of <code>localStorage</code> and <code>sessionStorage</code> provided to angular-cache must implement at least the <code>setItem</code>, <code>getItem</code>, and <code>removeItem</code> methods.</p>
+<p>See <a href="guide.html#using-angular-cache-with-localStorage">Using angular-cache with localStorage</a>.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    storageImpl: mystorageImplementation,
+    storageMode: <span class="string">'localStorage'</span>
+});
+
+$angularCacheFactory(<span class="string">'otherCache'</span>, {
+    storageImpl: mySessionStorageImplementation,
+    storageMode: <span class="string">'sessionStorage'</span>
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="verifyintegrity">
+                            <div class="page-header"><h1>verifyIntegrity</h1></div>
+                            <p><strong>Type:</strong> <code>boolean</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Description:</strong> Specify whether to verify integrity of data saved in <code>localStorage</code> on every operation. If true, angular-cache will perform a full sync with <code>localStorage</code> on every operation. Increases reliability of data synchronization, but may incur a performance penalty. Has no effect if <code>storageMode</code> is set to &quot;none&quot;.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+    storageMode: <span class="string">'localStorage'</span>,
+    verifyIntegrity: <span class="literal">true</span>
+});</code></pre>
+
+                        </section>
+                    
+                
+			</div>
+		</div>
+		<div class="row">
+		    <div class="col-md-3"></div>
+		    <div class="col-md-9">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'angularcache'; // required: replace example with your forum shortname
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function() {
+                        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+            </div>
+		</div>
+	</div>
+	<footer id="footer-main" class="navbar navbar-default">
+        <div class="container">
+            <ul class="nav navbar-nav row">
+                <li class="col-lg-3">
+                    <a href="http://www.pseudobry.com/">© 2013 Jason Dobry</a>
+                </li>
+                <li class="col-lg-2">
+                    <a href="https://github.com/jmdobry/angular-cache/blob/master/LICENSE">MIT Licensed</a>
+                </li>
+                <li class="col-lg-4">
+                    <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></span>
+                    <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=fork&count=true"allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe></span>
+                </li>
+                <li class="col-lg-3 pull-right">
+                    <a href="JavaScript:void(0)" onclick="window.scrollTo(0, 0);" class="pull-right" style="margin-right: 30px;">
+                        <span class="glyphicon glyphicon-arrow-up"></span>&nbsp;&nbsp;Back to top
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+	<script src="js/scripts.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('#sidenav').affix({
+				offset: {
+					top: function () { return $(window).width() <= 768 ? 290 : 154 },
+			  		bottom: 0
+				}
+			})
+		});
+	</script>
+	<script type="text/javascript">
+      var analytics=analytics||[];(function(){var e=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group","on","once","off"],t=function(e){return function(){analytics.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var n=0;n<e.length;n++)analytics[e[n]]=t(e[n])})(),analytics.load=function(e){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+e+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)};
+      analytics.load("cnao3w6o9h");
+    </script>
+</body>
+</html>

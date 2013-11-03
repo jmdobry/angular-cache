@@ -27,7 +27,7 @@ will install the latest stable version of angular-cache and save the change to y
 <br>
 Alternatively, you can specify the new version you want to install, for example:
 
-`bower install angular-cache#2.0.0 --save`.
+`bower install angular-cache#2.1.0 --save`.
 
 <br>
 `bower prune` will remove the old installation of angular-cache.
