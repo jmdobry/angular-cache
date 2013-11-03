@@ -15,7 +15,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         // these folders will no longer be checked into development branches
-        clean: ['dist/', 'docs/', 'coverage/'],
+        clean: {
+            pre: ['dist/', 'coverage/'],
+            post: ['coverage/']
+        },
         jshint: {
             all: ['Gruntfile.js', 'src/**/*.js', 'test/*.js'],
             jshintrc: '.jshintrc'
@@ -34,6 +37,17 @@ module.exports = function (grunt) {
         },
         uglify: {
             main: {
+                options: {
+                    banner: '/**\n' +
+                        '* @author Jason Dobry <jason.dobry@gmail.com>\n' +
+                        '* @file angular-cache.min.js\n' +
+                        '* @version <%= pkg.version %> - Homepage <http://jmdobry.github.io/angular-cache/>\n' +
+                        '* @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>\n' +
+                        '* @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>\n' +
+                        '*\n' +
+                        '* @overview angular-cache is a very useful replacement for Angular\'s $cacheFactory.\n' +
+                        '*/\n'
+                },
                 files: {
                     'dist/angular-cache.min.js': ['dist/angular-cache.js']
                 }
@@ -41,33 +55,90 @@ module.exports = function (grunt) {
         },
         karma: {
             options: {
-                configFile: './karma.conf.js',
-                singleRun: true,
-                autoWatch: false
+                configFile: './karma.conf.js'
             },
             dev: {
-                browsers: ['Chrome']
+                browsers: ['Chrome'],
+                autoWatch: true,
+                singleRun: false
             },
-            travis: {
-                browsers: ['Firefox', 'PhantomJS'],
-                coverageReporter: {
-                    type: 'lcov',
-                    dir: 'coverage/'
-                },
-                preprocessors: {
-                    'src/angular-cache.js': ['coverage']
-                },
-                reporters: ['progress', 'coverage']
+            '1.0.4': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.0.4/angular.js',
+                        'bower_components/angular-mocks-1.0.4/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
             },
-            release: {
-                coverageReporter: {
-                    type: 'lcov',
-                    dir: 'coverage/'
-                },
-                preprocessors: {
-                    'src/angular-cache.js': ['coverage']
-                },
-                reporters: ['progress', 'coverage']
+            '1.0.5': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.0.5/angular.js',
+                        'bower_components/angular-mocks-1.0.5/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
+            },
+            '1.0.6': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.0.6/angular.js',
+                        'bower_components/angular-mocks-1.0.6/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
+            },
+            '1.0.7': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.0.7/angular.js',
+                        'bower_components/angular-mocks-1.0.7/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
+            },
+            '1.0.8': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.0.8/angular.js',
+                        'bower_components/angular-mocks-1.0.8/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
+            },
+            '1.1.4': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.1.4/angular.js',
+                        // hopefully this works. 1.1.4 isn't available on bower
+                        'bower_components/angular-mocks-1.1.5/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
+            },
+            '1.1.5': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.1.5/angular.js',
+                        'bower_components/angular-mocks-1.1.5/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
             }
         },
         coveralls: {
@@ -77,14 +148,12 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('release', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev']);
-    grunt.registerTask('build', ['clean', 'jshint', 'copy', 'uglify', 'karma:dev', 'clean']);
+    grunt.registerTask('test', ['karma:1.1.5']);
+    grunt.registerTask('release', ['clean:pre', 'jshint', 'copy', 'uglify', 'test', 'clean:post']);
+    grunt.registerTask('build', ['release', 'clean:pre']);
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('test', ['karma:dev']);
 
     // Used by the CLI build servers
-    grunt.registerTask('travis', ['clean', 'jshint', 'copy', 'uglify', 'karma:travis', 'coveralls']);
-
-    // Only used on the gh-pages branch
-    grunt.registerTask('pages', ['clean', 'jshint', 'build', 'copy', 'uglify', 'karma:release']);
+    grunt.registerTask('test-cli', ['karma:1.0.4', 'karma:1.0.5', 'karma:1.0.6', 'karma:1.0.7', 'karma:1.0.8', 'karma:1.1.4', 'karma:1.1.5']);
+    grunt.registerTask('cli', ['clean', 'jshint', 'copy', 'uglify', 'test-cli', 'coveralls']);
 };

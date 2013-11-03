@@ -1,8 +1,8 @@
 {
   "name": "angular-cache",
   "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-  "version": "2.0.0",
-  "homepage": "https://github.com/jmdobry/angular-cache",
+  "version": "2.1.0",
+  "homepage": "http://jmdobry.github.io/angular-cache",
   "repository": {
     "type": "git",
     "url": "git://github.com/jmdobry/angular-cache.git"
@@ -18,16 +18,17 @@
       "url": "https://github.com/jmdobry/angular-cache/blob/master/LICENSE"
     }
   ],
+  "postinstall": "bower install",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.5.2",
-    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-jshint": "~0.7.1",
+    "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-copy": "~0.4.1",
     "karma": "~0.10.2",
     "grunt-karma": "~0.6.2",
     "grunt-cli": "~0.1.8",
-    "phantomjs": "1.9.1-0",
+    "phantomjs": "~1.9.2-2",
     "karma-script-launcher": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-chrome-launcher": "~0.1.0",
@@ -43,7 +44,6 @@
   },
   "scripts": {
     "test": "node node_modules/grunt-cli/bin/grunt build",
-    "test_drone": "node node_modules/grunt-cli/bin/grunt drone",
     "test_travis": "node node_modules/grunt-cli/bin/grunt travis"
   }
 }

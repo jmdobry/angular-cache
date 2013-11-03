@@ -2,19 +2,18 @@ module.exports = function (config) {
     config.set({
         basePath: './',
         frameworks: ['jasmine'],
-        autoWatch: true,
-        browsers: ['Chrome'],
-        captureTimeout: 60000,
-        colors: true,
-        exclude: ['dist/'],
+        browsers: ['Firefox', 'PhantomJS'],
         files: [
-            'test/vendor/angular-1.1.5.min.js',
-            'test/vendor/angular-mocks-1.1.5.js',
+            'bower_components/angular-1.1.5/angular.min.js',
+            'bower_components/angular-mocks-1.1.5/angular-mocks.js',
             'src/angular-cache.js',
             'test/karma.start.js',
             'test/*.js'
         ],
-        logLevel: config.LOG_DEBUG,
+        captureTimeout: 60000,
+        colors: true,
+        exclude: ['dist/'],
+        logLevel: config.LOG_INFO,
         port: 9876,
         plugins: [
             'karma-chrome-launcher',
@@ -23,8 +22,16 @@ module.exports = function (config) {
             'karma-jasmine',
             'karma-coverage'
         ],
-        reporters: ['progress'],
         runnerPort: 9100,
-        singleRun: false
+        singleRun: true,
+        autoWatch: false,
+        coverageReporter: {
+            type: 'lcov',
+            dir: 'coverage/'
+        },
+        preprocessors: {
+            'src/angular-cache.js': ['coverage']
+        },
+        reporters: ['progress', 'coverage']
     });
 };

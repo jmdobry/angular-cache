@@ -20,10 +20,9 @@
         this.$get = function () {
             /**
              * @method bubbleUp
-             * @param {Array} heap The heap.
-             * @param {Function} weightFunc The weight function.
-             * @param {Number} n The index of the element to bubble up.
-             * @ignore
+             * @param {array} heap The heap.
+             * @param {function} weightFunc The weight function.
+             * @param {number} n The index of the element to bubble up.
              */
             function bubbleUp(heap, weightFunc, n) {
                 var element = heap[n],
@@ -47,10 +46,9 @@
 
             /**
              * @method bubbleDown
-             * @param {Array} heap The heap.
-             * @param {Function} weightFunc The weight function.
-             * @param {Number} n The index of the element to sink down.
-             * @ignore
+             * @param {array} heap The heap.
+             * @param {function} weightFunc The weight function.
+             * @param {number} n The index of the element to sink down.
              */
             function bubbleDown(heap, weightFunc, n) {
                 var length = heap.length,
@@ -91,7 +89,7 @@
             /**
              * @class BinaryHeap
              * @desc BinaryHeap implementation of a priority queue.
-             * @param {Function} weightFunc Function that returns the value that should be used for node value comparison.
+             * @param {function} weightFunc Function that returns the value that should be used for node value comparison.
              * @example
              * angular.module('app').controller(function (BinaryHeap) {
              *      var bHeap = new BinaryHeap(function (x) {
@@ -179,7 +177,7 @@
             /**
              * @method BinaryHeap.size
              * @desc Return the size of the priority queue.
-             * @returns {Number} The size of the priority queue.
+             * @returns {number} The size of the priority queue.
              */
             BinaryHeap.prototype.size = function () {
                 return this.heap.length;
@@ -224,10 +222,8 @@
         /**
          * @method _validateNumberOption
          * @desc Validates the given number option.
-         * @param {Number} option The number option to check.
-         * @param {Function} cb Callback function
-         * @private
-         * @ignore
+         * @param {number} option The number option to check.
+         * @param {function} cb Callback function
          */
         function _validateNumberOption(option, cb) {
             if (!angular.isNumber(option)) {
@@ -242,37 +238,7 @@
         /**
          * @method $AngularCacheFactoryProvider.setCacheDefaults
          * @desc Set the default configuration for all caches created by $angularCacheFactory.
-         * @param {Object} options
-         * @example
-         * app.module('app', ['jmdobry.angular-cache'])
-         *  .config(function ($angularCacheFactoryProvider) {
-         *      $angularCacheFactoryProvider.setCacheDefaults({
-         *          maxAge: 3600000,
-         *          deleteOnExpire: 'aggressive'
-         *      });
-         *  })
-         *  .run(function ($angularCacheFactory) {
-         *      var info = $angularCacheFactory.info();
-         *
-         *      console.log(info.cacheDefaults); // output below
-         *
-         *      // {
-         *      //    capacity: Number.MAX_VALUE,
-         *      //    maxAge: 3600000,
-         *      //    deleteOnExpire: 'aggressive',
-         *      //    onExpire: null,
-         *      //    cacheFlushInterval: null,
-         *      //    storageMode: 'none',
-         *      //    storageImpl: null,
-         *      //    recycleFreq: 1000,
-         *      //    verifyIntegrity: false
-         *      // }
-         *
-         *      var newCache = $angularCacheFactory('newCache');
-         *
-         *      newCache.info().maxAge; // 3600000
-         *      newCache.info().deleteOnExpire; // "aggressive"
-         *  });
+         * @param {object} options
          */
         this.setCacheDefaults = function (options) {
             var errStr = '$angularCacheFactoryProvider.setCacheDefaults(options): ';
@@ -362,9 +328,8 @@
             /**
              * @method _keySet
              * @desc Returns an object of the keys of the given collection.
-             * @param {Object} collection The collection from which to get the set of keys.
-             * @returns {Object} A hash of the keys of the given collection.
-             * @ignore
+             * @param {object} collection The collection from which to get the set of keys.
+             * @returns {object} A hash of the keys of the given collection.
              */
             function _keySet(collection) {
                 var keySet = {}, key;
@@ -379,9 +344,8 @@
             /**
              * @method _keys
              * @desc Returns an array of the keys of the given collection.
-             * @param {Object} collection The collection from which to get the keys.
-             * @returns {Array} An array of the keys of the given collection.
-             * @ignore
+             * @param {object} collection The collection from which to get the keys.
+             * @returns {array} An array of the keys of the given collection.
              */
             function _keys(collection) {
                 var keys = [], key;
@@ -396,10 +360,8 @@
             /**
              * @class AngularCache
              * @desc Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
-             * @param {String} cacheId The id of the new cache.
-             * @param {Object} [options] See [Configuration Options]{@link https://github.com/jmdobry/angular-cache#configuration}.
-             * @example
-             * var newCache = $angularCacheFactory('newCache', { maxAge: 900000, deleteOnExpire: 'passive' });
+             * @param {string} cacheId The id of the new cache.
+             * @param {object} [options] See [Configuration Options]{@link https://github.com/jmdobry/angular-cache#configuration}.
              */
             function AngularCache(cacheId, options) {
                 var config = angular.extend({}, { id: cacheId }),
@@ -420,9 +382,7 @@
                 /**
                  * @method _setCapacity
                  * @desc Set the capacity for this cache.
-                 * @param {Number} capacity The new capacity for this cache.
-                 * @private
-                 * @ignore
+                 * @param {number} capacity The new capacity for this cache.
                  */
                 function _setCapacity(capacity) {
                     _validateNumberOption(capacity, function (err) {
@@ -440,9 +400,7 @@
                 /**
                  * @method _setDeleteOnExpire
                  * @desc Set the deleteOnExpire setting for this cache.
-                 * @param {String} deleteOnExpire The new deleteOnExpire for this cache.
-                 * @private
-                 * @ignore
+                 * @param {string} deleteOnExpire The new deleteOnExpire for this cache.
                  */
                 function _setDeleteOnExpire(deleteOnExpire) {
                     if (!angular.isString(deleteOnExpire)) {
@@ -457,9 +415,7 @@
                 /**
                  * @method _setMaxAge
                  * @desc Set the maxAge for this cache.
-                 * @param {Number} maxAge The new maxAge for this cache.
-                 * @private
-                 * @ignore
+                 * @param {number} maxAge The new maxAge for this cache.
                  */
                 function _setMaxAge(maxAge) {
                     var keys = _keys(data);
@@ -502,9 +458,7 @@
                 /**
                  * @method _setRecycleFreq
                  * @desc Set the recycleFreq setting for this cache.
-                 * @param {Number} recycleFreq The new recycleFreq for this cache.
-                 * @private
-                 * @ignore
+                 * @param {number} recycleFreq The new recycleFreq for this cache.
                  */
                 function _setRecycleFreq(recycleFreq) {
                     if (recycleFreq === null) {
@@ -532,9 +486,7 @@
                 /**
                  * @method _setCacheFlushInterval
                  * @desc Set the cacheFlushInterval for this cache.
-                 * @param {Number} cacheFlushInterval The new cacheFlushInterval for this cache.
-                 * @private
-                 * @ignore
+                 * @param {number} cacheFlushInterval The new cacheFlushInterval for this cache.
                  */
                 function _setCacheFlushInterval(cacheFlushInterval) {
                     if (cacheFlushInterval === null) {
@@ -563,10 +515,8 @@
                 /**
                  * @method _setStorageMode
                  * @desc Configure the cache to use localStorage.
-                 * @param {String} storageMode "localStorage"|"sessionStorage"|null
-                 * @param {Object} storageImpl The storage polyfill/replacement to use.
-                 * @private
-                 * @ignore
+                 * @param {string} storageMode "localStorage"|"sessionStorage"|null
+                 * @param {object} storageImpl The storage polyfill/replacement to use.
                  */
                 function _setStorageMode(storageMode, storageImpl) {
                     var keys, i;
@@ -616,12 +566,10 @@
                 /**
                  * @method _setOptions
                  * @desc Configure this cache with the given options.
-                 * @param {Object} cacheOptions New configuration options for the cache.
-                 * @param {Boolean} [strict] If true then any existing configuration will be reset to default before
+                 * @param {object} cacheOptions New configuration options for the cache.
+                 * @param {boolean} [strict] If true then any existing configuration will be reset to default before
                  * applying the new options, otherwise only the options specified in the options hash will be altered.
-                 * @param {Object} [options] Configuration.
-                 * @private
-                 * @ignore
+                 * @param {object} [options] Configuration.
                  */
                 function _setOptions(cacheOptions, strict, options) {
                     cacheOptions = cacheOptions || {};
@@ -677,8 +625,6 @@
                 /**
                  * @method _loadCacheConfig
                  * @desc If storageMode is set, attempt to load previous cache configuration from localStorage.
-                 * @private
-                 * @ignore
                  */
                 function _loadCacheConfig() {
                     var keys = angular.fromJson(storage.getItem(prefix + '.keys'));
@@ -716,9 +662,7 @@
                 /**
                  * @method _syncToStorage
                  * @desc If storageMode is set, sync to localStorage.
-                 * @param {String} key The identifier of the item to sync.
-                 * @private
-                 * @ignore
+                 * @param {string} key The identifier of the item to sync.
                  */
                 function _syncToStorage(key) {
                     if (config.storageMode !== 'none' && storage) {
@@ -767,9 +711,9 @@
                 /**
                  * @method AngularCache.put
                  * @desc Add a key-value pair to the cache.
-                 * @param {String} key The identifier for the item to add to the cache.
+                 * @param {string} key The identifier for the item to add to the cache.
                  * @param {*} value The value of the item to add to the cache.
-                 * @param {Object} [options] {{ maxAge: {Number}, deleteOnExpire: {String} }}
+                 * @param {object} [options] {{ maxAge: {number}, deleteOnExpire: {string} }}
                  * @returns {*} value The value of the item added to the cache.
                  */
                 this.put = function (key, value, options) {
@@ -842,11 +786,25 @@
                 /**
                  * @method AngularCache.get
                  * @desc Retrieve the item from the cache with the specified key.
-                 * @param {String} key The key of the item to retrieve.
-                 * @param {Object} [options] Configuration.
+                 * @param {string|Array} key The key of the item to retrieve or an array of keys of items to retrieve.
+                 * @param {object} [options] Configuration.
                  * @returns {*} The value of the item in the cache with the specified key.
                  */
                 this.get = function (key, options) {
+                    if (angular.isArray(key)) {
+                        var keys = key,
+                            values = [];
+
+                        angular.forEach(keys, function (key) {
+                            var value = self.get(key, options);
+                            if (angular.isDefined(value)) {
+                                values.push(value);
+                            }
+                        });
+
+                        return values;
+                    }
+
                     options = options || {};
                     if (!angular.isString(key)) {
                         throw new Error('AngularCache.get(key, options): key: must be a string!');
@@ -888,8 +846,8 @@
                 /**
                  * @method AngularCache.remove
                  * @desc Remove the item with the specified key from the cache.
-                 * @param {String} key The key of the item to remove.
-                 * @param {Object} [options] Configuration.
+                 * @param {string} key The key of the item to remove.
+                 * @param {object} [options] Configuration.
                  */
                 this.remove = function (key, options) {
                     options = options || {};
@@ -906,15 +864,6 @@
                 /**
                  * @method AngularCache.removeAll
                  * @desc Clear the cache.
-                 * @example
-                 * var someCache = $angularCacheFactory.get('someCache');
-                 * someCache.get('someKey'); // "someValue"
-                 * someCache.info(); // { size: 3, ... }
-                 *
-                 * someCache.removeAll();
-                 *
-                 * someCache.get('someKey'); // undefined
-                 * someCache.info(); // { size: 0, ... }
                  */
                 this.removeAll = function () {
                     _removeAllFromStorage();
@@ -926,14 +875,7 @@
                 /**
                  * @method AngularCache.removeExpired
                  * @desc Remove all expired items from the cache.
-                 * @param {Object} [options] Configuration.
-                 * @example
-                 * var someCache = $angularCacheFactory.get('someCache');
-                 * someCache.info('someKey'); // { expired: true, ... }
-                 *
-                 * someCache.removeExpired();
-                 *
-                 * someCache.get('someKey'); // undefined
+                 * @param {object} [options] Configuration.
                  */
                 this.removeExpired = function (options) {
                     options = options || {};
@@ -954,13 +896,6 @@
                 /**
                  * @method AngularCache.destroy
                  * @desc Completely destroy the cache.
-                 * @example
-                 * var someCache = $angularCacheFactory.get('someCache');
-                 *
-                 * someCache.destroy();
-                 *
-                 * $angularCacheFactory.get('someCache'); // undefined
-                 * someCache.get('key'); // Error
                  */
                 this.destroy = function () {
                     if (config.cacheFlushIntervalId) {
@@ -997,25 +932,9 @@
                 /**
                  * @method AngularCache.info
                  * @desc Return an object containing information about the cache.
-                 * @param {String} [key] The key of the item about which to retrieve information.
-                 * @returns {Object} stats Object containing information about this cache or the item with the
+                 * @param {string} [key] The key of the item about which to retrieve information.
+                 * @returns {object} stats Object containing information about this cache or the item with the
                  * specified key.
-                 * @example
-                 * var newCache = $angularCacheFactory('newCache', { maxAge: 90000, capacity: 2 });
-                 *
-                 * newCache.info(); // { size: 0, maxAge: 90000, deleteOnExpire: 'none', ... }
-                 *
-                 * newCache.put('someKey', 1);
-                 *
-                 * newCache.info(); // { size: 1, maxAge: 90000, deleteOnExpire: 'none', ... }
-                 *
-                 * newCache.put('someOtherKey', 2);
-                 *
-                 * newCache.info(); // { size: 2, maxAge: 90000, deleteOnExpire: 'none', ... }
-                 *
-                 * newCache.put('yetOtherKey', 3); // 'someKey' gets popped of the LRU queue
-                 *
-                 * newCache.info(); // { size: 2, maxAge: 90000, deleteOnExpire: 'none', ... }
                  */
                 this.info = function (key) {
                     if (key) {
@@ -1043,12 +962,7 @@
                 /**
                  * @method AngularCache.keySet
                  * @desc Return the set of the keys of all items in the cache.
-                 * @returns {Object} The set of the keys of all items currently in this cache.
-                 * @example
-                 * var someCache = $angularCacheFactory('someCache');
-                 * someCache.put('someKey', 'someValue');
-                 *
-                 * someCache.keySet(); // { someKey: "someKey" }
+                 * @returns {object} The set of the keys of all items currently in this cache.
                  */
                 this.keySet = function () {
                     return _keySet(data);
@@ -1057,12 +971,7 @@
                 /**
                  * @method AngularCache.keys
                  * @desc Return an array of the keys of all items in the cache.
-                 * @returns {Array} An array of the keys of all items in the cache.
-                 * @example
-                 * var someCache = $angularCacheFactory('someCache');
-                 * someCache.put('someKey', 'someValue');
-                 *
-                 * someCache.keys(); // ["someKey"]
+                 * @returns {array} An array of the keys of all items in the cache.
                  */
                 this.keys = function () {
                     return _keys(data);
@@ -1071,21 +980,10 @@
                 /**
                  * @method AngularCache.setOptions
                  * @desc Configure this cache with the given options.
-                 * @param {Object} cacheOptions
-                 * @param {Boolean} [strict] If true then any existing configuration will be reset to defaults before
+                 * @param {object} cacheOptions
+                 * @param {boolean} [strict] If true then any existing configuration will be reset to defaults before
                  * applying the new options, otherwise only the options specified in the hash will be altered.
-                 * @param {Object} [options] Configuration.
-                 * @example
-                 * var someCache = $angularCacheFactory('newCache');
-                 *
-                 * someCache.put('someKey', 1);
-                 * someCache.put('someOtherKey', 2);
-                 *
-                 * someCache.setOptions({ capacity: 1 });
-                 *
-                 * someCache.info().size; // 1
-                 * someCache.get('someKey'); // undefined
-                 * someCache.get('someOtherKey'); // 2
+                 * @param {object} [options] Configuration.
                  */
                 this.setOptions = _setOptions;
 
@@ -1095,50 +993,9 @@
 
             /**
              * @class AngularCacheFactory
-             * @param {String} cacheId The id of the new cache.
-             * @param  {Object} [options] See [Configuration Options]{@link https://github.com/jmdobry/angular-cache#configuration}.
+             * @param {string} cacheId The id of the new cache.
+             * @param  {object} [options] See [Configuration Options]{@link https://github.com/jmdobry/angular-cache#configuration}.
              * @returns {AngularCache}
-             * @example
-             * // create a cache with default settings
-             * var myCache = $angularCacheFactory('myCache');
-             * @example
-             * // create an LRU cache with a capacity of 10
-             * var myLRUCache = $angularCacheFactory('myLRUCache', {
-             *      capacity: 10
-             * });
-             * @example
-             * // create a cache whose items expire after 10 minutes (but are not deleted)
-             * var myTimeLimitedCache = $angularCacheFactory('myTimeLimitedCache', {
-             *      maxAge: 600000,
-             *      onExpire: function (key, value, done) {
-             *          // This callback is executed during a call to "get()" and the requested item has expired.
-             *          // Receives the key and value of the expired item and a third argument, "done", which is
-             *          // a callback function passed as the second argument to "get()".
-             *          // See the "onExpire" configuration option discussed above.
-             *
-             *          // do something, like get a fresh value from the server and put it into the cache
-             *          if (done && typeof done === 'function') {
-             *              done(); // pass whatever you want into done()
-             *          }
-             *      }
-             * });
-             * @example
-             * // create a cache whose items have a maximum lifetime of 10 minutes which are immediately deleted upon expiration
-             * var myAggressiveTimeLimitedCache = $angularCacheFactory('myAggressiveTimeLimitedCache', {
-             *      maxAge: 600000,
-             *      deleteOnExpire: 'aggressive',
-             *      onExpire: function (key, value) {
-             *          // This callback is executed right when items expire. Receives the key and value of expired items.
-             *          // See the "onExpire" configuration option discussed above.
-             *
-             *          // do something, like get a fresh value from the server and put it into the cache
-             *      }
-             * });
-             * @example
-             * // create a cache that will clear itself every 10 minutes
-             * var myIntervalCache = $angularCacheFactory('myIntervalCache', {
-             *      cacheFlushInterval: 600000
-             * });
              */
             function angularCacheFactory(cacheId, options) {
                 if (cacheId in caches) {
@@ -1154,9 +1011,7 @@
             /**
              * @method AngularCacheFactory.info
              * @desc Return an object containing information about all caches in $angularCacheFactory.
-             * @returns {Object} An object containing information about all caches of this factory.
-             * @example
-             * $angularCacheFactory.info(); // { size: 3, cacheDefaults: { ... } }
+             * @returns {object} An object containing information about all caches of this factory.
              */
             angularCacheFactory.info = function () {
                 var keys = _keys(caches);
@@ -1175,11 +1030,8 @@
             /**
              * @method AngularCacheFactory.get
              * @desc Return the cache with the specified cacheId.
-             * @param {String} cacheId The id of the desired cache.
+             * @param {string} cacheId The id of the desired cache.
              * @returns {AngularCache} The cache with the specified cachedId.
-             * @example
-             * var someCache = $angularCacheFactory.get('someCache');
-             * someCache.put('someKey', 'someValue');
              */
             angularCacheFactory.get = function (cacheId) {
                 if (!angular.isString(cacheId)) {
@@ -1191,12 +1043,8 @@
             /**
              * @method AngularCacheFactory.keySet
              * @desc Return the set of keys of all current caches owned by angularCacheFactory.
-             * @returns {Object} The set of keys associated with all current caches owned by this
+             * @returns {object} The set of keys associated with all current caches owned by this
              * angularCacheFactory.
-             * @example
-             * $angularCacheFactory('newCache');
-             *
-             * $angularCacheFactory.keySet(); // { newCache: "newCache" }
              */
             angularCacheFactory.keySet = function () {
                 return _keySet(caches);
@@ -1205,12 +1053,8 @@
             /**
              * @method AngularCacheFactory.keys
              * @desc Return an array of the keys of all caches owned by angularCacheFactory.
-             * @returns {Array} An array of the keys associated with all current caches owned by
+             * @returns {array} An array of the keys associated with all current caches owned by
              * this angularCacheFactory.
-             * @example
-             * $angularCacheFactory('newCache');
-             *
-             * $angularCacheFactory.keys(); // ["newCache"]
              */
             angularCacheFactory.keys = function () {
                 return _keys(caches);
@@ -1219,10 +1063,6 @@
             /**
              * @method AngularCacheFactory.removeAll
              * @desc Destroy all caches in $angularCacheFactory.
-             * @example
-             * $angularCacheFactory.removeAll();
-             *
-             * $angularCacheFactory.info().size; // 0
              */
             angularCacheFactory.removeAll = function () {
                 var keys = _keys(caches);
@@ -1234,13 +1074,6 @@
             /**
              * @method AngularCacheFactory.clearAll
              * @desc Clears the contents of every cache in $angularCacheFactory.
-             * @example
-             * $angularCacheFactory.get('someCache').put('someKey', 'someValue');
-             * $angularCacheFactory.get('someCache').info().size; // 1
-             *
-             * $angularCacheFactory.clearAll();
-             *
-             * $angularCacheFactory.get('someCache').info().size; // 0
              */
             angularCacheFactory.clearAll = function () {
                 var keys = _keys(caches);
