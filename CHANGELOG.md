@@ -1,3 +1,17 @@
+##### 2.1.0 - 03 November 2013
+
+###### Backwards compatible API changes
+- Modify .get(key, options) to accept multiple keys #71
+
+###### Other
+- Run tests against multiple versions of Angular.js #72
+- Add banner to dist/angular-cache.min.js #68
+
+##### 2.0.0 - 30 October 2013
+- Not all methods of AngularCache and $angularCacheFactory are in README #61
+- Fix demo to work with 2.0.0-rc.1 #62
+- Using Bower to install this package, the dist filenames change per version? #63
+
 ##### 2.0.0-rc.1 - 14 October 2013
 
 ###### Breaking API changes
