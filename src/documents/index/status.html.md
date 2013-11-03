@@ -15,7 +15,7 @@ index: 2
 <tbody>
 <tr>
 <td>Version</td>
-<td>[2.2.0](https://github.com/jmdobry/angular-cache/releases/tag/2.1.0)</td>
+<td>[2.1.0](https://github.com/jmdobry/angular-cache/releases/tag/2.1.0)</td>
 </tr>
 <tr>
 <td>Source</td>
@@ -39,3 +39,14 @@ index: 2
 </tr>
 </tbody>
 </table>
+
+
+Angular-cache is tested with the following versions of Angular.js:
+
+- 1.0.4
+- 1.0.5
+- 1.0.6
+- 1.0.7
+- 1.0.8
+- 1.1.4
+- 1.1.5
