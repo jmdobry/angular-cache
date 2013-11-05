@@ -28,7 +28,3 @@ Download angular-cache manually here: [Downloads](https://github.com/jmdobry/ang
 
 <br>
 Each release has a development version of angular-cache and a minified version.
-
-### An example release:
-<br>
-![Example Release](/img/release.png)
