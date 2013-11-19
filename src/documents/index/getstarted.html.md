@@ -9,7 +9,7 @@ index: 3
 [Installation](installation.html) - Read how to install angular-cache and get it running in your application.
 
 ## Guide
-[Guide](installation.html) - Learn how to use angular-cache and read about common usage patterns.
+[Guide](guide.html) - Learn how to use angular-cache and read about common usage patterns.
 
 ## API
 [API](api.html) - Reference API documentation for angular-cache.
