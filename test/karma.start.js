@@ -3,6 +3,8 @@ var fail = function (msg) {
     },
     TYPES_EXCEPT_STRING = [123, 123.123, null, undefined, {}, [], true, false, function () {}],
     TYPES_EXCEPT_STRING_OR_ARRAY = [123, 123.123, null, undefined, {}, true, false, function () {}],
+    TYPES_EXCEPT_STRING_OR_NUMBER = [null, undefined, {}, [], true, false, function () {}],
+    TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER = [null, undefined, {}, true, false, function () {}],
     TYPES_EXCEPT_NUMBER = ['string', null, undefined, {}, [], true, false, function () {}],
     TYPES_EXCEPT_OBJECT = ['string', 123, 123.123, null, undefined, true, false, function () {}],
     TYPES_EXCEPT_BOOLEAN = ['string', 123, 123.123, null, undefined, {}, [], function () {}],

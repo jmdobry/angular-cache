@@ -1,15 +1,15 @@
 describe('AngularCache.put(key, value, options)', function () {
     it('should throw an error if "key" is not a string.', function () {
         var cache = $angularCacheFactory('cache');
-        for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
+        for (var i = 0; i < TYPES_EXCEPT_STRING_OR_NUMBER.length; i++) {
             try {
-                cache.put(TYPES_EXCEPT_STRING[i], 'value');
-                fail(TYPES_EXCEPT_STRING[i]);
+                cache.put(TYPES_EXCEPT_STRING_OR_NUMBER[i], 'value');
+                fail(TYPES_EXCEPT_STRING_OR_NUMBER[i]);
             } catch (err) {
                 expect(err.message).toEqual('AngularCache.put(key, value, options): key: must be a string!');
                 continue;
             }
-            fail(TYPES_EXCEPT_STRING[i]);
+            fail(TYPES_EXCEPT_STRING_OR_NUMBER[i]);
         }
     });
     it('should throw an error if "options" is not an object.', function () {
