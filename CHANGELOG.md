@@ -1,7 +1,13 @@
+##### 2.1.1 - 20 November 2013
+
+###### Backwards compatible bug fixes
+- Allow number keys, but stringify them #76
+- Fix "Uncaught TypeError: Cannot read property 'maxAge' of null" #77 (thanks @evngeny-o)
+
 ##### 2.1.0 - 03 November 2013
 
 ###### Backwards compatible API changes
-- Modify .get(key, options) to accept multiple keys #71
+- Modify .get(key, options) to accept multiple keys #71 (thanks @roryf)
 
 ###### Other
 - Run tests against multiple versions of Angular.js #72
