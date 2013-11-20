@@ -1,15 +1,15 @@
 describe('AngularCache.get(key)', function () {
     it('should throw an error if "key" is not a string or array.', function () {
         var cache = $angularCacheFactory('cache');
-        for (var i = 0; i < TYPES_EXCEPT_STRING_OR_ARRAY.length; i++) {
+        for (var i = 0; i < TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER.length; i++) {
             try {
-                cache.get(TYPES_EXCEPT_STRING_OR_ARRAY[i]);
-                fail(TYPES_EXCEPT_STRING_OR_ARRAY[i]);
+                cache.get(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
+                fail(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
             } catch (err) {
                 expect(err.message).toEqual('AngularCache.get(key, options): key: must be a string!');
                 continue;
             }
-            fail(TYPES_EXCEPT_STRING_OR_ARRAY[i]);
+            fail(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
         }
     });
     it('should throw an error if "options" is not an object.', function () {

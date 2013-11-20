@@ -326,6 +326,19 @@
             var caches = {};
 
             /**
+             * Stringify a number.
+             * @param {number|*} number The number to be stringified.
+             * @returns {*} number or a string.
+             * @private
+             */
+            function _stringifyNumber(number) {
+                if (number && angular.isNumber(number)) {
+                    return number.toString();
+                }
+                return number;
+            }
+
+            /**
              * @method _keySet
              * @desc Returns an object of the keys of the given collection.
              * @param {object} collection The collection from which to get the set of keys.
@@ -718,6 +731,9 @@
                  */
                 this.put = function (key, value, options) {
                     options = options || {};
+
+                    key = _stringifyNumber(key);
+
                     if (!angular.isString(key)) {
                         throw new Error('AngularCache.put(key, value, options): key: must be a string!');
                     } else if (options && !angular.isObject(options)) {
@@ -791,6 +807,7 @@
                  * @returns {*} The value of the item in the cache with the specified key.
                  */
                 this.get = function (key, options) {
+
                     if (angular.isArray(key)) {
                         var keys = key,
                             values = [];
@@ -803,6 +820,8 @@
                         });
 
                         return values;
+                    } else {
+                        key = _stringifyNumber(key);
                     }
 
                     options = options || {};
