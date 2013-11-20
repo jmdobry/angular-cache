@@ -631,7 +631,7 @@
                     storage.removeItem(prefix + '.keys');
                     if (keys && keys.length) {
                         for (var i = 0; i < keys.length; i++) {
-                            var data = angular.fromJson(storage.getItem(prefix + '.data.' + keys[i])),
+                            var data = angular.fromJson(storage.getItem(prefix + '.data.' + keys[i])) || {},
                                 maxAge = data.maxAge || config.maxAge,
                                 deleteOnExpire = data.deleteOnExpire || config.deleteOnExpire;
                             if (maxAge && ((new Date().getTime() - data.created) > maxAge) && deleteOnExpire === 'aggressive') {
