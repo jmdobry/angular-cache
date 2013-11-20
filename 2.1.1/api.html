@@ -1,0 +1,613 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="angular-cache : A vey useful replacement for Angular's $cacheFactory.">
+	<meta name="author" content="Jason Dobry">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+    <link rel="icon" href="img/favicon.png" type="image/x-icon">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="css/styles.min.css">
+	<title>angular-cache</title>
+</head>
+<body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
+    <a href="https://github.com/jmdobry/angular-cache" id="github-ribbon">
+        <img style="z-index: 2000; position: fixed; top: 0; right: 0; border: 0;" width="120" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="./">
+					<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAAAyCAYAAACqGbz7AAAFDklEQVR42u2bS2sUQRDH/QK5esopBw8ePHgK+AlEchUPiqIgJCReRL1FyEkQFfGViAqalaAgiIggQQ/iIYIgCImal5hI8BGT+IiJJtm1Gmal0/SjerpntsX/D4rdzcxU1/y7Z7pqerJhAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID0qNVqnWTnVKtWq5fp84jluA6yXrJNzHaayM6S9ZEdzBlPjyOePuW4Zmn7FrKL0rZLZHt8fJSkaZ/uWK6PksZFT5E6JD4e1lmoyKKBLzU3w+IC0hw/ITaSGDO67QYx64zljYfa+0of203xKHTVt2edpvp65uOjLE2ZDHN0L2pcmPohhg6Jj4d15BaaGjvl0dkiuLtKcM1kP6VdRhide0favxIYz0tHPILfZFulfV5oXJ3x8VGypt4+Qgnthxg6JD4e4lyEJud0Ip/oo59sXtPWqGZWqyr7PHZ08Hi9KbJ2ZjzXsjThPNl7n3jo+Clp+0ayOaWJNbI2ro9GaCqOFwMyu2svuHwEzoAx+iGGDimPh7/9Ube8Yt/UCDHhuMBGLbOaTL+rgynw73Id6YpH2q+tHhf5eMuI5760fSfZqqZTm7g+GqTpfR8fgRdhjH6IocM/Px44Kce4epMhO2bLlYkhhw/Z13FDPVjVpa6ueJQHO1eFOOJuxPBxNPCc1vlogKbe51DkuAjohxg6/FPjIU/KETtXFtP6bk49GFqHpVAPltU+fX9u81H0uEi9H1KLw/WEUk0HJkNzZU3+/kMO2FIP5q7DEqoHi9JU9tFC9kuJ7zt3eShUw0bqkEocso9QsXV57mCEXLlmKKSbHfVgcN6dQD1YlKaD2bYDykOIOlci1oNF9cNgWf1QVn8UkfdzGArwIdaBdnnWg12G4rzOrcTrwaI1FbH1Rl6aCK5/CtIhlTh0nI72CJqBKVdeFFM0c9D41IObyd5Z/F1IvB4M0ZS7LjZQ8NJEjDoshg6pxKEb0+2x6sFl6tBX4g2WzGoeufKImMKzqZx7B2fVg/T1kXjs7BlPKvVgiKbrfCgaLJOtZN9/Kml9R5ZirTDso/L6VlF1WLAOqcSh+hAvB+R5nVGb58pvK9DPbZ65ciX7WyvZEuPu7VUP5ogniXowUFOdjweGervJto+lH6bLqAdj6JBKHNHeTIpcO6mz2n715DSMFBhPSuuDUdun79cZPgbIPtPfP9iM9pklu1FCHdaQdbn/an1Q93icfp90XIQV5ZF70LpYJB//+/pgSy2NdblU4ih3fTCwdhox3IkGmPXgPs3MOamIseiIJ4aPqPVg7HqU4yNwXFg1VN5OEbXQLH2+9qkpmTqkEkdwXVrmWlrF0tYTVz1o+DeSKWn7Q028k8oFr/MxY4tD9WHQ5XYq65McH4ElilVDab97eWtKzjmkEkfIeGhoPWho742tHsxqyDVNm+JONW+YTbu5Pqj9b4bZ+LBrPSg7dlR6mjaWPaU8lGJNG3hzNmm4IJ3/nBJfd+xzSCWOkPEQnPf75Oyc16XE1K8sXVTU7ZrUwMZjXRuePm4xdLHRXZSmeX1EuAh9NXwae2ylEkfIeOAIvUOTb8v/XiLW+qYdubLsY5jZbmt2wWpnzqxmG7Oc5Gp2Z+p0FOMuH2JW3svUxcSS0qGxNc3lI+Ji/Zjj/MXT1RNFjK1U4ggZDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAG8Ac7NumYSaPNAQAAAABJRU5ErkJggg==" alt="angular-cache" width="225" height="50">
+				</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+                    <li class="">
+                        <a href="./">Home</a>
+                    </li>
+                    <li class="">
+                        <a href="installation.html">Installation</a>
+                    </li>
+                    <li class="">
+                        <a href="guide.html">Guide</a>
+                    </li>
+                    <li class="">
+                        <a href="configuration.html">Configuration</a>
+                    </li>
+                    <li class="active">
+                        <a href="api.html">API</a>
+                    </li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Community <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li>
+							    <a href="https://groups.google.com/forum/#!forum/angular-cache">
+							    <i class="glyphicon glyphicon-envelope"></i> Mailing List
+							    </a>
+                            </li>
+							<li class="divider"></li>
+							<li><a href="https://github.com/jmdobry/angular-cache/issues?state=open">Issues</a></li>
+							<li><a href="https://github.com/jmdobry/angular-cache">GitHub</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+	<header class="jumbotron subhead" id="overview">
+		<div class="container">
+			<h1>API</h1>
+			<p class="lead">Reference API documentation for angular-cache.</p>
+		</div>
+	</header>
+	<div class="container">
+        
+        
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+
+		<!-- Docs nav
+		================================================== -->
+		<div class="row">
+			<div class="col-md-3" id="sidebar">
+				<ul class="list-group nav" id="sidenav">
+				    
+                        
+                            <li class="list-group-item active">
+                                <a href="#provider"><i class="glyphicon glyphicon-chevron-right"></i> $angularCacheFactoryProvider</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#setcachedefaults"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.setCacheDefaults(options)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#factory"><i class="glyphicon glyphicon-chevron-right"></i> $angularCacheFactory(cacheId, options)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryget"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.get(cacheId)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryinfo"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.info()</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryclearall"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.clearAll()</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#factoryremoveall"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeAll()</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#factorykeyset"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.keySet()</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#factorykeys"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.keys()</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cache"><i class="glyphicon glyphicon-chevron-right"></i> AngularCache</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cachesetoptions"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.setOptions(options, strict)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheput"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.put(key, value, options)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheget"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.get(key, options)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheremove"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.remove(key, options)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheremoveexpired"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeExpired(options)</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheremoveall"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeAll()</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cachedestroy"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.destroy()</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#cacheinfo"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.info(key), .keySet() & .keys()</a>
+                            </li>
+                        
+                    
+				</ul>
+			</div>
+			<div class="col-md-9">
+				
+				    
+				        <section id="provider">
+                            <div class="page-header"><h1>$angularCacheFactoryProvider</h1></div>
+                            <h2>Description</h2>
+<p>Provider for <code>$angularCacheFactory</code>. Injectable into an Angular module&#39;s <code>config()</code> method call.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">app.module(<span class="string">'app'</span>, [<span class="string">'jmdobry.angular-cache'</span>])
+    .config(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactoryProvider)</span> {</span>
+        <span class="comment">// ...</span>
+    });</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="setcachedefaults">
+                            <div class="page-header"><h1>.setCacheDefaults(options)</h1></div>
+                            <h2>Description</h2>
+<p>Set the default configuration for all caches created by <code>$angularCacheFactory</code>.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration object for global cache defaults. See <a href="configuration.html">Configuration Options</a>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">app.module(<span class="string">'app'</span>, [<span class="string">'jmdobry.angular-cache'</span>])
+    .config(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactoryProvider)</span> {</span>
+        $angularCacheFactoryProvider.setCacheDefaults({
+            maxAge: <span class="number">3600000</span>,
+            deleteOnExpire: <span class="string">'aggressive'</span>
+        });
+    })
+    .run(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
+        <span class="keyword">var</span> info = $angularCacheFactory.info();
+
+        console.log(info.cacheDefaults); <span class="comment">// output below</span>
+
+        <span class="comment">// {</span>
+        <span class="comment">//    capacity: Number.MAX_VALUE,</span>
+        <span class="comment">//    maxAge: 3600000,</span>
+        <span class="comment">//    deleteOnExpire: 'aggressive',</span>
+        <span class="comment">//    onExpire: null,</span>
+        <span class="comment">//    cacheFlushInterval: null,</span>
+        <span class="comment">//    storageMode: 'none',</span>
+        <span class="comment">//    storageImpl: null,</span>
+        <span class="comment">//    recycleFreq: 1000,</span>
+        <span class="comment">//    verifyIntegrity: false</span>
+        <span class="comment">// }</span>
+
+        <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>);
+
+        newCache.info().maxAge; <span class="comment">// 3600000</span>
+        newCache.info().deleteOnExpire; <span class="comment">// "aggressive"</span>
+    });</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factory">
+                            <div class="page-header"><h1>$angularCacheFactory(cacheId, options)</h1></div>
+                            <h2>Description</h2>
+<p>Angular Factory Service. Produces instances of  <code>AngularCache</code>.</p>
+<h2>Parameters</h2>
+<h4>cacheId</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The name of the new cache. Must be unique.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> The configuration options for the new cache. See <a href="configuration.html">Configuration Options</a>;</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">angular.module(<span class="string">'app'</span>).controller(<span class="string">'myCtrl'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
+    <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { options... });
+});</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryget">
+                            <div class="page-header"><h1>.get(cacheId)</h1></div>
+                            <h2>Description</h2>
+<p>Return the cache with the specified cacheId.</p>
+<h2>Parameters</h2>
+<h4>cacheId</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The cacheId of the cache to retrieve.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> someCache = $angularCacheFactory.get(<span class="string">'someCache'</span>);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryinfo">
+                            <div class="page-header"><h1>.info()</h1></div>
+                            <h2>Description</h2>
+<p>Return an object containing information about <code>$angularCacheFactory</code> and all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.info(); <span class="comment">// { info...}</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryclearall">
+                            <div class="page-header"><h1>.clearAll()</h1></div>
+                            <h2>Description</h2>
+<p>Clear the contents of every cache in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.clearAll();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factoryremoveall">
+                            <div class="page-header"><h1>.removeAll()</h1></div>
+                            <h2>Description</h2>
+<p>Destroy all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.removeAll();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factorykeyset">
+                            <div class="page-header"><h1>.keySet()</h1></div>
+                            <h2>Description</h2>
+<p>Return the set of cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.keySet();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="factorykeys">
+                            <div class="page-header"><h1>.keys()</h1></div>
+                            <h2>Description</h2>
+<p>Return an array of the cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.keys();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cache">
+                            <div class="page-header"><h1>AngularCache</h1></div>
+                            <h2>Description</h2>
+<p>Object produced by invocations of <code>$angularCacheFactory(cacheId, options)</code>.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>);
+
+newCache; <span class="comment">// instance of AngularCache</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cachesetoptions">
+                            <div class="page-header"><h1>.setOptions(options, strict)</h1></div>
+                            <h2>Description</h2>
+<p>Dynamically set the configuration for the cache. See <a href="configuration.html">Configuration Options</a>.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> The configuration options for the cache. See <a href="configuration.html">Configuration Options</a>.</p>
+<h4>strict</h4>
+<p><strong>Type:</strong> <code>boolean</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> If true, the cache&#39;s configuration will be reset to default before applying the new configuration.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ maxAge: <span class="number">900000</span> });
+
+$angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ verifyIntegrity: <span class="literal">false</span> }, <span class="literal">true</span>);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheput">
+                            <div class="page-header"><h1>.put(key, value, options)</h1></div>
+                            <h2>Description</h2>
+<p>Add a key-value pair to the cache.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The key of the item to be added to the cache.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>*</code></p>
+<p><strong>Required:</strong> Yes</p>
+<p><strong>Description:</strong> The item to be added to the cache.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> The configuration options for the item to be added.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.put(<span class="string">'key'</span>, <span class="string">'value'</span>);
+
+someCache.put(<span class="string">'ageLimit'</span>, <span class="number">55</span>);
+
+someCache.put(<span class="string">'things'</span>, { stuff: <span class="string">'lots of stuff'</span> });
+
+someCache.put(<span class="string">'isIt'</span>, <span class="literal">true</span>);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheget">
+                            <div class="page-header"><h1>.get(key, options)</h1></div>
+                            <h2>Description</h2>
+<p>Retrieve the item from the cache with the specified key.</p>
+<h2>Parameters</h2>
+<h4>key</h4>
+<p><strong>Type:</strong> <code>string|Array</code></p>
+<p><strong>Description:</strong> The key of the item to retrieve or an array of the keys of items to retrieve.</p>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>onExpire: Function</code> is the only option available for this method.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.get(<span class="string">'key'</span>); <span class="comment">// 'value'</span>
+
+someCache.get(<span class="string">'ageLimit'</span>); <span class="comment">// 55</span>
+
+someCache.get(<span class="string">'things'</span>); <span class="comment">// { stuff: 'lots of stuff' }</span>
+
+someCache.get(<span class="string">'isIt'</span>); <span class="comment">// true</span>
+
+someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit'</span>]); <span class="comment">// ['value', 55]</span></code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheremove">
+                            <div class="page-header"><h1>.remove(key, options)</h1></div>
+                            <h2>Description</h2>
+<p>Remove the item with the specified key from the cache.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is the only option available for this method.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.remove(<span class="string">'someKey'</span>);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheremoveexpired">
+                            <div class="page-header"><h1>.removeExpired(options)</h1></div>
+                            <h2>Description</h2>
+<p>Remove all expired items from the cache.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>object</code></p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is the only option available for this method.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.removeExpired(options);</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheremoveall">
+                            <div class="page-header"><h1>.removeAll()</h1></div>
+                            <h2>Description</h2>
+<p>Clear the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.removeAll();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cachedestroy">
+                            <div class="page-header"><h1>.destroy()</h1></div>
+                            <h2>Description</h2>
+<p>Completely destroy the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.destroy();</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="cacheinfo">
+                            <div class="page-header"><h1>.info(key)</h1></div>
+                            <h2>Description</h2>
+<p>Return an object containing information about the item with the specified key, or if no key is specified, return information about the cache itself.</p>
+<h2>Parameters</h2>
+<h4>options</h4>
+<p><strong>Type:</strong> <code>string</code></p>
+<p><strong>Required:</strong> No</p>
+<p><strong>Description:</strong> The key of the item about which to retrieve information.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.info(<span class="string">'someKey'</span>); <span class="comment">// { // info about 'someKey'... }</span>
+
+someCache.info(); <span class="comment">// { // info about 'someCache'... }</span></code></pre>
+<h1>.keySet()</h1>
+<h2>Description</h2>
+<p>Return the set of keys of all items in the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.keySet();</code></pre>
+<h1>.keys()</h1>
+<h2>Description</h2>
+<p>Return an array of the keys of all items in the cache.</p>
+<h2>Usage</h2>
+<pre class="highlighted"><code class="javascript">someCache.keys();</code></pre>
+
+                        </section>
+                    
+                
+			</div>
+		</div>
+		<div class="row">
+		    <div class="col-md-3"></div>
+		    <div class="col-md-9">
+                <div id="disqus_thread"></div>
+                <script type="text/javascript">
+                    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                    var disqus_shortname = 'angularcache'; // required: replace example with your forum shortname
+
+                    /* * * DON'T EDIT BELOW THIS LINE * * */
+                    (function() {
+                        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+            </div>
+		</div>
+	</div>
+	<footer id="footer-main" class="navbar navbar-default">
+        <div class="container">
+            <ul class="nav navbar-nav row">
+                <li class="col-lg-3">
+                    <a href="http://www.pseudobry.com/">© 2013 Jason Dobry</a>
+                </li>
+                <li class="col-lg-2">
+                    <a href="https://github.com/jmdobry/angular-cache/blob/master/LICENSE">MIT Licensed</a>
+                </li>
+                <li class="col-lg-4">
+                    <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe></span>
+                    <span class="footer-button"><iframe src="http://ghbtns.com/github-btn.html?user=jmdobry&repo=angular-cache&type=fork&count=true"allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe></span>
+                </li>
+                <li class="col-lg-3 pull-right">
+                    <a href="JavaScript:void(0)" onclick="window.scrollTo(0, 0);" class="pull-right" style="margin-right: 30px;">
+                        <span class="glyphicon glyphicon-arrow-up"></span>&nbsp;&nbsp;Back to top
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+	<script src="js/scripts.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('#sidenav').affix({
+				offset: {
+					top: function () { return $(window).width() <= 768 ? 290 : 154 },
+			  		bottom: 0
+				}
+			})
+		});
+	</script>
+	<script type="text/javascript">
+      var analytics=analytics||[];(function(){var e=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group","on","once","off"],t=function(e){return function(){analytics.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var n=0;n<e.length;n++)analytics[e[n]]=t(e[n])})(),analytics.load=function(e){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+e+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)};
+      analytics.load("cnao3w6o9h");
+    </script>
+</body>
+</html>

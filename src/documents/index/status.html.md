@@ -15,7 +15,7 @@ index: 2
 <tbody>
 <tr>
 <td>Version</td>
-<td>[2.1.0](https://github.com/jmdobry/angular-cache/releases/tag/2.1.0)</td>
+<td>[2.1.1](https://github.com/jmdobry/angular-cache/releases/tag/2.1.1)</td>
 </tr>
 <tr>
 <td>Source</td>
