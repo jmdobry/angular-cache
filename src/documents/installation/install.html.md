@@ -27,10 +27,10 @@ Include the version of angular-cache you downloaded on your web page _after_ you
 Finally, list angular-cache as a dependency in your app's module definition.
 
 ```javascript
-angular.module('app', ['jmdobry.angular-cache']).config(function ($angularCacheProvider) {
+angular.module('app', ['jmdobry.angular-cache']).config(function ($angularCacheFactoryProvider) {
 
     // optionally set cache defaults
-    $angularCacheProvider.setCacheDefaults({ options... });
+    $angularCacheFactoryProvider.setCacheDefaults({ options... });
 
 }).run(function ($angularCacheFactory) {
 

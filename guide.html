@@ -124,7 +124,7 @@
 				    
 				        <section id="basics">
                             <div class="page-header"><h1>Basics</h1></div>
-                            <h2>Create a cache</h2>
+                            <h2 id="create-a-cache">Create a cache</h2>
 <p>First, inject <code>$angularCacheFactory</code> then create as many caches as you so desire. Let&#39;s go:</p>
 <pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
 
@@ -182,7 +182,7 @@ profileCache.put(<span class="string">'/profiles/22'</span>, {
                 }
         });
     });</code></pre>
-<h2>Working with a cache</h2>
+<h2 id="working-with-a-cache">Working with a cache</h2>
 <p>We can retrieve items from a cache like so:</p>
 <pre class="highlighted"><code class="javascript"><span class="keyword">var</span> profile = profileCache.get(<span class="string">'/profiles/34'</span>);
 
@@ -215,7 +215,7 @@ $angularCacheFactory.get(<span class="string">'profileCache'</span>); <span clas
 				    
 				        <section id="http">
                             <div class="page-header"><h1>Angular-cache w/$http</h1></div>
-                            <h4>Using angular-cache with $http</h4>
+                            <h4 id="using-angular-cache-with-http">Using angular-cache with $http</h4>
 <p><strong>Note</strong> The downside of letting $http handle caching for you is that it caches the responses (in string form) to your requests–not the JavaScript Object parsed from the response body. This means you can&#39;t interact with the data in the cache used by <code>$http</code>. See below for how to handle the caching yourself–giving you more control and the ability to interact with the cache (use it as a data store).</p>
 <p>Configure <code>$http</code> to use a cache created by <code>$angularCacheFactory</code> by default:</p>
 <pre class="highlighted"><code class="javascript">app.run(<span class="function"><span class="keyword">function</span> <span class="params">($http, $angularCacheFactory)</span> {</span>
@@ -343,7 +343,7 @@ app.controller(<span class="string">'myCtrl'</span>, <span class="function"><spa
 				    
 				        <section id="storage">
                             <div class="page-header"><h1>Angular-cache w/Web Storage</h1></div>
-                            <h4>Using angular-cache with localStorage (or sessionStorage)</h4>
+                            <h4 id="using-angular-cache-with-localstorage-or-sessionstorage-">Using angular-cache with localStorage (or sessionStorage)</h4>
 <p>Using angular-cache in browsers that support localStorage:</p>
 <pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
 
@@ -399,10 +399,12 @@ app.controller(<span class="string">'myCtrl'</span>, <span class="function"><spa
   deleter <span class="keyword">void</span> removeItem(DOMString key);
   <span class="keyword">void</span> clear();
 };</code></pre>
-<p>angular-cache cares only about these three methods:
-- <a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-setitem">setItem</a>
-- <a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-getitem">getItem</a>
-- <a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-removeitem">removeItem</a></p>
+<p>angular-cache cares only about these three methods:</p>
+<ul>
+<li><a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-setitem">setItem</a></li>
+<li><a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-getitem">getItem</a></li>
+<li><a href="http://www.w3.org/TR/2013/REC-webstorage-20130730/#dom-storage-removeitem">removeItem</a></li>
+</ul>
 <p>One developer suggested using <a href="https://github.com/marcuswestin/store.js/">store.js</a>–a wrapper and polyfill for localStorage. However, store.js has its own API that doesn&#39;t match that of the webstorage spec, so if you want to use store.js or any other 3rd-party polyfill then you&#39;ll need to create a wrapper for it if it doesn&#39;t have the same API as <code>localStorage</code>. For example:</p>
 <pre class="highlighted"><code class="javascript"><span class="keyword">var</span> storeJsToStandard {
   getItem: store.get,
@@ -422,7 +424,7 @@ $angularCacheFactory(<span class="string">'myNewCache'</span>, {
 				        <section id="configure">
                             <div class="page-header"><h1>Configure a cache</h1></div>
                             <p>See <a href="configuration.html">Configuration Options</a> for information on the available configuration options.</p>
-<h4>Dynamically configure a cache</h4>
+<h4 id="dynamically-configure-a-cache">Dynamically configure a cache</h4>
 <pre class="highlighted"><code class="javascript">app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
 
     <span class="keyword">var</span> cache = $angularCacheFactory(<span class="string">'cache'</span>, {

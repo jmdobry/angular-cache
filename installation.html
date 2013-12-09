@@ -116,7 +116,7 @@
 				    
 				        <section id="download">
                             <div class="page-header"><h1>Download</h1></div>
-                            <h2>With Bower</h2>
+                            <h2 id="with-bower">With Bower</h2>
 <p>Angular-cache is registered in the Bower package repository. With Bower you can install angular-cache and manage your app&#39;s dependency on angular-cache.</p>
 <p><br>
 To install angular-cache, open a terminal in your project&#39;s directory and enter the command:</p>
@@ -126,7 +126,7 @@ To install angular-cache, open a terminal in your project&#39;s directory and en
 Enter the following command to install a specific version:</p>
 <p><code>bower install angular-cache#x.x.x --save</code></p>
 <p>where <code>x.x.x</code> is the version of angular-cache you want to install.</p>
-<h2>Download Manually</h2>
+<h2 id="download-manually">Download Manually</h2>
 <p>Download angular-cache manually here: <a href="https://github.com/jmdobry/angular-cache/releases">Downloads</a>.</p>
 <p><br>
 Each release has a development version of angular-cache and a minified version.</p>
@@ -137,21 +137,21 @@ Each release has a development version of angular-cache and a minified version.<
 				    
 				        <section id="install">
                             <div class="page-header"><h1>Installation</h1></div>
-                            <h2>With Bower</h2>
+                            <h2 id="with-bower">With Bower</h2>
 <p>Angular-cache should have installed to <code>path/to/bower_components/angular-cache/</code>. You can reference the files in the <code>dist/</code> folder, which contains development and minified versions of angular-cache.</p>
 <p>Include angular-cache on your web page <em>after</em> angular.js.</p>
 <pre class="highlighted"><code class="xml"><span class="comment">&lt;!-- After angular.js --&gt;</span>
 <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"/path/to/bower_components/angular-cache/dist/angular-cache.min.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre>
-<h2>Install Manually</h2>
+<h2 id="install-manually">Install Manually</h2>
 <p>Include the version of angular-cache you downloaded on your web page <em>after</em> you include angular.js.</p>
 <pre class="highlighted"><code class="xml"><span class="comment">&lt;!-- After angular.js --&gt;</span>
 <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"/js/plugins/angular-cache-2.1.0.min.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></code></pre>
-<h2>Load the angular-cache module</h2>
+<h2 id="load-the-angular-cache-module">Load the angular-cache module</h2>
 <p>Finally, list angular-cache as a dependency in your app&#39;s module definition.</p>
-<pre class="highlighted"><code class="javascript">angular.module(<span class="string">'app'</span>, [<span class="string">'jmdobry.angular-cache'</span>]).config(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheProvider)</span> {</span>
+<pre class="highlighted"><code class="javascript">angular.module(<span class="string">'app'</span>, [<span class="string">'jmdobry.angular-cache'</span>]).config(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactoryProvider)</span> {</span>
 
     <span class="comment">// optionally set cache defaults</span>
-    $angularCacheProvider.setCacheDefaults({ options... });
+    $angularCacheFactoryProvider.setCacheDefaults({ options... });
 
 }).run(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
 
@@ -166,9 +166,9 @@ Each release has a development version of angular-cache and a minified version.<
 				    
 				        <section id="upgrade">
                             <div class="page-header"><h1>Upgrade</h1></div>
-                            <h2>Transition Details</h2>
+                            <h2 id="transition-details">Transition Details</h2>
 <p>See <a href="https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md">TRANSITION.md</a> for details on breaking changes between versions.</p>
-<h2>Upgrade with Bower</h2>
+<h2 id="upgrade-with-bower">Upgrade with Bower</h2>
 <p>After installing angular-cache with Bower, your <code>bower.json</code> file lists angular-cache as a dependency.</p>
 <pre class="highlighted"><code class="javascript"><span class="string">"dependencies"</span>: {
     <span class="string">"angular-cache"</span>: <span class="string">"~1.2.1"</span>
@@ -182,7 +182,7 @@ Alternatively, you can specify the new version you want to install, for example:
 <p><code>bower install angular-cache#2.1.0 --save</code>.</p>
 <p><br>
 <code>bower prune</code> will remove the old installation of angular-cache.</p>
-<h2>Upgrade Manually</h2>
+<h2 id="upgrade-manually">Upgrade Manually</h2>
 <p>Download the version of angular-cache you want as specified in the <a href="#download">Download</a> section.</p>
 <p>Remember to update your references to angular-cache.</p>
 

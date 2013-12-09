@@ -236,9 +236,9 @@
 				    
 				        <section id="provider">
                             <div class="page-header"><h1>$angularCacheFactoryProvider</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Provider for <code>$angularCacheFactory</code>. Injectable into an Angular module&#39;s <code>config()</code> method call.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">app.module(<span class="string">'app'</span>, [<span class="string">'jmdobry.angular-cache'</span>])
     .config(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactoryProvider)</span> {</span>
         <span class="comment">// ...</span>
@@ -250,13 +250,13 @@
 				    
 				        <section id="setcachedefaults">
                             <div class="page-header"><h1>.setCacheDefaults(options)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Set the default configuration for all caches created by <code>$angularCacheFactory</code>.</p>
-<h2>Parameters</h2>
-<h4>options</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
 <p><strong>Description:</strong> Configuration object for global cache defaults. See <a href="configuration.html">Configuration Options</a>.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">app.module(<span class="string">'app'</span>, [<span class="string">'jmdobry.angular-cache'</span>])
     .config(<span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactoryProvider)</span> {</span>
         $angularCacheFactoryProvider.setCacheDefaults({
@@ -293,18 +293,18 @@
 				    
 				        <section id="factory">
                             <div class="page-header"><h1>$angularCacheFactory(cacheId, options)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Angular Factory Service. Produces instances of  <code>AngularCache</code>.</p>
-<h2>Parameters</h2>
-<h4>cacheId</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="cacheid">cacheId</h4>
 <p><strong>Type:</strong> <code>string</code></p>
 <p><strong>Required:</strong> Yes</p>
 <p><strong>Description:</strong> The name of the new cache. Must be unique.</p>
-<h4>options</h4>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
 <p><strong>Required:</strong> No</p>
 <p><strong>Description:</strong> The configuration options for the new cache. See <a href="configuration.html">Configuration Options</a>;</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">angular.module(<span class="string">'app'</span>).controller(<span class="string">'myCtrl'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
     <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { options... });
 });</code></pre>
@@ -315,14 +315,14 @@
 				    
 				        <section id="factoryget">
                             <div class="page-header"><h1>.get(cacheId)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Return the cache with the specified cacheId.</p>
-<h2>Parameters</h2>
-<h4>cacheId</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="cacheid">cacheId</h4>
 <p><strong>Type:</strong> <code>string</code></p>
 <p><strong>Required:</strong> Yes</p>
 <p><strong>Description:</strong> The cacheId of the cache to retrieve.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript"><span class="keyword">var</span> someCache = $angularCacheFactory.get(<span class="string">'someCache'</span>);</code></pre>
 
                         </section>
@@ -331,9 +331,9 @@
 				    
 				        <section id="factoryinfo">
                             <div class="page-header"><h1>.info()</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Return an object containing information about <code>$angularCacheFactory</code> and all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory.info(); <span class="comment">// { info...}</span></code></pre>
 
                         </section>
@@ -342,9 +342,9 @@
 				    
 				        <section id="factoryclearall">
                             <div class="page-header"><h1>.clearAll()</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Clear the contents of every cache in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory.clearAll();</code></pre>
 
                         </section>
@@ -353,9 +353,9 @@
 				    
 				        <section id="factoryremoveall">
                             <div class="page-header"><h1>.removeAll()</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Destroy all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory.removeAll();</code></pre>
 
                         </section>
@@ -364,9 +364,9 @@
 				    
 				        <section id="factorykeyset">
                             <div class="page-header"><h1>.keySet()</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Return the set of cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory.keySet();</code></pre>
 
                         </section>
@@ -375,9 +375,9 @@
 				    
 				        <section id="factorykeys">
                             <div class="page-header"><h1>.keys()</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Return an array of the cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory.keys();</code></pre>
 
                         </section>
@@ -386,9 +386,9 @@
 				    
 				        <section id="cache">
                             <div class="page-header"><h1>AngularCache</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Object produced by invocations of <code>$angularCacheFactory(cacheId, options)</code>.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>);
 
 newCache; <span class="comment">// instance of AngularCache</span></code></pre>
@@ -399,17 +399,17 @@ newCache; <span class="comment">// instance of AngularCache</span></code></pre>
 				    
 				        <section id="cachesetoptions">
                             <div class="page-header"><h1>.setOptions(options, strict)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Dynamically set the configuration for the cache. See <a href="configuration.html">Configuration Options</a>.</p>
-<h2>Parameters</h2>
-<h4>options</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
 <p><strong>Description:</strong> The configuration options for the cache. See <a href="configuration.html">Configuration Options</a>.</p>
-<h4>strict</h4>
+<h4 id="strict">strict</h4>
 <p><strong>Type:</strong> <code>boolean</code></p>
 <p><strong>Required:</strong> No</p>
 <p><strong>Description:</strong> If true, the cache&#39;s configuration will be reset to default before applying the new configuration.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ maxAge: <span class="number">900000</span> });
 
 $angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ verifyIntegrity: <span class="literal">false</span> }, <span class="literal">true</span>);</code></pre>
@@ -420,22 +420,22 @@ $angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ v
 				    
 				        <section id="cacheput">
                             <div class="page-header"><h1>.put(key, value, options)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Add a key-value pair to the cache.</p>
-<h2>Parameters</h2>
-<h4>options</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>string</code></p>
 <p><strong>Required:</strong> Yes</p>
 <p><strong>Description:</strong> The key of the item to be added to the cache.</p>
-<h4>options</h4>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>*</code></p>
 <p><strong>Required:</strong> Yes</p>
 <p><strong>Description:</strong> The item to be added to the cache.</p>
-<h4>options</h4>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
 <p><strong>Required:</strong> No</p>
 <p><strong>Description:</strong> The configuration options for the item to be added.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.put(<span class="string">'key'</span>, <span class="string">'value'</span>);
 
 someCache.put(<span class="string">'ageLimit'</span>, <span class="number">55</span>);
@@ -450,16 +450,16 @@ someCache.put(<span class="string">'isIt'</span>, <span class="literal">true</sp
 				    
 				        <section id="cacheget">
                             <div class="page-header"><h1>.get(key, options)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Retrieve the item from the cache with the specified key.</p>
-<h2>Parameters</h2>
-<h4>key</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="key">key</h4>
 <p><strong>Type:</strong> <code>string|Array</code></p>
 <p><strong>Description:</strong> The key of the item to retrieve or an array of the keys of items to retrieve.</p>
-<h4>options</h4>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
 <p><strong>Description:</strong> Configuration options for this method call. <code>onExpire: Function</code> is the only option available for this method.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.get(<span class="string">'key'</span>); <span class="comment">// 'value'</span>
 
 someCache.get(<span class="string">'ageLimit'</span>); <span class="comment">// 55</span>
@@ -476,13 +476,13 @@ someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit
 				    
 				        <section id="cacheremove">
                             <div class="page-header"><h1>.remove(key, options)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Remove the item with the specified key from the cache.</p>
-<h2>Parameters</h2>
-<h4>options</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
 <p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is the only option available for this method.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.remove(<span class="string">'someKey'</span>);</code></pre>
 
                         </section>
@@ -491,13 +491,13 @@ someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit
 				    
 				        <section id="cacheremoveexpired">
                             <div class="page-header"><h1>.removeExpired(options)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Remove all expired items from the cache.</p>
-<h2>Parameters</h2>
-<h4>options</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
 <p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is the only option available for this method.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.removeExpired(options);</code></pre>
 
                         </section>
@@ -506,9 +506,9 @@ someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit
 				    
 				        <section id="cacheremoveall">
                             <div class="page-header"><h1>.removeAll()</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Clear the cache.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.removeAll();</code></pre>
 
                         </section>
@@ -517,9 +517,9 @@ someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit
 				    
 				        <section id="cachedestroy">
                             <div class="page-header"><h1>.destroy()</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Completely destroy the cache.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.destroy();</code></pre>
 
                         </section>
@@ -528,26 +528,26 @@ someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit
 				    
 				        <section id="cacheinfo">
                             <div class="page-header"><h1>.info(key)</h1></div>
-                            <h2>Description</h2>
+                            <h2 id="description">Description</h2>
 <p>Return an object containing information about the item with the specified key, or if no key is specified, return information about the cache itself.</p>
-<h2>Parameters</h2>
-<h4>options</h4>
+<h2 id="parameters">Parameters</h2>
+<h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>string</code></p>
 <p><strong>Required:</strong> No</p>
 <p><strong>Description:</strong> The key of the item about which to retrieve information.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.info(<span class="string">'someKey'</span>); <span class="comment">// { // info about 'someKey'... }</span>
 
 someCache.info(); <span class="comment">// { // info about 'someCache'... }</span></code></pre>
-<h1>.keySet()</h1>
-<h2>Description</h2>
+<h1 id="-keyset-">.keySet()</h1>
+<h2 id="description">Description</h2>
 <p>Return the set of keys of all items in the cache.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.keySet();</code></pre>
-<h1>.keys()</h1>
-<h2>Description</h2>
+<h1 id="-keys-">.keys()</h1>
+<h2 id="description">Description</h2>
 <p>Return an array of the keys of all items in the cache.</p>
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.keys();</code></pre>
 
                         </section>

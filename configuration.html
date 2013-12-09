@@ -166,19 +166,19 @@
                             <div class="page-header"><h1>Using these options</h1></div>
                             <p>These are the configuration options available for customizing each instance of <code>AngularCache</code>. They can be used in three places:</p>
 <p><br></p>
-<h4>Setting the default options for all caches</h4>
+<h4 id="setting-the-default-options-for-all-caches">Setting the default options for all caches</h4>
 <pre class="highlighted"><code class="javascript">$angularCacheFactoryProvider.setCacheDefaults({
     <span class="comment">// configuration options</span>
 });</code></pre>
 <p>See <a href="api.html#setcachedefaults">$angularCacheFactoryProvider.setCacheDefaults(options)</a></p>
 <p><br></p>
-<h4>Creating a cache</h4>
+<h4 id="creating-a-cache">Creating a cache</h4>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     <span class="comment">// configuration options</span>
 });</code></pre>
 <p>See <a href="api.html#factory">$angularCacheFactory(cacheId, options)</a></p>
 <p><br></p>
-<h4>Dynamically configuring a cache</h4>
+<h4 id="dynamically-configuring-a-cache">Dynamically configuring a cache</h4>
 <pre class="highlighted"><code class="javascript">newCache.setOptions({
     <span class="comment">// configuration options</span>
 });</code></pre>
@@ -258,7 +258,7 @@ Can be configured on a per-item basis:</p>
 <p><strong>Default:</strong> <code>null</code></p>
 <p><strong>Description:</strong> A callback function to be executed when an item expires.</p>
 <p><strong>Usage:</strong></p>
-<h4>Using &#39;onExpire&#39; in passive delete mode</h4>
+<h4 id="using-onexpire-in-passive-delete-mode">Using &#39;onExpire&#39; in passive delete mode</h4>
 <p>In passive delete mode the cache doesn&#39;t know if an item has expired until the item is requested, at which point the cache checks to see if the item has expired. If the item has expired then it is immediately removed from the cache, resulting in a &quot;miss&quot;.</p>
 <p>If you specify a global &quot;onExpire&quot; callback function, the cache will execute this function when it is discovered the item has expired, passing to the callback the key and value of the expired item.</p>
 <p>When you actually request the expired item via <code>myCache.get(&#39;someKey&#39;)</code> you can also pass a second argument to <code>get()</code> specifying a callback that your cache&#39;s &quot;onExpire&quot; callback can execute when it finishes. For example:</p>
@@ -318,7 +318,7 @@ newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos
         });
     }
 });</code></pre>
-<h4>Using &#39;onExpire&#39; in aggressive delete mode</h4>
+<h4 id="using-onexpire-in-aggressive-delete-mode">Using &#39;onExpire&#39; in aggressive delete mode</h4>
 <p>In aggressive delete mode you can&#39;t pass a second parameter to <code>get()</code> because your &quot;onExpire&quot; callback for the cache has already been executed for expired items.</p>
 <p><strong>Usage:</strong></p>
 <pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
