@@ -492,11 +492,11 @@ someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit
 				        <section id="cacheremoveexpired">
                             <div class="page-header"><h1>.removeExpired(options)</h1></div>
                             <h2 id="description">Description</h2>
-<p>Remove all expired items from the cache.</p>
+<p>Remove all expired items from the cache and return an object (or array) of the removed items.</p>
 <h2 id="parameters">Parameters</h2>
 <h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
-<p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is the only option available for this method.</p>
+<p><strong>Description:</strong> Configuration options for this method call. <code>verifyIntegrity: true|false</code> is available, as well as <code>asArray: true|false</code>, which will cause the method to return an array instead of an object.</p>
 <h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.removeExpired(options);</code></pre>
 
