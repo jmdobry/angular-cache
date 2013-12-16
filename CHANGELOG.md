@@ -1,3 +1,11 @@
+##### 2.2.0 - 15 December 2013
+
+###### Backwards compatible API changes
+- `removeExpired()` now returns an object (or array) of the removed items.
+
+###### Backwards compatible bug fixes
+- `removeExpired()` now removes _all_ expired items.
+
 ##### 2.1.1 - 20 November 2013
 
 ###### Backwards compatible bug fixes
