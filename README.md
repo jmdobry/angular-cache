@@ -1,14 +1,14 @@
 ## angular-cache
 __A very useful replacement for Angular's $cacheFactory.__
 
-__Version:__ 2.1.1
+__Version:__ 2.3.0
 
 All [Documentation](http://jmdobry.github.io/angular-cache) can be found at [jmdobry.github.io/angular-cache](http://jmdobry.github.io/angular-cache).
 
 ## License
 [MIT License](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)
 
-Copyright (C) 2013 Jason Dobry
+Copyright (C) 2013-2014 Jason Dobry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

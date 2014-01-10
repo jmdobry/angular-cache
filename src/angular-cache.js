@@ -215,7 +215,8 @@
 					recycleFreq: 1000,
 					storageMode: 'none',
 					storageImpl: null,
-					verifyIntegrity: true
+					verifyIntegrity: true,
+					disabled: false
 				};
 			};
 
@@ -246,6 +247,10 @@
 
 			if (!angular.isObject(options)) {
 				throw new Error(errStr + 'options: must be an object!');
+			}
+
+			if ('disabled' in options) {
+				options.disabled = options.disabled === true;
 			}
 
 			if ('capacity' in options) {
@@ -616,6 +621,9 @@
 						cacheOptions = angular.extend({}, cacheDefaults, cacheOptions);
 					}
 
+					if ('disabled' in cacheOptions) {
+						config.disabled = cacheOptions.disabled === true;
+					}
 					if ('verifyIntegrity' in cacheOptions) {
 						config.verifyIntegrity = cacheOptions.verifyIntegrity === true;
 					}
@@ -748,6 +756,9 @@
 				 * @returns {*} value The value of the item added to the cache.
 				 */
 				this.put = function (key, value, options) {
+					if (config.disabled) {
+						return;
+					}
 					options = options || {};
 
 					key = _stringifyNumber(key);
@@ -825,7 +836,9 @@
 				 * @returns {*} The value of the item in the cache with the specified key.
 				 */
 				this.get = function (key, options) {
-
+					if (config.disabled) {
+						return;
+					}
 					if (angular.isArray(key)) {
 						var keys = key,
 							values = [];
@@ -1127,6 +1140,28 @@
 				var keys = _keys(caches);
 				for (var i = 0; i < keys.length; i++) {
 					caches[keys[i]].removeAll();
+				}
+			};
+
+			/**
+			 * @method AngularCacheFactory.enableAll
+			 * @desc Enable any disabled caches.
+			 */
+			angularCacheFactory.enableAll = function () {
+				var keys = _keys(caches);
+				for (var i = 0; i < keys.length; i++) {
+					caches[keys[i]].setOptions({ disabled: false });
+				}
+			};
+
+			/**
+			 * @method AngularCacheFactory.disableAll
+			 * @desc Disable all caches.
+			 */
+			angularCacheFactory.disableAll = function () {
+				var keys = _keys(caches);
+				for (var i = 0; i < keys.length; i++) {
+					caches[keys[i]].setOptions({ disabled: true });
 				}
 			};
 

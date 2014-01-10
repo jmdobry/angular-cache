@@ -1,3 +1,16 @@
+##### 2.3.0 - 09 January 2014
+- Caches can now be disabled #82
+- The `options` object (`$angularCacheFactory()`, `AngularCache#setOptions()`, and `$angularCacheFactoryProvider.setCacheDefaults()`) now accepts a `disabled` field, which can be set to `true` and defaults to `false`.
+- `$angularCacheFactory.enableAll()` will enable any disabled caches.
+- `$angularCacheFactory.disableAll()` will disable all caches.
+- A disabled cache will operate as normal, except `AngularCache#get()` and `AngularCache#put()` will both immediately return `undefined` instead of performing their normal functions.
+
+###### Backwards compatible API changes
+- `removeExpired()` now returns an object (or array) of the removed items.
+
+###### Backwards compatible bug fixes
+- `removeExpired()` now removes _all_ expired items.
+
 ##### 2.2.0 - 15 December 2013
 
 ###### Backwards compatible API changes

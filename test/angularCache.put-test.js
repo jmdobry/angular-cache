@@ -1,4 +1,11 @@
 describe('AngularCache.put(key, value, options)', function () {
+	it('should do nothing if the cache is disabled.', function () {
+		var cache = $angularCacheFactory('cache', { disabled: true });
+
+		expect(cache.info().size).toEqual(0);
+		expect(cache.put('1', 'item')).toBeUndefined();
+		expect(cache.info().size).toEqual(0);
+	});
     it('should throw an error if "key" is not a string.', function () {
         var cache = $angularCacheFactory('cache');
         for (var i = 0; i < TYPES_EXCEPT_STRING_OR_NUMBER.length; i++) {
