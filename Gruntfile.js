@@ -140,6 +140,17 @@ module.exports = function (grunt) {
                     ]
                 }
             },
+            '1.2.0': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.2.0/angular.js',
+                        'bower_components/angular-mocks-1.2.0/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
+            },
             '1.2.1': {
                 options: {
                     files: [
