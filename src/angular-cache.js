@@ -327,7 +327,7 @@
 		/**
 		 * @ignore
 		 */
-		this.$get = ['$window', 'BinaryHeap', function ($window, BinaryHeap) {
+		this.$get = ['$window', '$q', 'BinaryHeap', function ($window, $q, BinaryHeap) {
 			var caches = {};
 
 			/**
@@ -676,9 +676,11 @@
 							if (maxAge && ((new Date().getTime() - data.created) > maxAge) && deleteOnExpire === 'aggressive') {
 								storage.removeItem(prefix + '.data.' + keys[i]);
 							} else {
-								var options = {
-									created: data.created
-								};
+								var options = {created: data.created},
+										value = data.value;
+								if (data._isPromise) {
+									value = $q.when(value);
+								}
 								if (data.expires) {
 									options.expires = data.expires;
 								}
@@ -691,36 +693,10 @@
 								if (data.deleteOnExpire) {
 									options.deleteOnExpire = data.deleteOnExpire;
 								}
-								self.put(keys[i], data.value, options);
+								self.put(keys[i], value, options);
 							}
 						}
 						_syncToStorage(null);
-					}
-				}
-
-				/**
-				 * @method _syncToStorage
-				 * @desc If storageMode is set, sync to localStorage.
-				 * @param {string} key The identifier of the item to sync.
-				 */
-				function _syncToStorage(key) {
-					if (config.storageMode !== 'none' && storage) {
-						storage.setItem(prefix + '.keys', angular.toJson(_keys(data)));
-						if (key) {
-							storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
-						}
-					}
-				}
-
-				function _verifyIntegrity(verifyIntegrity) {
-					if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
-						if (config.storageMode !== 'none' && storage) {
-							var keys = _keys(data);
-							storage.setItem(prefix + '.keys', angular.toJson(keys));
-							for (var i = 0; i < keys.length; i++) {
-								storage.setItem(prefix + '.data.' + keys[i], angular.toJson(data[keys[i]]));
-							}
-						}
 					}
 				}
 
@@ -732,8 +708,40 @@
 				}
 
 				function _saveItemToStorage(key) {
-					if (config.storageMode !== 'none' && storage) {
-						storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
+					if (config.storageMode === 'none' || !storage) { return; }
+					var item = data[key];
+					item._isPromise = typeof item.value.then === 'function';
+					if (!item._isPromise) {
+						storage.setItem(prefix + '.data.' + key, angular.toJson(item));
+					} else {
+						item.value.then(function (value) {
+							var finalData = angular.fromJson(angular.toJson(item));
+							finalData.value = value;
+							storage.setItem(prefix + '.data.' + key, angular.toJson(finalData));
+						});
+					}
+				}
+
+				/**
+				 * @method _syncToStorage
+				 * @desc If storageMode is set, sync to localStorage.
+				 * @param {string} key The identifier of the item to sync.
+				 */
+				function _syncToStorage(key) {
+					_saveKeysToStorage(_keys(data));
+					if (!key) { return; }
+					_saveItemToStorage(key);
+				}
+
+				function _verifyIntegrity(verifyIntegrity) {
+					if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
+						if (config.storageMode !== 'none' && storage) {
+							var keys = _keys(data);
+							_saveKeysToStorage(keys);
+							for (var i = 0; i < keys.length; i++) {
+								_saveItemToStorage(keys[i]);
+							}
+						}
 					}
 				}
 
@@ -743,7 +751,7 @@
 						for (var i = 0; i < keys.length; i++) {
 							storage.removeItem(prefix + '.data.' + keys[i]);
 						}
-						storage.setItem(prefix + '.keys', angular.toJson([]));
+						_saveKeysToStorage([]);
 					}
 				}
 
