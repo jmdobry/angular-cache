@@ -1,11 +1,11 @@
 describe('AngularCache.put(key, value, options)', function () {
-	it('should do nothing if the cache is disabled.', function () {
-		var cache = $angularCacheFactory('cache', { disabled: true });
+   it('should do nothing if the cache is disabled.', function () {
+      var cache = $angularCacheFactory('cache', { disabled: true });
 
-		expect(cache.info().size).toEqual(0);
-		expect(cache.put('1', 'item')).toBeUndefined();
-		expect(cache.info().size).toEqual(0);
-	});
+      expect(cache.info().size).toEqual(0);
+      expect(cache.put('1', 'item')).toBeUndefined();
+      expect(cache.info().size).toEqual(0);
+   });
     it('should throw an error if "key" is not a string.', function () {
         var cache = $angularCacheFactory('cache');
         for (var i = 0; i < TYPES_EXCEPT_STRING_OR_NUMBER.length; i++) {
@@ -225,4 +225,26 @@ describe('AngularCache.put(key, value, options)', function () {
             expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('["item1"]');
         }
     });
+    it('should accept the value as a promise when using storageMode.', inject(function ($rootScope, $q) {
+        var cache = $angularCacheFactory('cache', {storageMode: 'localStorage'}),
+            defer1 = $q.defer(),
+            promise1 = defer1.promise,
+            defer2 = $q.defer(),
+            promise2 = defer2.promise,
+            storagedItem;
+
+        cache.put('item1', promise1);
+        expect(cache.get('item1')).toBe(promise1);
+        defer1.resolve('value1');
+        $rootScope.$apply();
+        storagedItem = angular.fromJson(localStorage.getItem('angular-cache.caches.cache.data.item1'));
+        expect(storagedItem.value).toBe('value1');
+        expect(storagedItem._isPromise).toBe(true);
+
+        cache.put('item2', promise2);
+        expect(cache.get('item2')).toBe(promise2);
+        defer2.reject('some reason');
+        $rootScope.$apply();
+        expect(localStorage.getItem('angular-cache.caches.cache.data.item2')).toBeNull();
+    }));
 });
