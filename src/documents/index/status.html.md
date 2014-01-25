@@ -18,10 +18,6 @@ index: 2
 <td>[![Bower version](https://badge.fury.io/bo/angular-cache.png)](http://badge.fury.io/bo/angular-cache)</td>
 </tr>
 <tr>
-<td>Source</td>
-<td>[master](https://github.com/jmdobry/angular-cache)</td>
-</tr>
-<tr>
 <td>Build Status</td>
 <td>[![Build Status](https://travis-ci.org/jmdobry/angular-cache.png?branch=master)](https://travis-ci.org/jmdobry/angular-cache)</td>
 </tr>
@@ -50,3 +46,10 @@ Angular-cache is tested with the following versions of Angular.js:
 - 1.0.8
 - 1.1.4
 - 1.1.5
+- 1.2.1
+- 1.2.2
+- 1.2.3
+- 1.2.4
+- 1.2.5
+- 1.2.6
+- 1.2.7
