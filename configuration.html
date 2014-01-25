@@ -95,6 +95,8 @@
         
             
         
+            
+        
         
 
 		<!-- Docs nav
@@ -154,6 +156,12 @@
                         
                             <li class="list-group-item ">
                                 <a href="#verifyintegrity"><i class="glyphicon glyphicon-chevron-right"></i> verifyIntegrity</a>
+                            </li>
+                        
+                    
+                        
+                            <li class="list-group-item ">
+                                <a href="#disabled"><i class="glyphicon glyphicon-chevron-right"></i> disabled</a>
                             </li>
                         
                     
@@ -415,6 +423,23 @@ $angularCacheFactory(<span class="string">'otherCache'</span>, {
     storageMode: <span class="string">'localStorage'</span>,
     verifyIntegrity: <span class="literal">true</span>
 });</code></pre>
+
+                        </section>
+                    
+                
+				    
+				        <section id="disabled">
+                            <div class="page-header"><h1>disabled</h1></div>
+                            <p><strong>Type:</strong> <code>boolean</code></p>
+<p><strong>Default:</strong> <code>false</code></p>
+<p><strong>Description:</strong> Disabled the cache. The cache will continue to function as normal, aside from the fact that
+any calls to <code>AngularCache#put(key, value[, options])</code> or <code>AngularCache#get(key[, options])</code> will have no effect whatsoever.</p>
+<p><strong>Usage:</strong></p>
+<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { disabled: <span class="literal">true</span> }); <span class="comment">// This cache starts disabled</span>
+
+newCache.put(<span class="string">'4'</span>, <span class="string">'thing'</span>);
+
+newCache.get(<span class="string">'4'</span>); <span class="comment">// undefined, because the cache is disabled</span></code></pre>
 
                         </section>
                     

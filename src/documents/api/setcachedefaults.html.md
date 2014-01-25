@@ -39,6 +39,7 @@ app.module('app', ['jmdobry.angular-cache'])
         //    storageMode: 'none',
         //    storageImpl: null,
         //    recycleFreq: 1000,
+        //    disabled: false,
         //    verifyIntegrity: false
         // }
 

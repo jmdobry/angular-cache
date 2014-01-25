@@ -183,31 +183,31 @@
                     
                         
                             <li class="list-group-item ">
-                                <a href="#cachesetoptions"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.setOptions(options, strict)</a>
+                                <a href="#cachesetoptions"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.setOptions(options[, strict])</a>
                             </li>
                         
                     
                         
                             <li class="list-group-item ">
-                                <a href="#cacheput"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.put(key, value, options)</a>
+                                <a href="#cacheput"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.put(key, value[, options])</a>
                             </li>
                         
                     
                         
                             <li class="list-group-item ">
-                                <a href="#cacheget"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.get(key, options)</a>
+                                <a href="#cacheget"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.get(key[, options])</a>
                             </li>
                         
                     
                         
                             <li class="list-group-item ">
-                                <a href="#cacheremove"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.remove(key, options)</a>
+                                <a href="#cacheremove"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.remove(key[, options])</a>
                             </li>
                         
                     
                         
                             <li class="list-group-item ">
-                                <a href="#cacheremoveexpired"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeExpired(options)</a>
+                                <a href="#cacheremoveexpired"><i class="glyphicon glyphicon-chevron-right"></i> &emsp;.removeExpired([options])</a>
                             </li>
                         
                     
@@ -278,6 +278,7 @@
         <span class="comment">//    storageMode: 'none',</span>
         <span class="comment">//    storageImpl: null,</span>
         <span class="comment">//    recycleFreq: 1000,</span>
+        <span class="comment">//    disabled: false,</span>
         <span class="comment">//    verifyIntegrity: false</span>
         <span class="comment">// }</span>
 
@@ -379,6 +380,16 @@
 <p>Return an array of the cacheIds of all caches in <code>$angularCacheFactory</code>.</p>
 <h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">$angularCacheFactory.keys();</code></pre>
+<h1 id="-disableall-">.disableAll()</h1>
+<h2 id="description">Description</h2>
+<p>Disable all caches. No data will be lost.</p>
+<h2 id="usage">Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.disableAll();</code></pre>
+<h1 id="-enableall-">.enableAll()</h1>
+<h2 id="description">Description</h2>
+<p>Enable all caches. Caches will resume with full functionality.</p>
+<h2 id="usage">Usage</h2>
+<pre class="highlighted"><code class="javascript">$angularCacheFactory.enableAll();</code></pre>
 
                         </section>
                     
@@ -398,8 +409,10 @@ newCache; <span class="comment">// instance of AngularCache</span></code></pre>
                 
 				    
 				        <section id="cachesetoptions">
-                            <div class="page-header"><h1>.setOptions(options, strict)</h1></div>
-                            <h2 id="description">Description</h2>
+                            <div class="page-header"><h1>.setOptions(options[, strict])</h1></div>
+                            <h2 id="signature">Signature</h2>
+<p><code>AngularCache#setOptions(options[, strict])</code></p>
+<h2 id="description">Description</h2>
 <p>Dynamically set the configuration for the cache. See <a href="configuration.html">Configuration Options</a>.</p>
 <h2 id="parameters">Parameters</h2>
 <h4 id="options">options</h4>
@@ -419,8 +432,10 @@ $angularCacheFactory.get(<span class="string">'someCache'</span>).setOptions({ v
                 
 				    
 				        <section id="cacheput">
-                            <div class="page-header"><h1>.put(key, value, options)</h1></div>
-                            <h2 id="description">Description</h2>
+                            <div class="page-header"><h1>.put(key, value[, options])</h1></div>
+                            <h2 id="signature">Signature</h2>
+<p><code>AngularCache#put(key, value[, options])</code></p>
+<h2 id="description">Description</h2>
 <p>Add a key-value pair to the cache.</p>
 <h2 id="parameters">Parameters</h2>
 <h4 id="options">options</h4>
@@ -449,16 +464,21 @@ someCache.put(<span class="string">'isIt'</span>, <span class="literal">true</sp
                 
 				    
 				        <section id="cacheget">
-                            <div class="page-header"><h1>.get(key, options)</h1></div>
-                            <h2 id="description">Description</h2>
+                            <div class="page-header"><h1>.get(key[, options])</h1></div>
+                            <h2 id="signature">Signature</h2>
+<p><code>AngularCache#get(key[, options])</code></p>
+<h2 id="description">Description</h2>
 <p>Retrieve the item from the cache with the specified key.</p>
 <h2 id="parameters">Parameters</h2>
 <h4 id="key">key</h4>
-<p><strong>Type:</strong> <code>string|Array</code></p>
+<p><strong>Type:</strong> <code>string|array</code></p>
 <p><strong>Description:</strong> The key of the item to retrieve or an array of the keys of items to retrieve.</p>
 <h4 id="options">options</h4>
 <p><strong>Type:</strong> <code>object</code></p>
-<p><strong>Description:</strong> Configuration options for this method call. <code>onExpire: Function</code> is the only option available for this method.</p>
+<p><strong>Description:</strong> Configuration options for this method call. Possible properties of <code>options</code> parameter:</p>
+<ul>
+<li><code>onExpire</code> - <code>function</code> - Function to be called if the requested item has expired.</li>
+</ul>
 <h2 id="usage">Usage</h2>
 <pre class="highlighted"><code class="javascript">someCache.get(<span class="string">'key'</span>); <span class="comment">// 'value'</span>
 
@@ -468,15 +488,28 @@ someCache.get(<span class="string">'things'</span>); <span class="comment">// { 
 
 someCache.get(<span class="string">'isIt'</span>); <span class="comment">// true</span>
 
-someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit'</span>]); <span class="comment">// ['value', 55]</span></code></pre>
+someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit'</span>]); <span class="comment">// ['value', 55]</span>
+
+<span class="keyword">var</span> thing = someCache.get(<span class="string">'thingThatExpired'</span>, {
+                onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
+                    $http.get(key).then(<span class="function"><span class="keyword">function</span> <span class="params">(thing)</span> {</span>
+                        someCache.put(key, thing);
+
+                        someCache.get(<span class="string">'thingThatExpired'</span>); <span class="comment">// { name: 'A thing!' }</span>
+                    });
+                });
+
+thing; <span class="comment">// undefined</span></code></pre>
 
                         </section>
                     
                 
 				    
 				        <section id="cacheremove">
-                            <div class="page-header"><h1>.remove(key, options)</h1></div>
-                            <h2 id="description">Description</h2>
+                            <div class="page-header"><h1>.remove(key[, options])</h1></div>
+                            <h2 id="signature">Signature</h2>
+<p><code>AngularCache#remove(key[, options])</code></p>
+<h2 id="description">Description</h2>
 <p>Remove the item with the specified key from the cache.</p>
 <h2 id="parameters">Parameters</h2>
 <h4 id="options">options</h4>
@@ -490,8 +523,10 @@ someCache.get([<span class="string">'key'</span>, <span class="string">'ageLimit
                 
 				    
 				        <section id="cacheremoveexpired">
-                            <div class="page-header"><h1>.removeExpired(options)</h1></div>
-                            <h2 id="description">Description</h2>
+                            <div class="page-header"><h1>.removeExpired([options])</h1></div>
+                            <h2 id="signature">Signature</h2>
+<p><code>AngularCache#removeExpired([options])</code></p>
+<h2 id="description">Description</h2>
 <p>Remove all expired items from the cache and return an object (or array) of the removed items.</p>
 <h2 id="parameters">Parameters</h2>
 <h4 id="options">options</h4>

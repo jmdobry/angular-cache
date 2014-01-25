@@ -1,10 +1,13 @@
 ---
-sectionHeader: '.setOptions(options, strict)'
-sectionName: '&emsp;.setOptions(options, strict)'
+sectionHeader: '.setOptions(options[, strict])'
+sectionName: '&emsp;.setOptions(options[, strict])'
 sectionLinkName: cachesetoptions
 gfm: true
 index: 11
 ---
+## Signature
+`AngularCache#setOptions(options[, strict])`
+
 ## Description
 Dynamically set the configuration for the cache. See [Configuration Options](configuration.html).
 

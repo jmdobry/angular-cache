@@ -1,10 +1,13 @@
 ---
-sectionHeader: '.put(key, value, options)'
-sectionName: '&emsp;.put(key, value, options)'
+sectionHeader: '.put(key, value[, options])'
+sectionName: '&emsp;.put(key, value[, options])'
 sectionLinkName: cacheput
 gfm: true
 index: 12
 ---
+## Signature
+`AngularCache#put(key, value[, options])`
+
 ## Description
 Add a key-value pair to the cache.
 

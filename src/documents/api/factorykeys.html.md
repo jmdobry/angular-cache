@@ -13,3 +13,25 @@ Return an array of the cacheIds of all caches in `$angularCacheFactory`.
 ```javascript
 $angularCacheFactory.keys();
 ```
+
+# .disableAll()
+
+## Description
+Disable all caches. No data will be lost.
+
+## Usage
+
+```javascript
+$angularCacheFactory.disableAll();
+```
+
+# .enableAll()
+
+## Description
+Enable all caches. Caches will resume with full functionality.
+
+## Usage
+
+```javascript
+$angularCacheFactory.enableAll();
+```

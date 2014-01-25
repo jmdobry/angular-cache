@@ -1,10 +1,13 @@
 ---
-sectionHeader: '.removeExpired(options)'
-sectionName: '&emsp;.removeExpired(options)'
+sectionHeader: '.removeExpired([options])'
+sectionName: '&emsp;.removeExpired([options])'
 sectionLinkName: cacheremoveexpired
 gfm: true
 index: 15
 ---
+## Signature
+`AngularCache#removeExpired([options])`
+
 ## Description
 Remove all expired items from the cache and return an object (or array) of the removed items.
 

@@ -1,10 +1,13 @@
 ---
-sectionHeader: '.remove(key, options)'
-sectionName: '&emsp;.remove(key, options)'
+sectionHeader: '.remove(key[, options])'
+sectionName: '&emsp;.remove(key[, options])'
 sectionLinkName: cacheremove
 gfm: true
 index: 14
 ---
+## Signature
+`AngularCache#remove(key[, options])`
+
 ## Description
 Remove the item with the specified key from the cache.
 

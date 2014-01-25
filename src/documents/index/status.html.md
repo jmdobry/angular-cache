@@ -15,7 +15,7 @@ index: 2
 <tbody>
 <tr>
 <td>Version</td>
-<td>[2.2.0](https://github.com/jmdobry/angular-cache/releases/tag/2.2.0)</td>
+<td>[![Bower version](https://badge.fury.io/bo/angular-cache.png)](http://badge.fury.io/bo/angular-cache)</td>
 </tr>
 <tr>
 <td>Source</td>
