@@ -31,7 +31,7 @@ var newCache = $angularCacheFactory('newCache', {
         // what the url is if key != url
         $http.get(key).success(function (data) {
             $angularCacheFactory.get('newCache').put(key, data);
-            done(data); // Execute the "done" callback specified in the `get()` call
+            done(key, data); // Execute the "done" callback specified in the `get()` call
         });
     });
 });
@@ -40,10 +40,12 @@ newCache.put('denver', 'broncos');
 
 // wait a few seconds
 
-var value = newCache.get('denver', function (value) {
-    // here value is defined, because we retrieved it from the server
+var value = newCache.get('denver', {
+    onExpire: function (key, value) {
+        // here value is defined, because the global onExpire callback just retrieved it from the server
+    }
 });
-// here value is undefined because the item with
+// here value is undefined because the item withx
 // the key "denver" has expired and was deleted from the
 // cache when we requested it. The callback passed to
 // "get()" will receive the new value for 'denver' which
@@ -70,14 +72,16 @@ newCache.put('denver', 'broncos');
 // the server or decide to keep the old value and re-insert
 // it into the cache. Specifying an "onExpire" callback for
 // the cache is a good way to stay DRY.
-var value = newCache.get('denver', function (key, value) {
-    if (isGoodThisYear(key, value)) {
-        newCache.put(key, value);
-    } else {
-        $http.get(key).success(function (data) {
-            newCache.put(key, data);
-        });
-    }
+var value = newCache.get('denver', {
+	onExpire: function (key, value) {
+	    if (isGoodThisYear(key, value)) {
+	        newCache.put(key, value);
+	    } else {
+	        $http.get(key).success(function (data) {
+	            newCache.put(key, data);
+	        });
+	    }
+	}
 });
 ```
 

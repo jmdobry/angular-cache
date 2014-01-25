@@ -281,7 +281,7 @@ Can be configured on a per-item basis:</p>
         <span class="comment">// what the url is if key != url</span>
         $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
             $angularCacheFactory.get(<span class="string">'newCache'</span>).put(key, data);
-            done(data); <span class="comment">// Execute the "done" callback specified in the `get()` call</span>
+            done(key, data); <span class="comment">// Execute the "done" callback specified in the `get()` call</span>
         });
     });
 });
@@ -290,10 +290,12 @@ newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos
 
 <span class="comment">// wait a few seconds</span>
 
-<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(value)</span> {</span>
-    <span class="comment">// here value is defined, because we retrieved it from the server</span>
+<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, {
+    onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
+        <span class="comment">// here value is defined, because the global onExpire callback just retrieved it from the server</span>
+    }
 });
-<span class="comment">// here value is undefined because the item with</span>
+<span class="comment">// here value is undefined because the item withx</span>
 <span class="comment">// the key "denver" has expired and was deleted from the</span>
 <span class="comment">// cache when we requested it. The callback passed to</span>
 <span class="comment">// "get()" will receive the new value for 'denver' which</span>
@@ -317,13 +319,15 @@ newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos
 <span class="comment">// the server or decide to keep the old value and re-insert</span>
 <span class="comment">// it into the cache. Specifying an "onExpire" callback for</span>
 <span class="comment">// the cache is a good way to stay DRY.</span>
-<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
-    <span class="keyword">if</span> (isGoodThisYear(key, value)) {
-        newCache.put(key, value);
-    } <span class="keyword">else</span> {
-        $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
-            newCache.put(key, data);
-        });
+<span class="keyword">var</span> value = newCache.get(<span class="string">'denver'</span>, {
+    onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
+        <span class="keyword">if</span> (isGoodThisYear(key, value)) {
+            newCache.put(key, value);
+        } <span class="keyword">else</span> {
+            $http.get(key).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
+                newCache.put(key, data);
+            });
+        }
     }
 });</code></pre>
 <h4 id="using-onexpire-in-aggressive-delete-mode">Using &#39;onExpire&#39; in aggressive delete mode</h4>
