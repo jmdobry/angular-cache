@@ -12,6 +12,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         expect(cache.info().storageMode).toEqual(CACHE_DEFAULTS.storageMode);
         expect(cache.info().storageImpl).toEqual(CACHE_DEFAULTS.storageImpl);
         expect(cache.info().verifyIntegrity).toEqual(CACHE_DEFAULTS.verifyIntegrity);
+        expect(cache.info().readOnGet).toEqual(CACHE_DEFAULTS.readOnGet);
         cache.destroy();
     });
     it('should be able to create a cache with options.', function () {
@@ -32,7 +33,8 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             verifyIntegrity: false,
             recycleFreq: 2000,
             onExpire: function () {
-            }
+            },
+            readOnGet: false
         };
         var cache = $angularCacheFactory('cache', options);
         expect(cache).toBeDefined();
@@ -44,6 +46,7 @@ describe('$angularCacheFactory(cacheId, options)', function () {
         expect(cache.info().storageMode).toEqual(options.storageMode);
         expect(cache.info().localStorageImpl).not.toBeDefined(); // We don't expose this to the user
         expect(cache.info().onExpire).toEqual(options.onExpire);
+        expect(cache.info().readOnGet).toEqual(options.readOnGet);
         cache.destroy();
         expect($angularCacheFactory.get('cache')).not.toBeDefined();
     });

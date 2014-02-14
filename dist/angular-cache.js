@@ -216,7 +216,8 @@
 					storageMode: 'none',
 					storageImpl: null,
 					verifyIntegrity: true,
-					disabled: false
+					disabled: false,
+					readOnGet: false /* same as verifyIntegrity but for gets */
 				};
 			};
 
@@ -316,6 +317,10 @@
 				if (typeof options.onExpire !== 'function') {
 					throw new Error(errStr + 'onExpire: must be a function!');
 				}
+			}
+
+			if ('readOnGet' in options) {
+				options.readOnGet = options.readOnGet === true;
 			}
 
 			cacheDefaults = angular.extend({}, DEFAULTS(), options);
@@ -658,6 +663,10 @@
 						config.onExpire = cacheOptions.onExpire;
 					}
 
+					if ('readOnGet' in cacheOptions) {
+						config.readOnGet = cacheOptions.readOnGet === true;
+					}
+
 					cacheDirty = true;
 				}
 
@@ -744,6 +753,14 @@
 							storage.removeItem(prefix + '.data.' + keys[i]);
 						}
 						storage.setItem(prefix + '.keys', angular.toJson([]));
+					}
+				}
+
+				function _readItemFromStorage(key, readOnGet) {
+					if (readOnGet || (readOnGet !== false && config.readOnGet)) {
+						if (config.storageMode !== 'none' && storage) {
+							data[key] = angular.fromJson(storage.getItem(prefix + '.data.' + key)) || {};
+						}
 					}
 				}
 
@@ -866,7 +883,7 @@
 						return;
 					}
 
-					_verifyIntegrity(options.verifyIntegrity);
+					_readItemFromStorage(key, options.readOnGet);
 
 					var item = data[key],
 						value = item.value,
