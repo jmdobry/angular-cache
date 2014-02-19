@@ -26,8 +26,7 @@ var fail = function (msg) {
 		storageMode: 'none',
 		storageImpl: null,
 		verifyIntegrity: true,
-		disabled: false,
-		readOnGet: false
+		disabled: false
 	};
 
 var $angularCacheFactoryProvider, $angularCacheFactory, BinaryHeap;

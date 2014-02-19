@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-<%= pkg.version %>.js
- * @version <%= pkg.version %> - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @file angular-cache-2.3.0.js
+ * @version 2.3.0 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
  * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -216,8 +216,7 @@
 					storageMode: 'none',
 					storageImpl: null,
 					verifyIntegrity: true,
-					disabled: false,
-					readOnGet: false /* same as verifyIntegrity but for gets */
+					disabled: false
 				};
 			};
 
@@ -317,10 +316,6 @@
 				if (typeof options.onExpire !== 'function') {
 					throw new Error(errStr + 'onExpire: must be a function!');
 				}
-			}
-
-			if ('readOnGet' in options) {
-				options.readOnGet = options.readOnGet === true;
 			}
 
 			cacheDefaults = angular.extend({}, DEFAULTS(), options);
@@ -663,10 +658,6 @@
 						config.onExpire = cacheOptions.onExpire;
 					}
 
-					if ('readOnGet' in cacheOptions) {
-						config.readOnGet = cacheOptions.readOnGet === true;
-					}
-
 					cacheDirty = true;
 				}
 
@@ -733,7 +724,25 @@
 					}
 				}
 
-				function _saveKeysToStorage(keys) {
+        function _readItemFromStorage(key, verifyIntegrity) {
+          if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
+            if (config.storageMode !== 'none' && storage) {
+              var item = storage.getItem(prefix + '.data.' + key);
+
+              if (item === null) {
+                if (key in data)
+                  delete data[key];
+
+                return;
+              }
+
+
+              data[key] = angular.fromJson(item) || {};
+            }
+          }
+        }
+
+        function _saveKeysToStorage(keys) {
 					if (config.storageMode !== 'none' && storage) {
 						var keysToSave = keys || _keys(data);
 						storage.setItem(prefix + '.keys', angular.toJson(keysToSave));
@@ -753,14 +762,6 @@
 							storage.removeItem(prefix + '.data.' + keys[i]);
 						}
 						storage.setItem(prefix + '.keys', angular.toJson([]));
-					}
-				}
-
-				function _readItemFromStorage(key, readOnGet) {
-					if (readOnGet || (readOnGet !== false && config.readOnGet)) {
-						if (config.storageMode !== 'none' && storage) {
-							data[key] = angular.fromJson(storage.getItem(prefix + '.data.' + key)) || {};
-						}
 					}
 				}
 
@@ -879,11 +880,13 @@
 						throw new Error('AngularCache.get(key, options): options: must be an object!');
 					} else if (options.onExpire && !angular.isFunction(options.onExpire)) {
 						throw new Error('AngularCache.get(key, options): onExpire: must be a function!');
-					} else if (!(key in data)) {
-						return;
 					}
 
-					_readItemFromStorage(key, options.readOnGet);
+          _readItemFromStorage(key, options.verifyIntegrity);
+
+          if (!(key in data)) {
+						return;
+					}
 
 					var item = data[key],
 						value = item.value,
@@ -895,7 +898,7 @@
 					lruHeap.push(item);
 
 					if (deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
-						this.remove(key, { verifyIntegrity: false });
+            this.remove(key, { verifyIntegrity: false });
 
 						if (config.onExpire) {
 							config.onExpire(key, item.value, (options.onExpire));
