@@ -724,7 +724,25 @@
 					}
 				}
 
-				function _saveKeysToStorage(keys) {
+        function _readItemFromStorage(key, verifyIntegrity) {
+          if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
+            if (config.storageMode !== 'none' && storage) {
+              var item = storage.getItem(prefix + '.data.' + key);
+
+              if (item === null) {
+                if (key in data)
+                  delete data[key];
+
+                return;
+              }
+
+
+              data[key] = angular.fromJson(item) || {};
+            }
+          }
+        }
+
+        function _saveKeysToStorage(keys) {
 					if (config.storageMode !== 'none' && storage) {
 						var keysToSave = keys || _keys(data);
 						storage.setItem(prefix + '.keys', angular.toJson(keysToSave));
@@ -862,11 +880,13 @@
 						throw new Error('AngularCache.get(key, options): options: must be an object!');
 					} else if (options.onExpire && !angular.isFunction(options.onExpire)) {
 						throw new Error('AngularCache.get(key, options): onExpire: must be a function!');
-					} else if (!(key in data)) {
-						return;
 					}
 
-					_verifyIntegrity(options.verifyIntegrity);
+          _readItemFromStorage(key, options.verifyIntegrity);
+
+          if (!(key in data)) {
+						return;
+					}
 
 					var item = data[key],
 						value = item.value,
@@ -878,7 +898,7 @@
 					lruHeap.push(item);
 
 					if (deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
-						this.remove(key, { verifyIntegrity: false });
+            this.remove(key, { verifyIntegrity: false });
 
 						if (config.onExpire) {
 							config.onExpire(key, item.value, (options.onExpire));

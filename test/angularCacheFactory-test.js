@@ -32,7 +32,8 @@ describe('$angularCacheFactory(cacheId, options)', function () {
             verifyIntegrity: false,
             recycleFreq: 2000,
             onExpire: function () {
-            }
+            },
+            readOnGet: false
         };
         var cache = $angularCacheFactory('cache', options);
         expect(cache).toBeDefined();

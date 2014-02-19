@@ -10,7 +10,8 @@ describe('$angularCacheFactoryProvider.setCacheDefaults(options)', function () {
 			storageMode: CACHE_DEFAULTS.storageMode,
 			storageImpl: CACHE_DEFAULTS.storageImpl,
 			verifyIntegrity: CACHE_DEFAULTS.verifyIntegrity,
-			disabled: CACHE_DEFAULTS.disabled
+			disabled: CACHE_DEFAULTS.disabled,
+			readOnGet: CACHE_DEFAULTS.readOnGet
 		});
 		var cache = $angularCacheFactory('cache');
 		expect(cache).toBeDefined();
@@ -24,6 +25,7 @@ describe('$angularCacheFactoryProvider.setCacheDefaults(options)', function () {
 		expect(cache.info().storageMode).toEqual(CACHE_DEFAULTS.storageMode);
 		expect(cache.info().storageImpl).toEqual(CACHE_DEFAULTS.storageImpl);
 		expect(cache.info().verifyIntegrity).toEqual(CACHE_DEFAULTS.verifyIntegrity);
+		expect(cache.info().readOnGet).toEqual(CACHE_DEFAULTS.readOnGet);
 		expect(cache.info().disabled).toEqual(CACHE_DEFAULTS.disabled);
 		cache.destroy();
 	});
