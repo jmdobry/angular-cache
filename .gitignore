@@ -13,5 +13,6 @@ coverage/Chrome*/*
 coverage/Phantom*/*
 coverage/Firefox*/*
 coverage/
+doc/
 
 bower_components/

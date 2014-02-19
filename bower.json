@@ -2,8 +2,8 @@
   "author": "Jason Dobry",
   "name": "angular-cache",
   "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-  "version": "2.3.1",
-  "homepage": "http://jmdobry.github.io/angular-cache/",
+  "version": "3.0.0-beta.1",
+  "homepage": "https://github.com/jmdobry/angular-cache",
   "repository": {
     "type": "git",
     "url": "git://github.com/jmdobry/angular-cache.git"
@@ -16,8 +16,6 @@
     "src/",
     "coverage/",
     ".jshintrc",
-    "demo/",
-    ".jslintrc",
     "Gruntfile.js",
     "CONTRIBUTING.md",
     "TRANSITION.md",
@@ -44,6 +42,7 @@
     "angular-1.2.5": "angular#1.2.5",
     "angular-1.2.6": "angular#1.2.6",
     "angular-1.2.7": "angular#1.2.7",
+    "angular-1.2.13": "angular#1.2.13",
     "angular-mocks-1.0.4": "angular-mocks#1.0.4",
     "angular-mocks-1.0.5": "angular-mocks#1.0.5",
     "angular-mocks-1.0.6": "angular-mocks#1.0.6",
@@ -57,7 +56,8 @@
     "angular-mocks-1.2.4": "angular-mocks#1.2.4",
     "angular-mocks-1.2.5": "angular-mocks#1.2.5",
     "angular-mocks-1.2.6": "angular-mocks#1.2.6",
-    "angular-mocks-1.2.7": "angular-mocks#1.2.7"
+    "angular-mocks-1.2.7": "angular-mocks#1.2.7",
+    "angular-mocks-1.2.13": "angular-mocks#1.2.13"
   },
   "resolutions": {
     "angular": "1.0.8"

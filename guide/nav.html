@@ -1,0 +1,106 @@
+<div class="navbar navbar-fixed-top main-nav">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/" style="padding-top: 6px; padding-bottom: 6px; color: #0088cc;">
+                <img class="logo-small" src="/resources/img/data_white.png" style="height: 27px">&nbsp;
+                angular-data
+                <small style="font-size:11px; color: #fff;">Data store and caching for Angular.js</small>
+            </a>
+
+            <ul class="nav pull-right">
+                <li>
+                    <a href="/" tabindex="1">
+                        <i class="icon-home icon-white"></i> Home
+                    </a>
+                </li>
+                <li data-ng-repeat="group in docGroups" class="dropdown" ng-show="group.visible">
+
+                    <a data-ng-href="{{group.url}}" class="dropdown-toggle" data-toggle="dropdown"
+                       tabindex="{{$index + 2}}"
+                       data-ng-if="group.id !== 'api'" style="cursor: pointer">
+                        <i class="{{group.groupIcon}} icon-white"></i> {{group.title}} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" data-ng-if="group.id !== 'api'">
+                        <li data-ng-repeat="section in group.sections">
+                            <a data-ng-href="{{section.url}}">{{section.title}}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a data-ng-href="" class="dropdown-toggle" tabindex="3" style="cursor: pointer">
+                        <i class="icon-wrench icon-white"></i> API <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/documentation/api/api/index">API Overview</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="nav-header">
+                            Angular-data - 0.7.0
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DS">DS</a>
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DSHttpAdapter">DSHttpAdapter</a>
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DSUtils">DSUtils</a>
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DSErrors">DSErrors</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="nav-header">
+                            Angular-cache - 3.0.0
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DSCacheFactoryProvider">DSCacheFactoryProvider</a>
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DSCacheFactory">DSCacheFactory</a>
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DSCache">DSCache</a>
+                        </li>
+                        <li>
+                            <a href="/documentation/api/api/DSBinaryHeap">DSBinaryHeap</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a data-ng-href="" class="dropdown-toggle" tabindex="4" style="cursor: pointer">
+                        <i class="icon-group icon-white"></i> Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-header">
+                            Angular-data
+                        </li>
+                        <li>
+                            <a href="https://groups.google.com/forum/?fromgroups#!forum/angular-data">Mailing List</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/jmdobry/angular-data/issues">Issues</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/jmdobry/angular-data">GitHub</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="nav-header">
+                            Angular-cache
+                        </li>
+                        <li>
+                            <a href="https://groups.google.com/forum/?fromgroups#!forum/angular-cache">Mailing List</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/jmdobry/angular-cache/issues">Issues</a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/jmdobry/angular-cache">GitHub</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
