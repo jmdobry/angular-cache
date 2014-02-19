@@ -239,7 +239,7 @@ app.service(<span class="string">'myService'</span>, <span class="function"><spa
                 cache: <span class="literal">true</span>
             }).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
                 console.log(<span class="string">'time taken for request: '</span> + (<span class="keyword">new</span> Date().getTime() - start) + <span class="string">'ms'</span>);
-                deferred.resolved(data);
+                deferred.resolve(data);
             });
             <span class="keyword">return</span> deferred.promise;
         }
@@ -275,7 +275,7 @@ app.controller(<span class="string">'myCtrl'</span>, <span class="function"><spa
                 cache: $angularCacheFactory.get(<span class="string">'dataCache'</span>)
             }).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
                 console.log(<span class="string">'time taken for request: '</span> + (<span class="keyword">new</span> Date().getTime() - start) + <span class="string">'ms'</span>);
-                deferred.resolved(data);
+                deferred.resolve(data);
             });
             <span class="keyword">return</span> deferred.promise;
         }
@@ -317,7 +317,7 @@ app.controller(<span class="string">'myCtrl'</span>, <span class="function"><spa
             } <span class="keyword">else</span> {
                 $http.get(<span class="string">'api/data/'</span> + id).success(<span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
                         console.log(<span class="string">'time taken for request: '</span> + (<span class="keyword">new</span> Date().getTime() - start) + <span class="string">'ms'</span>);
-                        deferred.resolved(data);
+                        deferred.resolve(data);
                     });
             }
             <span class="keyword">return</span> deferred.promise;

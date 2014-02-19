@@ -32,7 +32,7 @@ app.service('myService', function ($http) {
                 cache: true
             }).success(function (data) {
                 console.log('time taken for request: ' + (new Date().getTime() - start) + 'ms');
-                deferred.resolved(data);
+                deferred.resolve(data);
             });
             return deferred.promise;
         }
@@ -71,7 +71,7 @@ app.service('myService', function ($http, $angularCacheFactory) {
                 cache: $angularCacheFactory.get('dataCache')
             }).success(function (data) {
                 console.log('time taken for request: ' + (new Date().getTime() - start) + 'ms');
-                deferred.resolved(data);
+                deferred.resolve(data);
             });
             return deferred.promise;
         }
@@ -116,7 +116,7 @@ app.service('myService', function ($http, $angularCacheFactory) {
             } else {
                 $http.get('api/data/' + id).success(function (data) {
                         console.log('time taken for request: ' + (new Date().getTime() - start) + 'ms');
-                        deferred.resolved(data);
+                        deferred.resolve(data);
                     });
             }
             return deferred.promise;
