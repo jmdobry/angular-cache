@@ -1,3 +1,8 @@
+##### 2.3.1 - 19 February 2014
+
+###### Backwards compatible bug fixes
+- Fixed #89
+
 ##### 2.3.0 - 09 January 2014
 - Caches can now be disabled #82
 - The `options` object (`$angularCacheFactory()`, `AngularCache#setOptions()`, and `$angularCacheFactoryProvider.setCacheDefaults()`) now accepts a `disabled` field, which can be set to `true` and defaults to `false`.

@@ -40,7 +40,7 @@ module.exports = function (grunt) {
                 options: {
                     banner: '/**\n' +
                         '* @author Jason Dobry <jason.dobry@gmail.com>\n' +
-                        '* @file angular-cache.min.js\n' +
+                        '* @file angular-cache-<%= pkg.version %>.min.js\n' +
                         '* @version <%= pkg.version %> - Homepage <http://jmdobry.github.io/angular-cache/>\n' +
                         '* @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>\n' +
                         '* @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>\n' +

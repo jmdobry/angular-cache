@@ -1,12 +1,11 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-2.3.0.js
- * @version 2.3.0 - [Homepage]{@link http://jmdobry.github.io/angular-cache/}
+ * @file angular-cache-2.3.1.js
+ * @version 2.3.1 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
- * @overview angular-cache is a caching system that improves upon the capabilities of the
- * $cacheFactory provided by AngularJS.
+ * @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
  */
 (function (window, angular, undefined) {
 	'use strict';
@@ -724,25 +723,24 @@
 					}
 				}
 
-        function _readItemFromStorage(key, verifyIntegrity) {
-          if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
-            if (config.storageMode !== 'none' && storage) {
-              var item = storage.getItem(prefix + '.data.' + key);
+				function _readItemFromStorage(key, verifyIntegrity) {
+					if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
+						if (config.storageMode !== 'none' && storage) {
+							var item = storage.getItem(prefix + '.data.' + key);
 
-              if (item === null) {
-                if (key in data)
-                  delete data[key];
+							if (item === null) {
+								if (key in data) {
+									delete data[key];
+								}
+								return;
+							}
 
-                return;
-              }
+							data[key] = angular.fromJson(item) || {};
+						}
+					}
+				}
 
-
-              data[key] = angular.fromJson(item) || {};
-            }
-          }
-        }
-
-        function _saveKeysToStorage(keys) {
+				function _saveKeysToStorage(keys) {
 					if (config.storageMode !== 'none' && storage) {
 						var keysToSave = keys || _keys(data);
 						storage.setItem(prefix + '.keys', angular.toJson(keysToSave));
@@ -882,9 +880,9 @@
 						throw new Error('AngularCache.get(key, options): onExpire: must be a function!');
 					}
 
-          _readItemFromStorage(key, options.verifyIntegrity);
+					_readItemFromStorage(key, options.verifyIntegrity);
 
-          if (!(key in data)) {
+					if (!(key in data)) {
 						return;
 					}
 
@@ -898,7 +896,7 @@
 					lruHeap.push(item);
 
 					if (deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
-            this.remove(key, { verifyIntegrity: false });
+						this.remove(key, { verifyIntegrity: false });
 
 						if (config.onExpire) {
 							config.onExpire(key, item.value, (options.onExpire));
