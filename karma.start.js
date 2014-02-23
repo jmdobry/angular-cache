@@ -1,3 +1,4 @@
+console.log(angular.version);
 var fail = function (msg) {
 		assert.equal('should not reach this!: ' + msg, 'failure');
 	},

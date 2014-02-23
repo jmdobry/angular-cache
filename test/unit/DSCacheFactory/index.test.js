@@ -54,7 +54,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected capacity to be greater than zero! Found: ' + capacity + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + capacity);
+		assert.equal(msg, '[ng:areq] Expected capacity to be greater than zero! Found: ' + capacity + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + capacity);
 		for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
 			if (TYPES_EXCEPT_NUMBER[i] === null) {
 				continue;
@@ -63,7 +63,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 				DSCacheFactory('capacityCache' + i, { capacity: TYPES_EXCEPT_NUMBER[i] });
 				fail();
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected capacity to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
+				assert.equal(err.message, '[ng:areq] Expected capacity to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
 				continue;
 			}
 			fail();
@@ -78,7 +78,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected maxAge to be greater than zero! Found: ' + maxAge + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + maxAge);
+		assert.equal(msg, '[ng:areq] Expected maxAge to be greater than zero! Found: ' + maxAge + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + maxAge);
 		for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
 			try {
 				DSCacheFactory('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] });
@@ -86,7 +86,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 					fail(TYPES_EXCEPT_NUMBER[i]);
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected maxAge to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
+				assert.equal(err.message, '[ng:areq] Expected maxAge to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_NUMBER[i] !== null) {
@@ -104,7 +104,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected cacheFlushInterval to be greater than zero! Found: ' + cacheFlushInterval + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + cacheFlushInterval);
+		assert.equal(msg, '[ng:areq] Expected cacheFlushInterval to be greater than zero! Found: ' + cacheFlushInterval + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + cacheFlushInterval);
 		for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
 			try {
 				DSCacheFactory('cacheFlushIntervalCache' + i, { cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] });
@@ -112,7 +112,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 					fail();
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected cacheFlushInterval to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
+				assert.equal(err.message, '[ng:areq] Expected cacheFlushInterval to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_NUMBER[i] !== null) {
@@ -130,7 +130,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected recycleFreq to be greater than zero! Found: ' + recycleFreq + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + recycleFreq);
+		assert.equal(msg, '[ng:areq] Expected recycleFreq to be greater than zero! Found: ' + recycleFreq + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + recycleFreq);
 		for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
 			try {
 				DSCacheFactory('recycleFreqCache' + i, { recycleFreq: TYPES_EXCEPT_NUMBER[i] });
@@ -138,7 +138,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 					fail();
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected recycleFreq to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
+				assert.equal(err.message, '[ng:areq] Expected recycleFreq to be a number! Found: ' + typeof TYPES_EXCEPT_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_NUMBER[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_NUMBER[i] !== null) {
@@ -156,7 +156,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected onExpire to be a function! Found: ' + typeof onExpire + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof onExpire);
+		assert.equal(msg, '[ng:areq] Expected onExpire to be a function! Found: ' + typeof onExpire + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof onExpire);
 		for (var i = 0; i < TYPES_EXCEPT_FUNCTION.length; i++) {
 			try {
 				if (TYPES_EXCEPT_FUNCTION[i]) {
@@ -165,7 +165,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 					continue;
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected onExpire to be a function! Found: ' + typeof TYPES_EXCEPT_FUNCTION[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_FUNCTION[i]);
+				assert.equal(err.message, '[ng:areq] Expected onExpire to be a function! Found: ' + typeof TYPES_EXCEPT_FUNCTION[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_FUNCTION[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_FUNCTION[i] !== null) {
@@ -183,7 +183,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected deleteOnExpire to be "none", "passive" or "aggressive"! Found: ' + deleteOnExpire + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + deleteOnExpire);
+		assert.equal(msg, '[ng:areq] Expected deleteOnExpire to be "none", "passive" or "aggressive"! Found: ' + deleteOnExpire + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + deleteOnExpire);
 		for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
 			if (TYPES_EXCEPT_STRING[i] === null) {
 				continue;
@@ -192,7 +192,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 				DSCacheFactory('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] });
 				fail(TYPES_EXCEPT_STRING[i]);
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected deleteOnExpire to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
+				assert.equal(err.message, '[ng:areq] Expected deleteOnExpire to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
 				continue;
 			}
 			fail(TYPES_EXCEPT_STRING[i]);
@@ -208,13 +208,13 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: ' + storageMode + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + storageMode);
+		assert.equal(msg, '[ng:areq] Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: ' + storageMode + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + storageMode);
 		for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
 			try {
 				DSCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
 				fail(TYPES_EXCEPT_STRING[i]);
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected storageMode to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
+				assert.equal(err.message, '[ng:areq] Expected storageMode to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
 				continue;
 			}
 			fail(TYPES_EXCEPT_STRING[i]);
@@ -230,7 +230,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[ng:areq] Expected storageImpl to be an object! Found: ' + typeof storageImpl + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof storageImpl);
+		assert.equal(msg, '[ng:areq] Expected storageImpl to be an object! Found: ' + typeof storageImpl + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof storageImpl);
 		for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
 			try {
 				DSCacheFactory('storageImplCache' + i, { storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
@@ -238,7 +238,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 					fail(TYPES_EXCEPT_OBJECT[i]);
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected storageImpl to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
+				assert.equal(err.message, '[ng:areq] Expected storageImpl to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
@@ -258,7 +258,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			});
 			fail();
 		} catch (err) {
-			assert.equal(err.message, '[ng:areq] Expected storageImpl to implement "setItem(key, value)"! Found: ' + typeof storageImpl.setItem + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof storageImpl.setItem);
+			assert.equal(err.message, '[ng:areq] Expected storageImpl to implement "setItem(key, value)"! Found: ' + typeof storageImpl.setItem + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof storageImpl.setItem);
 		}
 		try {
 			storageImpl = {
@@ -273,7 +273,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			});
 			fail();
 		} catch (err) {
-			assert.equal(err.message, '[ng:areq] Expected storageImpl to implement "getItem(key)"! Found: ' + typeof storageImpl.getItem + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof storageImpl.getItem);
+			assert.equal(err.message, '[ng:areq] Expected storageImpl to implement "getItem(key)"! Found: ' + typeof storageImpl.getItem + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof storageImpl.getItem);
 		}
 		try {
 			storageImpl = {
@@ -288,7 +288,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			});
 			fail();
 		} catch (err) {
-			assert.equal(err.message, '[ng:areq] Expected storageImpl to implement "removeItem(key)"! Found: ' + typeof storageImpl.removeItem + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof storageImpl.removeItem);
+			assert.equal(err.message, '[ng:areq] Expected storageImpl to implement "removeItem(key)"! Found: ' + typeof storageImpl.removeItem + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof storageImpl.removeItem);
 		}
 
 		done();
@@ -300,7 +300,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			var msg = err.message;
 		}
-		assert.equal(msg, '[$cacheFactory:iid] CacheId \'cache\' is already taken!\nhttp://errors.angularjs.org/1.2.13/$cacheFactory/iid?p0=cache');
+		assert.equal(msg, '[$cacheFactory:iid] CacheId \'cache\' is already taken!\nhttp://errors.angularjs.org/' + angular.version.full + '/$cacheFactory/iid?p0=cache');
 
 		done();
 	});
@@ -310,7 +310,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 				DSCacheFactory(TYPES_EXCEPT_STRING[i]);
 				fail(TYPES_EXCEPT_STRING[i]);
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected cacheId to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
+				assert.equal(err.message, '[ng:areq] Expected cacheId to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
 				continue;
 			}
 			fail(TYPES_EXCEPT_STRING[i]);

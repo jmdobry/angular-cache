@@ -5,7 +5,7 @@ describe('DSCacheFactory.get(cacheId)', function () {
 				DSCacheFactory.get(TYPES_EXCEPT_STRING[i]);
 				fail();
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected cacheId to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
+				assert.equal(err.message, '[ng:areq] Expected cacheId to be a string! Found: ' + typeof TYPES_EXCEPT_STRING[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING[i]);
 				continue;
 			}
 			fail();

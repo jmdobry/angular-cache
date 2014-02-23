@@ -13,7 +13,7 @@ describe('DSCache.put(key, value, options)', function () {
 				cache.put(TYPES_EXCEPT_STRING_OR_NUMBER[i], 'value');
 				fail(TYPES_EXCEPT_STRING_OR_NUMBER[i]);
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected key to be a string! Found: ' + typeof TYPES_EXCEPT_STRING_OR_NUMBER[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING_OR_NUMBER[i]);
+				assert.equal(err.message, '[ng:areq] Expected key to be a string! Found: ' + typeof TYPES_EXCEPT_STRING_OR_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING_OR_NUMBER[i]);
 				continue;
 			}
 			fail(TYPES_EXCEPT_STRING_OR_NUMBER[i]);

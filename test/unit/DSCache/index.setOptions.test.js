@@ -8,7 +8,7 @@ describe('DSCache.setOptions()', function () {
 					fail(TYPES_EXCEPT_OBJECT[i]);
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected cacheOptions to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
+				assert.equal(err.message, '[ng:areq] Expected cacheOptions to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {

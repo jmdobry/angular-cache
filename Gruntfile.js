@@ -93,7 +93,7 @@ module.exports = function (grunt) {
 						'bower_components/angular-mocks-1.0.4/angular-mocks.js',
 						'dist/angular-cache.js',
 						'./karma.start.js',
-						'test/unit/*.js'
+						'test/unit/**/*.js'
 					]
 				}
 			},
@@ -104,7 +104,7 @@ module.exports = function (grunt) {
 						'bower_components/angular-mocks-1.0.5/angular-mocks.js',
 						'dist/angular-cache.js',
 						'./karma.start.js',
-						'test/unit/*.js'
+						'test/unit/**/*.js'
 					]
 				}
 			},
@@ -115,7 +115,7 @@ module.exports = function (grunt) {
 						'bower_components/angular-mocks-1.0.6/angular-mocks.js',
 						'dist/angular-cache.js',
 						'./karma.start.js',
-						'test/unit/*.js'
+						'test/unit/**/*.js'
 					]
 				}
 			},
@@ -126,7 +126,7 @@ module.exports = function (grunt) {
 						'bower_components/angular-mocks-1.0.7/angular-mocks.js',
 						'dist/angular-cache.js',
 						'./karma.start.js',
-						'test/unit/*.js'
+						'test/unit/**/*.js'
 					]
 				}
 			},
@@ -137,7 +137,7 @@ module.exports = function (grunt) {
 						'bower_components/angular-mocks-1.0.8/angular-mocks.js',
 						'dist/angular-cache.js',
 						'./karma.start.js',
-						'test/unit/*.js'
+						'test/unit/**/*.js'
 					]
 				}
 			},
@@ -429,13 +429,13 @@ module.exports = function (grunt) {
 
 	// Used by the CLI build servers
 	grunt.registerTask('test-ci', [
-		'karma:1.0.4',
-		'karma:1.0.5',
-		'karma:1.0.6',
-		'karma:1.0.7',
-		'karma:1.0.8',
-		'karma:1.1.4',
-		'karma:1.1.5',
+//		'karma:1.0.4',
+//		'karma:1.0.5',
+//		'karma:1.0.6',
+//		'karma:1.0.7',
+//		'karma:1.0.8',
+//		'karma:1.1.4',
+//		'karma:1.1.5',
 		'karma:1.2.1',
 		'karma:1.2.2',
 		'karma:1.2.3',
@@ -445,5 +445,5 @@ module.exports = function (grunt) {
 		'karma:1.2.7'
 	]);
 	grunt.registerTask('doc', ['clean:doc', 'docular', 'concat', 'copy', 'clean:afterDoc', 'uglify:scripts']);
-	grunt.registerTask('ci', ['clean', 'jshint', 'copy', 'uglify', 'test-ci', 'coveralls']);
+	grunt.registerTask('ci', ['build', 'test-ci', 'coveralls']);
 };

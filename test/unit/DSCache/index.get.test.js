@@ -17,7 +17,7 @@ describe('asCache.get(key)', function () {
 				cache.get(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
 				fail(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected key to be a string! Found: ' + typeof TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
+				assert.equal(err.message, '[ng:areq] Expected key to be a string! Found: ' + typeof TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
 				continue;
 			}
 			fail(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
@@ -32,7 +32,7 @@ describe('asCache.get(key)', function () {
 					fail(TYPES_EXCEPT_OBJECT[i]);
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected options to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
+				assert.equal(err.message, '[ng:areq] Expected options to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
@@ -52,7 +52,7 @@ describe('asCache.get(key)', function () {
 					fail(TYPES_EXCEPT_FUNCTION[i]);
 				}
 			} catch (err) {
-				assert.equal(err.message, '[ng:areq] Expected options.onExpire to be a function! Found: ' + typeof TYPES_EXCEPT_FUNCTION[i] + '.\nhttp://errors.angularjs.org/1.2.13/ng/areq?p0=' + typeof TYPES_EXCEPT_FUNCTION[i]);
+				assert.equal(err.message, '[ng:areq] Expected options.onExpire to be a function! Found: ' + typeof TYPES_EXCEPT_FUNCTION[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_FUNCTION[i]);
 				continue;
 			}
 			if (TYPES_EXCEPT_FUNCTION[i] !== null && TYPES_EXCEPT_FUNCTION[i] !== undefined && TYPES_EXCEPT_FUNCTION[i] !== false) {
