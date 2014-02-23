@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-2.3.1.js
- * @version 2.3.1 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @file angular-cache-2.3.2.js
+ * @version 2.3.2 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @copyright (c) 2013 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -728,14 +728,11 @@
 						if (config.storageMode !== 'none' && storage) {
 							var item = storage.getItem(prefix + '.data.' + key);
 
-							if (item === null) {
-								if (key in data) {
-									delete data[key];
-								}
-								return;
+							if (!item && key in data) {
+								self.remove(key);
+							} else if (item) {
+								self.put(key, angular.fromJson(item));
 							}
-
-							data[key] = angular.fromJson(item) || {};
 						}
 					}
 				}
@@ -748,7 +745,7 @@
 				}
 
 				function _saveItemToStorage(key) {
-					if (config.storageMode !== 'none' && storage) {
+					if (config.storageMode !== 'none' && storage && key in data) {
 						storage.setItem(prefix + '.data.' + key, angular.toJson(data[key]));
 					}
 				}
