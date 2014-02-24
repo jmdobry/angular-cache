@@ -14,12 +14,87 @@ var utils = require('../utils');
  *
  * ## Examples:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ *
+ * cache.get('1'); // "apple"
+ * cache.get('2'); // undefined
+ * ```
+ *
+ * ```js
+ *  var options = {
+ *          deleteOnExpire: 'passive',
+ *          maxAge: 1000
+ *      },
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *
+ *  cache.get('1'); // "apple"
+ *
+ *  setTimeout(function () {
+ *      cache.get('1'); // undefined
+ *  }, 1500);
+ * ```
+ *
+ * ```js
+ *  var options = {
+ *          deleteOnExpire: 'passive',
+ *          maxAge: 1000
+ *      },
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *
+ *  cache.get('1', {
+ *      onExpire: function (key, value) {
+ *          console.log(key, value);
+ *      }
+ *  }); // "apple"
+ *
+ *  setTimeout(function () {
+ *      cache.get('1'); // undefined
+ *                      // "1" "apple" (printed to console)
+ *  }, 1500);
+ * ```
+ *
+ * ```js
+ *  var options = {
+ *          deleteOnExpire: 'passive',
+ *          maxAge: 1000,
+ *          onExpire: function (key, value, done) {
+ *              console.log('global hit');
+ *              if (done) {
+ *                  done(key, value);
+ *              }
+ *          }
+ *      },
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *
+ *  cache.get('1', {
+ *      onExpire: function (key, value) {
+ *          console.log(key, value);
+ *      }
+ *  }); // "apple"
+ *
+ *  setTimeout(function () {
+ *      cache.get('1'); // undefined
+ *                      // "global hit" (printed to console)
+ *                      // "1" "apple" (printed to console)
+ *  }, 1500);
  * ```
  *
  * @param {string} key The key of the item to retrieve.
  * @param {object=} options Optional configuration. Properties:
+ *
  * - `{function=}` - `onExpire` - Callback to be used if in passive `deleteOnExpire` mode and the requested item has
- * expired.
+ * expired. If a global `onExpire` callback exists for this cache, then it will be called with three arguments: `key`,
+ * `value`, and `done`, where `done` is the `onExpire` callback passed into the call to `DSCache#get(key[, options])`.
+ * (See the last example above.)
+ *
  * @returns {*} The item with the given key.
  */
 module.exports = function get(key, options) {

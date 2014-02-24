@@ -10,12 +10,39 @@
  * DSCache#info([key])
  * ```
  *
- * ## Examples:
+ * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 'banana');
+ *
+ * cache.info();    //  {
+ *                  //      id: 'cache',
+ *                  //      capacity: Number.MAX_VALUE,
+ *                  //      maxAge: Number.MAX_VALUE,
+ *                  //      deleteOnExpire: 'none',
+ *                  //      onExpire: null,
+ *                  //      cacheFlushInterval: null,
+ *                  //      recycleFreq: 1000,
+ *                  //      storageMode: 'memory',
+ *                  //      storageImpl: null,
+ *                  //      disabled: false,
+ *                  //      size: 2
+ *                  //  }
+ *
+ * cache.info('1'); //  {
+ *                  //      created: 1234567890,
+ *                  //      accessed: 1234567890,
+ *                  //      expires: Number.MAX_VALUE,
+ *                  //      isExpired: false
+ *                  //  }
+ *
+ * cache.info('3'); // undefined
  * ```
  *
  * @param {string=} key The key of the item whose status is to be retrieved.
- * @returns {object} The status of this cache or the item for the given key.
+ * @returns {object} The status of this cache or of the item with the given key.
  */
 module.exports = function info(key) {
 	if (key) {

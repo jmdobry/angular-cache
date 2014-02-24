@@ -12,6 +12,15 @@
  *
  * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ *
+ * cache.get('1'); // "apple"
+ *
+ * cache.remove('1'); // "apple"
+ *
+ * cache.get('1'); // undefined
  * ```
  *
  * @param {string} key The key of the item to remove.

@@ -14,6 +14,12 @@ var utils = require('../utils');
  *
  * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 'banana');
+ *
+ * cache.keys(); // { "1": "1", "2": "2" }
  * ```
  *
  * @returns {object} An object of the keys in this cache.

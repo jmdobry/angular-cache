@@ -26,9 +26,17 @@ function _setStorageMode(storageMode, storageImpl) {
 		}
 		this.$$storage = storageImpl;
 	} else if (this.$$storageMode === 'localStorage') {
-		this.$$storage = $window.localStorage;
+		if ($window.localStorage) {
+			this.$$storage = $window.localStorage;
+		} else {
+			delete this.$$storage;
+		}
 	} else if (this.$$storageMode === 'sessionStorage') {
-		this.$$storage = $window.sessionStorage;
+		if ($window.sessionStorage) {
+			this.$$storage = $window.sessionStorage;
+		} else {
+			delete this.$$storage;
+		}
 	}
 }
 
@@ -46,9 +54,23 @@ function _setStorageMode(storageMode, storageImpl) {
  *
  * ## Example:
  * ```js
+ *  cache.setOptions({
+ *      maxAge: 60000,
+ *      deleteOnExpire: 'aggressive',
+ *      disabled: false
+ *  });
  * ```
  *
- * @param {object} cacheOptions New configuration options for the cache.
+ * @param {object} cacheOptions New configuration options for the cache. Properties:
+ *
+ * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+ * - `{number=}` - `maxAge` - Default: `null`
+ * - `{number=}` - `deleteOnExpire` - Default: `none`
+ * - `{function=}` - `onExpire` - Default: `null`
+ * - `{number=}` - `cacheFlushInterval` - Default: `null`
+ * - `{number=}` - `recycleFreq` - Default: `1000`
+ * - `{boolean=}` - `disabled` - Default: `false`
+ *
  * @param {boolean=} strict If true then any existing configuration will be reset to the defaults before
  * applying the new options, otherwise only the options specified in the options hash will be altered.
  */
@@ -102,12 +124,13 @@ function _setOptions(cacheOptions, strict) {
 	}
 }
 
-/*!
+/**
  * @doc function
  * @id DSCache
  * @name DSCache
  * @description
- * Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
+ * Instantiated via `DSCacheFactory(cacheId[, options])`.
+ *
  * @param {string} cacheId The id of the new cache.
  * @param {object=} options Configuration options.
  */
@@ -144,21 +167,164 @@ for (var key in defaults.defaults) {
 	DSCache.prototype['$$' + key] = defaults.defaults[key];
 }
 
+/**
+ * @doc method
+ * @id DSCache.methods:setOptions
+ * @name setOptions
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setOptions](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setOptions = _setOptions;
+
+/**
+ * @doc method
+ * @id DSCache.methods:setCapacity
+ * @name setCapacity
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setCapacity](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setCapacity = require('./setCapacity');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setDeleteOnExpire
+ * @name setDeleteOnExpire
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setDeleteOnExpire](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setDeleteOnExpire = require('./setDeleteOnExpire');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setMaxAge
+ * @name setMaxAge
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setMaxAge](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setMaxAge = require('./setMaxAge');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setRecycleFreq
+ * @name setRecycleFreq
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setRecycleFreq](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setRecycleFreq = require('./setRecycleFreq');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setCacheFlushInterval
+ * @name setCacheFlushInterval
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setCacheFlushInterval](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setCacheFlushInterval = require('./setCacheFlushInterval');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setOnExpire
+ * @name setOnExpire
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setOnExpire](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setOnExpire = require('./setOnExpire');
+
+/**
+ * @doc method
+ * @id DSCache.methods:put
+ * @name put
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.put](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.put = require('./put');
+
+/**
+ * @doc method
+ * @id DSCache.methods:get
+ * @name get
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.get](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.get = require('./get');
+
+/**
+ * @doc method
+ * @id DSCache.methods:remove
+ * @name remove
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.remove](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.remove = require('./remove');
+
+/**
+ * @doc method
+ * @id DSCache.methods:removeAll
+ * @name removeAll
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.removeAll](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.removeAll = require('./removeAll');
+
+/**
+ * @doc method
+ * @id DSCache.methods:removeExpired
+ * @name removeExpired
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.removeExpired](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.removeExpired = require('./removeExpired');
+
+/**
+ * @doc method
+ * @id DSCache.methods:destroy
+ * @name destroy
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.destroy](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.destroy = require('./destroy');
+
+/**
+ * @doc method
+ * @id DSCache.methods:info
+ * @name info
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.info](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.info = require('./info');
+
+/**
+ * @doc method
+ * @id DSCache.methods:keySet
+ * @name keySet
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.keySet](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.keySet = require('./keySet');
+
+/**
+ * @doc method
+ * @id DSCache.methods:keys
+ * @name keys
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.keys](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.keys = require('./keys');
 
 /**
@@ -175,6 +341,19 @@ DSCache.prototype.keys = require('./keys');
  *
  * ## Example:
  * ```js
+ *  var cache = DSCacheFactory.get('cache');
+ *
+ *  cache.put('1', 'apple');
+ *  cache.get('1'); // "apple"
+ *  cache.info().size; // 1
+ *
+ *  cache.disable();
+ *  cache.info().size; // 1
+ *
+ *  cache.get('1'); // undefined
+ *  cache.put('2', 'banana'); // undefined
+ *  cache.get('2'); // undefined
+ *  cache.info().size; // 1
  * ```
  */
 DSCache.prototype.disable = function () {
@@ -195,6 +374,18 @@ DSCache.prototype.disable = function () {
  *
  * ## Example:
  * ```js
+ *  var options = {
+ *      disabled: true
+ *  };
+ *  var cache = DSCacheFactory.get('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *  cache.get('1'); // undefined
+ *
+ *  cache.enable();
+ *
+ *  cache.put('1', 'apple');
+ *  cache.get('1'); // "apple"
  * ```
  */
 DSCache.prototype.enable = function () {

@@ -3,7 +3,7 @@
  * @id DSCache.methods:destroy
  * @name destroy
  * @description
- * Destroy this cache.
+ * Destroy this cache and all of its data.
  *
  * ## Signature:
  * ```js
@@ -12,6 +12,12 @@
  *
  * ## Example:
  * ```js
+ * var someCache = DSCacheFactory.get('someCache');
+ *
+ * someCache.destroy();
+ *
+ * DSCacheFactory.get('someCache'); // undefined
+ * someCache.put('1', 'apple'); // Error
  * ```
  */
 module.exports = function destroy() {

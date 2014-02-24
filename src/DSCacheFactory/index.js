@@ -68,16 +68,17 @@ function DSCacheFactoryProvider() {
 		 * @param {string} cacheId The id of the new cache.
 		 * @param {object} options Configuration options. Properties:
 		 *
-		 * - `{number}` - `capacity` - Default: `Number.MAX_VALUE`
-		 * - `{number}` - `maxAge` - Default: `null`
-		 * - `{number}` - `deleteOnExpire` - Default: `none`
-		 * - `{function}` - `onExpire` - Default: `null`
-		 * - `{number}` - `cacheFlushInterval` - Default: `null`
-		 * - `{number}` - `recycleFreq` - Default: `1000`
-		 * - `{number}` - `deleteOnExpire` - Default: `null`
-		 * - `{string}` - `storageMode` - Default: `'none`
-		 * - `{object}` - `storageImpl` - Default: `null`
-		 * - `{boolean}` - `disabled` - Default: `false`
+		 * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+		 * - `{number=}` - `maxAge` - Default: `null`
+		 * - `{number=}` - `deleteOnExpire` - Default: `none`
+		 * - `{function=}` - `onExpire` - Default: `null`
+		 * - `{number=}` - `cacheFlushInterval` - Default: `null`
+		 * - `{number=}` - `recycleFreq` - Default: `1000`
+		 * - `{number=}` - `deleteOnExpire` - Default: `null`
+		 * - `{string=}` - `storageMode` - Default: `'none`
+		 * - `{object=}` - `storageImpl` - Default: `null`
+		 * - `{boolean=}` - `disabled` - Default: `false`
+		 * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
 		 *
 		 * @returns {DSCache} New instance of DSCache.
 		 */

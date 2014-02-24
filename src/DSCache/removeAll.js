@@ -12,10 +12,26 @@
  *
  * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 'banana');
+ * cache.info().size; // 2
+ *
+ * cache.get('1'); // "apple"
+ * cache.get('2'); // "banana"
+ *
+ * cache.removeAll();
+ * cache.info().size; // 0
+ *
+ * cache.get('1'); // undefined
+ * cache.get('2'); // undefined
  * ```
  */
 module.exports = function removeAll() {
 	if (this.$$storage) {
+		this.$$lruHeap.removeAll();
+		this.$$expiresHeap.removeAll();
 		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
 
 		if (keysJson) {

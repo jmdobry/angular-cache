@@ -190,7 +190,7 @@ module.exports = DSBinaryHeapProvider;
  * @id DSCache.methods:destroy
  * @name destroy
  * @description
- * Destroy this cache.
+ * Destroy this cache and all of its data.
  *
  * ## Signature:
  * ```js
@@ -199,6 +199,12 @@ module.exports = DSBinaryHeapProvider;
  *
  * ## Example:
  * ```js
+ * var someCache = DSCacheFactory.get('someCache');
+ *
+ * someCache.destroy();
+ *
+ * DSCacheFactory.get('someCache'); // undefined
+ * someCache.put('1', 'apple'); // Error
  * ```
  */
 module.exports = function destroy() {
@@ -233,12 +239,87 @@ var utils = require('../utils');
  *
  * ## Examples:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ *
+ * cache.get('1'); // "apple"
+ * cache.get('2'); // undefined
+ * ```
+ *
+ * ```js
+ *  var options = {
+ *          deleteOnExpire: 'passive',
+ *          maxAge: 1000
+ *      },
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *
+ *  cache.get('1'); // "apple"
+ *
+ *  setTimeout(function () {
+ *      cache.get('1'); // undefined
+ *  }, 1500);
+ * ```
+ *
+ * ```js
+ *  var options = {
+ *          deleteOnExpire: 'passive',
+ *          maxAge: 1000
+ *      },
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *
+ *  cache.get('1', {
+ *      onExpire: function (key, value) {
+ *          console.log(key, value);
+ *      }
+ *  }); // "apple"
+ *
+ *  setTimeout(function () {
+ *      cache.get('1'); // undefined
+ *                      // "1" "apple" (printed to console)
+ *  }, 1500);
+ * ```
+ *
+ * ```js
+ *  var options = {
+ *          deleteOnExpire: 'passive',
+ *          maxAge: 1000,
+ *          onExpire: function (key, value, done) {
+ *              console.log('global hit');
+ *              if (done) {
+ *                  done(key, value);
+ *              }
+ *          }
+ *      },
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *
+ *  cache.get('1', {
+ *      onExpire: function (key, value) {
+ *          console.log(key, value);
+ *      }
+ *  }); // "apple"
+ *
+ *  setTimeout(function () {
+ *      cache.get('1'); // undefined
+ *                      // "global hit" (printed to console)
+ *                      // "1" "apple" (printed to console)
+ *  }, 1500);
  * ```
  *
  * @param {string} key The key of the item to retrieve.
  * @param {object=} options Optional configuration. Properties:
+ *
  * - `{function=}` - `onExpire` - Callback to be used if in passive `deleteOnExpire` mode and the requested item has
- * expired.
+ * expired. If a global `onExpire` callback exists for this cache, then it will be called with three arguments: `key`,
+ * `value`, and `done`, where `done` is the `onExpire` callback passed into the call to `DSCache#get(key[, options])`.
+ * (See the last example above.)
+ *
  * @returns {*} The item with the given key.
  */
 module.exports = function get(key, options) {
@@ -355,9 +436,17 @@ function _setStorageMode(storageMode, storageImpl) {
 		}
 		this.$$storage = storageImpl;
 	} else if (this.$$storageMode === 'localStorage') {
-		this.$$storage = $window.localStorage;
+		if ($window.localStorage) {
+			this.$$storage = $window.localStorage;
+		} else {
+			delete this.$$storage;
+		}
 	} else if (this.$$storageMode === 'sessionStorage') {
-		this.$$storage = $window.sessionStorage;
+		if ($window.sessionStorage) {
+			this.$$storage = $window.sessionStorage;
+		} else {
+			delete this.$$storage;
+		}
 	}
 }
 
@@ -375,9 +464,23 @@ function _setStorageMode(storageMode, storageImpl) {
  *
  * ## Example:
  * ```js
+ *  cache.setOptions({
+ *      maxAge: 60000,
+ *      deleteOnExpire: 'aggressive',
+ *      disabled: false
+ *  });
  * ```
  *
- * @param {object} cacheOptions New configuration options for the cache.
+ * @param {object} cacheOptions New configuration options for the cache. Properties:
+ *
+ * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+ * - `{number=}` - `maxAge` - Default: `null`
+ * - `{number=}` - `deleteOnExpire` - Default: `none`
+ * - `{function=}` - `onExpire` - Default: `null`
+ * - `{number=}` - `cacheFlushInterval` - Default: `null`
+ * - `{number=}` - `recycleFreq` - Default: `1000`
+ * - `{boolean=}` - `disabled` - Default: `false`
+ *
  * @param {boolean=} strict If true then any existing configuration will be reset to the defaults before
  * applying the new options, otherwise only the options specified in the options hash will be altered.
  */
@@ -431,12 +534,13 @@ function _setOptions(cacheOptions, strict) {
 	}
 }
 
-/*!
+/**
  * @doc function
  * @id DSCache
  * @name DSCache
  * @description
- * Instantiated via <code>$angularCacheFactory(cacheId[, options])</code>
+ * Instantiated via `DSCacheFactory(cacheId[, options])`.
+ *
  * @param {string} cacheId The id of the new cache.
  * @param {object=} options Configuration options.
  */
@@ -473,21 +577,164 @@ for (var key in defaults.defaults) {
 	DSCache.prototype['$$' + key] = defaults.defaults[key];
 }
 
+/**
+ * @doc method
+ * @id DSCache.methods:setOptions
+ * @name setOptions
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setOptions](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setOptions = _setOptions;
+
+/**
+ * @doc method
+ * @id DSCache.methods:setCapacity
+ * @name setCapacity
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setCapacity](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setCapacity = require('./setCapacity');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setDeleteOnExpire
+ * @name setDeleteOnExpire
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setDeleteOnExpire](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setDeleteOnExpire = require('./setDeleteOnExpire');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setMaxAge
+ * @name setMaxAge
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setMaxAge](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setMaxAge = require('./setMaxAge');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setRecycleFreq
+ * @name setRecycleFreq
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setRecycleFreq](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setRecycleFreq = require('./setRecycleFreq');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setCacheFlushInterval
+ * @name setCacheFlushInterval
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setCacheFlushInterval](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setCacheFlushInterval = require('./setCacheFlushInterval');
+
+/**
+ * @doc method
+ * @id DSCache.methods:setOnExpire
+ * @name setOnExpire
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.setOnExpire](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.setOnExpire = require('./setOnExpire');
+
+/**
+ * @doc method
+ * @id DSCache.methods:put
+ * @name put
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.put](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.put = require('./put');
+
+/**
+ * @doc method
+ * @id DSCache.methods:get
+ * @name get
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.get](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.get = require('./get');
+
+/**
+ * @doc method
+ * @id DSCache.methods:remove
+ * @name remove
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.remove](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.remove = require('./remove');
+
+/**
+ * @doc method
+ * @id DSCache.methods:removeAll
+ * @name removeAll
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.removeAll](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.removeAll = require('./removeAll');
+
+/**
+ * @doc method
+ * @id DSCache.methods:removeExpired
+ * @name removeExpired
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.removeExpired](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.removeExpired = require('./removeExpired');
+
+/**
+ * @doc method
+ * @id DSCache.methods:destroy
+ * @name destroy
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.destroy](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.destroy = require('./destroy');
+
+/**
+ * @doc method
+ * @id DSCache.methods:info
+ * @name info
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.info](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.info = require('./info');
+
+/**
+ * @doc method
+ * @id DSCache.methods:keySet
+ * @name keySet
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.keySet](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.keySet = require('./keySet');
+
+/**
+ * @doc method
+ * @id DSCache.methods:keys
+ * @name keys
+ * @methodOf DSCache
+ * @description
+ * See [DSCache.keys](/documentation/api/angular-cache/DSCache.methods:create).
+ */
 DSCache.prototype.keys = require('./keys');
 
 /**
@@ -504,6 +751,19 @@ DSCache.prototype.keys = require('./keys');
  *
  * ## Example:
  * ```js
+ *  var cache = DSCacheFactory.get('cache');
+ *
+ *  cache.put('1', 'apple');
+ *  cache.get('1'); // "apple"
+ *  cache.info().size; // 1
+ *
+ *  cache.disable();
+ *  cache.info().size; // 1
+ *
+ *  cache.get('1'); // undefined
+ *  cache.put('2', 'banana'); // undefined
+ *  cache.get('2'); // undefined
+ *  cache.info().size; // 1
  * ```
  */
 DSCache.prototype.disable = function () {
@@ -524,6 +784,18 @@ DSCache.prototype.disable = function () {
  *
  * ## Example:
  * ```js
+ *  var options = {
+ *      disabled: true
+ *  };
+ *  var cache = DSCacheFactory.get('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *  cache.get('1'); // undefined
+ *
+ *  cache.enable();
+ *
+ *  cache.put('1', 'apple');
+ *  cache.get('1'); // "apple"
  * ```
  */
 DSCache.prototype.enable = function () {
@@ -545,12 +817,39 @@ module.exports = DSCache;
  * DSCache#info([key])
  * ```
  *
- * ## Examples:
+ * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 'banana');
+ *
+ * cache.info();    //  {
+ *                  //      id: 'cache',
+ *                  //      capacity: Number.MAX_VALUE,
+ *                  //      maxAge: Number.MAX_VALUE,
+ *                  //      deleteOnExpire: 'none',
+ *                  //      onExpire: null,
+ *                  //      cacheFlushInterval: null,
+ *                  //      recycleFreq: 1000,
+ *                  //      storageMode: 'memory',
+ *                  //      storageImpl: null,
+ *                  //      disabled: false,
+ *                  //      size: 2
+ *                  //  }
+ *
+ * cache.info('1'); //  {
+ *                  //      created: 1234567890,
+ *                  //      accessed: 1234567890,
+ *                  //      expires: Number.MAX_VALUE,
+ *                  //      isExpired: false
+ *                  //  }
+ *
+ * cache.info('3'); // undefined
  * ```
  *
  * @param {string=} key The key of the item whose status is to be retrieved.
- * @returns {object} The status of this cache or the item for the given key.
+ * @returns {object} The status of this cache or of the item with the given key.
  */
 module.exports = function info(key) {
 	if (key) {
@@ -600,6 +899,12 @@ var utils = require('../utils');
  *
  * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 'banana');
+ *
+ * cache.keys(); // { "1": "1", "2": "2" }
  * ```
  *
  * @returns {object} An object of the keys in this cache.
@@ -639,6 +944,12 @@ var utils = require('../utils');
  *
  * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 'banana');
+ *
+ * cache.keys(); // [ "1", "2" ]
  * ```
  *
  * @returns {Array} An array of the keys in this cache.
@@ -672,8 +983,18 @@ var utils = require('../utils');
  * DSCache#put(key, value)
  * ```
  *
- * ## Examples:
+ * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 3);
+ * cache.put('3', { stuff: 'more stuff' });
+ *
+ * cache.get('1'); // "apple"
+ * cache.get('2'); // 3
+ * cache.get('3'); // { stuff: 'more stuff' }
+ * cache.get('4'); // undefined
  * ```
  *
  * ## Throws:
@@ -763,6 +1084,15 @@ module.exports = function put(key, value) {
  *
  * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ *
+ * cache.get('1'); // "apple"
+ *
+ * cache.remove('1'); // "apple"
+ *
+ * cache.get('1'); // undefined
  * ```
  *
  * @param {string} key The key of the item to remove.
@@ -818,10 +1148,26 @@ module.exports = function remove(key) {
  *
  * ## Example:
  * ```js
+ * var cache = DSCacheFactory('cache');
+ *
+ * cache.put('1', 'apple');
+ * cache.put('2', 'banana');
+ * cache.info().size; // 2
+ *
+ * cache.get('1'); // "apple"
+ * cache.get('2'); // "banana"
+ *
+ * cache.removeAll();
+ * cache.info().size; // 0
+ *
+ * cache.get('1'); // undefined
+ * cache.get('2'); // undefined
  * ```
  */
 module.exports = function removeAll() {
 	if (this.$$storage) {
+		this.$$lruHeap.removeAll();
+		this.$$expiresHeap.removeAll();
 		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
 
 		if (keysJson) {
@@ -857,6 +1203,30 @@ module.exports = function removeAll() {
  *
  * ## Example:
  * ```js
+ *  var options = {
+ *          maxAge: 1000
+ *      },
+ *      // deleteOnExpire defaults to "none"
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *  cache.put('2', 'banana');
+ *
+ *  setTimeout(function () {
+ *      cache.put('3', 'orange');
+ *
+ *      cache.info().size; // 3
+ *      cache.info('1').isExpired; // true
+ *      cache.info('2').isExpired; // true
+ *      cache.info('3').isExpired; // false
+ *
+ *      cache.removeExpired(); // { "1": "apple", "2": "banana" }
+ *
+ *      cache.info().size; // 1
+ *      cache.get('1'); // undefined
+ *      cache.get('2'); // undefined
+ *      cache.info('3').isExpired; // false
+ *  }, 1500);
  * ```
  *
  * @returns {object} The removed items, if any.
@@ -1348,16 +1718,17 @@ function DSCacheFactoryProvider() {
 		 * @param {string} cacheId The id of the new cache.
 		 * @param {object} options Configuration options. Properties:
 		 *
-		 * - `{number}` - `capacity` - Default: `Number.MAX_VALUE`
-		 * - `{number}` - `maxAge` - Default: `null`
-		 * - `{number}` - `deleteOnExpire` - Default: `none`
-		 * - `{function}` - `onExpire` - Default: `null`
-		 * - `{number}` - `cacheFlushInterval` - Default: `null`
-		 * - `{number}` - `recycleFreq` - Default: `1000`
-		 * - `{number}` - `deleteOnExpire` - Default: `null`
-		 * - `{string}` - `storageMode` - Default: `'none`
-		 * - `{object}` - `storageImpl` - Default: `null`
-		 * - `{boolean}` - `disabled` - Default: `false`
+		 * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+		 * - `{number=}` - `maxAge` - Default: `null`
+		 * - `{number=}` - `deleteOnExpire` - Default: `none`
+		 * - `{function=}` - `onExpire` - Default: `null`
+		 * - `{number=}` - `cacheFlushInterval` - Default: `null`
+		 * - `{number=}` - `recycleFreq` - Default: `1000`
+		 * - `{number=}` - `deleteOnExpire` - Default: `null`
+		 * - `{string=}` - `storageMode` - Default: `'none`
+		 * - `{object=}` - `storageImpl` - Default: `null`
+		 * - `{boolean=}` - `disabled` - Default: `false`
+		 * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
 		 *
 		 * @returns {DSCache} New instance of DSCache.
 		 */
@@ -1607,16 +1978,225 @@ module.exports = DSCacheFactoryProvider;
 module.exports=require('Gv0+ce');
 },{}],"Gv0+ce":[function(require,module,exports){
 var defaults = {
+	/**
+	 * @doc overview
+	 * @id capacity
+	 * @name capacity
+	 * @description
+	 * __Default:__ `Number.MAX_VALUE`
+	 *
+	 * This option limits the capacity of a cache. With a maximum capacity set, a cache operates as an LRU cache,
+	 * deleting the least-recently-used item when the cache exceeds capacity.
+	 *
+	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 * - `DSCache.setCapacity(capacity)`
+	 * - `DSCache.setOptions(options[, strict])`
+	 */
 	capacity: Number.MAX_VALUE,
+
+	/**
+	 * @doc overview
+	 * @id maxAge
+	 * @name maxAge
+	 * @description
+	 * __Default:__ `Number.MAX_VALUE`
+	 *
+	 * This option determines how long an item is in a cache before the item expires.. With `maxAge` set, items are
+	 * marked as expired when their time in a cache exceeds `maxAge`. A cache's behavior when an item expires is
+	 * determined by the [deleteOnExpire](/documentation/api/angular-cache/deleteOnExpire) option.
+	 *
+	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 * - `DSCache.setMaxAge(maxAge)`
+	 * - `DSCache.setOptions(options[, strict])`
+	 */
 	maxAge: Number.MAX_VALUE,
+
+	/**
+	 * @doc overview
+	 * @id deleteOnExpire
+	 * @name deleteOnExpire
+	 * @description
+	 * __Default:__ `"none"`
+	 *
+	 * This option determines how long an item is in a cache before the item expires.. With `maxAge` set, items are
+	 * marked as expired when their time in a cache exceeds `maxAge`. A cache's behavior when an item expires is
+	 * determined by the [deleteOnExpire](/documentation/api/angular-cache/deleteOnExpire) option.
+	 *
+	 * This option is dynamically configurable. Must be `"none"`, `"passive"` or `"aggressive"`.
+	 *
+	 * #### "none"
+	 * A cache will do nothing when its items expire.
+	 *
+	 * #### "passive"
+	 * A cache will do nothing when its items expire. If an expired item is request it is removed from the cache and
+	 * `undefined` is returned.
+	 *
+	 * #### "aggressive"
+	 * A cache will periodically scan for expired items and actively remove them from the cache if any are found. The
+	 * frequency of the scan is determined by the [recycleFreq](/documentation/api/angular-cache/recycleFreq) option.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 * - `DSCache.setRecycleFreq(recycleFreq)`
+	 * - `DSCache.setOptions(options[, strict])`
+	 */
 	deleteOnExpire: 'none',
+
+	/**
+	 * @doc overview
+	 * @id onExpire
+	 * @name onExpire
+	 * @description
+	 * __Default:__ `"none"`
+	 *
+	 * This option is a callback function which will be executed whenever an expired item is removed from a cache by
+	 * either requesting an expired item while the cache is in `"passive"` `deleteOnExpire` mode, or when an expired
+	 * item is actively removed when the cache is in `"aggressive"` `deleteOnExpire` mode.
+	 *
+	 * This option is dynamically configurable. Must be a function. Will be passed the `key` and `value` of the expired
+	 * item. Will be passed a third `done` argument (if in `"passive"` `deleteOnExpire` mode) which is the `onExpire`
+	 * argument passed to [DSCache#get(key[, options])](/documentation/api/angular-cache/DSCache.methods:get).
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 * - `DSCache.setOnExpire(onExpire)`
+	 * - `DSCache.setOptions(options[, strict])`
+	 */
 	onExpire: null,
+
+	/**
+	 * @doc overview
+	 * @id cacheFlushInterval
+	 * @name cacheFlushInterval
+	 * @description
+	 * __Default:__ `null`
+	 *
+	 * This option, if set, will cause a cache to periodically clear itself of all data.
+	 *
+	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 * - `DSCache.setCacheFlushInterval(cacheFlushInterval)`
+	 * - `DSCache.setOptions(options[, strict])`
+	 */
 	cacheFlushInterval: null,
+
+	/**
+	 * @doc overview
+	 * @id recycleFreq
+	 * @name recycleFreq
+	 * @description
+	 * __Default:__ `1000`
+	 *
+	 * This option determines how often a cache will scan for expired items when in `"aggressive"` `deleteOnExpire`
+	 * mode.
+	 *
+	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 * - `DSCache.setRecycleFreq(recycleFreq)`
+	 * - `DSCache.setOptions(options[, strict])`
+	 */
 	recycleFreq: 1000,
+
+	/**
+	 * @doc overview
+	 * @id storageMode
+	 * @name storageMode
+	 * @description
+	 * __Default:__ `"memory"`
+	 *
+	 * This option determines the storage mode for a cache.
+	 *
+	 * #### "memory"
+	 * All data will be held in memory.
+	 *
+	 * #### "localStorage"
+	 * Data will be held in `localStorage`, if available (or
+	 * [storageImpl](/documentation/api/angular-cache/storageImpl) is provided).
+	 *
+	 * #### "sessionStorage"
+	 * Data will be held in `sessionStorage`, if available (or
+	 * [storageImpl](/documentation/api/angular-cache/storageImpl) is provided).
+	 *
+	 * This option is NOT dynamically configurable. Must be `"memory"`, `"localStorage"` or `"sessionStorage"`.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 */
 	storageMode: 'memory',
+
+	/**
+	 * @doc overview
+	 * @id storageImpl
+	 * @name storageImpl
+	 * @description
+	 * __Default:__ `null`
+	 *
+	 * This option is available if you want to provide a custom `localStorage` or `sessionStorage` implementation.
+	 *
+	 * This option is NOT dynamically configurable. Must be an object that implements `setItem(key, value)`,
+	 * `getItem(key)` and `removeItem(key)`.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 */
 	storageImpl: null,
+
+	/**
+	 * @doc overview
+	 * @id disabled
+	 * @name disabled
+	 * @description
+	 * __Default:__ `false`
+	 *
+	 * This option disables or enables cache.
+	 *
+	 * This option is dynamically configurable. Must be `true` or `false`.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 * - `DSCache.setOptions(options[, strict])`
+	 *
+	 * or just use [DSCache#disable()](/documentation/api/angular-cache/DSCache.methods:disable) or
+	 * [DSCache#enable()](/documentation/api/angular-cache/DSCache.methods:enable).
+	 */
 	disabled: false,
-	storagePrefix: 'ac.'
+
+	/**
+	 * @doc overview
+	 * @id storagePrefix
+	 * @name storagePrefix
+	 * @description
+	 * __Default:__ `"angular-cache.caches."`
+	 *
+	 * This option determines the namespace for a cache when `storageMode` is `"localStorage"` or `"sessionStorage"`.
+	 * Setting this value to something like `"ac."` will save space when using WebStorage.
+	 *
+	 * This option is NOT dynamically configurable. Must be a string.
+	 *
+	 * ### Where can it be used?
+	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+	 * - `DSCacheFactory(cacheId[, options])`
+	 */
+	storagePrefix: 'angular-cache.caches.'
 };
 
 function Config() {

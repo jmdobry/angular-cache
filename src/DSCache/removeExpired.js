@@ -12,6 +12,30 @@
  *
  * ## Example:
  * ```js
+ *  var options = {
+ *          maxAge: 1000
+ *      },
+ *      // deleteOnExpire defaults to "none"
+ *      cache = DSCacheFactory('cache', options);
+ *
+ *  cache.put('1', 'apple');
+ *  cache.put('2', 'banana');
+ *
+ *  setTimeout(function () {
+ *      cache.put('3', 'orange');
+ *
+ *      cache.info().size; // 3
+ *      cache.info('1').isExpired; // true
+ *      cache.info('2').isExpired; // true
+ *      cache.info('3').isExpired; // false
+ *
+ *      cache.removeExpired(); // { "1": "apple", "2": "banana" }
+ *
+ *      cache.info().size; // 1
+ *      cache.get('1'); // undefined
+ *      cache.get('2'); // undefined
+ *      cache.info('3').isExpired; // false
+ *  }, 1500);
  * ```
  *
  * @returns {object} The removed items, if any.
