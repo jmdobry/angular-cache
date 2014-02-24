@@ -7,7 +7,8 @@ var defaults = {
 	recycleFreq: 1000,
 	storageMode: 'memory',
 	storageImpl: null,
-	disabled: false
+	disabled: false,
+	storagePrefix: 'ac.'
 };
 
 function Config() {

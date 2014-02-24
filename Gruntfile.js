@@ -11,30 +11,14 @@ module.exports = function (grunt) {
 	require('load-grunt-tasks')(grunt);
 	require('time-grunt')(grunt);
 
-	var dev = process.cwd().indexOf('/home/codetrain/angular-cache') === -1;
+	var pkg = grunt.file.readJSON('package.json');
 
 	// Project configuration.
 	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
+		pkg: pkg,
 		clean: {
 			dist: ['dist/'],
-			coverage: ['coverage/'],
-			doc: ['doc/'],
-			afterDoc: [
-				'doc/resources/img/angular.png',
-				'doc/resources/img/angular_grey.png',
-				'doc/resources/img/AngularJS-small.png',
-				'doc/resources/img/docular-small.png',
-				'doc/resources/img/favicon.ico',
-				'doc/resources/img/grunt.png',
-				'doc/resources/img/grunt_grey.png',
-				'doc/resources/img/node.png',
-				'doc/resources/img/node_grey.png',
-				'doc/resources/angular/',
-				'doc/resources/doc_api_resources/doc_api.js',
-				'doc/resources/js/docs*.js',
-				'doc/resources/js/jquery*.js'
-			]
+			coverage: ['coverage/']
 		},
 		jshint: {
 			all: ['Gruntfile.js', 'src/**/*.js', 'test/unit/**/*.js'],
@@ -42,7 +26,7 @@ module.exports = function (grunt) {
 		},
 		watch: {
 			files: ['src/**/*.js'],
-			tasks: ['build', 'doc']
+			tasks: ['build']
 		},
 		uglify: {
 			main: {
@@ -59,11 +43,6 @@ module.exports = function (grunt) {
 				},
 				files: {
 					'dist/angular-cache.min.js': ['dist/angular-cache.js']
-				}
-			},
-			scripts: {
-				files: {
-					'doc/resources/js/libs.min.js': ['doc/resources/js/libs.js']
 				}
 			}
 		},
@@ -253,169 +232,6 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-		concat: {
-			libs: {
-				src: [
-					'doc/resources/js/jquery.js',
-					'doc/resources/js/jquery.goto.js',
-					'doc/resources/js/jquery.cookie.js',
-					'doc/resources/angular/angular.js',
-					'doc/resources/angular/angular-bootstrap.js',
-					'doc/resources/angular/angular-bootstrap-prettify.js',
-					'doc/resources/angular/angular-cookies.js',
-					'doc/resources/angular/angular-resource.js',
-					'doc/resources/angular/angular-sanitize.js'
-
-				],
-				dest: 'doc/resources/js/libs.js'
-			},
-			scripts: {
-				src: [
-					'doc/resources/js/docs_module_begin.js',
-					'guide/angular-data.js',
-					'doc/resources/doc_api_resources/doc_api.js',
-					'doc/resources/js/docs_module_end.js',
-					'doc/documentation/docs-metadata.js',
-					'doc/documentation/groups-metadata.js',
-					'doc/documentation/layout-metadata.js'
-
-				],
-				dest: 'doc/resources/js/scripts.js'
-			},
-			css: {
-				src: [
-					'doc/resources/css/bootstrap.min.css',
-					'doc/resources/css/font-awesome.css',
-					'doc/resources/css/docular.css',
-					'doc/resources/css/custom.css',
-					'doc/resources/doc_api_resources/doc_api.css',
-					'guide/angular-data.css'
-				],
-				dest: 'doc/resources/css/styles.css'
-			}
-		},
-		copy: {
-			favicon: {
-				expand: true,
-				cwd: 'guide/',
-				src: 'favicon.ico',
-				dest: 'doc/',
-				flatten: true
-			},
-			index: {
-				expand: true,
-				cwd: 'guide/',
-				src: 'index.html',
-				dest: 'doc/',
-				flatten: true
-			},
-			data_white: {
-				expand: true,
-				cwd: 'guide/',
-				src: 'data_white.png',
-				dest: 'doc/resources/img/',
-				flatten: true
-			},
-			chart: {
-				expand: true,
-				cwd: 'guide/',
-				src: 'chart.png',
-				dest: 'doc/resources/img/',
-				flatten: true
-			},
-			cream_dust: {
-				expand: true,
-				cwd: 'guide/',
-				src: 'cream_dust.png',
-				dest: 'doc/resources/img/',
-				flatten: true
-			}
-		},
-		docular: {
-			groups: [
-				{
-					groupTitle: 'Guide',
-					groupId: 'guide',
-					groupIcon: 'icon-book',
-					sections: [
-						{
-							id: 'overview',
-							title: 'Overview',
-							docs: ['guide/overview/'],
-							rank: {
-								index: 1,
-								overview: 2,
-								resources: 3,
-								synchronous: 4,
-								asynchronous: 5
-							}
-						},
-						{
-							id: 'resource',
-							title: 'Defining Resources',
-							docs: ['guide/resource/'],
-							rank: {
-								index: 1,
-								overview: 2,
-								basic: 3,
-								advanced: 4,
-								lifecycle: 5
-							}
-						},
-						{
-							id: 'queries',
-							title: 'Queries',
-							docs: ['guide/queries/'],
-							rank: {
-								index: 1,
-								overview: 2
-							}
-						},
-						{
-							id: 'adapters',
-							title: 'Adapters',
-							docs: ['guide/adapters/'],
-							rank: {
-								index: 1,
-								overview: 2
-							}
-						}
-					]
-				},
-				{
-					groupTitle: 'API',
-					groupId: 'api',
-					groupIcon: 'icon-wrench',
-					showSource: true,
-					sections: [
-						{
-							id: 'api',
-							title: 'angular-data',
-							scripts: [
-								'src/',
-								'../angular-data/src/'
-							],
-							docs: ['guide/api']
-						}
-					]
-				}
-			],
-			docular_webapp_target: 'doc',
-			showDocularDocs: false,
-			showAngularDocs: false,
-			docular_partial_home: 'guide/home.html',
-			docular_partial_navigation: 'guide/nav.html',
-			docular_partial_footer: 'guide/footer.html'//,
-//			analytics: {
-//				account: 'UA-46792694-5',
-//				domainName: 'angular-cache.codetrain.io'
-//			},
-//			discussions: {
-//				shortName: 'angular-data',
-//				url: 'http://angular-cache.codetrain.io',
-//				dev: dev
-//			}
-		},
 		coveralls: {
 			options: {
 				coverage_dir: 'coverage'
@@ -423,8 +239,22 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('test', ['karma:1.1.5']);
-	grunt.registerTask('build', ['clean', 'jshint', 'browserify', 'uglify:main']);
+	grunt.registerTask('version', function (filePath) {
+		var file = grunt.file.read(filePath);
+
+		file = file.replace(/<%= pkg\.version %>/gi, pkg.version);
+
+		grunt.file.write(filePath, file);
+	});
+
+	grunt.registerTask('test', ['karma:1.2.7']);
+	grunt.registerTask('build', [
+		'clean',
+		'jshint',
+		'browserify',
+		'version:dist/angular-cache.js',
+		'uglify'
+	]);
 	grunt.registerTask('default', ['build']);
 
 	// Used by the CLI build servers
@@ -444,6 +274,5 @@ module.exports = function (grunt) {
 		'karma:1.2.6',
 		'karma:1.2.7'
 	]);
-	grunt.registerTask('doc', ['clean:doc', 'docular', 'concat', 'copy', 'clean:afterDoc', 'uglify:scripts']);
 	grunt.registerTask('ci', ['build', 'test-ci', 'coveralls']);
 };

@@ -11,20 +11,19 @@
   "main": "./dist/angular-cache.min.js",
   "ignore": [
     ".idea/",
-    ".bowerrc",
+    ".*",
     "*.iml",
     "src/",
+    "bower_components/",
     "coverage/",
-    ".jshintrc",
     "Gruntfile.js",
+    "package.json",
     "CONTRIBUTING.md",
-    "TRANSITION.md",
     "node_modules/",
     "test/",
     "karma.conf.js",
-    "libpeerconnection.log",
-    ".gitignore",
-    ".travis.yml"
+    "karma.start.js",
+    "libpeerconnection.log"
   ],
   "devDependencies": {
     "angular-1.0.4": "angular#1.0.4",

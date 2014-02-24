@@ -17,7 +17,7 @@
 	/**
 	 * @doc overview
 	 * @id angular-cache
-	 * @name angular-cache
+	 * @name Overview
 	 * @description
 	 * Angular-cache is installable via:
 	 *

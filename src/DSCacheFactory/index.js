@@ -1,5 +1,6 @@
 var defaults = require('../defaults'),
-	DSCache = require('../DSCache');
+	DSCache = require('../DSCache'),
+	version = '<%= pkg.version %>';
 
 /**
  * @doc function
@@ -9,6 +10,8 @@ var defaults = require('../defaults'),
 function DSCacheFactoryProvider() {
 
 	var config = new defaults.Config();
+
+	this.version = version;
 
 	/**
 	 * @doc method
@@ -58,10 +61,13 @@ function DSCacheFactoryProvider() {
 		 * @id DSCacheFactory
 		 * @name DSCacheFactory
 		 * @description
+		 * ## Version: <%= pkg.version %>
+		 *
 		 * Factory function that produces instances of `DSCache`.
 		 *
 		 * @param {string} cacheId The id of the new cache.
 		 * @param {object} options Configuration options. Properties:
+		 *
 		 * - `{number}` - `capacity` - Default: `Number.MAX_VALUE`
 		 * - `{number}` - `maxAge` - Default: `null`
 		 * - `{number}` - `deleteOnExpire` - Default: `none`
@@ -89,6 +95,8 @@ function DSCacheFactoryProvider() {
 			};
 			return caches[cacheId];
 		}
+
+		DSCacheFactory.version = version;
 
 		/**
 		 * @doc method
