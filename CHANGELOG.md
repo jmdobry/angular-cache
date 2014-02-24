@@ -27,6 +27,16 @@
 ###### Other
 - I might have missed something...
 
+##### 2.3.3 - 24 February 2014
+
+###### Backwards compatible bug fixes
+- *sigh Fixed #102 (regression from #100)
+
+##### 2.3.2 - 23 February 2014
+
+###### Backwards compatible bug fixes
+- Fixed #100 (regression from #89)
+
 ##### 2.3.1 - 19 February 2014
 
 ###### Backwards compatible bug fixes
