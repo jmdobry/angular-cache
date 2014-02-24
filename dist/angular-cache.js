@@ -1,3 +1,12 @@
+/**
+ * @author Jason Dobry <jason.dobry@gmail.com>
+ * @file angular-cache.js
+ * @version 3.0.0-beta.1 - Homepage <https://github.com/jmdobry/angular-cache>
+ * @copyright (c) 2013 Jason Dobry <http://www.pseudobry.com>
+ * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
+ *
+ * @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
+ */
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @desc Provider for the DSBinaryHeap.
@@ -435,7 +444,6 @@ function DSCache(cacheId, options) {
 
 	this.$$data = {};
 	this.$$id = cacheId;
-	this.$$prefix = 'angular-cache.caches.' + cacheId;
 	this.$$storage = null;
 
 	this.$$expiresHeap = new DSBinaryHeap(function (x) {
@@ -451,6 +459,11 @@ function DSCache(cacheId, options) {
 	if ('storageMode' in options) {
 		_setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
 	}
+	if ('storagePrefix' in options) {
+		this.$$storagePrefix = options.storagePrefix;
+	}
+
+	this.$$prefix = this.$$storagePrefix + cacheId;
 
 	// Initialize this cache with the default and given options
 	_setOptions.apply(this, [options, true]);

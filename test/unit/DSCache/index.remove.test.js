@@ -38,17 +38,17 @@ describe('DSCache.remove(key)', function () {
 		localStorageCache.put('item1', 'value1');
 		sessionStorageCache.put('item1', 'value1');
 
-		assert.equal(angular.fromJson($window.localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).value, 'value1');
-		assert.equal($window.localStorage.getItem('angular-cache.caches.localStorageCache.keys'), '["item1"]');
-		assert.equal(angular.fromJson($window.sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).value, 'value1');
-		assert.equal($window.sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys'), '["item1"]');
+		assert.equal(angular.fromJson($window.localStorage.getItem(localStorageCache.$$storagePrefix + 'localStorageCache.data.item1')).value, 'value1');
+		assert.equal($window.localStorage.getItem(localStorageCache.$$storagePrefix + 'localStorageCache.keys'), '["item1"]');
+		assert.equal(angular.fromJson($window.sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.data.item1')).value, 'value1');
+		assert.equal($window.sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.keys'), '["item1"]');
 
 		localStorageCache.remove('item1');
 		sessionStorageCache.remove('item1');
 
-		assert.isNull(angular.fromJson($window.localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')));
-		assert.equal($window.localStorage.getItem('angular-cache.caches.localStorageCache.keys'), '[]');
-		assert.isNull(angular.fromJson($window.sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')));
-		assert.equal($window.sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys'), '[]');
+		assert.isNull(angular.fromJson($window.localStorage.getItem(localStorageCache.$$storagePrefix + 'localStorageCache.data.item1')));
+		assert.equal($window.localStorage.getItem(localStorageCache.$$storagePrefix + 'localStorageCache.keys'), '[]');
+		assert.isNull(angular.fromJson($window.sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.data.item1')));
+		assert.equal($window.sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.keys'), '[]');
 	});
 });

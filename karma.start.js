@@ -1,4 +1,3 @@
-console.log(angular.version);
 var fail = function (msg) {
 		assert.equal('should not reach this!: ' + msg, 'failure');
 	},
@@ -26,7 +25,8 @@ var fail = function (msg) {
 		recycleFreq: 1000,
 		storageMode: 'memory',
 		storageImpl: null,
-		disabled: false
+		disabled: false,
+		storagePrefix: 'ac.'
 	};
 
 var DSCacheFactoryProvider, DSCacheFactory, DSBinaryHeap, $window;

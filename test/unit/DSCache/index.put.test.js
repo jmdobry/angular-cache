@@ -100,9 +100,9 @@ describe('DSCache.put(key, value, options)', function () {
 		localStorageCache.put('item1', 'value1');
 		sessionStorageCache.put('item1', 'value1');
 
-		assert.equal(angular.fromJson($window.localStorage.getItem('angular-cache.caches.localStorageCache.data.item1')).value, 'value1');
-		assert.equal($window.localStorage.getItem('angular-cache.caches.localStorageCache.keys'), '["item1"]');
-		assert.equal(angular.fromJson($window.sessionStorage.getItem('angular-cache.caches.sessionStorageCache.data.item1')).value, 'value1');
-		assert.equal($window.sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys'), '["item1"]');
+		assert.equal(angular.fromJson($window.localStorage.getItem(localStorageCache.$$storagePrefix + 'localStorageCache.data.item1')).value, 'value1');
+		assert.equal($window.localStorage.getItem(localStorageCache.$$storagePrefix + 'localStorageCache.keys'), '["item1"]');
+		assert.equal(angular.fromJson($window.sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.data.item1')).value, 'value1');
+		assert.equal($window.sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.keys'), '["item1"]');
 	});
 });

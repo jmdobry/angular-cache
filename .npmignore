@@ -1,0 +1,9 @@
+.*
+bower.json
+*.iml
+.idea/
+test/
+coverage/
+bower_components/
+karma*
+Gruntfile.js

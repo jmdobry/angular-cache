@@ -115,7 +115,6 @@ function DSCache(cacheId, options) {
 
 	this.$$data = {};
 	this.$$id = cacheId;
-	this.$$prefix = 'angular-cache.caches.' + cacheId;
 	this.$$storage = null;
 
 	this.$$expiresHeap = new DSBinaryHeap(function (x) {
@@ -131,6 +130,11 @@ function DSCache(cacheId, options) {
 	if ('storageMode' in options) {
 		_setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
 	}
+	if ('storagePrefix' in options) {
+		this.$$storagePrefix = options.storagePrefix;
+	}
+
+	this.$$prefix = this.$$storagePrefix + cacheId;
 
 	// Initialize this cache with the default and given options
 	_setOptions.apply(this, [options, true]);
