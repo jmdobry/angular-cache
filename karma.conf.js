@@ -33,9 +33,9 @@ module.exports = function (config) {
 			type: 'lcov',
 			dir: 'coverage/'
 		},
-//		preprocessors: {
-//			'dist/angular-cache.js': ['coverage']
-//		},
-		reporters: ['progress'/*, 'coverage'*/]
+		preprocessors: {
+			'dist/angular-cache.js': ['coverage']
+		},
+		reporters: ['progress', 'coverage']
 	});
 };

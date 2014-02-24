@@ -61,8 +61,6 @@ function DSCacheFactoryProvider() {
 		 * @id DSCacheFactory
 		 * @name DSCacheFactory
 		 * @description
-		 * ## Version: <%= pkg.version %>
-		 *
 		 * Factory function that produces instances of `DSCache`.
 		 *
 		 * @param {string} cacheId The id of the new cache.

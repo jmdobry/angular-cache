@@ -1,9 +1,13 @@
 ## angular-cache
 __A very useful replacement for Angular's $cacheFactory.__
 
-__Version:__ 2.3.1
+__Version:__ 3.0.0-beta.1
 
-All [Documentation](http://jmdobry.github.io/angular-cache) can be found at [jmdobry.github.io/angular-cache](http://jmdobry.github.io/angular-cache).
+Documentation for 3.x.x can be found at [angular-data.codetrain.io](http://angular-data.codetrain.io).
+
+Documentation for 2.x.x can be found at [jmdobry.github.io/angular-cache](http://jmdobry.github.io/angular-cache).
+
+See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for upgrading from 2.x.x to 3.x.x.
 
 ## License
 [MIT License](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)

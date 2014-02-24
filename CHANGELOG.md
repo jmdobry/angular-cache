@@ -1,3 +1,32 @@
+##### 3.0.0-beta.1 24 February 2014
+
+###### Breaking API changes
+- `maxAge` and `deleteOnExpire` are no longer overridable for individual items
+- Renamed angular module to `angular-data.DSCacheFactory`. Angular-cache is now part of the `angular-data` namespace
+- The `verifyIntegrity` option has been completely removed due to a cache being exclusively in-memory OR in web storage #96
+- Supported values for the `storageMode` option are now: `"memory"`, `"localStorage"` or `"sessionStorage"` with the default being `"memory"`
+- `DSCache#put(key, value)` no longer accepts a third `options` argument
+- `DSCache#removeExpired()` no longer accepts an `options` argument and thus no longer supports returning removed expired items as an array
+- `DSCache#remove(key)` no longer accepts an `options` argument
+- `DSCache#setOptions(options[, strict])` no longer accepts `storageMode` and `storageImpl` as part of the `options` argument
+- `storageMode` is no longer dynamically configurable
+- `storageImpl` is no longer dynamically configurable
+
+###### Backwards compatible API changes
+- Added `DSCache#enable()`
+- Added `DSCache#disable()`
+- Added `DSCache#setCapacity(capacity)`
+- Added `DSCache#setMaxAge(maxAge)`
+- Added `DSCache#setCacheFlushInterval(cacheFlushInterval)`
+- Added `DSCache#setRecycleFreq(recycleFreq)`
+- Added `DSCache#setDeleteOnExpire(deleteOnExpire)`
+- Added `DSCache#setOnExpire(onExpire)`
+- Added option `storagePrefix` for customizing the prefix used in `localStorage`, etc. #98
+- Refactored to be in-memory OR webStorage, never both #96
+
+###### Other
+- I might have missed something...
+
 ##### 2.3.1 - 19 February 2014
 
 ###### Backwards compatible bug fixes

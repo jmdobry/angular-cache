@@ -1711,8 +1711,6 @@ function DSCacheFactoryProvider() {
 		 * @id DSCacheFactory
 		 * @name DSCacheFactory
 		 * @description
-		 * ## Version: 3.0.0-beta.1
-		 *
 		 * Factory function that produces instances of `DSCache`.
 		 *
 		 * @param {string} cacheId The id of the new cache.
@@ -2233,15 +2231,30 @@ module.exports = {
 	 * @id angular-cache
 	 * @name Overview
 	 * @description
-	 * Angular-cache is installable via:
+	 * __Version:__ 3.0.0-beta.1
 	 *
+	 * ## Install
+	 *
+	 * #### Bower
 	 * ```text
 	 * bower install angular-cache
 	 * ```
 	 *
-	 * or by downloading angular-cache.x.x.x.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+	 * Load `dist/angular-cache.js` or `dist/angular-cache.min.js` onto your web page after Angular.js.
+	 *
+	 * #### Npm
+	 * ```text
+	 * npm install angular-cache
+	 * ```
+	 *
+	 * Load `dist/angular-cache.js` or `dist/angular-cache.min.js` onto your web page after Angular.js. Angular-cache is
+	 * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
+	 *
+	 * #### Manual download
+	 * Download angular-cache.3.0.0-beta.1.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
 	 * section of the angular-cache GitHub project.
 	 *
+	 * ## Load into Angular
 	 * Your Angular app must depend on the module `"angular-data.DSCacheFactory"` in order to use angular-cache. Loading
 	 * angular-cache into your app allows you to inject the following:
 	 *
@@ -2254,7 +2267,8 @@ module.exports = {
 	 *
 	 * [DSBinaryHeap](/documentation/api/api/DSBinaryHeap) is a priority queue implemented as a Binary Heap.
 	 *
-	 * Angular-cache is a dependency of [angular-data](/documentation/api/api/angular-data) and must be loaded first.
+	 * Angular-cache is a dependency of [angular-data](/documentation/api/api/angular-data) and must be loaded before
+	 * angular-data if you are using angular-data.
 	 */
 	angular.module('angular-data.DSCacheFactory', ['ng', 'angular-data.DSBinaryHeap'])
 		.provider('DSCacheFactory', require('./DSCacheFactory'));
