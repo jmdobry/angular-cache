@@ -144,20 +144,4 @@ describe('AngularCache.get(key)', function () {
 		cache.put('item2', value2);
 		expect(cache.get(['item1', 'item2', 'item3'])).toEqual([value1, value2]);
 	});
-
-	/* See: https://github.com/jmdobry/angular-cache/blob/master/src/angular-cache.js#L1062	*/
-	xit('should keep sync with other caches which has same name.', function () {
-		var options = {
-			storageMode: 'localStorage'
-		};
-
-		var cache1 = $angularCacheFactory('cache', options),
-			cache2 = $angularCacheFactory('cache', options),
-			valueSync = 'valueSync';
-
-		$angularCacheFactory.clearAll();
-
-		cache1.put('itemSync', valueSync);
-		expect(cache2.get('itemSync').toEqual(valueSync));
-	});
 });

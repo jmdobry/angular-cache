@@ -726,12 +726,17 @@
 				function _readItemFromStorage(key, verifyIntegrity) {
 					if (verifyIntegrity || (verifyIntegrity !== false && config.verifyIntegrity)) {
 						if (config.storageMode !== 'none' && storage) {
-							var item = storage.getItem(prefix + '.data.' + key);
+							var itemJson = storage.getItem(prefix + '.data.' + key);
 
-							if (!item && key in data) {
+							if (!itemJson && key in data) {
 								self.remove(key);
-							} else if (item) {
-								self.put(key, angular.fromJson(item));
+							} else if (itemJson) {
+								var item = angular.fromJson(itemJson),
+									value = item ? item.value : null;
+
+								if (value) {
+									self.put(key, value);
+								}
 							}
 						}
 					}
