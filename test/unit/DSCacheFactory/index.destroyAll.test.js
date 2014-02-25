@@ -3,14 +3,14 @@ describe('DSCacheFactory.destroyAll()', function () {
 		var cacheKeys = ['DSCacheFactory.destroyAll.cache', 'DSCacheFactory.destroyAll.cache1', 'DSCacheFactory.destroyAll.cache2'],
 			caches = [];
 
-		caches.push(DSCacheFactory(cacheKeys[0]));
-		caches.push(DSCacheFactory(cacheKeys[1]));
-		caches.push(DSCacheFactory(cacheKeys[2]));
+		caches.push(TestDSCacheFactory(cacheKeys[0]));
+		caches.push(TestDSCacheFactory(cacheKeys[1]));
+		caches.push(TestDSCacheFactory(cacheKeys[2]));
 
 		sinon.spy(caches[0], 'destroy');
 		sinon.spy(caches[1], 'destroy');
 		sinon.spy(caches[2], 'destroy');
-		DSCacheFactory.destroyAll();
+		TestDSCacheFactory.destroyAll();
 
 		assert.equal(caches[0].destroy.callCount, 1);
 		assert.equal(caches[1].destroy.callCount, 1);
@@ -22,15 +22,15 @@ describe('DSCacheFactory.destroyAll()', function () {
 		var cacheKeys = ['DSCacheFactory.destroyAll.cache', 'DSCacheFactory.destroyAll.cache1', 'DSCacheFactory.destroyAll.cache2'],
 			caches = [];
 
-		caches.push(DSCacheFactory(cacheKeys[0]));
-		caches.push(DSCacheFactory(cacheKeys[1]));
-		caches.push(DSCacheFactory(cacheKeys[2]));
+		caches.push(TestDSCacheFactory(cacheKeys[0]));
+		caches.push(TestDSCacheFactory(cacheKeys[1]));
+		caches.push(TestDSCacheFactory(cacheKeys[2]));
 
-		DSCacheFactory.destroyAll();
+		TestDSCacheFactory.destroyAll();
 
-		assert.isUndefined(DSCacheFactory.get(cacheKeys[0]));
-		assert.isUndefined(DSCacheFactory.get(cacheKeys[1]));
-		assert.isUndefined(DSCacheFactory.get(cacheKeys[2]));
+		assert.isUndefined(TestDSCacheFactory.get(cacheKeys[0]));
+		assert.isUndefined(TestDSCacheFactory.get(cacheKeys[1]));
+		assert.isUndefined(TestDSCacheFactory.get(cacheKeys[2]));
 
 		done();
 	});

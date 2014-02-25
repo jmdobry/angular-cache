@@ -2,7 +2,7 @@ describe('DSCache.keys()', function () {
 	it('should return the array of keys of all items in the cache.', function () {
 		var itemKeys = ['item1', 'item2', 'item3'];
 
-		var cache = DSCacheFactory('DSCache.keys.cache');
+		var cache = TestDSCacheFactory('DSCache.keys.cache');
 
 		cache.put(itemKeys[0], itemKeys[0]);
 		cache.put(itemKeys[1], itemKeys[1]);

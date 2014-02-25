@@ -1,4 +1,5 @@
-var defaults = require('../defaults');
+var defaults = require('../defaults'),
+	DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
 /*!
  * Configure the cache to use webStorage.

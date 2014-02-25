@@ -1,6 +1,6 @@
 describe('DSCacheFactoryProvider.setCacheDefaults(options)', function () {
 	it('should have the correct defaults.', function () {
-		var cache = DSCacheFactory('DSCacheFactoryProvider.setCacheDefaults.cache');
+		var cache = TestDSCacheFactory('DSCacheFactoryProvider.setCacheDefaults.cache');
 		assert.isDefined(cache);
 		assert.equal(cache.info().id, 'DSCacheFactoryProvider.setCacheDefaults.cache');
 		assert.equal(cache.info().capacity, CACHE_DEFAULTS.capacity);
@@ -34,8 +34,8 @@ describe('DSCacheFactoryProvider.setCacheDefaults(options)', function () {
 			onExpire: function () {
 			}
 		};
-		DSCacheFactoryProvider.setCacheDefaults(options);
-		var cache = DSCacheFactory('cache');
+		TestDSCacheFactoryProvider.setCacheDefaults(options);
+		var cache = TestDSCacheFactory('cache');
 		assert.isDefined(cache);
 		assert.equal(cache.info().id, 'cache');
 		assert.equal(cache.info().capacity, options.capacity);
@@ -53,7 +53,7 @@ describe('DSCacheFactoryProvider.setCacheDefaults(options)', function () {
 				continue;
 			}
 			try {
-				DSCacheFactoryProvider.setCacheDefaults(TYPES_EXCEPT_OBJECT[i]);
+				TestDSCacheFactoryProvider.setCacheDefaults(TYPES_EXCEPT_OBJECT[i]);
 				if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
 					fail(TYPES_EXCEPT_OBJECT[i]);
 				}

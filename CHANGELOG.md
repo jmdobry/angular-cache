@@ -1,3 +1,8 @@
+##### 3.0.0-beta.2 25 February 2014
+
+###### Backwards compatible bug fixes
+- Fixed missing reference to DSBinaryHeap #105
+
 ##### 3.0.0-beta.1 24 February 2014
 
 ###### Breaking API changes

@@ -7,15 +7,15 @@ describe('DSCacheFactory.info()', function () {
 			},
 			caches = [];
 
-		caches.push(DSCacheFactory('cache'));
-		caches.push(DSCacheFactory('cache2', {
+		caches.push(TestDSCacheFactory('cache'));
+		caches.push(TestDSCacheFactory('cache2', {
 			maxAge: options.maxAge
 		}));
-		caches.push(DSCacheFactory('cache3', {
+		caches.push(TestDSCacheFactory('cache3', {
 			capacity: options.capacity,
 			cacheFlushInterval: options.cacheFlushInterval
 		}));
-		var info = DSCacheFactory.info();
+		var info = TestDSCacheFactory.info();
 		assert.equal(info.size, 3);
 
 		assert.equal(info.cacheDefaults.capacity, CACHE_DEFAULTS.capacity);

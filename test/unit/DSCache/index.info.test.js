@@ -2,13 +2,13 @@ describe('DSCache.info()', function () {
 	it('should return the correct values.', function () {
 		var onExpire = function () {
 		};
-		var cache = DSCacheFactory('cache'),
-			cache2 = DSCacheFactory('cache2', { maxAge: 1000 }),
-			cache3 = DSCacheFactory('cache3', { cacheFlushInterval: 1000 }),
-			cache4 = DSCacheFactory('cache4', { capacity: 1000 }),
-			cache5 = DSCacheFactory('cache5', { storageMode: 'localStorage' }),
-			cache6 = DSCacheFactory('cache6', { storageMode: 'sessionStorage' }),
-			cache7 = DSCacheFactory('cache7', { maxAge: 100, onExpire: onExpire });
+		var cache = TestDSCacheFactory('cache'),
+			cache2 = TestDSCacheFactory('cache2', { maxAge: 1000 }),
+			cache3 = TestDSCacheFactory('cache3', { cacheFlushInterval: 1000 }),
+			cache4 = TestDSCacheFactory('cache4', { capacity: 1000 }),
+			cache5 = TestDSCacheFactory('cache5', { storageMode: 'localStorage' }),
+			cache6 = TestDSCacheFactory('cache6', { storageMode: 'sessionStorage' }),
+			cache7 = TestDSCacheFactory('cache7', { maxAge: 100, onExpire: onExpire });
 		var cacheInfo = cache.info();
 		assert.equal(cacheInfo.id, 'cache');
 		assert.equal(cacheInfo.capacity, Number.MAX_VALUE);

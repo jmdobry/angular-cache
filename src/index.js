@@ -12,7 +12,7 @@
 	};
 
 	angular.module('angular-data.DSBinaryHeap', [])
-		.provider('DSBinaryHeap', require('./DSBinaryHeap'));
+		.provider('DSBinaryHeap', require('./DSBinaryHeap').DSBinaryHeapProvider);
 
 	/**
 	 * @doc overview

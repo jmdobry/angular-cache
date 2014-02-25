@@ -1,6 +1,6 @@
 describe('DSCache.removeAll()', function () {
 	it('should remove all items in the cache.', function () {
-		var cache = DSCacheFactory('DSCache.removeAll.cache');
+		var cache = TestDSCacheFactory('DSCache.removeAll.cache');
 		var value1 = 'value1',
 			value2 = 2,
 			value3 = {
@@ -15,8 +15,8 @@ describe('DSCache.removeAll()', function () {
 		assert.isUndefined(cache.get('item3'));
 	});
 	it('should remove items from localStorage when storageMode is used.', function () {
-		var localStorageCache = DSCacheFactory('DSCache.removeAll.localStorageCache', { storageMode: 'localStorage', storageImpl: $window.localStorage }),
-			sessionStorageCache = DSCacheFactory('DSCache.removeAll.sessionStorageCache', { storageMode: 'sessionStorage', storageImpl: $window.sessionStorage, storagePrefix: 'affas' });
+		var localStorageCache = TestDSCacheFactory('DSCache.removeAll.localStorageCache', { storageMode: 'localStorage', storageImpl: $window.localStorage }),
+			sessionStorageCache = TestDSCacheFactory('DSCache.removeAll.sessionStorageCache', { storageMode: 'sessionStorage', storageImpl: $window.sessionStorage, storagePrefix: 'affas' });
 
 		localStorageCache.put('item1', 'value1');
 		sessionStorageCache.put('item1', 'value1');

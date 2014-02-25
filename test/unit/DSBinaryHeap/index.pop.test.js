@@ -1,7 +1,7 @@
 describe('DSBinaryHeap.pop()', function () {
 	it('should pop the item off of the front of the DSBinaryHeap.', function () {
-		var heap = new DSBinaryHeap();
-		var objHeap = new DSBinaryHeap(function (x) {
+		var heap = new TestDSBinaryHeap();
+		var objHeap = new TestDSBinaryHeap(function (x) {
 			return x.value;
 		});
 		var items = [20, 4, 33, 1, 0, 34, 22, 31, 32, 5, 6, 7];

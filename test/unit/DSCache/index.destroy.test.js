@@ -1,6 +1,6 @@
 describe('DSCache.destroy()', function () {
 	it('should destroy the cache and remove all traces of its existence.', function () {
-		var cache = DSCacheFactory('cache');
+		var cache = TestDSCacheFactory('cache');
 		cache.destroy();
 		try {
 			assert.equal(cache.info(), { size: 0 });
@@ -8,11 +8,11 @@ describe('DSCache.destroy()', function () {
 		} catch (err) {
 
 		}
-		assert.isUndefined(DSCacheFactory.get('cache'));
+		assert.isUndefined(TestDSCacheFactory.get('cache'));
 	});
 	it('should remove items from localStorage when storageMode is used.', function () {
-		var localStorageCache = DSCacheFactory('localStorageCache', { storageMode: 'localStorage', storageImpl: $window.localStorage, storagePrefix: 'acc.' }),
-			sessionStorageCache = DSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage', storageImpl: $window.sessionStorage });
+		var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage', storageImpl: $window.localStorage, storagePrefix: 'acc.' }),
+			sessionStorageCache = TestDSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage', storageImpl: $window.sessionStorage });
 
 		localStorageCache.put('item1', 'value1');
 		sessionStorageCache.put('item1', 'value1');

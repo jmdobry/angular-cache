@@ -2,19 +2,19 @@ describe('DSCacheFactory.disableAll()', function () {
 	it('should disable all caches in DSCacheFactory.', function (done) {
 		var cacheKeys = ['DSCacheFactory.disableAll.cache', 'DSCacheFactory.disableAll.cache1', 'DSCacheFactory.disableAll.cache2'];
 
-		DSCacheFactory(cacheKeys[0]);
-		DSCacheFactory(cacheKeys[1], { disabled: true });
-		DSCacheFactory(cacheKeys[2]);
+		TestDSCacheFactory(cacheKeys[0]);
+		TestDSCacheFactory(cacheKeys[1], { disabled: true });
+		TestDSCacheFactory(cacheKeys[2]);
 
-		assert.equal(DSCacheFactory.get(cacheKeys[0]).info().disabled, false);
-		assert.equal(DSCacheFactory.get(cacheKeys[1]).info().disabled, true);
-		assert.equal(DSCacheFactory.get(cacheKeys[2]).info().disabled, false);
+		assert.equal(TestDSCacheFactory.get(cacheKeys[0]).info().disabled, false);
+		assert.equal(TestDSCacheFactory.get(cacheKeys[1]).info().disabled, true);
+		assert.equal(TestDSCacheFactory.get(cacheKeys[2]).info().disabled, false);
 
-		DSCacheFactory.disableAll();
+		TestDSCacheFactory.disableAll();
 
-		assert.equal(DSCacheFactory.get(cacheKeys[0]).info().disabled, true);
-		assert.equal(DSCacheFactory.get(cacheKeys[1]).info().disabled, true);
-		assert.equal(DSCacheFactory.get(cacheKeys[2]).info().disabled, true);
+		assert.equal(TestDSCacheFactory.get(cacheKeys[0]).info().disabled, true);
+		assert.equal(TestDSCacheFactory.get(cacheKeys[1]).info().disabled, true);
+		assert.equal(TestDSCacheFactory.get(cacheKeys[2]).info().disabled, true);
 
 		done();
 	});

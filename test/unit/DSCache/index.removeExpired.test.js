@@ -1,6 +1,6 @@
 describe('DSCache.removeExpired()', function () {
 	it('should remove all expired items when deleteOnExpire is "none".', function (done) {
-		var cache = DSCacheFactory('cache', {
+		var cache = TestDSCacheFactory('cache', {
 			deleteOnExpire: 'none',
 			maxAge: 10,
 			recycleFreq: 20
@@ -27,7 +27,7 @@ describe('DSCache.removeExpired()', function () {
 		}, 100);
 	});
 //	it('should remove all expired items when deleteOnExpire is "passive".', function (done) {
-//		var cache = DSCacheFactory('cache', {
+//		var cache = TestDSCacheFactory('cache', {
 //			deleteOnExpire: 'passive',
 //			maxAge: 10,
 //			recycleFreq: 20
@@ -54,7 +54,7 @@ describe('DSCache.removeExpired()', function () {
 //		}, 100);
 //	});
 //	it('should remove all expired items when deleteOnExpire is "aggressive".', function (done) {
-//		var cache = DSCacheFactory('cache', {
+//		var cache = TestDSCacheFactory('cache', {
 //			deleteOnExpire: 'aggressive',
 //			maxAge: 10,
 //			recycleFreq: 20
