@@ -20,6 +20,7 @@
     "trailing": true,
     "smarttabs": true,
     "predef": [
+        "assert",
         "inject",
         "describe",
         "describe",
