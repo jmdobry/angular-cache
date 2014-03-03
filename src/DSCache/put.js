@@ -49,7 +49,7 @@ module.exports = function put(key, value) {
 			key: key,
 			value: value,
 			created: now,
-			accessed: now,
+			accessed: now
 		};
 
 	item.expires = item.created + this.$$maxAge;
@@ -75,7 +75,16 @@ module.exports = function put(key, value) {
 		});
 		// Set item
 		this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
-		keys.push(key);
+		var exists = false;
+		for (var i = 0; i < keys.length; i++) {
+			if (keys[i] === key) {
+				exists = true;
+				break;
+			}
+		}
+		if (!exists) {
+			keys.push(key);
+		}
 		this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
 	} else {
 		// Remove existing

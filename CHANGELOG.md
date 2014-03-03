@@ -1,3 +1,8 @@
+##### 3.0.0-beta.3 03 March 2014
+
+###### Backwards compatible bug fixes
+- Fixed duplicate keys when using localStorage #106
+
 ##### 3.0.0-beta.2 25 February 2014
 
 ###### Backwards compatible bug fixes
