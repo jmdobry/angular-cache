@@ -8,10 +8,7 @@ module.exports = function (config) {
 			'bower_components/angular-mocks-1.2.13/angular-mocks.js',
 			'dist/angular-cache.js',
 			'./karma.start.js',
-			'test/unit/defaults/*.js',
-			'test/unit/DSBinaryHeap/*.js',
-			'test/unit/DSCacheFactory/*.js',
-			'test/unit/DSCache/*.js'
+			'test/unit/**/*.js'
 		],
 		captureTimeout: 60000,
 		colors: true,

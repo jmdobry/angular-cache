@@ -36,8 +36,7 @@ describe('DSCache.keys()', function () {
 		var itemKeys = ['item1', 'item2', 'item3'];
 
 		var cache = TestDSCacheFactory('DSCache.keys.cache', {
-			storageMode: 'localStorage',
-			storageImpl: $window.localStorage
+			storageMode: 'localStorage'
 		});
 
 		cache.put(itemKeys[0], itemKeys[0]);

@@ -1,5 +1,5 @@
 describe('DSCacheFactory(cacheId, options)', function () {
-	it('should be able to create a default cache.', function (done) {
+	it('should be able to create a default cache.', function () {
 		var cache = TestDSCacheFactory('DSCacheFactory.cache');
 		assert.isDefined(cache);
 		assert.equal(cache.info().id, 'DSCacheFactory.cache');
@@ -11,17 +11,15 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		assert.equal(cache.info().recycleFreq, CACHE_DEFAULTS.recycleFreq);
 		assert.equal(cache.info().storageMode, CACHE_DEFAULTS.storageMode);
 		assert.equal(cache.info().storageImpl, CACHE_DEFAULTS.storageImpl);
-
-		done();
 	});
-	it('should be able to create a cache with options.', function (done) {
+	it('should be able to create a cache with options.', function () {
 		var options = {
 			capacity: Math.floor((Math.random() * 100000) + 1),
 			maxAge: Math.floor((Math.random() * 100000) + 1),
 			cacheFlushInterval: Math.floor((Math.random() * 100000) + 1),
 			deleteOnExpire: 'aggressive',
 			storageMode: 'localStorage',
-			localStorageImpl: {
+			storageImpl: {
 				setItem: function () {
 				},
 				getItem: function () {
@@ -31,8 +29,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			},
 			recycleFreq: 2000,
 			onExpire: function () {
-			},
-			readOnGet: false
+			}
 		};
 		var cache = TestDSCacheFactory('DSCacheFactory.cache', options);
 		assert.isDefined(cache);
@@ -42,11 +39,44 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		assert.equal(cache.info().cacheFlushInterval, options.cacheFlushInterval);
 		assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
 		assert.equal(cache.info().storageMode, options.storageMode);
-		assert.isUndefined(cache.info().localStorageImpl); // We don't expose this to the user
+		assert.equal(cache.info().storageImpl, options.storageImpl);
 		assert.equal(cache.info().onExpire, options.onExpire);
-		done();
 	});
-	it('should throw an exception if "capacity" is not a number or is less than zero.', function (done) {
+	it('should not use localStorage if it is not available.', function () {
+		var options = {
+			deleteOnExpire: 'aggressive',
+			storageMode: 'localStorage'
+		};
+		var orig = localStorage.setItem;
+		localStorage.setItem = function () {
+			throw new Error();
+		};
+		var cache = TestDSCacheFactory('DSCacheFactory.cache', options);
+		assert.isDefined(cache);
+		assert.equal(cache.info().id, 'DSCacheFactory.cache');
+		assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
+		assert.equal(cache.info().storageMode, 'memory');
+		assert.isUndefined(cache.info().storageImpl);
+		localStorage.setItem = orig;
+	});
+	it('should not use sessionStorage if it is not available.', function () {
+		var options = {
+			deleteOnExpire: 'aggressive',
+			storageMode: 'sessionStorage'
+		};
+		var orig = sessionStorage.setItem;
+		sessionStorage.setItem = function () {
+			throw new Error();
+		};
+		var cache = TestDSCacheFactory('DSCacheFactory.cache', options);
+		assert.isDefined(cache);
+		assert.equal(cache.info().id, 'DSCacheFactory.cache');
+		assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
+		assert.equal(cache.info().storageMode, 'memory');
+		assert.isUndefined(cache.info().storageImpl);
+		sessionStorage.setItem = orig;
+	});
+	it('should throw an exception if "capacity" is not a number or is less than zero.', function () {
 		var capacity = Math.floor((Math.random() * 100000) + 1) * -1;
 		try {
 			TestDSCacheFactory('capacityCache99', { capacity: capacity });
@@ -68,9 +98,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			}
 			fail();
 		}
-		done();
 	});
-	it('should validate maxAge.', function (done) {
+	it('should validate maxAge.', function () {
 		var maxAge = Math.floor((Math.random() * 100000) + 1) * -1;
 		try {
 			TestDSCacheFactory('maxAgeCache99', { maxAge: maxAge });
@@ -93,10 +122,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 				fail(TYPES_EXCEPT_NUMBER[i]);
 			}
 		}
-
-		done();
 	});
-	it('should validate cacheFlushInterval.', function (done) {
+	it('should validate cacheFlushInterval.', function () {
 		var cacheFlushInterval = Math.floor((Math.random() * 100000) + 1) * -1;
 		try {
 			TestDSCacheFactory('cacheFlushIntervalCache99', { cacheFlushInterval: cacheFlushInterval });
@@ -119,10 +146,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 				fail();
 			}
 		}
-
-		done();
 	});
-	it('should validate recycleFreq.', function (done) {
+	it('should validate recycleFreq.', function () {
 		var recycleFreq = Math.floor((Math.random() * 100000) + 1) * -1;
 		try {
 			TestDSCacheFactory('recycleFreqCache99', { recycleFreq: recycleFreq });
@@ -145,10 +170,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 				fail();
 			}
 		}
-
-		done();
 	});
-	it('should validate onExpire.', function (done) {
+	it('should validate onExpire.', function () {
 		var onExpire = 234;
 		try {
 			TestDSCacheFactory('onExpireCache99', { onExpire: onExpire });
@@ -172,10 +195,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 				fail();
 			}
 		}
-
-		done();
 	});
-	it('should validate deleteOnExpire.', function (done) {
+	it('should validate deleteOnExpire.', function () {
 		var deleteOnExpire = 'fail';
 		try {
 			TestDSCacheFactory('cache', { deleteOnExpire: deleteOnExpire });
@@ -197,10 +218,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			}
 			fail(TYPES_EXCEPT_STRING[i]);
 		}
-
-		done();
 	});
-	it('should validate storageMode.', function (done) {
+	it('should validate storageMode.', function () {
 		var storageMode = 'fail';
 		try {
 			TestDSCacheFactory('cache', { storageMode: storageMode });
@@ -219,10 +238,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			}
 			fail(TYPES_EXCEPT_STRING[i]);
 		}
-
-		done();
 	});
-	it('should validate storageImpl.', function (done) {
+	it('should validate storageImpl.', function () {
 		var storageImpl = 'fail';
 		try {
 			TestDSCacheFactory('cache', { storageMode: 'localStorage', storageImpl: storageImpl });
@@ -290,10 +307,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 		} catch (err) {
 			assert.equal(err.message, '[ng:areq] Expected storageImpl to implement "removeItem(key)"! Found: ' + typeof storageImpl.removeItem + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof storageImpl.removeItem);
 		}
-
-		done();
 	});
-	it('should prevent a cache from being duplicated.', function (done) {
+	it('should prevent a cache from being duplicated.', function () {
 		try {
 			TestDSCacheFactory('cache');
 			TestDSCacheFactory('cache');
@@ -301,10 +316,8 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			var msg = err.message;
 		}
 		assert.equal(msg, '[$cacheFactory:iid] CacheId \'cache\' is already taken!\nhttp://errors.angularjs.org/' + angular.version.full + '/$cacheFactory/iid?p0=cache');
-
-		done();
 	});
-	it('should require cacheId to be a string.', function (done) {
+	it('should require cacheId to be a string.', function () {
 		for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
 			try {
 				TestDSCacheFactory(TYPES_EXCEPT_STRING[i]);
@@ -315,7 +328,5 @@ describe('DSCacheFactory(cacheId, options)', function () {
 			}
 			fail(TYPES_EXCEPT_STRING[i]);
 		}
-
-		done();
 	});
 });

@@ -1,3 +1,11 @@
+##### 3.0.0-beta.4 22 April 2014
+
+###### Backwards compatible API changes
+- Add feature to 'touch' elements in the cache #103
+
+###### Backwards compatible bug fixes
+- `localstorage` and Safari Private Browsing #107
+
 ##### 3.0.0-beta.3 03 March 2014
 
 ###### Backwards compatible bug fixes

@@ -29,39 +29,14 @@ var fail = function (msg) {
 		storagePrefix: 'ac.'
 	};
 
-var TestDSCacheFactoryProvider, TestDSCacheFactory, TestDSBinaryHeap, $window;
+var TestDSCacheFactoryProvider, TestDSCacheFactory, TestDSBinaryHeap;
 
 beforeEach(module('angular-data.DSCacheFactory', function (_DSCacheFactoryProvider_) {
 	TestDSCacheFactoryProvider = _DSCacheFactoryProvider_;
 }));
-beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_, _$window_) {
+beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_) {
 	TestDSCacheFactory = _DSCacheFactory_;
 	TestDSBinaryHeap = _DSBinaryHeap_;
-	$window = _$window_;
-	$window.localStorage = {
-		data: {},
-		getItem: function (key) {
-			return this.data[key];
-		},
-		setItem: function (key, value) {
-			this.data[key] = value;
-		},
-		removeItem: function (key) {
-			delete this.data[key];
-		}
-	};
-	$window.sessionStorage = {
-		data: {},
-		getItem: function (key) {
-			return this.data[key];
-		},
-		setItem: function (key, value) {
-			this.data[key] = value;
-		},
-		removeItem: function (key) {
-			delete this.data[key];
-		}
-	};
 }));
 afterEach(function () {
 	TestDSCacheFactory.destroyAll();

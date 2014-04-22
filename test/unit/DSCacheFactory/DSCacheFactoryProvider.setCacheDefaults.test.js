@@ -20,7 +20,7 @@ describe('DSCacheFactoryProvider.setCacheDefaults(options)', function () {
 			cacheFlushInterval: Math.floor((Math.random() * 100000) + 1),
 			deleteOnExpire: 'aggressive',
 			storageMode: 'localStorage',
-			localStorageImpl: {
+			storageImpl: {
 				setItem: function () {
 				},
 				getItem: function () {
@@ -43,7 +43,7 @@ describe('DSCacheFactoryProvider.setCacheDefaults(options)', function () {
 		assert.equal(cache.info().cacheFlushInterval, options.cacheFlushInterval);
 		assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
 		assert.equal(cache.info().storageMode, options.storageMode);
-		assert.isUndefined(cache.info().localStorageImpl); // We don't expose this to the user
+		assert.equal(cache.info().storageImpl, options.storageImpl);
 		assert.equal(cache.info().onExpire, options.onExpire);
 		assert.equal(cache.info().disabled, options.disabled);
 	});

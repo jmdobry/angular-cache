@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-cache.js
- * @version 3.0.0-beta.3 - Homepage <https://github.com/jmdobry/angular-cache>
+ * @version 3.0.0-beta.4 - Homepage <https://github.com/jmdobry/angular-cache>
  * @copyright (c) 2013 Jason Dobry <http://www.pseudobry.com>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -418,8 +418,6 @@ var defaults = require('../defaults'),
  * Configure the cache to use webStorage.
  */
 function _setStorageMode(storageMode, storageImpl) {
-	var $window = angular.injector(['ng']).get('$window');
-
 	if (!angular.isString(storageMode)) {
 		throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
 	} else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
@@ -440,16 +438,22 @@ function _setStorageMode(storageMode, storageImpl) {
 		}
 		this.$$storage = storageImpl;
 	} else if (this.$$storageMode === 'localStorage') {
-		if ($window.localStorage) {
-			this.$$storage = $window.localStorage;
-		} else {
+		try {
+			localStorage.setItem('angular-cache', 'angular-cache');
+			localStorage.removeItem('angular-cache');
+			this.$$storage = localStorage;
+		} catch (e) {
 			delete this.$$storage;
+			this.$$storageMode = 'memory';
 		}
 	} else if (this.$$storageMode === 'sessionStorage') {
-		if ($window.sessionStorage) {
-			this.$$storage = $window.sessionStorage;
-		} else {
+		try {
+			sessionStorage.setItem('angular-cache', 'angular-cache');
+			sessionStorage.removeItem('angular-cache');
+			this.$$storage = sessionStorage;
+		} catch (e) {
 			delete this.$$storage;
+			this.$$storageMode = 'memory';
 		}
 	}
 }
@@ -806,6 +810,46 @@ DSCache.prototype.enable = function () {
 	delete this.$$disabled;
 };
 
+/**
+ * @doc method
+ * @id DSCache.methods:touch
+ * @name touch
+ * @description
+ * Reset the expiry of a single item or all items in the cache.
+ *
+ * ## Signature:
+ * ```js
+ * DSCache#touch(key)
+ * ```
+ *
+ * ## Example:
+ * ```js
+ *  cache.touch('1'); // touch one item
+ *
+ *  cache.touch(); // touch all items
+ * ```
+ *
+ * @param {string=} key The key of the item to touch.
+ */
+DSCache.prototype.touch = function (key) {
+	if (key) {
+		var _this = this;
+		var val = this.get(key, {
+			onExpire: function (k, v) {
+				_this.put(k, v);
+			}
+		});
+		if (val) {
+			this.put(key, val);
+		}
+	} else {
+		var keys = this.keys();
+		for (var i = 0; i < keys.length; i++) {
+			this.touch(keys[i]);
+		}
+	}
+};
+
 module.exports = DSCache;
 
 },{"../DSBinaryHeap":1,"../defaults":"Gv0+ce","./destroy":2,"./get":3,"./info":5,"./keySet":6,"./keys":7,"./put":8,"./remove":9,"./removeAll":10,"./removeExpired":11,"./setCacheFlushInterval":12,"./setCapacity":13,"./setDeleteOnExpire":14,"./setMaxAge":15,"./setOnExpire":16,"./setRecycleFreq":17}],5:[function(require,module,exports){
@@ -879,7 +923,7 @@ module.exports = function info(key) {
 			cacheFlushInterval: this.$$cacheFlushInterval,
 			recycleFreq: this.$$recycleFreq,
 			storageMode: this.$$storageMode,
-			storageImpl: this.$$storageImpl,
+			storageImpl: this.$$storage,
 			disabled: this.$$disabled,
 			size: this.$$lruHeap && this.$$lruHeap.size() || 0
 		};
@@ -1663,7 +1707,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults'),
 	DSCache = require('../DSCache'),
-	version = '3.0.0-beta.3';
+	version = '3.0.0-beta.4';
 
 /**
  * @doc function
@@ -2244,7 +2288,7 @@ module.exports = {
 	 * @id angular-cache
 	 * @name Overview
 	 * @description
-	 * __Version:__ 3.0.0-beta.3
+	 * __Version:__ 3.0.0-beta.4
 	 *
 	 * ## Install
 	 *
@@ -2264,7 +2308,7 @@ module.exports = {
 	 * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
 	 *
 	 * #### Manual download
-	 * Download angular-cache.3.0.0-beta.3.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+	 * Download angular-cache.3.0.0-beta.4.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
 	 * section of the angular-cache GitHub project.
 	 *
 	 * ## Load into Angular

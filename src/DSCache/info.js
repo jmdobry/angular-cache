@@ -68,7 +68,7 @@ module.exports = function info(key) {
 			cacheFlushInterval: this.$$cacheFlushInterval,
 			recycleFreq: this.$$recycleFreq,
 			storageMode: this.$$storageMode,
-			storageImpl: this.$$storageImpl,
+			storageImpl: this.$$storage,
 			disabled: this.$$disabled,
 			size: this.$$lruHeap && this.$$lruHeap.size() || 0
 		};

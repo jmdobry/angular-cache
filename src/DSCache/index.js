@@ -5,8 +5,6 @@ var defaults = require('../defaults'),
  * Configure the cache to use webStorage.
  */
 function _setStorageMode(storageMode, storageImpl) {
-	var $window = angular.injector(['ng']).get('$window');
-
 	if (!angular.isString(storageMode)) {
 		throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
 	} else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
@@ -27,16 +25,22 @@ function _setStorageMode(storageMode, storageImpl) {
 		}
 		this.$$storage = storageImpl;
 	} else if (this.$$storageMode === 'localStorage') {
-		if ($window.localStorage) {
-			this.$$storage = $window.localStorage;
-		} else {
+		try {
+			localStorage.setItem('angular-cache', 'angular-cache');
+			localStorage.removeItem('angular-cache');
+			this.$$storage = localStorage;
+		} catch (e) {
 			delete this.$$storage;
+			this.$$storageMode = 'memory';
 		}
 	} else if (this.$$storageMode === 'sessionStorage') {
-		if ($window.sessionStorage) {
-			this.$$storage = $window.sessionStorage;
-		} else {
+		try {
+			sessionStorage.setItem('angular-cache', 'angular-cache');
+			sessionStorage.removeItem('angular-cache');
+			this.$$storage = sessionStorage;
+		} catch (e) {
 			delete this.$$storage;
+			this.$$storageMode = 'memory';
 		}
 	}
 }
@@ -391,6 +395,46 @@ DSCache.prototype.disable = function () {
  */
 DSCache.prototype.enable = function () {
 	delete this.$$disabled;
+};
+
+/**
+ * @doc method
+ * @id DSCache.methods:touch
+ * @name touch
+ * @description
+ * Reset the expiry of a single item or all items in the cache.
+ *
+ * ## Signature:
+ * ```js
+ * DSCache#touch(key)
+ * ```
+ *
+ * ## Example:
+ * ```js
+ *  cache.touch('1'); // touch one item
+ *
+ *  cache.touch(); // touch all items
+ * ```
+ *
+ * @param {string=} key The key of the item to touch.
+ */
+DSCache.prototype.touch = function (key) {
+	if (key) {
+		var _this = this;
+		var val = this.get(key, {
+			onExpire: function (k, v) {
+				_this.put(k, v);
+			}
+		});
+		if (val) {
+			this.put(key, val);
+		}
+	} else {
+		var keys = this.keys();
+		for (var i = 0; i < keys.length; i++) {
+			this.touch(keys[i]);
+		}
+	}
 };
 
 module.exports = DSCache;

@@ -1,4 +1,7 @@
-### 1.x.x. ---> 2.0.0 - xx October 2013
+### 2.x.x. ---> 3.x.x - xx April 2013
+TODO
+
+### 1.x.x. ---> 2.0.0 - 30 October 2013
 
 #### Breaking API changes
 ##### Swapped `aggressiveDelete` option for `deleteOnExpire` option.

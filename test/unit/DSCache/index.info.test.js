@@ -62,7 +62,7 @@ describe('DSCache.info()', function () {
 		assert.equal(cacheInfo4.storageMode, 'memory');
 		assert.equal(cacheInfo4.onExpire, null);
 		if (localStorage) {
-			assert.equal(cache5.info().storageMode, 'localStorage');
+			assert.equal(cache5.info().storageMode, 'localStorage', 'cache5 storageMode should be "memory"');
 		} else {
 			assert.equal(cache5.info().storageMode, null);
 		}
