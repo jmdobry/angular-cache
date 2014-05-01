@@ -227,6 +227,17 @@ module.exports = function (grunt) {
                         'test/*.js'
                     ]
                 }
+            },
+            '1.2.16': {
+                options: {
+                    files: [
+                        'bower_components/angular-1.2.16/angular.js',
+                        'bower_components/angular-mocks-1.2.16/angular-mocks.js',
+                        'src/angular-cache.js',
+                        'test/karma.start.js',
+                        'test/*.js'
+                    ]
+                }
             }
         },
         coveralls: {
@@ -236,12 +247,12 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('test', ['karma:1.1.5']);
+    grunt.registerTask('test', ['karma:1.2.16']);
     grunt.registerTask('release', ['clean:pre', 'jshint', 'copy', 'uglify', 'test', 'clean:post']);
     grunt.registerTask('build', ['release', 'clean:pre']);
     grunt.registerTask('default', ['build']);
 
     // Used by the CLI build servers
-    grunt.registerTask('test-cli', ['karma:1.0.4', 'karma:1.0.5', 'karma:1.0.6', 'karma:1.0.7', 'karma:1.0.8', 'karma:1.1.4', 'karma:1.1.5', 'karma:1.2.1', 'karma:1.2.2', 'karma:1.2.3', 'karma:1.2.4', 'karma:1.2.5', 'karma:1.2.6', 'karma:1.2.7']);
+    grunt.registerTask('test-cli', ['karma:1.0.4', 'karma:1.0.5', 'karma:1.0.6', 'karma:1.0.7', 'karma:1.0.8', 'karma:1.1.4', 'karma:1.1.5', 'karma:1.2.1', 'karma:1.2.2', 'karma:1.2.3', 'karma:1.2.4', 'karma:1.2.5', 'karma:1.2.6', 'karma:1.2.7', 'karma:1.2.16']);
     grunt.registerTask('cli', ['clean', 'jshint', 'copy', 'uglify', 'test-cli', 'coveralls']);
 };
