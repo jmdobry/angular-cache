@@ -10,8 +10,6 @@
 (function (window, angular, undefined) {
 	'use strict';
 
-	angular.module('jmdobry.binary-heap', []);
-
 	/**
 	 * @desc Provider for the BinaryHeap.
 	 */
@@ -186,15 +184,8 @@
 		};
 	}
 
-	angular.module('jmdobry.binary-heap').provider('BinaryHeap', BinaryHeapProvider);
-
-	/**
-	 * @desc Provides an $AngularCacheFactoryProvider, which gives you the ability to use an
-	 *       $angularCacheFactory. The $angularCacheFactory produces AngularCache objects, which
-	 *       the same abilities as the cache objects that come with Angular, except with some added
-	 *       functionality.
-	 */
-	angular.module('jmdobry.angular-cache', ['ng', 'jmdobry.binary-heap']);
+	angular.module('jmdobry.binary-heap', []).
+	provider('BinaryHeap', BinaryHeapProvider);
 
 	/**
 	 * @class $AngularCacheFactoryProvider
@@ -1189,6 +1180,13 @@
 		}];
 	}
 
-	// Register the new provider with Angular.
-	angular.module('jmdobry.angular-cache').provider('$angularCacheFactory', $AngularCacheFactoryProvider);
+	/**
+	 * @desc Provides an $AngularCacheFactoryProvider, which gives you the ability to use an
+	 *       $angularCacheFactory. The $angularCacheFactory produces AngularCache objects, which
+	 *       the same abilities as the cache objects that come with Angular, except with some added
+	 *       functionality.
+	 */
+	angular.module('jmdobry.angular-cache', ['ng', 'jmdobry.binary-heap']).
+	provider('$angularCacheFactory', $AngularCacheFactoryProvider);
+
 })(window, window.angular);
