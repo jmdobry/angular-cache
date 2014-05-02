@@ -4,8 +4,8 @@ module.exports = function (config) {
 		frameworks: ['mocha', 'chai', 'sinon'],
 		browsers: ['Firefox', 'PhantomJS'],
 		files: [
-			'bower_components/angular-1.2.13/angular.js',
-			'bower_components/angular-mocks-1.2.13/angular-mocks.js',
+			'bower_components/angular-1.2.16/angular.js',
+			'bower_components/angular-mocks-1.2.16/angular-mocks.js',
 			'dist/angular-cache.js',
 			'./karma.start.js',
 			'test/unit/**/*.js'
