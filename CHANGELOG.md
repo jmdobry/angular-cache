@@ -1,7 +1,12 @@
+##### 2.3.4 - 01 May 2014
+
+###### Backwards compatible bug fixes
+- Fix module definition and load sequencing #111
+
 ##### 2.3.3 - 24 February 2014
 
 ###### Backwards compatible bug fixes
-- *sigh Fixed #102 (regression from #100)
+- *sigh* Fixed #102 (regression from #100)
 
 ##### 2.3.2 - 23 February 2014
 
