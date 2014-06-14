@@ -41,14 +41,14 @@
  * `deleteOnExpire` for this cache will be reset to the default (`"none"`).
  */
 module.exports = function setDeleteOnExpire(deleteOnExpire) {
-	if (deleteOnExpire === null) {
-		delete this.$$deleteOnExpire;
-	} else if (!angular.isString(deleteOnExpire)) {
-		throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be a string! Found: {0}.', typeof deleteOnExpire);
-	} else if (deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
-		throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be "none", "passive" or "aggressive"! Found: {0}.', deleteOnExpire);
-	} else {
-		this.$$deleteOnExpire = deleteOnExpire;
-	}
-	this.setRecycleFreq(this.$$recycleFreq);
+  if (deleteOnExpire === null) {
+    delete this.$$deleteOnExpire;
+  } else if (!angular.isString(deleteOnExpire)) {
+    throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be a string! Found: {0}.', typeof deleteOnExpire);
+  } else if (deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
+    throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be "none", "passive" or "aggressive"! Found: {0}.', deleteOnExpire);
+  } else {
+    this.$$deleteOnExpire = deleteOnExpire;
+  }
+  this.setRecycleFreq(this.$$recycleFreq);
 };

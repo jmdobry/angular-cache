@@ -34,75 +34,75 @@ var utils = require('../utils');
  * @returns {*} The newly stored item.
  */
 module.exports = function put(key, value) {
-	if (this.$$disabled || value === null || value === undefined) {
-		return;
-	}
+  if (this.$$disabled || value === null || value === undefined) {
+    return;
+  }
 
-	key = utils.stringifyNumber(key);
+  key = utils.stringifyNumber(key);
 
-	if (!angular.isString(key)) {
-		throw angular.$$minErr('ng')('areq', 'Expected key to be a string! Found: {0}.', typeof key);
-	}
+  if (!angular.isString(key)) {
+    throw angular.$$minErr('ng')('areq', 'Expected key to be a string! Found: {0}.', typeof key);
+  }
 
-	var now = new Date().getTime(),
-		item = {
-			key: key,
-			value: value,
-			created: now,
-			accessed: now
-		};
+  var now = new Date().getTime(),
+    item = {
+      key: key,
+      value: value,
+      created: now,
+      accessed: now
+    };
 
-	item.expires = item.created + this.$$maxAge;
+  item.expires = item.created + this.$$maxAge;
 
-	if (this.$$storage) {
-		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
-			keys = keysJson ? angular.fromJson(keysJson) : [],
-			itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  if (this.$$storage) {
+    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
+      keys = keysJson ? angular.fromJson(keysJson) : [],
+      itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
 
-		// Remove existing
-		if (itemJson) {
-			this.remove(key);
-		}
-		// Add to expires heap
-		this.$$expiresHeap.push({
-			key: key,
-			expires: item.expires
-		});
-		// Add to lru heap
-		this.$$lruHeap.push({
-			key: key,
-			accessed: item.accessed
-		});
-		// Set item
-		this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
-		var exists = false;
-		for (var i = 0; i < keys.length; i++) {
-			if (keys[i] === key) {
-				exists = true;
-				break;
-			}
-		}
-		if (!exists) {
-			keys.push(key);
-		}
-		this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
-	} else {
-		// Remove existing
-		if (this.$$data[key]) {
-			this.remove(key);
-		}
-		// Add to expires heap
-		this.$$expiresHeap.push(item);
-		// Add to lru heap
-		this.$$lruHeap.push(item);
-		// Set item
-		this.$$data[key] = item;
-	}
+    // Remove existing
+    if (itemJson) {
+      this.remove(key);
+    }
+    // Add to expires heap
+    this.$$expiresHeap.push({
+      key: key,
+      expires: item.expires
+    });
+    // Add to lru heap
+    this.$$lruHeap.push({
+      key: key,
+      accessed: item.accessed
+    });
+    // Set item
+    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    var exists = false;
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i] === key) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      keys.push(key);
+    }
+    this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
+  } else {
+    // Remove existing
+    if (this.$$data[key]) {
+      this.remove(key);
+    }
+    // Add to expires heap
+    this.$$expiresHeap.push(item);
+    // Add to lru heap
+    this.$$lruHeap.push(item);
+    // Set item
+    this.$$data[key] = item;
+  }
 
-	// Handle exceeded capacity
-	if (this.$$lruHeap.size() > this.$$capacity) {
-		this.remove(this.$$lruHeap.peek().key);
-	}
+  // Handle exceeded capacity
+  if (this.$$lruHeap.size() > this.$$capacity) {
+    this.remove(this.$$lruHeap.peek().key);
+  }
 
-	return value;
+  return value;
 };

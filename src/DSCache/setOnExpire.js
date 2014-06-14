@@ -35,11 +35,11 @@
  * callback for this cache will be removed.
  */
 module.exports = function setOnExpire(onExpire) {
-	if (onExpire === null) {
-		delete this.$$onExpire;
-	} else if (!angular.isFunction(onExpire)) {
-		throw angular.$$minErr('ng')('areq', 'Expected onExpire to be a function! Found: {0}.', typeof onExpire);
-	} else {
-		this.$$onExpire = onExpire;
-	}
+  if (onExpire === null) {
+    delete this.$$onExpire;
+  } else if (!angular.isFunction(onExpire)) {
+    throw angular.$$minErr('ng')('areq', 'Expected onExpire to be a function! Found: {0}.', typeof onExpire);
+  } else {
+    this.$$onExpire = onExpire;
+  }
 };

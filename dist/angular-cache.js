@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-cache.js
- * @version 3.0.0 - Homepage <https://github.com/jmdobry/angular-cache>
+ * @version 3.0.1 - Homepage <https://github.com/jmdobry/angular-cache>
  * @copyright (c) 2013 Jason Dobry <http://www.pseudobry.com>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -15,23 +15,23 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  * @param {number} n The index of the element to bubble up.
  */
 function bubbleUp(heap, weightFunc, n) {
-	var element = heap[n],
-		weight = weightFunc(element);
-	// When at 0, an element can not go up any further.
-	while (n > 0) {
-		// Compute the parent element's index, and fetch it.
-		var parentN = Math.floor((n + 1) / 2) - 1,
-			parent = heap[parentN];
-		// If the parent has a lesser weight, things are in order and we
-		// are done.
-		if (weight >= weightFunc(parent)) {
-			break;
-		} else {
-			heap[parentN] = element;
-			heap[n] = parent;
-			n = parentN;
-		}
-	}
+  var element = heap[n],
+    weight = weightFunc(element);
+  // When at 0, an element can not go up any further.
+  while (n > 0) {
+    // Compute the parent element's index, and fetch it.
+    var parentN = Math.floor((n + 1) / 2) - 1,
+      parent = heap[parentN];
+    // If the parent has a lesser weight, things are in order and we
+    // are done.
+    if (weight >= weightFunc(parent)) {
+      break;
+    } else {
+      heap[parentN] = element;
+      heap[n] = parent;
+      n = parentN;
+    }
+  }
 }
 
 /**
@@ -41,39 +41,39 @@ function bubbleUp(heap, weightFunc, n) {
  * @param {number} n The index of the element to sink down.
  */
 function bubbleDown(heap, weightFunc, n) {
-	var length = heap.length,
-		node = heap[n],
-		nodeWeight = weightFunc(node);
+  var length = heap.length,
+    node = heap[n],
+    nodeWeight = weightFunc(node);
 
-	while (true) {
-		var child2N = (n + 1) * 2,
-			child1N = child2N - 1;
-		var swap = null;
-		if (child1N < length) {
-			var child1 = heap[child1N],
-				child1Weight = weightFunc(child1);
-			// If the score is less than our node's, we need to swap.
-			if (child1Weight < nodeWeight) {
-				swap = child1N;
-			}
-		}
-		// Do the same checks for the other child.
-		if (child2N < length) {
-			var child2 = heap[child2N],
-				child2Weight = weightFunc(child2);
-			if (child2Weight < (swap === null ? nodeWeight : weightFunc(heap[child1N]))) {
-				swap = child2N;
-			}
-		}
+  while (true) {
+    var child2N = (n + 1) * 2,
+      child1N = child2N - 1;
+    var swap = null;
+    if (child1N < length) {
+      var child1 = heap[child1N],
+        child1Weight = weightFunc(child1);
+      // If the score is less than our node's, we need to swap.
+      if (child1Weight < nodeWeight) {
+        swap = child1N;
+      }
+    }
+    // Do the same checks for the other child.
+    if (child2N < length) {
+      var child2 = heap[child2N],
+        child2Weight = weightFunc(child2);
+      if (child2Weight < (swap === null ? nodeWeight : weightFunc(heap[child1N]))) {
+        swap = child2N;
+      }
+    }
 
-		if (swap === null) {
-			break;
-		} else {
-			heap[n] = heap[swap];
-			heap[swap] = node;
-			n = swap;
-		}
-	}
+    if (swap === null) {
+      break;
+    } else {
+      heap[n] = heap[swap];
+      heap[swap] = node;
+      n = swap;
+    }
+  }
 }
 
 /**
@@ -88,14 +88,14 @@ function bubbleDown(heap, weightFunc, n) {
              * );
              */
 function DSBinaryHeap(weightFunc) {
-	if (weightFunc && !angular.isFunction(weightFunc)) {
-		throw new Error('DSBinaryHeap(weightFunc): weightFunc: must be a function!');
-	}
-	weightFunc = weightFunc || function (x) {
-		return x;
-	};
-	this.weightFunc = weightFunc;
-	this.heap = [];
+  if (weightFunc && !angular.isFunction(weightFunc)) {
+    throw new Error('DSBinaryHeap(weightFunc): weightFunc: must be a function!');
+  }
+  weightFunc = weightFunc || function (x) {
+    return x;
+  };
+  this.weightFunc = weightFunc;
+  this.heap = [];
 }
 
 /**
@@ -104,8 +104,8 @@ function DSBinaryHeap(weightFunc) {
  * @param {*} node The element to push into the binary heap.
  */
 DSBinaryHeap.prototype.push = function (node) {
-	this.heap.push(node);
-	bubbleUp(this.heap, this.weightFunc, this.heap.length - 1);
+  this.heap.push(node);
+  bubbleUp(this.heap, this.weightFunc, this.heap.length - 1);
 };
 
 /**
@@ -114,7 +114,7 @@ DSBinaryHeap.prototype.push = function (node) {
  * @returns {*}
  */
 DSBinaryHeap.prototype.peek = function () {
-	return this.heap[0];
+  return this.heap[0];
 };
 
 /**
@@ -123,13 +123,13 @@ DSBinaryHeap.prototype.peek = function () {
  * @returns {*}
  */
 DSBinaryHeap.prototype.pop = function () {
-	var front = this.heap[0],
-		end = this.heap.pop();
-	if (this.heap.length > 0) {
-		this.heap[0] = end;
-		bubbleDown(this.heap, this.weightFunc, 0);
-	}
-	return front;
+  var front = this.heap[0],
+    end = this.heap.pop();
+  if (this.heap.length > 0) {
+    this.heap[0] = end;
+    bubbleDown(this.heap, this.weightFunc, 0);
+  }
+  return front;
 };
 
 /**
@@ -140,20 +140,20 @@ DSBinaryHeap.prototype.pop = function () {
  * @returns {*} The removed node.
  */
 DSBinaryHeap.prototype.remove = function (node) {
-	var length = this.heap.length;
-	for (var i = 0; i < length; i++) {
-		if (angular.equals(this.heap[i], node)) {
-			var removed = this.heap[i],
-				end = this.heap.pop();
-			if (i !== length - 1) {
-				this.heap[i] = end;
-				bubbleUp(this.heap, this.weightFunc, i);
-				bubbleDown(this.heap, this.weightFunc, i);
-			}
-			return removed;
-		}
-	}
-	return null;
+  var length = this.heap.length;
+  for (var i = 0; i < length; i++) {
+    if (angular.equals(this.heap[i], node)) {
+      var removed = this.heap[i],
+        end = this.heap.pop();
+      if (i !== length - 1) {
+        this.heap[i] = end;
+        bubbleUp(this.heap, this.weightFunc, i);
+        bubbleDown(this.heap, this.weightFunc, i);
+      }
+      return removed;
+    }
+  }
+  return null;
 };
 
 /**
@@ -161,7 +161,7 @@ DSBinaryHeap.prototype.remove = function (node) {
  * @desc Remove all nodes from this DSBinaryHeap.
  */
 DSBinaryHeap.prototype.removeAll = function () {
-	this.heap = [];
+  this.heap = [];
 };
 
 /**
@@ -170,21 +170,21 @@ DSBinaryHeap.prototype.removeAll = function () {
  * @returns {number} The size of the priority queue.
  */
 DSBinaryHeap.prototype.size = function () {
-	return this.heap.length;
+  return this.heap.length;
 };
 
 /**
  * @desc Provider for the DSBinaryHeap.
  */
 function DSBinaryHeapProvider() {
-	this.$get = function () {
-		return DSBinaryHeap;
-	};
+  this.$get = function () {
+    return DSBinaryHeap;
+  };
 }
 
 module.exports = {
-	DSBinaryHeapProvider: DSBinaryHeapProvider,
-	DSBinaryHeap: DSBinaryHeap
+  DSBinaryHeapProvider: DSBinaryHeapProvider,
+  DSBinaryHeap: DSBinaryHeap
 };
 
 },{}],2:[function(require,module,exports){
@@ -211,18 +211,18 @@ module.exports = {
  * ```
  */
 module.exports = function destroy() {
-	clearInterval(this.$$cacheFlushIntervalId);
-	clearInterval(this.$$recycleFreqId);
-	this.removeAll();
-	if (this.$$storage) {
-		this.$$storage.removeItem(this.$$prefix + '.keys');
-		this.$$storage.removeItem(this.$$prefix);
-	}
-	this.$$storage = null;
-	this.$$data = null;
-	this.$$lruHeap = null;
-	this.$$expiresHeap = null;
-	this.$$prefix = null;
+  clearInterval(this.$$cacheFlushIntervalId);
+  clearInterval(this.$$recycleFreqId);
+  this.removeAll();
+  if (this.$$storage) {
+    this.$$storage.removeItem(this.$$prefix + '.keys');
+    this.$$storage.removeItem(this.$$prefix);
+  }
+  this.$$storage = null;
+  this.$$data = null;
+  this.$$lruHeap = null;
+  this.$$expiresHeap = null;
+  this.$$prefix = null;
 };
 
 },{}],3:[function(require,module,exports){
@@ -326,136 +326,136 @@ var utils = require('../utils');
  * @returns {*} The item with the given key.
  */
 module.exports = function get(key, options) {
-	var _this = this;
+  var _this = this;
 
-	if (angular.isArray(key)) {
-		var keys = key,
-			values = [];
+  if (angular.isArray(key)) {
+    var keys = key,
+      values = [];
 
-		angular.forEach(keys, function (key) {
-			var value = _this.get(key, options);
-			if (value !== null && value !== undefined) {
-				values.push(value);
-			}
-		});
+    angular.forEach(keys, function (key) {
+      var value = _this.get(key, options);
+      if (value !== null && value !== undefined) {
+        values.push(value);
+      }
+    });
 
-		return values;
-	} else {
-		key = utils.stringifyNumber(key);
+    return values;
+  } else {
+    key = utils.stringifyNumber(key);
 
-		if (this.$$disabled) {
-			return;
-		}
-	}
+    if (this.$$disabled) {
+      return;
+    }
+  }
 
-	options = options || {};
-	if (!angular.isString(key)) {
-		throw angular.$$minErr('ng')('areq', 'Expected key to be a string! Found: {0}.', typeof key);
-	} else if (options && !angular.isObject(options)) {
-		throw angular.$$minErr('ng')('areq', 'Expected options to be an object! Found: {0}.', typeof options);
-	} else if (options.onExpire && !angular.isFunction(options.onExpire)) {
-		throw angular.$$minErr('ng')('areq', 'Expected options.onExpire to be a function! Found: {0}.', typeof options.onExpire);
-	}
+  options = options || {};
+  if (!angular.isString(key)) {
+    throw angular.$$minErr('ng')('areq', 'Expected key to be a string! Found: {0}.', typeof key);
+  } else if (options && !angular.isObject(options)) {
+    throw angular.$$minErr('ng')('areq', 'Expected options to be an object! Found: {0}.', typeof options);
+  } else if (options.onExpire && !angular.isFunction(options.onExpire)) {
+    throw angular.$$minErr('ng')('areq', 'Expected options.onExpire to be a function! Found: {0}.', typeof options.onExpire);
+  }
 
-	var item;
+  var item;
 
-	if (this.$$storage) {
-		var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  if (this.$$storage) {
+    var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
 
-		if (itemJson) {
-			item = angular.fromJson(itemJson);
-		} else {
-			return;
-		}
-	} else {
-		if (!(key in this.$$data)) {
-			return;
-		}
+    if (itemJson) {
+      item = angular.fromJson(itemJson);
+    } else {
+      return;
+    }
+  } else {
+    if (!(key in this.$$data)) {
+      return;
+    }
 
-		item = this.$$data[key];
-	}
+    item = this.$$data[key];
+  }
 
-	var value = item.value,
-		now = new Date().getTime();
+  var value = item.value,
+    now = new Date().getTime();
 
-	if (this.$$storage) {
-		this.$$lruHeap.remove({
-			key: key,
-			accessed: item.accessed
-		});
-		item.accessed = now;
-		this.$$lruHeap.push({
-			key: key,
-			accessed: now
-		});
-	} else {
-		this.$$lruHeap.remove(item);
-		item.accessed = now;
-		this.$$lruHeap.push(item);
-	}
+  if (this.$$storage) {
+    this.$$lruHeap.remove({
+      key: key,
+      accessed: item.accessed
+    });
+    item.accessed = now;
+    this.$$lruHeap.push({
+      key: key,
+      accessed: now
+    });
+  } else {
+    this.$$lruHeap.remove(item);
+    item.accessed = now;
+    this.$$lruHeap.push(item);
+  }
 
-	if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
-		this.remove(key);
+  if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
+    this.remove(key);
 
-		if (this.$$onExpire) {
-			this.$$onExpire(key, item.value, options.onExpire);
-		} else if (options.onExpire) {
-			options.onExpire(key, item.value);
-		}
-		value = undefined;
-	} else if (this.$$storage) {
-		this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
-	}
+    if (this.$$onExpire) {
+      this.$$onExpire(key, item.value, options.onExpire);
+    } else if (options.onExpire) {
+      options.onExpire(key, item.value);
+    }
+    value = undefined;
+  } else if (this.$$storage) {
+    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+  }
 
-	return value;
+  return value;
 };
 
 },{"../utils":22}],4:[function(require,module,exports){
 var defaults = require('../defaults'),
-	DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
+  DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
 /*!
  * Configure the cache to use webStorage.
  */
 function _setStorageMode(storageMode, storageImpl) {
-	if (!angular.isString(storageMode)) {
-		throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
-	} else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
-		throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: {0}.', storageMode);
-	}
+  if (!angular.isString(storageMode)) {
+    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
+  } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
+    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: {0}.', storageMode);
+  }
 
-	this.$$storageMode = storageMode;
+  this.$$storageMode = storageMode;
 
-	if (storageImpl) {
-		if (!angular.isObject(storageImpl)) {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to be an object! Found: {0}.', typeof storageImpl);
-		} else if (!('setItem' in storageImpl) || typeof storageImpl.setItem !== 'function') {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "setItem(key, value)"! Found: {0}.', typeof storageImpl.setItem);
-		} else if (!('getItem' in storageImpl) || typeof storageImpl.getItem !== 'function') {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "getItem(key)"! Found: {0}.', typeof storageImpl.getItem);
-		} else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
-		}
-		this.$$storage = storageImpl;
-	} else if (this.$$storageMode === 'localStorage') {
-		try {
-			localStorage.setItem('angular-cache', 'angular-cache');
-			localStorage.removeItem('angular-cache');
-			this.$$storage = localStorage;
-		} catch (e) {
-			delete this.$$storage;
-			this.$$storageMode = 'memory';
-		}
-	} else if (this.$$storageMode === 'sessionStorage') {
-		try {
-			sessionStorage.setItem('angular-cache', 'angular-cache');
-			sessionStorage.removeItem('angular-cache');
-			this.$$storage = sessionStorage;
-		} catch (e) {
-			delete this.$$storage;
-			this.$$storageMode = 'memory';
-		}
-	}
+  if (storageImpl) {
+    if (!angular.isObject(storageImpl)) {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to be an object! Found: {0}.', typeof storageImpl);
+    } else if (!('setItem' in storageImpl) || typeof storageImpl.setItem !== 'function') {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "setItem(key, value)"! Found: {0}.', typeof storageImpl.setItem);
+    } else if (!('getItem' in storageImpl) || typeof storageImpl.getItem !== 'function') {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "getItem(key)"! Found: {0}.', typeof storageImpl.getItem);
+    } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
+    }
+    this.$$storage = storageImpl;
+  } else if (this.$$storageMode === 'localStorage') {
+    try {
+      localStorage.setItem('angular-cache', 'angular-cache');
+      localStorage.removeItem('angular-cache');
+      this.$$storage = localStorage;
+    } catch (e) {
+      delete this.$$storage;
+      this.$$storageMode = 'memory';
+    }
+  } else if (this.$$storageMode === 'sessionStorage') {
+    try {
+      sessionStorage.setItem('angular-cache', 'angular-cache');
+      sessionStorage.removeItem('angular-cache');
+      this.$$storage = sessionStorage;
+    } catch (e) {
+      delete this.$$storage;
+      this.$$storageMode = 'memory';
+    }
+  }
 }
 
 /**
@@ -493,53 +493,53 @@ function _setStorageMode(storageMode, storageImpl) {
  * applying the new options, otherwise only the options specified in the options hash will be altered.
  */
 function _setOptions(cacheOptions, strict) {
-	cacheOptions = cacheOptions || {};
-	strict = !!strict;
-	if (!angular.isObject(cacheOptions)) {
-		throw angular.$$minErr('ng')('areq', 'Expected cacheOptions to be an object! Found: {0}.', typeof cacheOptions);
-	}
+  cacheOptions = cacheOptions || {};
+  strict = !!strict;
+  if (!angular.isObject(cacheOptions)) {
+    throw angular.$$minErr('ng')('areq', 'Expected cacheOptions to be an object! Found: {0}.', typeof cacheOptions);
+  }
 
-	if ('disabled' in cacheOptions) {
-		this.$$disabled = !!cacheOptions.disabled;
-	} else if (strict) {
-		delete this.$$disabled;
-	}
+  if ('disabled' in cacheOptions) {
+    this.$$disabled = !!cacheOptions.disabled;
+  } else if (strict) {
+    delete this.$$disabled;
+  }
 
-	if ('capacity' in cacheOptions) {
-		this.setCapacity(cacheOptions.capacity);
-	} else if (strict) {
-		this.setCapacity(null);
-	}
+  if ('capacity' in cacheOptions) {
+    this.setCapacity(cacheOptions.capacity);
+  } else if (strict) {
+    this.setCapacity(null);
+  }
 
-	if ('deleteOnExpire' in cacheOptions) {
-		this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
-	} else if (strict) {
-		this.setDeleteOnExpire(null);
-	}
+  if ('deleteOnExpire' in cacheOptions) {
+    this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
+  } else if (strict) {
+    this.setDeleteOnExpire(null);
+  }
 
-	if ('maxAge' in cacheOptions) {
-		this.setMaxAge(cacheOptions.maxAge);
-	} else if (strict) {
-		this.setMaxAge(null);
-	}
+  if ('maxAge' in cacheOptions) {
+    this.setMaxAge(cacheOptions.maxAge);
+  } else if (strict) {
+    this.setMaxAge(null);
+  }
 
-	if ('recycleFreq' in cacheOptions) {
-		this.setRecycleFreq(cacheOptions.recycleFreq);
-	} else if (strict) {
-		this.setRecycleFreq(null);
-	}
+  if ('recycleFreq' in cacheOptions) {
+    this.setRecycleFreq(cacheOptions.recycleFreq);
+  } else if (strict) {
+    this.setRecycleFreq(null);
+  }
 
-	if ('cacheFlushInterval' in cacheOptions) {
-		this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
-	} else if (strict) {
-		this.setCacheFlushInterval(null);
-	}
+  if ('cacheFlushInterval' in cacheOptions) {
+    this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
+  } else if (strict) {
+    this.setCacheFlushInterval(null);
+  }
 
-	if ('onExpire' in cacheOptions) {
-		this.setOnExpire(cacheOptions.onExpire);
-	} else if (strict) {
-		this.setOnExpire(null);
-	}
+  if ('onExpire' in cacheOptions) {
+    this.setOnExpire(cacheOptions.onExpire);
+  } else if (strict) {
+    this.setOnExpire(null);
+  }
 }
 
 /**
@@ -554,35 +554,35 @@ function _setOptions(cacheOptions, strict) {
  */
 function DSCache(cacheId, options) {
 
-	this.$$data = {};
-	this.$$id = cacheId;
-	this.$$storage = null;
+  this.$$data = {};
+  this.$$id = cacheId;
+  this.$$storage = null;
 
-	this.$$expiresHeap = new DSBinaryHeap(function (x) {
-		return x.expires;
-	});
+  this.$$expiresHeap = new DSBinaryHeap(function (x) {
+    return x.expires;
+  });
 
-	this.$$lruHeap = new DSBinaryHeap(function (x) {
-		return x.accessed;
-	});
+  this.$$lruHeap = new DSBinaryHeap(function (x) {
+    return x.accessed;
+  });
 
-	options = options || {};
+  options = options || {};
 
-	if ('storageMode' in options) {
-		_setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
-	}
-	if ('storagePrefix' in options) {
-		this.$$storagePrefix = options.storagePrefix;
-	}
+  if ('storageMode' in options) {
+    _setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
+  }
+  if ('storagePrefix' in options) {
+    this.$$storagePrefix = options.storagePrefix;
+  }
 
-	this.$$prefix = this.$$storagePrefix + cacheId;
+  this.$$prefix = this.$$storagePrefix + cacheId;
 
-	// Initialize this cache with the default and given options
-	_setOptions.apply(this, [options, true]);
+  // Initialize this cache with the default and given options
+  _setOptions.apply(this, [options, true]);
 }
 
 for (var key in defaults.defaults) {
-	DSCache.prototype['$$' + key] = defaults.defaults[key];
+  DSCache.prototype['$$' + key] = defaults.defaults[key];
 }
 
 /**
@@ -775,7 +775,7 @@ DSCache.prototype.keys = require('./keys');
  * ```
  */
 DSCache.prototype.disable = function () {
-	this.$$disabled = true;
+  this.$$disabled = true;
 };
 
 /**
@@ -807,7 +807,7 @@ DSCache.prototype.disable = function () {
  * ```
  */
 DSCache.prototype.enable = function () {
-	delete this.$$disabled;
+  delete this.$$disabled;
 };
 
 /**
@@ -832,22 +832,22 @@ DSCache.prototype.enable = function () {
  * @param {string=} key The key of the item to touch.
  */
 DSCache.prototype.touch = function (key) {
-	if (key) {
-		var _this = this;
-		var val = this.get(key, {
-			onExpire: function (k, v) {
-				_this.put(k, v);
-			}
-		});
-		if (val) {
-			this.put(key, val);
-		}
-	} else {
-		var keys = this.keys();
-		for (var i = 0; i < keys.length; i++) {
-			this.touch(keys[i]);
-		}
-	}
+  if (key) {
+    var _this = this;
+    var val = this.get(key, {
+      onExpire: function (k, v) {
+        _this.put(k, v);
+      }
+    });
+    if (val) {
+      this.put(key, val);
+    }
+  } else {
+    var keys = this.keys();
+    for (var i = 0; i < keys.length; i++) {
+      this.touch(keys[i]);
+    }
+  }
 };
 
 module.exports = DSCache;
@@ -900,34 +900,34 @@ module.exports = DSCache;
  * @returns {object} The status of this cache or of the item with the given key.
  */
 module.exports = function info(key) {
-	if (key) {
-		if (key in this.$$data) {
-			var item = this.$$data[key];
+  if (key) {
+    if (key in this.$$data) {
+      var item = this.$$data[key];
 
-			return {
-				created: item.created,
-				accessed: item.accessed,
-				expires: item.expires,
-				isExpired: (new Date().getTime() - item.created) > this.$$maxAge
-			};
-		} else {
-			return undefined;
-		}
-	} else {
-		return {
-			id: this.$$id,
-			capacity: this.$$capacity,
-			maxAge: this.$$maxAge,
-			deleteOnExpire: this.$$deleteOnExpire,
-			onExpire: this.$$onExpire,
-			cacheFlushInterval: this.$$cacheFlushInterval,
-			recycleFreq: this.$$recycleFreq,
-			storageMode: this.$$storageMode,
-			storageImpl: this.$$storage,
-			disabled: this.$$disabled,
-			size: this.$$lruHeap && this.$$lruHeap.size() || 0
-		};
-	}
+      return {
+        created: item.created,
+        accessed: item.accessed,
+        expires: item.expires,
+        isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+      };
+    } else {
+      return undefined;
+    }
+  } else {
+    return {
+      id: this.$$id,
+      capacity: this.$$capacity,
+      maxAge: this.$$maxAge,
+      deleteOnExpire: this.$$deleteOnExpire,
+      onExpire: this.$$onExpire,
+      cacheFlushInterval: this.$$cacheFlushInterval,
+      recycleFreq: this.$$recycleFreq,
+      storageMode: this.$$storageMode,
+      storageImpl: this.$$storage,
+      disabled: this.$$disabled,
+      size: this.$$lruHeap && this.$$lruHeap.size() || 0
+    };
+  }
 };
 
 },{}],6:[function(require,module,exports){
@@ -958,21 +958,21 @@ var utils = require('../utils');
  * @returns {object} An object of the keys in this cache.
  */
 module.exports = function keySet() {
-	if (this.$$storage) {
-		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
-			kSet = {};
+  if (this.$$storage) {
+    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
+      kSet = {};
 
-		if (keysJson) {
-			var keys = angular.fromJson(keysJson);
+    if (keysJson) {
+      var keys = angular.fromJson(keysJson);
 
-			for (var i = 0; i < keys.length; i++) {
-				kSet[keys[i]] = keys[i];
-			}
-		}
-		return kSet;
-	} else {
-		return utils.keySet(this.$$data);
-	}
+      for (var i = 0; i < keys.length; i++) {
+        kSet[keys[i]] = keys[i];
+      }
+    }
+    return kSet;
+  } else {
+    return utils.keySet(this.$$data);
+  }
 };
 
 },{"../utils":22}],7:[function(require,module,exports){
@@ -1003,17 +1003,17 @@ var utils = require('../utils');
  * @returns {Array} An array of the keys in this cache.
  */
 module.exports = function keys() {
-	if (this.$$storage) {
-		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  if (this.$$storage) {
+    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
 
-		if (keysJson) {
-			return angular.fromJson(keysJson);
-		} else {
-			return [];
-		}
-	} else {
-		return utils.keys(this.$$data);
-	}
+    if (keysJson) {
+      return angular.fromJson(keysJson);
+    } else {
+      return [];
+    }
+  } else {
+    return utils.keys(this.$$data);
+  }
 };
 
 },{"../utils":22}],8:[function(require,module,exports){
@@ -1053,77 +1053,77 @@ var utils = require('../utils');
  * @returns {*} The newly stored item.
  */
 module.exports = function put(key, value) {
-	if (this.$$disabled || value === null || value === undefined) {
-		return;
-	}
+  if (this.$$disabled || value === null || value === undefined) {
+    return;
+  }
 
-	key = utils.stringifyNumber(key);
+  key = utils.stringifyNumber(key);
 
-	if (!angular.isString(key)) {
-		throw angular.$$minErr('ng')('areq', 'Expected key to be a string! Found: {0}.', typeof key);
-	}
+  if (!angular.isString(key)) {
+    throw angular.$$minErr('ng')('areq', 'Expected key to be a string! Found: {0}.', typeof key);
+  }
 
-	var now = new Date().getTime(),
-		item = {
-			key: key,
-			value: value,
-			created: now,
-			accessed: now
-		};
+  var now = new Date().getTime(),
+    item = {
+      key: key,
+      value: value,
+      created: now,
+      accessed: now
+    };
 
-	item.expires = item.created + this.$$maxAge;
+  item.expires = item.created + this.$$maxAge;
 
-	if (this.$$storage) {
-		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
-			keys = keysJson ? angular.fromJson(keysJson) : [],
-			itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  if (this.$$storage) {
+    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
+      keys = keysJson ? angular.fromJson(keysJson) : [],
+      itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
 
-		// Remove existing
-		if (itemJson) {
-			this.remove(key);
-		}
-		// Add to expires heap
-		this.$$expiresHeap.push({
-			key: key,
-			expires: item.expires
-		});
-		// Add to lru heap
-		this.$$lruHeap.push({
-			key: key,
-			accessed: item.accessed
-		});
-		// Set item
-		this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
-		var exists = false;
-		for (var i = 0; i < keys.length; i++) {
-			if (keys[i] === key) {
-				exists = true;
-				break;
-			}
-		}
-		if (!exists) {
-			keys.push(key);
-		}
-		this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
-	} else {
-		// Remove existing
-		if (this.$$data[key]) {
-			this.remove(key);
-		}
-		// Add to expires heap
-		this.$$expiresHeap.push(item);
-		// Add to lru heap
-		this.$$lruHeap.push(item);
-		// Set item
-		this.$$data[key] = item;
-	}
+    // Remove existing
+    if (itemJson) {
+      this.remove(key);
+    }
+    // Add to expires heap
+    this.$$expiresHeap.push({
+      key: key,
+      expires: item.expires
+    });
+    // Add to lru heap
+    this.$$lruHeap.push({
+      key: key,
+      accessed: item.accessed
+    });
+    // Set item
+    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    var exists = false;
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i] === key) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      keys.push(key);
+    }
+    this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
+  } else {
+    // Remove existing
+    if (this.$$data[key]) {
+      this.remove(key);
+    }
+    // Add to expires heap
+    this.$$expiresHeap.push(item);
+    // Add to lru heap
+    this.$$lruHeap.push(item);
+    // Set item
+    this.$$data[key] = item;
+  }
 
-	// Handle exceeded capacity
-	if (this.$$lruHeap.size() > this.$$capacity) {
-		this.remove(this.$$lruHeap.peek().key);
-	}
+  // Handle exceeded capacity
+  if (this.$$lruHeap.size() > this.$$capacity) {
+    this.remove(this.$$lruHeap.peek().key);
+  }
 
-	return value;
+  return value;
 };
 
 },{"../utils":22}],9:[function(require,module,exports){
@@ -1156,38 +1156,38 @@ module.exports = function put(key, value) {
  * @returns {*} The removed item if an item was removed.
  */
 module.exports = function remove(key) {
-	if (this.$$storage) {
-		var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  if (this.$$storage) {
+    var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
 
-		if (itemJson) {
-			var item = angular.fromJson(itemJson);
-			this.$$lruHeap.remove({
-				key: key,
-				accessed: item.accessed
-			});
-			this.$$expiresHeap.remove({
-				key: key,
-				expires: item.expires
-			});
-			this.$$storage.removeItem(this.$$prefix + '.data.' + key);
-			var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
-				keys = keysJson ? angular.fromJson(keysJson) : [],
-				index = keys.indexOf(key);
+    if (itemJson) {
+      var item = angular.fromJson(itemJson);
+      this.$$lruHeap.remove({
+        key: key,
+        accessed: item.accessed
+      });
+      this.$$expiresHeap.remove({
+        key: key,
+        expires: item.expires
+      });
+      this.$$storage.removeItem(this.$$prefix + '.data.' + key);
+      var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
+        keys = keysJson ? angular.fromJson(keysJson) : [],
+        index = keys.indexOf(key);
 
-			if (index >= 0) {
-				keys.splice(index, 1);
-			}
-			this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
-			return item.value;
-		}
-	} else {
-		var value = this.$$data[key] ? this.$$data[key].value : undefined;
-		this.$$lruHeap.remove(this.$$data[key]);
-		this.$$expiresHeap.remove(this.$$data[key]);
-		this.$$data[key] = null;
-		delete this.$$data[key];
-		return value;
-	}
+      if (index >= 0) {
+        keys.splice(index, 1);
+      }
+      this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
+      return item.value;
+    }
+  } else {
+    var value = this.$$data[key] ? this.$$data[key].value : undefined;
+    this.$$lruHeap.remove(this.$$data[key]);
+    this.$$expiresHeap.remove(this.$$data[key]);
+    this.$$data[key] = null;
+    delete this.$$data[key];
+    return value;
+  }
 };
 
 },{}],10:[function(require,module,exports){
@@ -1222,27 +1222,27 @@ module.exports = function remove(key) {
  * ```
  */
 module.exports = function removeAll() {
-	if (this.$$storage) {
-		this.$$lruHeap.removeAll();
-		this.$$expiresHeap.removeAll();
-		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  if (this.$$storage) {
+    this.$$lruHeap.removeAll();
+    this.$$expiresHeap.removeAll();
+    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
 
-		if (keysJson) {
-			var keys = angular.fromJson(keysJson);
+    if (keysJson) {
+      var keys = angular.fromJson(keysJson);
 
-			for (var i = 0; i < keys.length; i++) {
-				this.remove(keys[i]);
-			}
-		}
-		this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson([]));
-	} else {
-		this.$$lruHeap.removeAll();
-		this.$$expiresHeap.removeAll();
-		for (var key in this.$$data) {
-			this.$$data[key] = null;
-		}
-		this.$$data = {};
-	}
+      for (var i = 0; i < keys.length; i++) {
+        this.remove(keys[i]);
+      }
+    }
+    this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson([]));
+  } else {
+    this.$$lruHeap.removeAll();
+    this.$$expiresHeap.removeAll();
+    for (var key in this.$$data) {
+      this.$$data[key] = null;
+    }
+    this.$$data = {};
+  }
 };
 
 },{}],11:[function(require,module,exports){
@@ -1289,37 +1289,37 @@ module.exports = function removeAll() {
  * @returns {object} The removed items, if any.
  */
 module.exports = function removeExpired() {
-	var now = new Date().getTime(),
-		expired = {},
-		key,
-		expiredItem;
+  var now = new Date().getTime(),
+    expired = {},
+    key,
+    expiredItem;
 
-	while ((expiredItem = this.$$expiresHeap.peek()) && expiredItem.expires < now) {
-		expired[expiredItem.key] = expiredItem.value ? expiredItem.value : null;
-		this.$$expiresHeap.pop();
-	}
+  while ((expiredItem = this.$$expiresHeap.peek()) && expiredItem.expires < now) {
+    expired[expiredItem.key] = expiredItem.value ? expiredItem.value : null;
+    this.$$expiresHeap.pop();
+  }
 
-	if (this.$$storage) {
-		for (key in expired) {
-			var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
-			if (itemJson) {
-				expired[key] = angular.fromJson(itemJson).value;
-				this.remove(key);
-			}
-		}
-	} else {
-		for (key in expired) {
-			this.remove(key);
-		}
-	}
+  if (this.$$storage) {
+    for (key in expired) {
+      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+      if (itemJson) {
+        expired[key] = angular.fromJson(itemJson).value;
+        this.remove(key);
+      }
+    }
+  } else {
+    for (key in expired) {
+      this.remove(key);
+    }
+  }
 
-	if (this.$$onExpire) {
-		for (key in expired) {
-			this.$$onExpire(key, expired[key]);
-		}
-	}
+  if (this.$$onExpire) {
+    for (key in expired) {
+      this.$$onExpire(key, expired[key]);
+    }
+  }
 
-	return expired;
+  return expired;
 };
 
 },{}],12:[function(require,module,exports){
@@ -1358,21 +1358,21 @@ module.exports = function removeExpired() {
  * `cacheFlushInterval` is `null` then `cacheFlushInterval` for this cache will be reset to the default (`null`).
  */
 module.exports = function setCacheFlushInterval(cacheFlushInterval) {
-	if (cacheFlushInterval === null) {
-		delete this.$$cacheFlushInterval;
-	} else if (!angular.isNumber(cacheFlushInterval)) {
-		throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be a number! Found: {0}.', typeof cacheFlushInterval);
-	} else if (cacheFlushInterval < 0) {
-		throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be greater than zero! Found: {0}.', cacheFlushInterval);
-	} else if (cacheFlushInterval !== this.$$cacheFlushInterval) {
-		this.$$cacheFlushInterval = cacheFlushInterval;
-		clearInterval(this.$$cacheFlushIntervalId);
-		(function (_this) {
-			_this.$$cacheFlushIntervalId = setInterval(function () {
-				_this.removeAll();
-			}, _this.$$cacheFlushInterval);
-		})(this);
-	}
+  if (cacheFlushInterval === null) {
+    delete this.$$cacheFlushInterval;
+  } else if (!angular.isNumber(cacheFlushInterval)) {
+    throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be a number! Found: {0}.', typeof cacheFlushInterval);
+  } else if (cacheFlushInterval < 0) {
+    throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be greater than zero! Found: {0}.', cacheFlushInterval);
+  } else if (cacheFlushInterval !== this.$$cacheFlushInterval) {
+    this.$$cacheFlushInterval = cacheFlushInterval;
+    clearInterval(this.$$cacheFlushIntervalId);
+    (function (_this) {
+      _this.$$cacheFlushIntervalId = setInterval(function () {
+        _this.removeAll();
+      }, _this.$$cacheFlushInterval);
+    })(this);
+  }
 };
 
 },{}],13:[function(require,module,exports){
@@ -1416,20 +1416,20 @@ module.exports = function setCacheFlushInterval(cacheFlushInterval) {
  * @returns {object} Key-value pairs of any items removed because this cache's size exceeds the new capacity.
  */
 module.exports = function setCapacity(capacity) {
-	if (capacity === null) {
-		delete this.$$capacity;
-	} else if (!angular.isNumber(capacity)) {
-		throw angular.$$minErr('ng')('areq', 'Expected capacity to be a number! Found: {0}.', typeof capacity);
-	} else if (capacity < 0) {
-		throw angular.$$minErr('ng')('areq', 'Expected capacity to be greater than zero! Found: {0}.', capacity);
-	} else {
-		this.$$capacity = capacity;
-	}
-	var removed = {};
-	while (this.$$lruHeap.size() > this.$$capacity) {
-		removed[this.$$lruHeap.peek().key] = this.remove(this.$$lruHeap.peek().key);
-	}
-	return removed;
+  if (capacity === null) {
+    delete this.$$capacity;
+  } else if (!angular.isNumber(capacity)) {
+    throw angular.$$minErr('ng')('areq', 'Expected capacity to be a number! Found: {0}.', typeof capacity);
+  } else if (capacity < 0) {
+    throw angular.$$minErr('ng')('areq', 'Expected capacity to be greater than zero! Found: {0}.', capacity);
+  } else {
+    this.$$capacity = capacity;
+  }
+  var removed = {};
+  while (this.$$lruHeap.size() > this.$$capacity) {
+    removed[this.$$lruHeap.peek().key] = this.remove(this.$$lruHeap.peek().key);
+  }
+  return removed;
 };
 
 },{}],14:[function(require,module,exports){
@@ -1476,16 +1476,16 @@ module.exports = function setCapacity(capacity) {
  * `deleteOnExpire` for this cache will be reset to the default (`"none"`).
  */
 module.exports = function setDeleteOnExpire(deleteOnExpire) {
-	if (deleteOnExpire === null) {
-		delete this.$$deleteOnExpire;
-	} else if (!angular.isString(deleteOnExpire)) {
-		throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be a string! Found: {0}.', typeof deleteOnExpire);
-	} else if (deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
-		throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be "none", "passive" or "aggressive"! Found: {0}.', deleteOnExpire);
-	} else {
-		this.$$deleteOnExpire = deleteOnExpire;
-	}
-	this.setRecycleFreq(this.$$recycleFreq);
+  if (deleteOnExpire === null) {
+    delete this.$$deleteOnExpire;
+  } else if (!angular.isString(deleteOnExpire)) {
+    throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be a string! Found: {0}.', typeof deleteOnExpire);
+  } else if (deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
+    throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be "none", "passive" or "aggressive"! Found: {0}.', deleteOnExpire);
+  } else {
+    this.$$deleteOnExpire = deleteOnExpire;
+  }
+  this.setRecycleFreq(this.$$recycleFreq);
 };
 
 },{}],15:[function(require,module,exports){
@@ -1531,59 +1531,59 @@ var utils = require('../utils');
  * `maxAge`. Items are only removed if the `deleteOnExpire` setting for this cache is set to `"aggressive"`.
  */
 module.exports = function setMaxAge(maxAge) {
-	if (maxAge === null) {
-		delete this.$$maxAge;
-	} else if (!angular.isNumber(maxAge)) {
-		throw angular.$$minErr('ng')('areq', 'Expected maxAge to be a number! Found: {0}.', typeof maxAge);
-	} else if (maxAge < 0) {
-		throw angular.$$minErr('ng')('areq', 'Expected maxAge to be greater than zero! Found: {0}.', maxAge);
-	} else {
-		this.$$maxAge = maxAge;
-	}
-	var i, keys, key;
+  if (maxAge === null) {
+    delete this.$$maxAge;
+  } else if (!angular.isNumber(maxAge)) {
+    throw angular.$$minErr('ng')('areq', 'Expected maxAge to be a number! Found: {0}.', typeof maxAge);
+  } else if (maxAge < 0) {
+    throw angular.$$minErr('ng')('areq', 'Expected maxAge to be greater than zero! Found: {0}.', maxAge);
+  } else {
+    this.$$maxAge = maxAge;
+  }
+  var i, keys, key;
 
-	this.$$expiresHeap.removeAll();
+  this.$$expiresHeap.removeAll();
 
-	if (this.$$storage) {
-		var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  if (this.$$storage) {
+    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
 
-		keys = keysJson ? angular.fromJson(keysJson) : [];
+    keys = keysJson ? angular.fromJson(keysJson) : [];
 
-		for (i = 0; i < keys.length; i++) {
-			key = keys[i];
-			var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+    for (i = 0; i < keys.length; i++) {
+      key = keys[i];
+      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
 
-			if (itemJson) {
-				var item = angular.fromJson(itemJson);
-				if (this.$$maxAge === Number.MAX_VALUE) {
-					item.expires = Number.MAX_VALUE;
-				} else {
-					item.expires = item.created + this.$$maxAge;
-				}
-				this.$$expiresHeap.push({
-					key: key,
-					expires: item.expires
-				});
-			}
-		}
-	} else {
-		keys = utils.keys(this.$$data);
+      if (itemJson) {
+        var item = angular.fromJson(itemJson);
+        if (this.$$maxAge === Number.MAX_VALUE) {
+          item.expires = Number.MAX_VALUE;
+        } else {
+          item.expires = item.created + this.$$maxAge;
+        }
+        this.$$expiresHeap.push({
+          key: key,
+          expires: item.expires
+        });
+      }
+    }
+  } else {
+    keys = utils.keys(this.$$data);
 
-		for (i = 0; i < keys.length; i++) {
-			key = keys[i];
-			if (this.$$maxAge === Number.MAX_VALUE) {
-				this.$$data[key].expires = Number.MAX_VALUE;
-			} else {
-				this.$$data[key].expires = this.$$data[key].created + this.$$maxAge;
-			}
-			this.$$expiresHeap.push(this.$$data[key]);
-		}
-	}
-	if (this.$$deleteOnExpire === 'aggressive') {
-		return this.removeExpired();
-	} else {
-		return {};
-	}
+    for (i = 0; i < keys.length; i++) {
+      key = keys[i];
+      if (this.$$maxAge === Number.MAX_VALUE) {
+        this.$$data[key].expires = Number.MAX_VALUE;
+      } else {
+        this.$$data[key].expires = this.$$data[key].created + this.$$maxAge;
+      }
+      this.$$expiresHeap.push(this.$$data[key]);
+    }
+  }
+  if (this.$$deleteOnExpire === 'aggressive') {
+    return this.removeExpired();
+  } else {
+    return {};
+  }
 };
 
 },{"../utils":22}],16:[function(require,module,exports){
@@ -1624,13 +1624,13 @@ module.exports = function setMaxAge(maxAge) {
  * callback for this cache will be removed.
  */
 module.exports = function setOnExpire(onExpire) {
-	if (onExpire === null) {
-		delete this.$$onExpire;
-	} else if (!angular.isFunction(onExpire)) {
-		throw angular.$$minErr('ng')('areq', 'Expected onExpire to be a function! Found: {0}.', typeof onExpire);
-	} else {
-		this.$$onExpire = onExpire;
-	}
+  if (onExpire === null) {
+    delete this.$$onExpire;
+  } else if (!angular.isFunction(onExpire)) {
+    throw angular.$$minErr('ng')('areq', 'Expected onExpire to be a function! Found: {0}.', typeof onExpire);
+  } else {
+    this.$$onExpire = onExpire;
+  }
 };
 
 },{}],17:[function(require,module,exports){
@@ -1683,31 +1683,31 @@ module.exports = function setOnExpire(onExpire) {
  * `recycleFreq` for this cache will be reset to the default (`1000` milliseconds).
  */
 module.exports = function setRecycleFreq(recycleFreq) {
-	if (recycleFreq === null) {
-		delete this.$$recycleFreq;
-	} else if (!angular.isNumber(recycleFreq)) {
-		throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be a number! Found: {0}.', typeof recycleFreq);
-	} else if (recycleFreq < 0) {
-		throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be greater than zero! Found: {0}.', recycleFreq);
-	} else {
-		this.$$recycleFreq = recycleFreq;
-	}
-	clearInterval(this.$$recycleFreqId);
-	if (this.$$deleteOnExpire === 'aggressive') {
-		(function (_this) {
-			_this.$$recycleFreqId = setInterval(function () {
-				_this.removeExpired();
-			}, _this.$$recycleFreq);
-		})(this);
-	} else {
-		delete this.$$recycleFreqId;
-	}
+  if (recycleFreq === null) {
+    delete this.$$recycleFreq;
+  } else if (!angular.isNumber(recycleFreq)) {
+    throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be a number! Found: {0}.', typeof recycleFreq);
+  } else if (recycleFreq < 0) {
+    throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be greater than zero! Found: {0}.', recycleFreq);
+  } else {
+    this.$$recycleFreq = recycleFreq;
+  }
+  clearInterval(this.$$recycleFreqId);
+  if (this.$$deleteOnExpire === 'aggressive') {
+    (function (_this) {
+      _this.$$recycleFreqId = setInterval(function () {
+        _this.removeExpired();
+      }, _this.$$recycleFreq);
+    })(this);
+  } else {
+    delete this.$$recycleFreqId;
+  }
 };
 
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults'),
-	DSCache = require('../DSCache'),
-	version = '3.0.0';
+  DSCache = require('../DSCache'),
+  version = '3.0.1';
 
 /**
  * @doc function
@@ -1716,659 +1716,696 @@ var defaults = require('../defaults'),
  */
 function DSCacheFactoryProvider() {
 
-	var config = new defaults.Config();
+  var config = new defaults.Config();
 
-	this.version = version;
+  this.version = version;
 
-	/**
-	 * @doc method
-	 * @id DSCacheFactoryProvider.methods:setCacheDefaults
-	 * @name setCacheDefaults
-	 * @desc Set the default configuration for all caches created by $angularCacheFactory.
-	 * @param {object} options Default configuration options for each new cache.
-	 */
-	this.setCacheDefaults = function (options) {
-		options = options || {};
+  /**
+   * @doc method
+   * @id DSCacheFactoryProvider.methods:setCacheDefaults
+   * @name setCacheDefaults
+   * @desc Set the default configuration for all caches created by $angularCacheFactory.
+   * @param {object} options Default configuration options for each new cache.
+   */
+  this.setCacheDefaults = function (options) {
+    options = options || {};
 
-		if (!angular.isObject(options)) {
-			throw angular.$$minErr('ng')('areq', 'Expected options to be an object! Found: {0}.', typeof options);
-		}
+    if (!angular.isObject(options)) {
+      throw angular.$$minErr('ng')('areq', 'Expected options to be an object! Found: {0}.', typeof options);
+    }
 
-		for (var key in defaults.defaults) {
-			if (key in options) {
-				config[key] = options[key];
-			}
-		}
-		if ('disabled' in options) {
-			config.$$disabled = !!options.disabled;
-		}
-	};
+    for (var key in defaults.defaults) {
+      if (key in options) {
+        config[key] = options[key];
+      }
+    }
+    if ('disabled' in options) {
+      config.$$disabled = !!options.disabled;
+    }
+  };
 
-	this.$get = function () {
-		var caches = {};
+  this.$get = function () {
+    var caches = {};
 
-		/*!
-		 * @method _keys
-		 * @desc Returns an array of the keys of the given collection.
-		 * @param {object} collection The collection from which to get the keys.
-		 * @returns {array} An array of the keys of the given collection.
-		 */
-		function _keys(collection) {
-			var keys = [], key;
-			for (key in collection) {
-				if (collection.hasOwnProperty(key)) {
-					keys.push(key);
-				}
-			}
-			return keys;
-		}
+    /*!
+     * @method _keys
+     * @desc Returns an array of the keys of the given collection.
+     * @param {object} collection The collection from which to get the keys.
+     * @returns {array} An array of the keys of the given collection.
+     */
+    function _keys(collection) {
+      var keys = [], key;
+      for (key in collection) {
+        if (collection.hasOwnProperty(key)) {
+          keys.push(key);
+        }
+      }
+      return keys;
+    }
 
-		/**
-		 * @doc function
-		 * @id DSCacheFactory
-		 * @name DSCacheFactory
-		 * @description
-		 * Factory function that produces instances of `DSCache`.
-		 *
-		 * @param {string} cacheId The id of the new cache.
-		 * @param {object} options Configuration options. Properties:
-		 *
-		 * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
-		 * - `{number=}` - `maxAge` - Default: `null`
-		 * - `{number=}` - `deleteOnExpire` - Default: `none`
-		 * - `{function=}` - `onExpire` - Default: `null`
-		 * - `{number=}` - `cacheFlushInterval` - Default: `null`
-		 * - `{number=}` - `recycleFreq` - Default: `1000`
-		 * - `{number=}` - `deleteOnExpire` - Default: `null`
-		 * - `{string=}` - `storageMode` - Default: `'none`
-		 * - `{object=}` - `storageImpl` - Default: `null`
-		 * - `{boolean=}` - `disabled` - Default: `false`
-		 * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
-		 *
-		 * @returns {DSCache} New instance of DSCache.
-		 */
-		function DSCacheFactory(cacheId, options) {
-			if (cacheId in caches) {
-				throw angular.$$minErr('$cacheFactory')('iid', "CacheId '{0}' is already taken!", cacheId);
-			} else if (!angular.isString(cacheId)) {
-				throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
-			}
+    /**
+     * @doc function
+     * @id DSCacheFactory
+     * @name DSCacheFactory
+     * @description
+     * Factory function that produces instances of `DSCache`.
+     *
+     * @param {string} cacheId The id of the new cache.
+     * @param {object} options Configuration options. Properties:
+     *
+     * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+     * - `{number=}` - `maxAge` - Default: `null`
+     * - `{number=}` - `deleteOnExpire` - Default: `none`
+     * - `{function=}` - `onExpire` - Default: `null`
+     * - `{number=}` - `cacheFlushInterval` - Default: `null`
+     * - `{number=}` - `recycleFreq` - Default: `1000`
+     * - `{number=}` - `deleteOnExpire` - Default: `null`
+     * - `{string=}` - `storageMode` - Default: `'none`
+     * - `{object=}` - `storageImpl` - Default: `null`
+     * - `{boolean=}` - `disabled` - Default: `false`
+     * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
+     *
+     * @returns {DSCache} New instance of DSCache.
+     */
+    function DSCacheFactory(cacheId, options) {
+      if (cacheId in caches) {
+        throw angular.$$minErr('$cacheFactory')('iid', "CacheId '{0}' is already taken!", cacheId);
+      } else if (!angular.isString(cacheId)) {
+        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
+      }
 
-			caches[cacheId] = new DSCache(cacheId, angular.extend({}, config, options));
-			caches[cacheId].destroy = function () {
-				this.constructor.prototype.destroy.call(this);
-				delete caches[this.$$id];
-			};
-			return caches[cacheId];
-		}
+      caches[cacheId] = new DSCache(cacheId, angular.extend({}, config, options));
+      caches[cacheId].destroy = function () {
+        this.constructor.prototype.destroy.call(this);
+        delete caches[this.$$id];
+      };
+      return caches[cacheId];
+    }
 
-		DSCacheFactory.version = version;
+    DSCacheFactory.version = version;
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:info
-		 * @name info
-		 * @description
-		 * Return the status of `DSCacheFactory`.
-		 * @returns {object} The status of `DSCacheFactory`.
-		 */
-		DSCacheFactory.info = function () {
-			var keys = _keys(caches);
-			var info = {
-				size: keys.length,
-				caches: {}
-			};
-			for (var i = 0; i < keys.length; i++) {
-				var key = keys[i];
-				info.caches[key] = caches[key].info();
-			}
-			var c = info.cacheDefaults = angular.extend({}, config);
-			for (var option in defaults.defaults) {
-				if (!(option in c)) {
-					c[option] = config['$$' + option];
-				}
-			}
-			return info;
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:info
+     * @name info
+     * @description
+     * Return the status of `DSCacheFactory`.
+     * @returns {object} The status of `DSCacheFactory`.
+     */
+    DSCacheFactory.info = function () {
+      var keys = _keys(caches);
+      var info = {
+        size: keys.length,
+        caches: {}
+      };
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        info.caches[key] = caches[key].info();
+      }
+      var c = info.cacheDefaults = angular.extend({}, config);
+      for (var option in defaults.defaults) {
+        if (!(option in c)) {
+          c[option] = config['$$' + option];
+        }
+      }
+      return info;
+    };
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:get
-		 * @name get
-		 * @description
-		 * Return the cache with the given `cacheId`.
-		 * @param {string} cacheId The id of the desired cache.
-		 * @returns {DSCache} The cache with the specified `cacheId`.
-		 */
-		DSCacheFactory.get = function (cacheId) {
-			if (!angular.isString(cacheId)) {
-				throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
-			}
-			return caches[cacheId];
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:get
+     * @name get
+     * @description
+     * Return the cache with the given `cacheId`.
+     * @param {string} cacheId The id of the desired cache.
+     * @returns {DSCache} The cache with the specified `cacheId`.
+     */
+    DSCacheFactory.get = function (cacheId) {
+      if (!angular.isString(cacheId)) {
+        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
+      }
+      return caches[cacheId];
+    };
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:keySet
-		 * @name keySet
-		 * @description
-		 * Return an object containing the `cacheId` of each cache.
-		 * @returns {object} An object containing the `cacheId` of each cache.
-		 */
-		DSCacheFactory.keySet = function () {
-			var cacheIds = {}, cacheId;
-			for (cacheId in caches) {
-				if (caches.hasOwnProperty(cacheId)) {
-					cacheIds[cacheId] = cacheId;
-				}
-			}
-			return cacheIds;
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:keySet
+     * @name keySet
+     * @description
+     * Return an object containing the `cacheId` of each cache.
+     * @returns {object} An object containing the `cacheId` of each cache.
+     */
+    DSCacheFactory.keySet = function () {
+      var cacheIds = {}, cacheId;
+      for (cacheId in caches) {
+        if (caches.hasOwnProperty(cacheId)) {
+          cacheIds[cacheId] = cacheId;
+        }
+      }
+      return cacheIds;
+    };
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:keys
-		 * @name keys
-		 * @description
-		 * Return an array containing the `cacheId` of each cache.
-		 * @returns {array} An array containing the `cacheId` of each cache.
-		 */
-		DSCacheFactory.keys = function () {
-			return _keys(caches);
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:keys
+     * @name keys
+     * @description
+     * Return an array containing the `cacheId` of each cache.
+     * @returns {array} An array containing the `cacheId` of each cache.
+     */
+    DSCacheFactory.keys = function () {
+      return _keys(caches);
+    };
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:destroyAll
-		 * @name destroyAll
-		 * @description
-		 * Destroy all caches.
-		 *
-		 * ## Signature:
-		 * ```js
-		 * DSCacheFactory.destroyAll()
-		 * ```
-		 *
-		 * ## Example:
-		 * ```js
-		 * var newCache = DSCacheFactory('newCache');
-		 * var otherCache = DSCacheFactory('otherCache');
-		 *
-		 * newCache.info().size; // 0
-		 * otherCache.info().size; // 0
-		 *
-		 * newCache.put('1', 'apple');
-		 * newCache.put('2', 'banana');
-		 * otherCache.put('abcd', 'horse');
-		 *
-		 * newCache.info().size; // 2
-		 * otherCache.info().size; // 1
-		 *
-		 * DSCacheFactory.destroyAll();
-		 *
-		 * newCache.info().size; // Error thrown
-		 * otherCache.info().size; // Error thrown
-		 *
-		 * DSCacheFactory.get('newCache'); // undefined
-		 * DSCacheFactory.get('otherCache'); // undefined
-		 * ```
-		 */
-		DSCacheFactory.destroyAll = function () {
-			for (var cacheId in caches) {
-				caches[cacheId].destroy();
-			}
-			caches = {};
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:destroyAll
+     * @name destroyAll
+     * @description
+     * Destroy all caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.destroyAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache');
+     * var otherCache = DSCacheFactory('otherCache');
+     *
+     * newCache.info().size; // 0
+     * otherCache.info().size; // 0
+     *
+     * newCache.put('1', 'apple');
+     * newCache.put('2', 'banana');
+     * otherCache.put('abcd', 'horse');
+     *
+     * newCache.info().size; // 2
+     * otherCache.info().size; // 1
+     *
+     * DSCacheFactory.destroyAll();
+     *
+     * newCache.info().size; // Error thrown
+     * otherCache.info().size; // Error thrown
+     *
+     * DSCacheFactory.get('newCache'); // undefined
+     * DSCacheFactory.get('otherCache'); // undefined
+     * ```
+     */
+    DSCacheFactory.destroyAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].destroy();
+      }
+      caches = {};
+    };
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:clearAll
-		 * @name clearAll
-		 * @description
-		 * Clear the contents of all caches.
-		 *
-		 * ## Signature:
-		 * ```js
-		 * DSCacheFactory.clearAll()
-		 * ```
-		 *
-		 * ## Example:
-		 * ```js
-		 * var newCache = DSCacheFactory('newCache');
-		 * var otherCache = DSCacheFactory('otherCache');
-		 *
-		 * newCache.info().size; // 0
-		 * otherCache.info().size; // 0
-		 *
-		 * newCache.put('1', 'apple');
-		 * newCache.put('2', 'banana');
-		 * otherCache.put('abcd', 'horse');
-		 *
-		 * newCache.info().size; // 2
-		 * otherCache.info().size; // 1
-		 *
-		 * DSCacheFactory.clearAll();
-		 *
-		 * newCache.info().size; // 0
-		 * otherCache.info().size; // 0
-		 * ```
-		 */
-		DSCacheFactory.clearAll = function () {
-			for (var cacheId in caches) {
-				caches[cacheId].removeAll();
-			}
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:clearAll
+     * @name clearAll
+     * @description
+     * Clear the contents of all caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.clearAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache');
+     * var otherCache = DSCacheFactory('otherCache');
+     *
+     * newCache.info().size; // 0
+     * otherCache.info().size; // 0
+     *
+     * newCache.put('1', 'apple');
+     * newCache.put('2', 'banana');
+     * otherCache.put('abcd', 'horse');
+     *
+     * newCache.info().size; // 2
+     * otherCache.info().size; // 1
+     *
+     * DSCacheFactory.clearAll();
+     *
+     * newCache.info().size; // 0
+     * otherCache.info().size; // 0
+     * ```
+     */
+    DSCacheFactory.clearAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].removeAll();
+      }
+    };
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:enableAll
-		 * @name enableAll
-		 * @description
-		 * Enable any disabled caches.
-		 *
-		 * ## Signature:
-		 * ```js
-		 * DSCacheFactory.enableAll()
-		 * ```
-		 *
-		 * ## Example:
-		 * ```js
-		 * var newCache = DSCacheFactory('newCache', { disabled: true });
-		 * var otherCache = DSCacheFactory('otherCache', { disabled: true });
-		 *
-		 * newCache.info().disabled; // true
-		 * otherCache.info().disabled; // true
-		 *
-		 * DSCacheFactory.enableAll();
-		 *
-		 * newCache.info().disabled; // false
-		 * otherCache.info().disabled; // false
-		 * ```
-		 */
-		DSCacheFactory.enableAll = function () {
-			for (var cacheId in caches) {
-				caches[cacheId].$$disabled = false;
-			}
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:enableAll
+     * @name enableAll
+     * @description
+     * Enable any disabled caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.enableAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache', { disabled: true });
+     * var otherCache = DSCacheFactory('otherCache', { disabled: true });
+     *
+     * newCache.info().disabled; // true
+     * otherCache.info().disabled; // true
+     *
+     * DSCacheFactory.enableAll();
+     *
+     * newCache.info().disabled; // false
+     * otherCache.info().disabled; // false
+     * ```
+     */
+    DSCacheFactory.enableAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].$$disabled = false;
+      }
+    };
 
-		/**
-		 * @doc method
-		 * @id DSCacheFactory.methods:disableAll
-		 * @name disableAll
-		 * @description
-		 * Disable all caches.
-		 *
-		 * ## Signature:
-		 * ```js
-		 * DSCacheFactory.disableAll()
-		 * ```
-		 *
-		 * ## Example:
-		 * ```js
-		 * var newCache = DSCacheFactory('newCache');
-		 * var otherCache = DSCacheFactory('otherCache');
-		 *
-		 * newCache.info().disabled; // false
-		 * otherCache.info().disabled; // false
-		 *
-		 * DSCacheFactory.disableAll();
-		 *
-		 * newCache.info().disabled; // true
-		 * otherCache.info().disabled; // true
-		 * ```
-		 */
-		DSCacheFactory.disableAll = function () {
-			for (var cacheId in caches) {
-				caches[cacheId].$$disabled = true;
-			}
-		};
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:disableAll
+     * @name disableAll
+     * @description
+     * Disable all caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.disableAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache');
+     * var otherCache = DSCacheFactory('otherCache');
+     *
+     * newCache.info().disabled; // false
+     * otherCache.info().disabled; // false
+     *
+     * DSCacheFactory.disableAll();
+     *
+     * newCache.info().disabled; // true
+     * otherCache.info().disabled; // true
+     * ```
+     */
+    DSCacheFactory.disableAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].$$disabled = true;
+      }
+    };
 
-		return DSCacheFactory;
-	};
+    return DSCacheFactory;
+  };
 }
 
 module.exports = DSCacheFactoryProvider;
 
-},{"../DSCache":4,"../defaults":"XjryW+"}],"XjryW+":[function(require,module,exports){
+},{"../DSCache":4,"../defaults":"XjryW+"}],"Defaults":[function(require,module,exports){
+module.exports=require('XjryW+');
+},{}],"XjryW+":[function(require,module,exports){
 var defaults = {
-	/**
-	 * @doc overview
-	 * @id capacity
-	 * @name capacity
-	 * @description
-	 * __Default:__ `Number.MAX_VALUE`
-	 *
-	 * This option limits the capacity of a cache. With a maximum capacity set, a cache operates as an LRU cache,
-	 * deleting the least-recently-used item when the cache exceeds capacity.
-	 *
-	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 * - `DSCache.setCapacity(capacity)`
-	 * - `DSCache.setOptions(options[, strict])`
-	 */
-	capacity: Number.MAX_VALUE,
+  /**
+   * @doc overview
+   * @id capacity
+   * @name capacity
+   * @description
+   * __Default:__ `Number.MAX_VALUE`
+   *
+   * This option limits the capacity of a cache. With a maximum capacity set, a cache operates as an LRU cache,
+   * deleting the least-recently-used item when the cache exceeds capacity.
+   *
+   * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setCapacity(capacity)`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  capacity: Number.MAX_VALUE,
 
-	/**
-	 * @doc overview
-	 * @id maxAge
-	 * @name maxAge
-	 * @description
-	 * __Default:__ `Number.MAX_VALUE`
-	 *
-	 * This option determines how long an item is in a cache before the item expires.. With `maxAge` set, items are
-	 * marked as expired when their time in a cache exceeds `maxAge`. A cache's behavior when an item expires is
-	 * determined by the [deleteOnExpire](/documentation/api/angular-cache/deleteOnExpire) option.
-	 *
-	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 * - `DSCache.setMaxAge(maxAge)`
-	 * - `DSCache.setOptions(options[, strict])`
-	 */
-	maxAge: Number.MAX_VALUE,
+  /**
+   * @doc overview
+   * @id maxAge
+   * @name maxAge
+   * @description
+   * __Default:__ `Number.MAX_VALUE`
+   *
+   * This option determines how long an item is in a cache before the item expires.. With `maxAge` set, items are
+   * marked as expired when their time in a cache exceeds `maxAge`. A cache's behavior when an item expires is
+   * determined by the [deleteOnExpire](/documentation/api/angular-cache/deleteOnExpire) option.
+   *
+   * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setMaxAge(maxAge)`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  maxAge: Number.MAX_VALUE,
 
-	/**
-	 * @doc overview
-	 * @id deleteOnExpire
-	 * @name deleteOnExpire
-	 * @description
-	 * __Default:__ `"none"`
-	 *
-	 * This option determines how long an item is in a cache before the item expires.. With `maxAge` set, items are
-	 * marked as expired when their time in a cache exceeds `maxAge`. A cache's behavior when an item expires is
-	 * determined by the [deleteOnExpire](/documentation/api/angular-cache/deleteOnExpire) option.
-	 *
-	 * This option is dynamically configurable. Must be `"none"`, `"passive"` or `"aggressive"`.
-	 *
-	 * #### "none"
-	 * A cache will do nothing when its items expire.
-	 *
-	 * #### "passive"
-	 * A cache will do nothing when its items expire. If an expired item is request it is removed from the cache and
-	 * `undefined` is returned.
-	 *
-	 * #### "aggressive"
-	 * A cache will periodically scan for expired items and actively remove them from the cache if any are found. The
-	 * frequency of the scan is determined by the [recycleFreq](/documentation/api/angular-cache/recycleFreq) option.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 * - `DSCache.setRecycleFreq(recycleFreq)`
-	 * - `DSCache.setOptions(options[, strict])`
-	 */
-	deleteOnExpire: 'none',
+  /**
+   * @doc overview
+   * @id deleteOnExpire
+   * @name deleteOnExpire
+   * @description
+   * __Default:__ `"none"`
+   *
+   * This option determines how long an item is in a cache before the item expires.. With `maxAge` set, items are
+   * marked as expired when their time in a cache exceeds `maxAge`. A cache's behavior when an item expires is
+   * determined by the [deleteOnExpire](/documentation/api/angular-cache/deleteOnExpire) option.
+   *
+   * This option is dynamically configurable. Must be `"none"`, `"passive"` or `"aggressive"`.
+   *
+   * #### "none"
+   * A cache will do nothing when its items expire.
+   *
+   * #### "passive"
+   * A cache will do nothing when its items expire. If an expired item is request it is removed from the cache and
+   * `undefined` is returned.
+   *
+   * #### "aggressive"
+   * A cache will periodically scan for expired items and actively remove them from the cache if any are found. The
+   * frequency of the scan is determined by the [recycleFreq](/documentation/api/angular-cache/recycleFreq) option.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setRecycleFreq(recycleFreq)`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  deleteOnExpire: 'none',
 
-	/**
-	 * @doc overview
-	 * @id onExpire
-	 * @name onExpire
-	 * @description
-	 * __Default:__ `"none"`
-	 *
-	 * This option is a callback function which will be executed whenever an expired item is removed from a cache by
-	 * either requesting an expired item while the cache is in `"passive"` `deleteOnExpire` mode, or when an expired
-	 * item is actively removed when the cache is in `"aggressive"` `deleteOnExpire` mode.
-	 *
-	 * This option is dynamically configurable. Must be a function. Will be passed the `key` and `value` of the expired
-	 * item. Will be passed a third `done` argument (if in `"passive"` `deleteOnExpire` mode) which is the `onExpire`
-	 * argument passed to [DSCache#get(key[, options])](/documentation/api/angular-cache/DSCache.methods:get).
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 * - `DSCache.setOnExpire(onExpire)`
-	 * - `DSCache.setOptions(options[, strict])`
-	 */
-	onExpire: null,
+  /**
+   * @doc overview
+   * @id onExpire
+   * @name onExpire
+   * @description
+   * __Default:__ `"none"`
+   *
+   * This option is a callback function which will be executed whenever an expired item is removed from a cache by
+   * either requesting an expired item while the cache is in `"passive"` `deleteOnExpire` mode, or when an expired
+   * item is actively removed when the cache is in `"aggressive"` `deleteOnExpire` mode.
+   *
+   * This option is dynamically configurable. Must be a function. Will be passed the `key` and `value` of the expired
+   * item. Will be passed a third `done` argument (if in `"passive"` `deleteOnExpire` mode) which is the `onExpire`
+   * argument passed to [DSCache#get(key[, options])](/documentation/api/angular-cache/DSCache.methods:get).
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setOnExpire(onExpire)`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  onExpire: null,
 
-	/**
-	 * @doc overview
-	 * @id cacheFlushInterval
-	 * @name cacheFlushInterval
-	 * @description
-	 * __Default:__ `null`
-	 *
-	 * This option, if set, will cause a cache to periodically clear itself of all data.
-	 *
-	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 * - `DSCache.setCacheFlushInterval(cacheFlushInterval)`
-	 * - `DSCache.setOptions(options[, strict])`
-	 */
-	cacheFlushInterval: null,
+  /**
+   * @doc overview
+   * @id cacheFlushInterval
+   * @name cacheFlushInterval
+   * @description
+   * __Default:__ `null`
+   *
+   * This option, if set, will cause a cache to periodically clear itself of all data.
+   *
+   * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setCacheFlushInterval(cacheFlushInterval)`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  cacheFlushInterval: null,
 
-	/**
-	 * @doc overview
-	 * @id recycleFreq
-	 * @name recycleFreq
-	 * @description
-	 * __Default:__ `1000`
-	 *
-	 * This option determines how often a cache will scan for expired items when in `"aggressive"` `deleteOnExpire`
-	 * mode.
-	 *
-	 * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 * - `DSCache.setRecycleFreq(recycleFreq)`
-	 * - `DSCache.setOptions(options[, strict])`
-	 */
-	recycleFreq: 1000,
+  /**
+   * @doc overview
+   * @id recycleFreq
+   * @name recycleFreq
+   * @description
+   * __Default:__ `1000`
+   *
+   * This option determines how often a cache will scan for expired items when in `"aggressive"` `deleteOnExpire`
+   * mode.
+   *
+   * This option is dynamically configurable. Must be a number (milliseconds) greater than zero.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setRecycleFreq(recycleFreq)`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  recycleFreq: 1000,
 
-	/**
-	 * @doc overview
-	 * @id storageMode
-	 * @name storageMode
-	 * @description
-	 * __Default:__ `"memory"`
-	 *
-	 * This option determines the storage mode for a cache.
-	 *
-	 * #### "memory"
-	 * All data will be held in memory.
-	 *
-	 * #### "localStorage"
-	 * Data will be held in `localStorage`, if available (or
-	 * [storageImpl](/documentation/api/angular-cache/storageImpl) is provided).
-	 *
-	 * #### "sessionStorage"
-	 * Data will be held in `sessionStorage`, if available (or
-	 * [storageImpl](/documentation/api/angular-cache/storageImpl) is provided).
-	 *
-	 * This option is NOT dynamically configurable. Must be `"memory"`, `"localStorage"` or `"sessionStorage"`.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 */
-	storageMode: 'memory',
+  /**
+   * @doc overview
+   * @id storageMode
+   * @name storageMode
+   * @description
+   * __Default:__ `"memory"`
+   *
+   * This option determines the storage mode for a cache.
+   *
+   * #### "memory"
+   * All data will be held in memory.
+   *
+   * #### "localStorage"
+   * Data will be held in `localStorage`, if available (or
+   * [storageImpl](/documentation/api/angular-cache/storageImpl) is provided).
+   *
+   * #### "sessionStorage"
+   * Data will be held in `sessionStorage`, if available (or
+   * [storageImpl](/documentation/api/angular-cache/storageImpl) is provided).
+   *
+   * This option is NOT dynamically configurable. Must be `"memory"`, `"localStorage"` or `"sessionStorage"`.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   */
+  storageMode: 'memory',
 
-	/**
-	 * @doc overview
-	 * @id storageImpl
-	 * @name storageImpl
-	 * @description
-	 * __Default:__ `null`
-	 *
-	 * This option is available if you want to provide a custom `localStorage` or `sessionStorage` implementation.
-	 *
-	 * This option is NOT dynamically configurable. Must be an object that implements `setItem(key, value)`,
-	 * `getItem(key)` and `removeItem(key)`.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 */
-	storageImpl: null,
+  /**
+   * @doc overview
+   * @id storageImpl
+   * @name storageImpl
+   * @description
+   * __Default:__ `null`
+   *
+   * This option is available if you want to provide a custom `localStorage` or `sessionStorage` implementation.
+   *
+   * This option is NOT dynamically configurable. Must be an object that implements `setItem(key, value)`,
+   * `getItem(key)` and `removeItem(key)`.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   */
+  storageImpl: null,
 
-	/**
-	 * @doc overview
-	 * @id disabled
-	 * @name disabled
-	 * @description
-	 * __Default:__ `false`
-	 *
-	 * This option disables or enables cache.
-	 *
-	 * This option is dynamically configurable. Must be `true` or `false`.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 * - `DSCache.setOptions(options[, strict])`
-	 *
-	 * or just use [DSCache#disable()](/documentation/api/angular-cache/DSCache.methods:disable) or
-	 * [DSCache#enable()](/documentation/api/angular-cache/DSCache.methods:enable).
-	 */
-	disabled: false,
+  /**
+   * @doc overview
+   * @id disabled
+   * @name disabled
+   * @description
+   * __Default:__ `false`
+   *
+   * This option disables or enables cache.
+   *
+   * This option is dynamically configurable. Must be `true` or `false`.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setOptions(options[, strict])`
+   *
+   * or just use [DSCache#disable()](/documentation/api/angular-cache/DSCache.methods:disable) or
+   * [DSCache#enable()](/documentation/api/angular-cache/DSCache.methods:enable).
+   */
+  disabled: false,
 
-	/**
-	 * @doc overview
-	 * @id storagePrefix
-	 * @name storagePrefix
-	 * @description
-	 * __Default:__ `"angular-cache.caches."`
-	 *
-	 * This option determines the namespace for a cache when `storageMode` is `"localStorage"` or `"sessionStorage"`.
-	 * Setting this value to something like `"ac."` will save space when using WebStorage.
-	 *
-	 * This option is NOT dynamically configurable. Must be a string.
-	 *
-	 * ### Where can it be used?
-	 * - `DSCacheFactoryProvider.setCacheDefaults(options)`
-	 * - `DSCacheFactory(cacheId[, options])`
-	 */
-	storagePrefix: 'angular-cache.caches.'
+  /**
+   * @doc overview
+   * @id storagePrefix
+   * @name storagePrefix
+   * @description
+   * __Default:__ `"angular-cache.caches."`
+   *
+   * This option determines the namespace for a cache when `storageMode` is `"localStorage"` or `"sessionStorage"`.
+   * Setting this value to something like `"ac."` will save space when using WebStorage.
+   *
+   * This option is NOT dynamically configurable. Must be a string.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   */
+  storagePrefix: 'angular-cache.caches.'
 };
 
 function Config() {
 }
 
 for (var option in defaults) {
-	Config.prototype['$$' + option] = defaults[option];
+  Config.prototype['$$' + option] = defaults[option];
 }
 
 module.exports = {
-	Config: Config,
-	defaults: defaults
+  Config: Config,
+  defaults: defaults
 };
 
-},{}],"Defaults":[function(require,module,exports){
-module.exports=require('XjryW+');
 },{}],21:[function(require,module,exports){
 (function (window, angular, undefined) {
-	'use strict';
+  'use strict';
 
-	angular.$$minErr = angular.$$minErr || function (module) {
-		return function () {
-			var code = arguments[0],
-				prefix = '[' + (module ? module + ':' : '') + code + '] ',
-				template = arguments[1];
+  angular.$$minErr = angular.$$minErr || function minErr(module) {
+    return function () {
+      var code = arguments[0],
+        prefix = '[' + (module ? module + ':' : '') + code + '] ',
+        template = arguments[1],
+        templateArgs = arguments,
+        stringify = function (obj) {
+          if (typeof obj === 'function') {
+            return obj.toString().replace(/ \{[\s\S]*$/, '');
+          } else if (typeof obj === 'undefined') {
+            return 'undefined';
+          } else if (typeof obj !== 'string') {
+            return JSON.stringify(obj);
+          }
+          return obj;
+        },
+        message, i;
 
-			return new Error(prefix + template);
-		};
-	};
+      message = prefix + template.replace(/\{\d+\}/g, function (match) {
+        var index = +match.slice(1, -1), arg;
 
-	angular.module('angular-data.DSBinaryHeap', [])
-		.provider('DSBinaryHeap', require('./DSBinaryHeap').DSBinaryHeapProvider);
+        if (index + 2 < templateArgs.length) {
+          arg = templateArgs[index + 2];
+          if (typeof arg === 'function') {
+            return arg.toString().replace(/ ?\{[\s\S]*$/, '');
+          } else if (typeof arg === 'undefined') {
+            return 'undefined';
+          } else if (typeof arg !== 'string') {
+            return angular.toJson(arg);
+          }
+          return arg;
+        }
+        return match;
+      });
 
-	/**
-	 * @doc overview
-	 * @id angular-cache
-	 * @name Overview
-	 * @description
-	 * __Version:__ 3.0.0
-	 *
-	 * ## Install
-	 *
-	 * #### Bower
-	 * ```text
-	 * bower install angular-cache
-	 * ```
-	 *
-	 * Load `dist/angular-cache.js` or `dist/angular-cache.min.js` onto your web page after Angular.js.
-	 *
-	 * #### Npm
-	 * ```text
-	 * npm install angular-cache
-	 * ```
-	 *
-	 * Load `dist/angular-cache.js` or `dist/angular-cache.min.js` onto your web page after Angular.js. Angular-cache is
-	 * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
-	 *
-	 * #### Manual download
-	 * Download angular-cache.3.0.0.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
-	 * section of the angular-cache GitHub project.
-	 *
-	 * ## Load into Angular
-	 * Your Angular app must depend on the module `"angular-data.DSCacheFactory"` in order to use angular-cache. Loading
-	 * angular-cache into your app allows you to inject the following:
-	 *
-	 * - `DSCacheFactory`
-	 * - `DSBinaryHeap`
-	 *
-	 * [DSCacheFactory](/documentation/api/api/DSCacheFactory) is a factory function that produces instances of
-	 * [DSCache](/documentation/api/api/DSCache), which is API compatible with caches produced by Angular's
-	 * [$cacheFactory](http://docs.angularjs.org/api/ng/service/$cacheFactory).
-	 *
-	 * [DSBinaryHeap](/documentation/api/api/DSBinaryHeap) is a priority queue implemented as a Binary Heap.
-	 *
-	 * Angular-cache is a dependency of [angular-data](/documentation/api/api/angular-data) and must be loaded before
-	 * angular-data if you are using angular-data.
-	 */
-	angular.module('angular-data.DSCacheFactory', ['ng', 'angular-data.DSBinaryHeap'])
-		.provider('DSCacheFactory', require('./DSCacheFactory'));
+      message = message + '\nhttp://errors.angularjs.org/' + angular.version.full + '/' +
+        (module ? module + '/' : '') + code;
+      for (i = 2; i < arguments.length; i++) {
+        message = message + (i == 2 ? '?' : '&') + 'p' + (i - 2) + '=' +
+          encodeURIComponent(stringify(arguments[i]));
+      }
+
+      return new Error(message);
+    };
+  };
+
+
+  angular.module('angular-data.DSBinaryHeap', [])
+    .provider('DSBinaryHeap', require('./DSBinaryHeap').DSBinaryHeapProvider);
+
+  /**
+   * @doc overview
+   * @id angular-cache
+   * @name Overview
+   * @description
+   * __Version:__ 3.0.1
+   *
+   * ## Install
+   *
+   * #### Bower
+   * ```text
+   * bower install angular-cache
+   * ```
+   *
+   * Load `dist/angular-cache.js` or `dist/angular-cache.min.js` onto your web page after Angular.js.
+   *
+   * #### Npm
+   * ```text
+   * npm install angular-cache
+   * ```
+   *
+   * Load `dist/angular-cache.js` or `dist/angular-cache.min.js` onto your web page after Angular.js. Angular-cache is
+   * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
+   *
+   * #### Manual download
+   * Download angular-cache.3.0.1.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+   * section of the angular-cache GitHub project.
+   *
+   * ## Load into Angular
+   * Your Angular app must depend on the module `"angular-data.DSCacheFactory"` in order to use angular-cache. Loading
+   * angular-cache into your app allows you to inject the following:
+   *
+   * - `DSCacheFactory`
+   * - `DSBinaryHeap`
+   *
+   * [DSCacheFactory](/documentation/api/api/DSCacheFactory) is a factory function that produces instances of
+   * [DSCache](/documentation/api/api/DSCache), which is API compatible with caches produced by Angular's
+   * [$cacheFactory](http://docs.angularjs.org/api/ng/service/$cacheFactory).
+   *
+   * [DSBinaryHeap](/documentation/api/api/DSBinaryHeap) is a priority queue implemented as a Binary Heap.
+   *
+   * Angular-cache is a dependency of [angular-data](/documentation/api/api/angular-data) and must be loaded before
+   * angular-data if you are using angular-data.
+   */
+  angular.module('angular-data.DSCacheFactory', ['ng', 'angular-data.DSBinaryHeap'])
+    .provider('DSCacheFactory', require('./DSCacheFactory'));
 
 })(window, window.angular);
 
 },{"./DSBinaryHeap":1,"./DSCacheFactory":18}],22:[function(require,module,exports){
 module.exports = {
-	/*!
-	 * Stringify a number.
-	 */
-	stringifyNumber: function (number) {
-		if (number && angular.isNumber(number)) {
-			return number.toString();
-		}
-		return number;
-	},
+  /*!
+   * Stringify a number.
+   */
+  stringifyNumber: function (number) {
+    if (number && angular.isNumber(number)) {
+      return number.toString();
+    }
+    return number;
+  },
 
-	/*!
-	 * Return a hash of the keys in the given collection.
-	 */
-	keySet: function (collection) {
-		var keySet = {}, key;
-		for (key in collection) {
-			if (collection.hasOwnProperty(key)) {
-				keySet[key] = key;
-			}
-		}
-		return keySet;
-	},
+  /*!
+   * Return a hash of the keys in the given collection.
+   */
+  keySet: function (collection) {
+    var keySet = {}, key;
+    for (key in collection) {
+      if (collection.hasOwnProperty(key)) {
+        keySet[key] = key;
+      }
+    }
+    return keySet;
+  },
 
-	/*!
-	 * Return an array of the keys in the given collection
-	 */
-	keys: function (collection) {
-		var keys = [], key;
-		for (key in collection) {
-			if (collection.hasOwnProperty(key)) {
-				keys.push(key);
-			}
-		}
-		return keys;
-	}
+  /*!
+   * Return an array of the keys in the given collection
+   */
+  keys: function (collection) {
+    var keys = [], key;
+    for (key in collection) {
+      if (collection.hasOwnProperty(key)) {
+        keys.push(key);
+      }
+    }
+    return keys;
+  }
 };
 
 },{}]},{},[21])

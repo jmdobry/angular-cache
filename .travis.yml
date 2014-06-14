@@ -11,3 +11,4 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 script:
   - grunt ci
+  - grunt coveralls || true

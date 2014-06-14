@@ -38,18 +38,18 @@
  * @returns {object} Key-value pairs of any items removed because this cache's size exceeds the new capacity.
  */
 module.exports = function setCapacity(capacity) {
-	if (capacity === null) {
-		delete this.$$capacity;
-	} else if (!angular.isNumber(capacity)) {
-		throw angular.$$minErr('ng')('areq', 'Expected capacity to be a number! Found: {0}.', typeof capacity);
-	} else if (capacity < 0) {
-		throw angular.$$minErr('ng')('areq', 'Expected capacity to be greater than zero! Found: {0}.', capacity);
-	} else {
-		this.$$capacity = capacity;
-	}
-	var removed = {};
-	while (this.$$lruHeap.size() > this.$$capacity) {
-		removed[this.$$lruHeap.peek().key] = this.remove(this.$$lruHeap.peek().key);
-	}
-	return removed;
+  if (capacity === null) {
+    delete this.$$capacity;
+  } else if (!angular.isNumber(capacity)) {
+    throw angular.$$minErr('ng')('areq', 'Expected capacity to be a number! Found: {0}.', typeof capacity);
+  } else if (capacity < 0) {
+    throw angular.$$minErr('ng')('areq', 'Expected capacity to be greater than zero! Found: {0}.', capacity);
+  } else {
+    this.$$capacity = capacity;
+  }
+  var removed = {};
+  while (this.$$lruHeap.size() > this.$$capacity) {
+    removed[this.$$lruHeap.peek().key] = this.remove(this.$$lruHeap.peek().key);
+  }
+  return removed;
 };

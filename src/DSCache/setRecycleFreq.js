@@ -47,23 +47,23 @@
  * `recycleFreq` for this cache will be reset to the default (`1000` milliseconds).
  */
 module.exports = function setRecycleFreq(recycleFreq) {
-	if (recycleFreq === null) {
-		delete this.$$recycleFreq;
-	} else if (!angular.isNumber(recycleFreq)) {
-		throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be a number! Found: {0}.', typeof recycleFreq);
-	} else if (recycleFreq < 0) {
-		throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be greater than zero! Found: {0}.', recycleFreq);
-	} else {
-		this.$$recycleFreq = recycleFreq;
-	}
-	clearInterval(this.$$recycleFreqId);
-	if (this.$$deleteOnExpire === 'aggressive') {
-		(function (_this) {
-			_this.$$recycleFreqId = setInterval(function () {
-				_this.removeExpired();
-			}, _this.$$recycleFreq);
-		})(this);
-	} else {
-		delete this.$$recycleFreqId;
-	}
+  if (recycleFreq === null) {
+    delete this.$$recycleFreq;
+  } else if (!angular.isNumber(recycleFreq)) {
+    throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be a number! Found: {0}.', typeof recycleFreq);
+  } else if (recycleFreq < 0) {
+    throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be greater than zero! Found: {0}.', recycleFreq);
+  } else {
+    this.$$recycleFreq = recycleFreq;
+  }
+  clearInterval(this.$$recycleFreqId);
+  if (this.$$deleteOnExpire === 'aggressive') {
+    (function (_this) {
+      _this.$$recycleFreqId = setInterval(function () {
+        _this.removeExpired();
+      }, _this.$$recycleFreq);
+    })(this);
+  } else {
+    delete this.$$recycleFreqId;
+  }
 };

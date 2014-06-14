@@ -1,3 +1,8 @@
+##### 3.0.1 14 June 2014
+
+###### Backwards compatible bug fixes
+- Added polyfill for `$$minErr`.
+
 ##### 3.0.0 14 June 2014
 
 3.0.0 Release

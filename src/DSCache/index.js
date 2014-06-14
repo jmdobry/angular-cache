@@ -1,48 +1,48 @@
 var defaults = require('../defaults'),
-	DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
+  DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
 /*!
  * Configure the cache to use webStorage.
  */
 function _setStorageMode(storageMode, storageImpl) {
-	if (!angular.isString(storageMode)) {
-		throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
-	} else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
-		throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: {0}.', storageMode);
-	}
+  if (!angular.isString(storageMode)) {
+    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
+  } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
+    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: {0}.', storageMode);
+  }
 
-	this.$$storageMode = storageMode;
+  this.$$storageMode = storageMode;
 
-	if (storageImpl) {
-		if (!angular.isObject(storageImpl)) {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to be an object! Found: {0}.', typeof storageImpl);
-		} else if (!('setItem' in storageImpl) || typeof storageImpl.setItem !== 'function') {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "setItem(key, value)"! Found: {0}.', typeof storageImpl.setItem);
-		} else if (!('getItem' in storageImpl) || typeof storageImpl.getItem !== 'function') {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "getItem(key)"! Found: {0}.', typeof storageImpl.getItem);
-		} else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
-			throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
-		}
-		this.$$storage = storageImpl;
-	} else if (this.$$storageMode === 'localStorage') {
-		try {
-			localStorage.setItem('angular-cache', 'angular-cache');
-			localStorage.removeItem('angular-cache');
-			this.$$storage = localStorage;
-		} catch (e) {
-			delete this.$$storage;
-			this.$$storageMode = 'memory';
-		}
-	} else if (this.$$storageMode === 'sessionStorage') {
-		try {
-			sessionStorage.setItem('angular-cache', 'angular-cache');
-			sessionStorage.removeItem('angular-cache');
-			this.$$storage = sessionStorage;
-		} catch (e) {
-			delete this.$$storage;
-			this.$$storageMode = 'memory';
-		}
-	}
+  if (storageImpl) {
+    if (!angular.isObject(storageImpl)) {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to be an object! Found: {0}.', typeof storageImpl);
+    } else if (!('setItem' in storageImpl) || typeof storageImpl.setItem !== 'function') {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "setItem(key, value)"! Found: {0}.', typeof storageImpl.setItem);
+    } else if (!('getItem' in storageImpl) || typeof storageImpl.getItem !== 'function') {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "getItem(key)"! Found: {0}.', typeof storageImpl.getItem);
+    } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
+      throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
+    }
+    this.$$storage = storageImpl;
+  } else if (this.$$storageMode === 'localStorage') {
+    try {
+      localStorage.setItem('angular-cache', 'angular-cache');
+      localStorage.removeItem('angular-cache');
+      this.$$storage = localStorage;
+    } catch (e) {
+      delete this.$$storage;
+      this.$$storageMode = 'memory';
+    }
+  } else if (this.$$storageMode === 'sessionStorage') {
+    try {
+      sessionStorage.setItem('angular-cache', 'angular-cache');
+      sessionStorage.removeItem('angular-cache');
+      this.$$storage = sessionStorage;
+    } catch (e) {
+      delete this.$$storage;
+      this.$$storageMode = 'memory';
+    }
+  }
 }
 
 /**
@@ -80,53 +80,53 @@ function _setStorageMode(storageMode, storageImpl) {
  * applying the new options, otherwise only the options specified in the options hash will be altered.
  */
 function _setOptions(cacheOptions, strict) {
-	cacheOptions = cacheOptions || {};
-	strict = !!strict;
-	if (!angular.isObject(cacheOptions)) {
-		throw angular.$$minErr('ng')('areq', 'Expected cacheOptions to be an object! Found: {0}.', typeof cacheOptions);
-	}
+  cacheOptions = cacheOptions || {};
+  strict = !!strict;
+  if (!angular.isObject(cacheOptions)) {
+    throw angular.$$minErr('ng')('areq', 'Expected cacheOptions to be an object! Found: {0}.', typeof cacheOptions);
+  }
 
-	if ('disabled' in cacheOptions) {
-		this.$$disabled = !!cacheOptions.disabled;
-	} else if (strict) {
-		delete this.$$disabled;
-	}
+  if ('disabled' in cacheOptions) {
+    this.$$disabled = !!cacheOptions.disabled;
+  } else if (strict) {
+    delete this.$$disabled;
+  }
 
-	if ('capacity' in cacheOptions) {
-		this.setCapacity(cacheOptions.capacity);
-	} else if (strict) {
-		this.setCapacity(null);
-	}
+  if ('capacity' in cacheOptions) {
+    this.setCapacity(cacheOptions.capacity);
+  } else if (strict) {
+    this.setCapacity(null);
+  }
 
-	if ('deleteOnExpire' in cacheOptions) {
-		this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
-	} else if (strict) {
-		this.setDeleteOnExpire(null);
-	}
+  if ('deleteOnExpire' in cacheOptions) {
+    this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
+  } else if (strict) {
+    this.setDeleteOnExpire(null);
+  }
 
-	if ('maxAge' in cacheOptions) {
-		this.setMaxAge(cacheOptions.maxAge);
-	} else if (strict) {
-		this.setMaxAge(null);
-	}
+  if ('maxAge' in cacheOptions) {
+    this.setMaxAge(cacheOptions.maxAge);
+  } else if (strict) {
+    this.setMaxAge(null);
+  }
 
-	if ('recycleFreq' in cacheOptions) {
-		this.setRecycleFreq(cacheOptions.recycleFreq);
-	} else if (strict) {
-		this.setRecycleFreq(null);
-	}
+  if ('recycleFreq' in cacheOptions) {
+    this.setRecycleFreq(cacheOptions.recycleFreq);
+  } else if (strict) {
+    this.setRecycleFreq(null);
+  }
 
-	if ('cacheFlushInterval' in cacheOptions) {
-		this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
-	} else if (strict) {
-		this.setCacheFlushInterval(null);
-	}
+  if ('cacheFlushInterval' in cacheOptions) {
+    this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
+  } else if (strict) {
+    this.setCacheFlushInterval(null);
+  }
 
-	if ('onExpire' in cacheOptions) {
-		this.setOnExpire(cacheOptions.onExpire);
-	} else if (strict) {
-		this.setOnExpire(null);
-	}
+  if ('onExpire' in cacheOptions) {
+    this.setOnExpire(cacheOptions.onExpire);
+  } else if (strict) {
+    this.setOnExpire(null);
+  }
 }
 
 /**
@@ -141,35 +141,35 @@ function _setOptions(cacheOptions, strict) {
  */
 function DSCache(cacheId, options) {
 
-	this.$$data = {};
-	this.$$id = cacheId;
-	this.$$storage = null;
+  this.$$data = {};
+  this.$$id = cacheId;
+  this.$$storage = null;
 
-	this.$$expiresHeap = new DSBinaryHeap(function (x) {
-		return x.expires;
-	});
+  this.$$expiresHeap = new DSBinaryHeap(function (x) {
+    return x.expires;
+  });
 
-	this.$$lruHeap = new DSBinaryHeap(function (x) {
-		return x.accessed;
-	});
+  this.$$lruHeap = new DSBinaryHeap(function (x) {
+    return x.accessed;
+  });
 
-	options = options || {};
+  options = options || {};
 
-	if ('storageMode' in options) {
-		_setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
-	}
-	if ('storagePrefix' in options) {
-		this.$$storagePrefix = options.storagePrefix;
-	}
+  if ('storageMode' in options) {
+    _setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
+  }
+  if ('storagePrefix' in options) {
+    this.$$storagePrefix = options.storagePrefix;
+  }
 
-	this.$$prefix = this.$$storagePrefix + cacheId;
+  this.$$prefix = this.$$storagePrefix + cacheId;
 
-	// Initialize this cache with the default and given options
-	_setOptions.apply(this, [options, true]);
+  // Initialize this cache with the default and given options
+  _setOptions.apply(this, [options, true]);
 }
 
 for (var key in defaults.defaults) {
-	DSCache.prototype['$$' + key] = defaults.defaults[key];
+  DSCache.prototype['$$' + key] = defaults.defaults[key];
 }
 
 /**
@@ -362,7 +362,7 @@ DSCache.prototype.keys = require('./keys');
  * ```
  */
 DSCache.prototype.disable = function () {
-	this.$$disabled = true;
+  this.$$disabled = true;
 };
 
 /**
@@ -394,7 +394,7 @@ DSCache.prototype.disable = function () {
  * ```
  */
 DSCache.prototype.enable = function () {
-	delete this.$$disabled;
+  delete this.$$disabled;
 };
 
 /**
@@ -419,22 +419,22 @@ DSCache.prototype.enable = function () {
  * @param {string=} key The key of the item to touch.
  */
 DSCache.prototype.touch = function (key) {
-	if (key) {
-		var _this = this;
-		var val = this.get(key, {
-			onExpire: function (k, v) {
-				_this.put(k, v);
-			}
-		});
-		if (val) {
-			this.put(key, val);
-		}
-	} else {
-		var keys = this.keys();
-		for (var i = 0; i < keys.length; i++) {
-			this.touch(keys[i]);
-		}
-	}
+  if (key) {
+    var _this = this;
+    var val = this.get(key, {
+      onExpire: function (k, v) {
+        _this.put(k, v);
+      }
+    });
+    if (val) {
+      this.put(key, val);
+    }
+  } else {
+    var keys = this.keys();
+    for (var i = 0; i < keys.length; i++) {
+      this.touch(keys[i]);
+    }
+  }
 };
 
 module.exports = DSCache;

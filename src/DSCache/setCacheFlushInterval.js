@@ -33,19 +33,19 @@
  * `cacheFlushInterval` is `null` then `cacheFlushInterval` for this cache will be reset to the default (`null`).
  */
 module.exports = function setCacheFlushInterval(cacheFlushInterval) {
-	if (cacheFlushInterval === null) {
-		delete this.$$cacheFlushInterval;
-	} else if (!angular.isNumber(cacheFlushInterval)) {
-		throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be a number! Found: {0}.', typeof cacheFlushInterval);
-	} else if (cacheFlushInterval < 0) {
-		throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be greater than zero! Found: {0}.', cacheFlushInterval);
-	} else if (cacheFlushInterval !== this.$$cacheFlushInterval) {
-		this.$$cacheFlushInterval = cacheFlushInterval;
-		clearInterval(this.$$cacheFlushIntervalId);
-		(function (_this) {
-			_this.$$cacheFlushIntervalId = setInterval(function () {
-				_this.removeAll();
-			}, _this.$$cacheFlushInterval);
-		})(this);
-	}
+  if (cacheFlushInterval === null) {
+    delete this.$$cacheFlushInterval;
+  } else if (!angular.isNumber(cacheFlushInterval)) {
+    throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be a number! Found: {0}.', typeof cacheFlushInterval);
+  } else if (cacheFlushInterval < 0) {
+    throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be greater than zero! Found: {0}.', cacheFlushInterval);
+  } else if (cacheFlushInterval !== this.$$cacheFlushInterval) {
+    this.$$cacheFlushInterval = cacheFlushInterval;
+    clearInterval(this.$$cacheFlushIntervalId);
+    (function (_this) {
+      _this.$$cacheFlushIntervalId = setInterval(function () {
+        _this.removeAll();
+      }, _this.$$cacheFlushInterval);
+    })(this);
+  }
 };
