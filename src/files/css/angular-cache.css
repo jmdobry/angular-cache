@@ -9,6 +9,10 @@ body {
     height: 40px;
     padding: 8px;
     text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2000;
 }
 .warning a {
     color: #3BC6CC;
@@ -102,7 +106,7 @@ code {
 
 .jumbotron {
     position: relative;
-    padding: 45px 20px 0;
+    padding: 85px 20px 0;
     margin: 0;
     background: #fd9d4a;
     color: #fff;
@@ -192,7 +196,7 @@ code {
 }
 
 #sidenav.affix {
-    top: 51px;
+    top: 91px;
 }
 
 #sidenav.affix-bottom {
