@@ -65,6 +65,21 @@ module.exports = function (grunt) {
 				autoWatch: true,
 				singleRun: false
 			},
+			min: {
+				browsers: ['Chrome'],
+				autoWatch: false,
+				singleRun: true,
+				logLevel: 'DEBUG',
+				options: {
+					files: [
+						'bower_components/angular-1.2.16/angular.js',
+						'bower_components/angular-mocks-1.2.16/angular-mocks.js',
+						'dist/angular-cache.min.js',
+						'./karma.start.js',
+						'test/unit/**/*.js'
+					]
+				}
+			},
 			'1.0.4': {
 				options: {
 					files: [
