@@ -15,6 +15,8 @@
 	<title>angular-cache</title>
 </head>
 <body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
+	<div class="warning">The docs for angular-cache 2.x.x are being deprecated. Please consider upgrading to <a href="http://angular-data.pseudobry.com/documentation/api/angular-cache/angular-cache">3.x.x</a>
+	</div>
     <a href="https://github.com/jmdobry/angular-cache" id="github-ribbon">
         <img style="z-index: 2000; position: fixed; top: 0; right: 0; border: 0;" width="120" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
     </a>
@@ -120,7 +122,7 @@
 <p>Angular-cache is a feature-packed drop-in replacement for Angular&#39;s $cacheFactory. $cacheFactory is small and useful, but it&#39;s missing many needed features that today&#39;s single-page apps require. Check it out:</p>
 <h2 id="-cachefactory-vs-angularcachefactory">$cacheFactory vs $angularCacheFactory</h2>
 <h5 id="-cachefactory">$cacheFactory</h5>
-<pre class="highlighted"><code class="javascript"><span class="comment">// Angular's $cacheFactory</span>
+<pre class="highlight"><code class="javascript"><span class="comment">// Angular's $cacheFactory</span>
 app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($cacheFactory)</span> {</span>
 
     <span class="comment">// This is the extent of $cacheFactory's configuration</span>
@@ -132,7 +134,7 @@ app.service(<span class="string">'myService'</span>, <span class="function"><spa
 
 });</code></pre>
 <h5 id="-angularcachefactory">$angularCacheFactory</h5>
-<pre class="highlighted"><code class="javascript"><span class="comment">// Smarter caching with $angularCacheFactory</span>
+<pre class="highlight"><code class="javascript"><span class="comment">// Smarter caching with $angularCacheFactory</span>
 app.service(<span class="string">'myService'</span>, <span class="function"><span class="keyword">function</span> <span class="params">($angularCacheFactory)</span> {</span>
 
     $angularCacheFactory(<span class="string">'myNewCache'</span>, {

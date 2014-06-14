@@ -15,6 +15,8 @@
 	<title>angular-cache</title>
 </head>
 <body data-spy="scroll" data-target="#sidebar" data-ember-extension="1" cz-shortcut-listen="true">
+	<div class="warning">The docs for angular-cache 2.x.x are being deprecated. Please consider upgrading to <a href="http://angular-data.pseudobry.com/documentation/api/angular-cache/angular-cache">3.x.x</a>
+	</div>
     <a href="https://github.com/jmdobry/angular-cache" id="github-ribbon">
         <img style="z-index: 2000; position: fixed; top: 0; right: 0; border: 0;" width="120" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
     </a>
@@ -175,19 +177,19 @@
                             <p>These are the configuration options available for customizing each instance of <code>AngularCache</code>. They can be used in three places:</p>
 <p><br></p>
 <h4 id="setting-the-default-options-for-all-caches">Setting the default options for all caches</h4>
-<pre class="highlighted"><code class="javascript">$angularCacheFactoryProvider.setCacheDefaults({
+<pre class="highlight"><code class="javascript">$angularCacheFactoryProvider.setCacheDefaults({
     <span class="comment">// configuration options</span>
 });</code></pre>
 <p>See <a href="api.html#setcachedefaults">$angularCacheFactoryProvider.setCacheDefaults(options)</a></p>
 <p><br></p>
 <h4 id="creating-a-cache">Creating a cache</h4>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     <span class="comment">// configuration options</span>
 });</code></pre>
 <p>See <a href="api.html#factory">$angularCacheFactory(cacheId, options)</a></p>
 <p><br></p>
 <h4 id="dynamically-configuring-a-cache">Dynamically configuring a cache</h4>
-<pre class="highlighted"><code class="javascript">newCache.setOptions({
+<pre class="highlight"><code class="javascript">newCache.setOptions({
     <span class="comment">// configuration options</span>
 });</code></pre>
 <p>See <a href="api.html#cachesetoptions">AngularCache.setOptions(options, strict)</a></p>
@@ -202,12 +204,12 @@
 <p><strong>Default:</strong> <code>null</code></p>
 <p><strong>Description:</strong> Set a default maximum lifetime on all items added to the cache. They will be removed aggressively or passively or not at all depending on the value of <code>deleteOnExpire</code> (see below). Can be configured on a per-item basis for greater specificity.</p>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     maxAge: <span class="number">3600000</span>
 });</code></pre>
 <p><br>
 Can be configured on a per-item basis:</p>
-<pre class="highlighted"><code class="javascript">newCache.put(<span class="string">'someKey'</span>, <span class="string">'someValue'</span>, {
+<pre class="highlight"><code class="javascript">newCache.put(<span class="string">'someKey'</span>, <span class="string">'someValue'</span>, {
     maxAge: <span class="number">90000</span> <span class="comment">// overrides the maxAge for "newCache"</span>
 });</code></pre>
 
@@ -230,13 +232,13 @@ Can be configured on a per-item basis:</p>
 </li>
 </ul>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     maxAge: <span class="number">3600000</span>,
     deleteOnExpire: <span class="string">'aggressive'</span>
 });</code></pre>
 <p><br>
 Can be configured on a per-item basis:</p>
-<pre class="highlighted"><code class="javascript">newCache.put(<span class="string">'someKey'</span>, <span class="string">'someValue'</span>, {
+<pre class="highlight"><code class="javascript">newCache.put(<span class="string">'someKey'</span>, <span class="string">'someValue'</span>, {
     maxAge: <span class="number">90000</span>,
     deleteOnExpire: <span class="string">'passive'</span> <span class="comment">// overrides the maxAge for "newCache"</span>
 });</code></pre>
@@ -251,7 +253,7 @@ Can be configured on a per-item basis:</p>
 <p><strong>Default:</strong> <code>1000</code></p>
 <p><strong>Description:</strong> How often the cache should check for expired items. Only used when <code>maxAge</code> is set.</p>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     maxAge: <span class="number">3600000</span>,
     recycleFreq: <span class="number">10000</span> <span class="comment">// check for expired items every 10 seconds</span>
 });</code></pre>
@@ -270,7 +272,7 @@ Can be configured on a per-item basis:</p>
 <p>In passive delete mode the cache doesn&#39;t know if an item has expired until the item is requested, at which point the cache checks to see if the item has expired. If the item has expired then it is immediately removed from the cache, resulting in a &quot;miss&quot;.</p>
 <p>If you specify a global &quot;onExpire&quot; callback function, the cache will execute this function when it is discovered the item has expired, passing to the callback the key and value of the expired item.</p>
 <p>When you actually request the expired item via <code>myCache.get(&#39;someKey&#39;)</code> you can also pass a second argument to <code>get()</code> specifying a callback that your cache&#39;s &quot;onExpire&quot; callback can execute when it finishes. For example:</p>
-<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
     maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second, but we don't know it until the item is requested</span>
     onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value, done)</span> {</span>
         <span class="comment">// "onExpire" callback for the cache.</span>
@@ -303,7 +305,7 @@ newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos
 <span class="comment">// is the "done" callback executed by the "onExpire"</span>
 <span class="comment">// callback specified when we created the cache.</span></code></pre>
 <p>Another example:</p>
-<pre class="highlighted"><code class="javascript"><span class="comment">// We don't specify an "onExpire" callback for this cache</span>
+<pre class="highlight"><code class="javascript"><span class="comment">// We don't specify an "onExpire" callback for this cache</span>
 <span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
     maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second, but we don't know it until the item is requested</span>
 });
@@ -333,7 +335,7 @@ newCache.put(<span class="string">'denver'</span>, <span class="string">'broncos
 <h4 id="using-onexpire-in-aggressive-delete-mode">Using &#39;onExpire&#39; in aggressive delete mode</h4>
 <p>In aggressive delete mode you can&#39;t pass a second parameter to <code>get()</code> because your &quot;onExpire&quot; callback for the cache has already been executed for expired items.</p>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, {
     maxAge: <span class="number">1000</span>, <span class="comment">// Items expire after 1 second and are immediately deleted</span>
     onExpire: <span class="function"><span class="keyword">function</span> <span class="params">(key, value)</span> {</span>
         <span class="comment">// "onExpire" callback for the cache.</span>
@@ -364,7 +366,7 @@ newCache.get(<span class="string">'denver'</span>); <span class="comment">// 'br
 <p><strong>Default:</strong> <code>null</code></p>
 <p><strong>Description:</strong> Set the cache to periodically clear itself.</p>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, { cacheFlushInterval: <span class="number">3600000</span> }); <span class="comment">// clear the cache every hour</span></code></pre>
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, { cacheFlushInterval: <span class="number">3600000</span> }); <span class="comment">// clear the cache every hour</span></code></pre>
 
                         </section>
                     
@@ -385,7 +387,7 @@ newCache.get(<span class="string">'denver'</span>); <span class="comment">// 'br
 </li>
 </ul>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     storageMode: <span class="string">'localStorage'</span>, <span class="comment">// this cache will sync itself to localStorage</span>
     verifyIntegrity: <span class="literal">true</span>
 });</code></pre>
@@ -403,7 +405,7 @@ newCache.get(<span class="string">'denver'</span>); <span class="comment">// 'br
 <p><strong>Note:</strong> If angular-cache doesn&#39;t detect a global <code>localStorage</code> or <code>sessionStorage</code> and you don&#39;t provide a polyfill, then syncing with web storage will be disabled. It is up to the developer to provide a polyfill for browsers that don&#39;t support <code>localStorage</code> and <code>sessionStorage</code>. Any implementation of <code>localStorage</code> and <code>sessionStorage</code> provided to angular-cache must implement at least the <code>setItem</code>, <code>getItem</code>, and <code>removeItem</code> methods.</p>
 <p>See <a href="guide.html#using-angular-cache-with-localStorage">Using angular-cache with localStorage</a>.</p>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     storageImpl: mystorageImplementation,
     storageMode: <span class="string">'localStorage'</span>
 });
@@ -423,7 +425,7 @@ $angularCacheFactory(<span class="string">'otherCache'</span>, {
 <p><strong>Default:</strong> <code>true</code></p>
 <p><strong>Description:</strong> Specify whether to verify integrity of data saved in <code>localStorage</code> on every operation. If true, angular-cache will perform a full sync with <code>localStorage</code> on every operation. Increases reliability of data synchronization, but may incur a performance penalty. Has no effect if <code>storageMode</code> is set to &quot;none&quot;.</p>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
+<pre class="highlight"><code class="javascript">$angularCacheFactory(<span class="string">'newCache'</span>, {
     storageMode: <span class="string">'localStorage'</span>,
     verifyIntegrity: <span class="literal">true</span>
 });</code></pre>
@@ -439,7 +441,7 @@ $angularCacheFactory(<span class="string">'otherCache'</span>, {
 <p><strong>Description:</strong> Disabled the cache. The cache will continue to function as normal, aside from the fact that
 any calls to <code>AngularCache#put(key, value[, options])</code> or <code>AngularCache#get(key[, options])</code> will have no effect whatsoever.</p>
 <p><strong>Usage:</strong></p>
-<pre class="highlighted"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { disabled: <span class="literal">true</span> }); <span class="comment">// This cache starts disabled</span>
+<pre class="highlight"><code class="javascript"><span class="keyword">var</span> newCache = $angularCacheFactory(<span class="string">'newCache'</span>, { disabled: <span class="literal">true</span> }); <span class="comment">// This cache starts disabled</span>
 
 newCache.put(<span class="string">'4'</span>, <span class="string">'thing'</span>);
 

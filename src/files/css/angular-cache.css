@@ -3,6 +3,19 @@ body {
     background-size: auto;
     background-repeat: repeat repeat;
 }
+.warning {
+    background-color: #C24C4C;
+    color: #fff;
+    height: 40px;
+    padding: 8px;
+    text-align: center;
+}
+.warning a {
+    color: #3BC6CC;
+}
+.navbar-fixed-top {
+    top: 40px;
+}
 a {
     color: #fd7c23;
 }
