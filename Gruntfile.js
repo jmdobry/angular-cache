@@ -66,9 +66,6 @@ module.exports = function (grunt) {
         singleRun: false
       },
       min: {
-        browsers: ['Chrome'],
-        autoWatch: false,
-        singleRun: true,
         options: {
           files: [
             'bower_components/angular-1.2.16/angular.js',
@@ -80,9 +77,6 @@ module.exports = function (grunt) {
         }
       },
       min_old: {
-        browsers: ['Chrome'],
-        autoWatch: true,
-        singleRun: false,
         options: {
           files: [
             'bower_components/angular-1.1.5/angular.js',
