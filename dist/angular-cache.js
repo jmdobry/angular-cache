@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-cache.js
- * @version 3.0.0-beta.4 - Homepage <https://github.com/jmdobry/angular-cache>
+ * @version 3.0.0 - Homepage <https://github.com/jmdobry/angular-cache>
  * @copyright (c) 2013 Jason Dobry <http://www.pseudobry.com>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -852,7 +852,7 @@ DSCache.prototype.touch = function (key) {
 
 module.exports = DSCache;
 
-},{"../DSBinaryHeap":1,"../defaults":"Gv0+ce","./destroy":2,"./get":3,"./info":5,"./keySet":6,"./keys":7,"./put":8,"./remove":9,"./removeAll":10,"./removeExpired":11,"./setCacheFlushInterval":12,"./setCapacity":13,"./setDeleteOnExpire":14,"./setMaxAge":15,"./setOnExpire":16,"./setRecycleFreq":17}],5:[function(require,module,exports){
+},{"../DSBinaryHeap":1,"../defaults":"XjryW+","./destroy":2,"./get":3,"./info":5,"./keySet":6,"./keys":7,"./put":8,"./remove":9,"./removeAll":10,"./removeExpired":11,"./setCacheFlushInterval":12,"./setCapacity":13,"./setDeleteOnExpire":14,"./setMaxAge":15,"./setOnExpire":16,"./setRecycleFreq":17}],5:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:info
@@ -1707,7 +1707,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults'),
 	DSCache = require('../DSCache'),
-	version = '3.0.0-beta.4';
+	version = '3.0.0';
 
 /**
  * @doc function
@@ -2029,9 +2029,7 @@ function DSCacheFactoryProvider() {
 
 module.exports = DSCacheFactoryProvider;
 
-},{"../DSCache":4,"../defaults":"Gv0+ce"}],"Defaults":[function(require,module,exports){
-module.exports=require('Gv0+ce');
-},{}],"Gv0+ce":[function(require,module,exports){
+},{"../DSCache":4,"../defaults":"XjryW+"}],"XjryW+":[function(require,module,exports){
 var defaults = {
 	/**
 	 * @doc overview
@@ -2266,6 +2264,8 @@ module.exports = {
 	defaults: defaults
 };
 
+},{}],"Defaults":[function(require,module,exports){
+module.exports=require('XjryW+');
 },{}],21:[function(require,module,exports){
 (function (window, angular, undefined) {
 	'use strict';
@@ -2288,7 +2288,7 @@ module.exports = {
 	 * @id angular-cache
 	 * @name Overview
 	 * @description
-	 * __Version:__ 3.0.0-beta.4
+	 * __Version:__ 3.0.0
 	 *
 	 * ## Install
 	 *
@@ -2308,7 +2308,7 @@ module.exports = {
 	 * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
 	 *
 	 * #### Manual download
-	 * Download angular-cache.3.0.0-beta.4.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+	 * Download angular-cache.3.0.0.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
 	 * section of the angular-cache GitHub project.
 	 *
 	 * ## Load into Angular

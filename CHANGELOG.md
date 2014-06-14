@@ -1,3 +1,7 @@
+##### 3.0.0 14 June 2014
+
+3.0.0 Release
+
 ##### 3.0.0-beta.4 22 April 2014
 
 ###### Backwards compatible API changes

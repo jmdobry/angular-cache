@@ -1,9 +1,9 @@
 ## angular-cache
 __A very useful replacement for Angular's $cacheFactory.__
 
-__Version:__ 3.0.0-beta.4
+__Version:__ 3.0.0
 
-Documentation for 3.x.x can be found at [angular-data.codetrain.io](http://angular-data.codetrain.io).
+Documentation for 3.x.x can be found at [angular-data.pseudobry.com](http://angular-data.pseudobry.com).
 
 Documentation for 2.x.x can be found at [jmdobry.github.io/angular-cache](http://jmdobry.github.io/angular-cache).
 
