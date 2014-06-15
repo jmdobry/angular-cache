@@ -1,3 +1,8 @@
+##### 2.3.5 - 15 June 2014
+
+###### Backwards compatible bug fixes
+- Page refresh retouches cache expiry times with defaults #114
+
 ##### 2.3.4 - 01 May 2014
 
 ###### Backwards compatible bug fixes

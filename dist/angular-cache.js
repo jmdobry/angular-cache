@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache-2.3.4.js
- * @version 2.3.4 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @file angular-cache.js
+ * @version 2.3.5 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @copyright (c) 2013-2014 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -815,7 +815,11 @@
 					}
 
 					if (item.maxAge || config.maxAge) {
-						item.expires = item.created + (item.maxAge || config.maxAge);
+						if ('expires' in options) {
+							item.expires = parseInt(options.expires, 10);
+						} else {
+							item.expires = item.created + (item.maxAge || config.maxAge);
+						}
 					}
 
 					deleteOnExpire = item.deleteOnExpire || config.deleteOnExpire;
