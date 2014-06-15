@@ -13,14 +13,14 @@ Add a key-value pair to the cache.
 
 ## Parameters
 
-#### options
+#### key
 __Type:__ `string`
 
 __Required:__ Yes
 
 __Description:__ The key of the item to be added to the cache.
 
-#### options
+#### value
 __Type:__ `*`
 
 __Required:__ Yes
