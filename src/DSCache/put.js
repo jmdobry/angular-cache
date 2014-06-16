@@ -34,10 +34,16 @@ var utils = require('../utils');
  * @returns {*} The newly stored item.
  */
 module.exports = function put(key, value) {
+  var _this = this;
   if (this.$$disabled || value === null || value === undefined) {
     return;
   }
-
+  if (value && value.then) {
+    value.then(function (v) {
+      _this.put(key, v);
+    });
+    return;
+  }
   key = utils.stringifyNumber(key);
 
   if (!angular.isString(key)) {

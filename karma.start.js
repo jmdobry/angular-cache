@@ -29,14 +29,16 @@ var fail = function (msg) {
 		storagePrefix: 'ac.'
 	};
 
-var TestDSCacheFactoryProvider, TestDSCacheFactory, TestDSBinaryHeap;
+var TestDSCacheFactoryProvider, TestDSCacheFactory, TestDSBinaryHeap, $q, $rootScope;
 
 beforeEach(module('angular-data.DSCacheFactory', function (_DSCacheFactoryProvider_) {
 	TestDSCacheFactoryProvider = _DSCacheFactoryProvider_;
 }));
-beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_) {
+beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_, _$q_, _$rootScope_) {
 	TestDSCacheFactory = _DSCacheFactory_;
 	TestDSBinaryHeap = _DSBinaryHeap_;
+  $q = _$q_;
+  $rootScope = _$rootScope_;
 }));
 afterEach(function () {
 	TestDSCacheFactory.destroyAll();

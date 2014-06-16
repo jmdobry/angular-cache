@@ -31,6 +31,8 @@ module.exports = function (grunt) {
     uglify: {
       main: {
         options: {
+          report: 'min',
+          sourceMap: true,
           banner: '/**\n' +
             '* @author Jason Dobry <jason.dobry@gmail.com>\n' +
             '* @file angular-cache.min.js\n' +
@@ -296,7 +298,7 @@ module.exports = function (grunt) {
     'karma:1.2.6',
     'karma:1.2.7',
     'karma:min',
-    'karma:min_old',
+    'karma:min_old'
   ]);
   grunt.registerTask('ci', ['build', 'test-ci']);
   grunt.registerTask('go', ['build', 'watch']);

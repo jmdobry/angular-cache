@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-cache.js
- * @version 3.0.1 - Homepage <https://github.com/jmdobry/angular-cache>
+ * @version 3.0.2 - Homepage <https://github.com/jmdobry/angular-cache>
  * @copyright (c) 2013 Jason Dobry <http://www.pseudobry.com>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -1053,10 +1053,16 @@ var utils = require('../utils');
  * @returns {*} The newly stored item.
  */
 module.exports = function put(key, value) {
+  var _this = this;
   if (this.$$disabled || value === null || value === undefined) {
     return;
   }
-
+  if (value && value.then) {
+    value.then(function (v) {
+      _this.put(key, v);
+    });
+    return;
+  }
   key = utils.stringifyNumber(key);
 
   if (!angular.isString(key)) {
@@ -1707,7 +1713,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults'),
   DSCache = require('../DSCache'),
-  version = '3.0.1';
+  version = '3.0.2';
 
 /**
  * @doc function
@@ -2325,7 +2331,7 @@ module.exports = {
    * @id angular-cache
    * @name Overview
    * @description
-   * __Version:__ 3.0.1
+   * __Version:__ 3.0.2
    *
    * ## Install
    *
@@ -2345,7 +2351,7 @@ module.exports = {
    * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
    *
    * #### Manual download
-   * Download angular-cache.3.0.1.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+   * Download angular-cache.3.0.2.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
    * section of the angular-cache GitHub project.
    *
    * ## Load into Angular
