@@ -4,7 +4,7 @@ module.exports = function (config) {
         frameworks: ['jasmine'],
         browsers: ['Firefox', 'PhantomJS'],
         files: [
-            'bower_components/angular-1.2.16/angular.min.js',
+            'bower_components/angular-1.2.16/angular.js',
             'bower_components/angular-mocks-1.2.16/angular-mocks.js',
             'src/angular-cache.js',
             'test/karma.start.js',

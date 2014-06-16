@@ -209,7 +209,7 @@ describe('AngularCache.put(key, value, options)', function () {
       expect(cache.get('item1')).toEqual(undefined);
     });
   });
-  it('should work with promises.', function () {
+  it('should work with normal promises.', function () {
     var cache = $angularCacheFactory('cache', {
       maxAge: 10,
       deleteOnExpire: 'aggressive',
@@ -230,6 +230,22 @@ describe('AngularCache.put(key, value, options)', function () {
         });
       });
     });
+  });
+  it('should work with $http promises.', function () {
+    $httpBackend.expectGET('test.com').respond({ name: 'John' });
+    var cache = $angularCacheFactory('cache', {});
+    $http.get('test.com', {
+      cache: cache
+    }).success(function (data) {
+      expect(data).toEqual({ name: 'John' });
+      $http.get('test.com', {
+        cache: cache
+      }).success(function (data) {
+        expect(data).toEqual({ name: 'John' });
+      });
+      $rootScope.$safeApply();
+    });
+    $httpBackend.flush();
   });
   it('should save data to localStorage when storageMode is used.', function () {
     var localStorageCache = $angularCacheFactory('localStorageCache', { storageMode: 'localStorage' }),

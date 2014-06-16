@@ -1,3 +1,8 @@
+##### 2.3.7 - 16 June 2014
+
+###### Backwards compatible bug fixes
+- Angular 1.2.18 with $http/localStorage #116
+
 ##### 2.3.6 - 15 June 2014
 
 ###### Backwards compatible bug fixes

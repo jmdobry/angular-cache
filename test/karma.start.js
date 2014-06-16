@@ -29,15 +29,46 @@ var fail = function (msg) {
     disabled: false
   };
 
-var $angularCacheFactoryProvider, $angularCacheFactory, BinaryHeap, $q, $rootScope;
+var $angularCacheFactoryProvider, $angularCacheFactory, BinaryHeap, $q, $rootScope, $httpBackend, $http;
 beforeEach(module('jmdobry.angular-cache', function (_$angularCacheFactoryProvider_) {
   $angularCacheFactoryProvider = _$angularCacheFactoryProvider_;
 }));
-beforeEach(inject(function (_$angularCacheFactory_, _BinaryHeap_, _$q_, _$rootScope_) {
+beforeEach(inject(function (_$angularCacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$httpBackend_, _$http_) {
   $angularCacheFactory = _$angularCacheFactory_;
   BinaryHeap = _BinaryHeap_;
   $q = _$q_;
   $rootScope = _$rootScope_;
+  $rootScope.$safeApply = function () {
+    var $scope, fn, force = false;
+    if (arguments.length === 1) {
+      var arg = arguments[0];
+      if (typeof arg === 'function') {
+        fn = arg;
+      } else {
+        $scope = arg;
+      }
+    } else {
+      $scope = arguments[0];
+      fn = arguments[1];
+      if (arguments.length === 3) {
+        force = !!arguments[2];
+      }
+    }
+    $scope = $scope || this;
+    fn = fn || function () {
+    };
+    if (force || !$scope.$$phase) {
+      if ($scope.$apply) {
+        $scope.$apply(fn);
+      } else {
+        $scope.apply(fn);
+      }
+    } else {
+      fn();
+    }
+  };
+  $httpBackend = _$httpBackend_;
+  $http = _$http_;
 }));
 afterEach(function () {
   $angularCacheFactory.removeAll();

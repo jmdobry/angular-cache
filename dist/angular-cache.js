@@ -1,7 +1,7 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-cache.js
- * @version 2.3.6 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 2.3.7 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @copyright (c) 2013-2014 Jason Dobry <http://jmdobry.github.io/angular-cache>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
@@ -787,7 +787,11 @@
           }
           if (value && value.then) {
             value.then(function (v) {
-              self.put(key, v, options);
+              if (angular.isObject(v) && 'status' in v && 'data' in v) {
+                self.put(key, [v.status, v.data, v.headers(), v.statusText]);
+              } else {
+                self.put(key, v, options);
+              }
             });
             return;
           }
