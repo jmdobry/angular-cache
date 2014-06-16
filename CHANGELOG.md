@@ -1,3 +1,8 @@
+##### 2.3.6 - 15 June 2014
+
+###### Backwards compatible bug fixes
+- $http w/ cache is trying to store a promise, which dies on JSON.stringify #115
+
 ##### 2.3.5 - 15 June 2014
 
 ###### Backwards compatible bug fixes
