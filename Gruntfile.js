@@ -254,5 +254,5 @@ module.exports = function (grunt) {
 
   // Used by the CLI build servers
   grunt.registerTask('test-cli', ['karma:1.0.4', 'karma:1.0.5', 'karma:1.0.6', 'karma:1.0.7', 'karma:1.0.8', 'karma:1.1.4', 'karma:1.1.5', 'karma:1.2.1', 'karma:1.2.2', 'karma:1.2.3', 'karma:1.2.4', 'karma:1.2.5', 'karma:1.2.6', 'karma:1.2.7', 'karma:1.2.16']);
-  grunt.registerTask('cli', ['clean', 'jshint', 'copy', 'uglify', 'test-cli', 'coveralls']);
+  grunt.registerTask('cli', ['clean', 'jshint', 'copy', 'uglify', 'test-cli']);
 };
