@@ -105,7 +105,7 @@ describe('DSCache.put(key, value, options)', function () {
       done();
     }, 100);
   });
-  it('should handle promises.', function (done) {
+  it('should handle normal promises.', function (done) {
     var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive', recycleFreq: 20 });
     var deferred = $q.defer();
     cache.put('item1', deferred.promise);
@@ -119,6 +119,22 @@ describe('DSCache.put(key, value, options)', function () {
         done();
       }, 100);
     }, 100);
+  });
+  it('should work with $http promises.', function () {
+    $httpBackend.expectGET('test.com').respond({ name: 'John' });
+    var cache = TestDSCacheFactory('cache', {});
+    $http.get('test.com', {
+      cache: cache
+    }).success(function (data) {
+      assert.deepEqual(data, { name: 'John' });
+      $http.get('test.com', {
+        cache: cache
+      }).success(function (data) {
+        assert.deepEqual(data, { name: 'John' });
+      });
+      $rootScope.$safeApply();
+    });
+    $httpBackend.flush();
   });
   it('should save data to localStorage when storageMode is used.', function () {
     var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage' }),

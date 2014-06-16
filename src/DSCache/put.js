@@ -40,7 +40,11 @@ module.exports = function put(key, value) {
   }
   if (value && value.then) {
     value.then(function (v) {
-      _this.put(key, v);
+      if (angular.isObject(v) && 'status' in v && 'data' in v) {
+        _this.put(key, [v.status, v.data, v.headers(), v.statusText]);
+      } else {
+        _this.put(key, v);
+      }
     });
     return;
   }
