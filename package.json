@@ -36,7 +36,8 @@
     "karma-coverage": "~0.2.4",
     "time-grunt": "~0.3.2",
     "load-grunt-tasks": "~0.5.0",
-    "grunt-karma-coveralls": "^2.5.1"
+    "grunt-karma-coveralls": "^2.5.1",
+    "karma-jasmine": "^0.1.5"
   },
   "scripts": {
     "test": "node node_modules/grunt-cli/bin/grunt build",
