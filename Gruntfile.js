@@ -33,11 +33,12 @@ module.exports = function (grunt) {
         options: {
           report: 'min',
           sourceMap: true,
+          sourceMapName: 'dist/angular-cache.min.map',
           banner: '/**\n' +
             '* @author Jason Dobry <jason.dobry@gmail.com>\n' +
             '* @file angular-cache.min.js\n' +
             '* @version <%= pkg.version %> - Homepage <https://github.com/jmdobry/angular-cache>\n' +
-            '* @copyright (c) 2013 Jason Dobry <http://www.pseudobry.com>\n' +
+            '* @copyright (c) 2013-2014 Jason Dobry <http://www.pseudobry.com>\n' +
             '* @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>\n' +
             '*\n' +
             '* @overview angular-cache is a very useful replacement for Angular\'s $cacheFactory.\n' +

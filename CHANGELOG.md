@@ -1,3 +1,12 @@
+##### 3.1.0 15 July 2014
+
+###### Backwards compatible API changes
+- #117 - call to DSCacheFactory(...) produces JSHint warning (Added DSCacheFactory.createCache method)
+
+###### Backwards compatible bug fixes
+- #118 - dist/angular-cache.js doesn't end with a semicolon (Upgraded dependencies)
+- #120 - How come the non minified version has minified code? (Upgraded dependencies)
+
 ##### 3.0.3 16 June 2014
 
 ###### Backwards compatible bug fixes

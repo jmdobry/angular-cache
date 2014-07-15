@@ -56,6 +56,21 @@ function DSCacheFactoryProvider() {
       return keys;
     }
 
+    function createCache(cacheId, options) {
+      if (cacheId in caches) {
+        throw angular.$$minErr('$cacheFactory')('iid', "CacheId '{0}' is already taken!", cacheId);
+      } else if (!angular.isString(cacheId)) {
+        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
+      }
+
+      caches[cacheId] = new DSCache(cacheId, angular.extend({}, config, options));
+      caches[cacheId].destroy = function () {
+        this.constructor.prototype.destroy.call(this);
+        delete caches[this.$$id];
+      };
+      return caches[cacheId];
+    }
+
     /**
      * @doc function
      * @id DSCacheFactory
@@ -81,19 +96,34 @@ function DSCacheFactoryProvider() {
      * @returns {DSCache} New instance of DSCache.
      */
     function DSCacheFactory(cacheId, options) {
-      if (cacheId in caches) {
-        throw angular.$$minErr('$cacheFactory')('iid', "CacheId '{0}' is already taken!", cacheId);
-      } else if (!angular.isString(cacheId)) {
-        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
-      }
-
-      caches[cacheId] = new DSCache(cacheId, angular.extend({}, config, options));
-      caches[cacheId].destroy = function () {
-        this.constructor.prototype.destroy.call(this);
-        delete caches[this.$$id];
-      };
-      return caches[cacheId];
+      return createCache(cacheId, options);
     }
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:createCache
+     * @name createCache
+     * @description
+     * Factory function that produces instances of `DSCache`.
+     *
+     * @param {string} cacheId The id of the new cache.
+     * @param {object} options Configuration options. Properties:
+     *
+     * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+     * - `{number=}` - `maxAge` - Default: `null`
+     * - `{number=}` - `deleteOnExpire` - Default: `none`
+     * - `{function=}` - `onExpire` - Default: `null`
+     * - `{number=}` - `cacheFlushInterval` - Default: `null`
+     * - `{number=}` - `recycleFreq` - Default: `1000`
+     * - `{number=}` - `deleteOnExpire` - Default: `null`
+     * - `{string=}` - `storageMode` - Default: `'none`
+     * - `{object=}` - `storageImpl` - Default: `null`
+     * - `{boolean=}` - `disabled` - Default: `false`
+     * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
+     *
+     * @returns {DSCache} New instance of DSCache.
+     */
+    DSCacheFactory.createCache = createCache;
 
     DSCacheFactory.version = version;
 
