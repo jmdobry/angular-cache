@@ -1,3 +1,9 @@
+##### 3.1.1 28 August 2014
+
+###### Backwards compatible bug fixes
+- #124 - DSCache.info does not work if the storageMode is localStorage.
+- #127 - requirejs conflict, require object overwritten
+
 ##### 3.1.0 15 July 2014
 
 ###### Backwards compatible API changes

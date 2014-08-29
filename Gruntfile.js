@@ -50,9 +50,6 @@ module.exports = function (grunt) {
       }
     },
     browserify: {
-      options: {
-        alias: ['src/defaults/index.js:Defaults']
-      },
       dist: {
         files: {
           'dist/angular-cache.js': ['src/index.js']

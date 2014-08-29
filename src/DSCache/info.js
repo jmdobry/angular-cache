@@ -46,17 +46,34 @@
  */
 module.exports = function info(key) {
   if (key) {
-    if (key in this.$$data) {
-      var item = this.$$data[key];
+    var item;
+    if (this.$$storage) {
+      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
 
-      return {
-        created: item.created,
-        accessed: item.accessed,
-        expires: item.expires,
-        isExpired: (new Date().getTime() - item.created) > this.$$maxAge
-      };
+      if (itemJson) {
+        item = angular.fromJson(itemJson);
+        return {
+          created: item.created,
+          accessed: item.accessed,
+          expires: item.expires,
+          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+        };
+      } else {
+        return undefined;
+      }
     } else {
-      return undefined;
+      if (key in this.$$data) {
+        item = this.$$data[key];
+
+        return {
+          created: item.created,
+          accessed: item.accessed,
+          expires: item.expires,
+          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+        };
+      } else {
+        return undefined;
+      }
     }
   } else {
     return {

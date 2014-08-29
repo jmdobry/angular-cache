@@ -1,13 +1,13 @@
 /**
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @file angular-cache.js
- * @version 3.1.0 - Homepage <https://github.com/jmdobry/angular-cache>
+ * @version 3.1.1 - Homepage <https://github.com/jmdobry/angular-cache>
  * @copyright (c) 2013-2014 Jason Dobry <http://www.pseudobry.com>
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
  *
  * @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
  */
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @method bubbleUp
  * @param {array} heap The heap.
@@ -410,7 +410,7 @@ module.exports = function get(key, options) {
   return value;
 };
 
-},{"../utils":22}],4:[function(require,module,exports){
+},{"../utils":21}],4:[function(require,module,exports){
 var defaults = require('../defaults'),
   DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
@@ -852,7 +852,7 @@ DSCache.prototype.touch = function (key) {
 
 module.exports = DSCache;
 
-},{"../DSBinaryHeap":1,"../defaults":"kH9dpy","./destroy":2,"./get":3,"./info":5,"./keySet":6,"./keys":7,"./put":8,"./remove":9,"./removeAll":10,"./removeExpired":11,"./setCacheFlushInterval":12,"./setCapacity":13,"./setDeleteOnExpire":14,"./setMaxAge":15,"./setOnExpire":16,"./setRecycleFreq":17}],5:[function(require,module,exports){
+},{"../DSBinaryHeap":1,"../defaults":19,"./destroy":2,"./get":3,"./info":5,"./keySet":6,"./keys":7,"./put":8,"./remove":9,"./removeAll":10,"./removeExpired":11,"./setCacheFlushInterval":12,"./setCapacity":13,"./setDeleteOnExpire":14,"./setMaxAge":15,"./setOnExpire":16,"./setRecycleFreq":17}],5:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:info
@@ -901,17 +901,34 @@ module.exports = DSCache;
  */
 module.exports = function info(key) {
   if (key) {
-    if (key in this.$$data) {
-      var item = this.$$data[key];
+    var item;
+    if (this.$$storage) {
+      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
 
-      return {
-        created: item.created,
-        accessed: item.accessed,
-        expires: item.expires,
-        isExpired: (new Date().getTime() - item.created) > this.$$maxAge
-      };
+      if (itemJson) {
+        item = angular.fromJson(itemJson);
+        return {
+          created: item.created,
+          accessed: item.accessed,
+          expires: item.expires,
+          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+        };
+      } else {
+        return undefined;
+      }
     } else {
-      return undefined;
+      if (key in this.$$data) {
+        item = this.$$data[key];
+
+        return {
+          created: item.created,
+          accessed: item.accessed,
+          expires: item.expires,
+          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+        };
+      } else {
+        return undefined;
+      }
     }
   } else {
     return {
@@ -975,7 +992,7 @@ module.exports = function keySet() {
   }
 };
 
-},{"../utils":22}],7:[function(require,module,exports){
+},{"../utils":21}],7:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1016,7 +1033,7 @@ module.exports = function keys() {
   }
 };
 
-},{"../utils":22}],8:[function(require,module,exports){
+},{"../utils":21}],8:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1136,7 +1153,7 @@ module.exports = function put(key, value) {
   return value;
 };
 
-},{"../utils":22}],9:[function(require,module,exports){
+},{"../utils":21}],9:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:remove
@@ -1596,7 +1613,7 @@ module.exports = function setMaxAge(maxAge) {
   }
 };
 
-},{"../utils":22}],16:[function(require,module,exports){
+},{"../utils":21}],16:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setOnExpire
@@ -1717,7 +1734,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults'),
   DSCache = require('../DSCache'),
-  version = '3.1.0';
+  version = '3.1.1';
 
 /**
  * @doc function
@@ -2069,9 +2086,7 @@ function DSCacheFactoryProvider() {
 
 module.exports = DSCacheFactoryProvider;
 
-},{"../DSCache":4,"../defaults":"kH9dpy"}],"Defaults":[function(require,module,exports){
-module.exports=require('kH9dpy');
-},{}],"kH9dpy":[function(require,module,exports){
+},{"../DSCache":4,"../defaults":19}],19:[function(require,module,exports){
 var defaults = {
   /**
    * @doc overview
@@ -2306,7 +2321,7 @@ module.exports = {
   defaults: defaults
 };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function (window, angular, undefined) {
   'use strict';
 
@@ -2365,7 +2380,7 @@ module.exports = {
    * @id angular-cache
    * @name Overview
    * @description
-   * __Version:__ 3.1.0
+   * __Version:__ 3.1.1
    *
    * ## Install
    *
@@ -2385,7 +2400,7 @@ module.exports = {
    * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
    *
    * #### Manual download
-   * Download angular-cache.3.1.0.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+   * Download angular-cache.3.1.1.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
    * section of the angular-cache GitHub project.
    *
    * ## Load into Angular
@@ -2409,7 +2424,7 @@ module.exports = {
 
 })(window, window.angular);
 
-},{"./DSBinaryHeap":1,"./DSCacheFactory":18}],22:[function(require,module,exports){
+},{"./DSBinaryHeap":1,"./DSCacheFactory":18}],21:[function(require,module,exports){
 module.exports = {
   /*!
    * Stringify a number.
@@ -2448,4 +2463,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[21]);
+},{}]},{},[20]);
