@@ -7,7 +7,6 @@
  *
  * @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
  */
-
 (function (window, angular, undefined) {
   'use strict';
 
