@@ -7,6 +7,7 @@
  *
  * @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
  */
+
 (function (window, angular, undefined) {
   'use strict';
 
@@ -234,6 +235,12 @@
     this.setCacheDefaults = function (options) {
       var errStr = '$angularCacheFactoryProvider.setCacheDefaults(options): ';
       options = options || {};
+
+      try {
+        localStorage.setItem('angular-cache.test', '1');
+      } catch (e) {
+        options.disabled = true;
+      }
 
       if (!angular.isObject(options)) {
         throw new Error(errStr + 'options: must be an object!');
