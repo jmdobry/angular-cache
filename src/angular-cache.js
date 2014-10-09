@@ -388,7 +388,8 @@
           prefix = 'angular-cache.caches.' + cacheId,
           cacheDirty = false,
           self = this,
-          storage = null;
+          storage = null,
+          promiseStorage = {};
 
         options = options || {};
 
@@ -799,19 +800,23 @@
           if (config.disabled) {
             return;
           }
-          if (!config.storePromises && value && value.then) {
-            value.then(function (v) {
-              if (angular.isObject(v) && 'status' in v && 'data' in v) {
-                self.put(key, [v.status, v.data, v.headers(), v.statusText]);
-              } else {
-                self.put(key, v, options);
-              }
-            });
+          key = _stringifyNumber(key);
+
+          if (value && value.then) {
+            if (!config.storePromises) {
+                value.then(function (v) {
+                    if (angular.isObject(v) && 'status' in v && 'data' in v) {
+                        self.put(key, [v.status, v.data, v.headers(), v.statusText]);
+                    } else {
+                        self.put(key, v, options);
+                    }
+                });
+            } else {
+                promiseStorage[key] = value;
+            }
             return;
           }
           options = options || {};
-
-          key = _stringifyNumber(key);
 
           if (!angular.isString(key)) {
             throw new Error('AngularCache.put(key, value, options): key: must be a string!');
@@ -912,6 +917,10 @@
             key = _stringifyNumber(key);
           }
 
+          if( config.storePromises){
+            return promiseStorage[key];
+          }
+
           options = options || {};
           if (!angular.isString(key)) {
             throw new Error('AngularCache.get(key, options): key: must be a string!');
@@ -960,6 +969,9 @@
          */
         this.remove = function (key, options) {
           options = options || {};
+          if (config.storePromises){
+            delete promiseStorage[key];
+          }
           _verifyIntegrity(options.verifyIntegrity);
           lruHeap.remove(data[key]);
           expiresHeap.remove(data[key]);
@@ -1030,6 +1042,7 @@
             storage.removeItem(prefix);
           }
           storage = null;
+          promiseStorage = null;
           data = null;
           lruHeap = null;
           expiresHeap = null;
