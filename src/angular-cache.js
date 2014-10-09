@@ -206,7 +206,8 @@
           storageMode: 'none',
           storageImpl: null,
           verifyIntegrity: true,
-          disabled: false
+          disabled: false,
+          storePromises: false
         };
       };
 
@@ -241,6 +242,10 @@
 
       if ('disabled' in options) {
         options.disabled = options.disabled === true;
+      }
+
+      if ('storePromises' in options) {
+        options.storePromises = options.storePromises === true;
       }
 
       if ('capacity' in options) {
@@ -617,6 +622,9 @@
           if ('verifyIntegrity' in cacheOptions) {
             config.verifyIntegrity = cacheOptions.verifyIntegrity === true;
           }
+          if ('storePromises' in cacheOptions) {
+            config.storePromises = cacheOptions.storePromises === true;
+          }
           if ('capacity' in cacheOptions) {
             _setCapacity(cacheOptions.capacity);
           }
@@ -681,6 +689,9 @@
                 if (data.deleteOnExpire) {
                   options.deleteOnExpire = data.deleteOnExpire;
                 }
+                if (data.storePromises) {
+                  options.storePromises = data.storePromises;
+                }
                 self.put(keys[i], data.value, options);
               }
             }
@@ -741,6 +752,9 @@
                 if (item && item.deleteOnExpire) {
                   options.deleteOnExpire = item.deleteOnExpire;
                 }
+                if (item && item.storePromises) {
+                  options.storePromises = item.storePromises;
+                }
 
                 if (value) {
                   self.put(key, value, options);
@@ -785,7 +799,7 @@
           if (config.disabled) {
             return;
           }
-          if (value && value.then) {
+          if (!config.storePromises && value && value.then) {
             value.then(function (v) {
               if (angular.isObject(v) && 'status' in v && 'data' in v) {
                 self.put(key, [v.status, v.data, v.headers(), v.statusText]);
@@ -836,6 +850,9 @@
 
           if (options.deleteOnExpire) {
             item.deleteOnExpire = options.deleteOnExpire;
+          }
+          if (options.storePromises) {
+            item.storePromises = options.storePromises;
           }
           if (options.maxAge) {
             item.maxAge = options.maxAge;
@@ -1048,6 +1065,7 @@
                 expires: data[key].expires,
                 maxAge: data[key].maxAge || config.maxAge,
                 deleteOnExpire: data[key].deleteOnExpire || config.deleteOnExpire,
+                storePromises: data[key].storePromises || config.storePromises,
                 isExpired: false
               };
               if (info.maxAge) {
