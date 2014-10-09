@@ -224,7 +224,7 @@ $angularCacheFactory.get(<span class="string">'profileCache'</span>); <span clas
 
     $angularCacheFactory(<span class="string">'defaultCache'</span>, {
         maxAge: <span class="number">900000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
-        cacheFlushInterval: <span class="number">6000000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        cacheFlushInterval: <span class="number">3600000</span>, <span class="comment">// This cache will clear itself every hour.</span>
         deleteOnExpire: <span class="string">'aggressive'</span> <span class="comment">// Items will be deleted from this cache right when they expire.</span>
     });
 
@@ -264,7 +264,7 @@ app.controller(<span class="string">'myCtrl'</span>, <span class="function"><spa
 
     $angularCacheFactory(<span class="string">'dataCache'</span>, {
         maxAge: <span class="number">90000</span>, <span class="comment">// Items added to this cache expire after 15 minutes.</span>
-        cacheFlushInterval: <span class="number">600000</span>, <span class="comment">// This cache will clear itself every hour.</span>
+        cacheFlushInterval: <span class="number">3600000</span>, <span class="comment">// This cache will clear itself every hour.</span>
         deleteOnExpire: <span class="string">'aggressive'</span> <span class="comment">// Items will be deleted from this cache right when they expire.</span>
     });
 
