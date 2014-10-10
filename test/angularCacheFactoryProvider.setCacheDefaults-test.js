@@ -11,7 +11,8 @@ describe('$angularCacheFactoryProvider.setCacheDefaults(options)', function () {
       storageImpl: CACHE_DEFAULTS.storageImpl,
       verifyIntegrity: CACHE_DEFAULTS.verifyIntegrity,
       disabled: CACHE_DEFAULTS.disabled,
-      readOnGet: CACHE_DEFAULTS.readOnGet
+      readOnGet: CACHE_DEFAULTS.readOnGet,
+      storePromises : CACHE_DEFAULTS.storePromises
     });
     var cache = $angularCacheFactory('cache');
     expect(cache).toBeDefined();

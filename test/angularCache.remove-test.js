@@ -59,4 +59,13 @@ describe('AngularCache.remove(key)', function () {
       expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('[]');
     }
   });
+  it('should allow to remove a promise if storePromises is true.', function () {
+    var cache = $angularCacheFactory('cache', {storePromises : true});
+    var deferred = $q.defer();
+    var promise = deferred.promise;
+    cache.put('mypromise', promise);
+    cache.remove('mypromise');
+    //we can't check on cache info size as promises are not counted
+    expect(cache.get('mypromise')).toBeUndefined();
+  });
 });
