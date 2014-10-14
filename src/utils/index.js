@@ -3,7 +3,7 @@ module.exports = {
    * Stringify a number.
    */
   stringifyNumber: function (number) {
-    if (number && angular.isNumber(number)) {
+    if (angular.isNumber(number)) {
       return number.toString();
     }
     return number;
