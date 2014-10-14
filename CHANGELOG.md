@@ -1,3 +1,13 @@
+##### 2.4.0 - 14 October 2014
+
+###### Backwards compatible API changes
+- #131 - Added a flag to allow storing promises
+
+###### Backwards compatible bug fixes
+- #128 - Fix for exception thrown in iOS privacy mode
+- #130 - (Docs) Wrong value for cache flush interval  
+- #132 - stringifyNumber(0) fails to stringify
+
 ##### 2.3.7 - 16 June 2014
 
 ###### Backwards compatible bug fixes

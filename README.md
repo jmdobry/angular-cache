@@ -1,7 +1,7 @@
 ## angular-cache
 __A very useful replacement for Angular's $cacheFactory.__
 
-__Version:__ 2.3.7
+__Version:__ 2.4.0
 
 All [Documentation](http://jmdobry.github.io/angular-cache) can be found at [jmdobry.github.io/angular-cache](http://jmdobry.github.io/angular-cache).
 

@@ -6,7 +6,7 @@
   "homepage": "http://jmdobry.github.io/angular-cache/",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jmdobry/angular-cache.git"
+    "url": "https://github.com/jmdobry/angular-cache.git"
   },
   "main": "./dist/angular-cache.min.js",
   "ignore": [
