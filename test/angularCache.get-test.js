@@ -144,4 +144,18 @@ describe('AngularCache.get(key)', function () {
     cache.put('item2', value2);
     expect(cache.get(['item1', 'item2', 'item3'])).toEqual([value1, value2]);
   });
+  it('should return a promise if storePromises is true.', function () {
+      var cache = $angularCacheFactory('cache', {storePromises : true});
+      var deferred = $q.defer();
+      var promise = deferred.promise;
+      cache.put('mypromise', promise);
+      expect(cache.get('mypromise')).toBe(promise);
+  });
+  it('should not return a promise if storePromises is false.', function () {
+      var cache = $angularCacheFactory('cache', {storePromises : false});
+      var deferred = $q.defer();
+      var promise = deferred.promise;
+      cache.put('mypromise', promise);
+      expect(cache.get('mypromise')).toBeUndefined();
+  });
 });

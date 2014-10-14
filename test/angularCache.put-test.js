@@ -263,4 +263,15 @@ describe('AngularCache.put(key, value, options)', function () {
       expect(sessionStorage.getItem('angular-cache.caches.sessionStorageCache.keys')).toEqual('["item1"]');
     }
   });
+  it('should store promises when storePromises is true.', function () {
+    $httpBackend.expectGET('test.com').respond({ name: 'John' });
+    var cache = $angularCacheFactory('cache', {storePromises : true});
+    $http.get('test.com', {
+          cache: cache
+    });
+    $http.get('test.com', {
+        cache: cache
+    });
+    $httpBackend.flush();
+  });
 });
