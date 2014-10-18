@@ -975,6 +975,9 @@
          * @param {object} [options] Configuration.
          */
         this.remove = function (key, options) {
+          if (config.disabled) {
+            return;
+          }
           options = options || {};
           if (config.storePromises) {
             delete promiseStorage[key];
@@ -994,6 +997,9 @@
          * @desc Clear the cache.
          */
         this.removeAll = function () {
+          if (config.disabled) {
+            return;
+          }
           _removeAllFromStorage();
           lruHeap.removeAll();
           expiresHeap.removeAll();
