@@ -1,3 +1,8 @@
+##### 2.4.1 - 18 October 2014
+
+###### Backwards compatible bug fixes
+- #133 - Fix ios privacy mode
+
 ##### 2.4.0 - 14 October 2014
 
 ###### Backwards compatible API changes
