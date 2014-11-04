@@ -83,8 +83,33 @@ module.exports = function put(key, value) {
       key: key,
       accessed: item.accessed
     });
+
     // Set item
-    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    try {
+      this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    } catch(e){
+
+      var targetItemSize = angular.toJson(item).length;
+      var releasedMemorySize = 0, itemToFlush;
+
+      while(releasedMemorySize < (targetItemSize * 2) ){ 
+        // we release 2 * memory more than the size of the target item to avoid generating too much exceptions
+        if(this.$$storage){
+          itemToFlush = this.$$storage.getItem(this.$$prefix + '.data.' + this.$$lruHeap.peek());
+
+          if(!itemToFlush) {
+            console.log("trying to flush a null for key : ", this.$$prefix + '.data.' + this.$$lruHeap.peek().key); 
+            return;
+          }
+          releasedMemorySize += itemToFlush.length;
+          this.remove(this.$$prefix + '.data.' + this.$$lruHeap.pop().key);
+          console.log("removed : ", this.$$lruHeap.peek().key);
+        }
+      } 
+
+      this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    }
+
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
       if (keys[i] === key) {
