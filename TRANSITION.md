@@ -77,7 +77,7 @@ $angularCacheFactory('myNewCache2', {
 ```
 
 ##### Installation
-The Bower package now contains only `dist/angular-cache.js` and dist/angular-cache.min.js`.
+The Bower package now contains only `dist/angular-cache.js` and `dist/angular-cache.min.js`.
 
 ##### onExpire
 
