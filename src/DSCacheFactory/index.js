@@ -1,6 +1,6 @@
-var defaults = require('../defaults'),
-  DSCache = require('../DSCache'),
-  version = '<%= pkg.version %>';
+var defaults = require('../defaults');
+var DSCache = require('../DSCache');
+var version = '<%= pkg.version %>';
 
 /**
  * @doc function
@@ -9,9 +9,11 @@ var defaults = require('../defaults'),
  */
 function DSCacheFactoryProvider() {
 
+  var _this = this;
+
   var config = new defaults.Config();
 
-  this.version = version;
+  _this.version = version;
 
   /**
    * @doc method
@@ -20,7 +22,7 @@ function DSCacheFactoryProvider() {
    * @desc Set the default configuration for all caches created by $angularCacheFactory.
    * @param {object} options Default configuration options for each new cache.
    */
-  this.setCacheDefaults = function (options) {
+  _this.setCacheDefaults = function (options) {
     options = options || {};
 
     if (!angular.isObject(options)) {
@@ -37,7 +39,7 @@ function DSCacheFactoryProvider() {
     }
   };
 
-  this.$get = function () {
+  _this.$get = ['$q', function ($q) {
     var caches = {};
 
     /*!
@@ -68,6 +70,7 @@ function DSCacheFactoryProvider() {
         this.constructor.prototype.destroy.call(this);
         delete caches[this.$$id];
       };
+      caches[cacheId].$q = $q;
       return caches[cacheId];
     }
 
@@ -347,7 +350,7 @@ function DSCacheFactoryProvider() {
     };
 
     return DSCacheFactory;
-  };
+  }];
 }
 
 module.exports = DSCacheFactoryProvider;

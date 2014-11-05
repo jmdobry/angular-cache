@@ -101,8 +101,8 @@ module.exports = function get(key, options) {
   var _this = this;
 
   if (angular.isArray(key)) {
-    var keys = key,
-      values = [];
+    var keys = key;
+    var values = [];
 
     angular.forEach(keys, function (key) {
       var value = _this.get(key, options);
@@ -115,7 +115,7 @@ module.exports = function get(key, options) {
   } else {
     key = utils.stringifyNumber(key);
 
-    if (this.$$disabled) {
+    if (_this.$$disabled) {
       return;
     }
   }
@@ -131,8 +131,12 @@ module.exports = function get(key, options) {
 
   var item;
 
-  if (this.$$storage) {
-    var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  if (_this.$$storage) {
+    if (_this.$$promises[key]) {
+      return _this.$$promises[key];
+    }
+
+    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
 
     if (itemJson) {
       item = angular.fromJson(itemJson);
@@ -140,43 +144,43 @@ module.exports = function get(key, options) {
       return;
     }
   } else {
-    if (!(key in this.$$data)) {
+    if (!(key in _this.$$data)) {
       return;
     }
 
-    item = this.$$data[key];
+    item = _this.$$data[key];
   }
 
-  var value = item.value,
-    now = new Date().getTime();
+  var value = item.value;
+  var now = new Date().getTime();
 
-  if (this.$$storage) {
-    this.$$lruHeap.remove({
+  if (_this.$$storage) {
+    _this.$$lruHeap.remove({
       key: key,
       accessed: item.accessed
     });
     item.accessed = now;
-    this.$$lruHeap.push({
+    _this.$$lruHeap.push({
       key: key,
       accessed: now
     });
   } else {
-    this.$$lruHeap.remove(item);
+    _this.$$lruHeap.remove(item);
     item.accessed = now;
-    this.$$lruHeap.push(item);
+    _this.$$lruHeap.push(item);
   }
 
-  if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
-    this.remove(key);
+  if (_this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
+    _this.remove(key);
 
-    if (this.$$onExpire) {
-      this.$$onExpire(key, item.value, options.onExpire);
+    if (_this.$$onExpire) {
+      _this.$$onExpire(key, item.value, options.onExpire);
     } else if (options.onExpire) {
       options.onExpire(key, item.value);
     }
     value = undefined;
-  } else if (this.$$storage) {
-    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+  } else if (_this.$$storage) {
+    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, angular.toJson(item));
   }
 
   return value;

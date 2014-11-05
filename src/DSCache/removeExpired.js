@@ -41,33 +41,34 @@
  * @returns {object} The removed items, if any.
  */
 module.exports = function removeExpired() {
-  var now = new Date().getTime(),
-    expired = {},
-    key,
-    expiredItem;
+  var _this = this;
+  var now = new Date().getTime();
+  var expired = {};
+  var key;
+  var expiredItem;
 
-  while ((expiredItem = this.$$expiresHeap.peek()) && expiredItem.expires < now) {
+  while ((expiredItem = _this.$$expiresHeap.peek()) && expiredItem.expires < now) {
     expired[expiredItem.key] = expiredItem.value ? expiredItem.value : null;
-    this.$$expiresHeap.pop();
+    _this.$$expiresHeap.pop();
   }
 
-  if (this.$$storage) {
+  if (_this.$$storage) {
     for (key in expired) {
-      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
       if (itemJson) {
         expired[key] = angular.fromJson(itemJson).value;
-        this.remove(key);
+        _this.remove(key);
       }
     }
   } else {
     for (key in expired) {
-      this.remove(key);
+      _this.remove(key);
     }
   }
 
-  if (this.$$onExpire) {
+  if (_this.$$onExpire) {
     for (key in expired) {
-      this.$$onExpire(key, expired[key]);
+      _this.$$onExpire(key, expired[key]);
     }
   }
 

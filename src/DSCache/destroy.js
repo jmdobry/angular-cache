@@ -21,16 +21,17 @@
  * ```
  */
 module.exports = function destroy() {
-  clearInterval(this.$$cacheFlushIntervalId);
-  clearInterval(this.$$recycleFreqId);
-  this.removeAll();
-  if (this.$$storage) {
-    this.$$storage.removeItem(this.$$prefix + '.keys');
-    this.$$storage.removeItem(this.$$prefix);
+  var _this = this;
+  clearInterval(_this.$$cacheFlushIntervalId);
+  clearInterval(_this.$$recycleFreqId);
+  _this.removeAll();
+  if (_this.$$storage) {
+    _this.$$storage.removeItem(_this.$$prefix + '.keys');
+    _this.$$storage.removeItem(_this.$$prefix);
   }
-  this.$$storage = null;
-  this.$$data = null;
-  this.$$lruHeap = null;
-  this.$$expiresHeap = null;
-  this.$$prefix = null;
+  _this.$$storage = null;
+  _this.$$data = null;
+  _this.$$lruHeap = null;
+  _this.$$expiresHeap = null;
+  _this.$$prefix = null;
 };
