@@ -1,12 +1,3 @@
-/**
- * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache.js
- * @version 3.1.1 - Homepage <https://github.com/jmdobry/angular-cache>
- * @copyright (c) 2013-2014 Jason Dobry <http://www.pseudobry.com>
- * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
- *
- * @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
- */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @method bubbleUp
@@ -211,18 +202,19 @@ module.exports = {
  * ```
  */
 module.exports = function destroy() {
-  clearInterval(this.$$cacheFlushIntervalId);
-  clearInterval(this.$$recycleFreqId);
-  this.removeAll();
-  if (this.$$storage) {
-    this.$$storage.removeItem(this.$$prefix + '.keys');
-    this.$$storage.removeItem(this.$$prefix);
+  var _this = this;
+  clearInterval(_this.$$cacheFlushIntervalId);
+  clearInterval(_this.$$recycleFreqId);
+  _this.removeAll();
+  if (_this.$$storage) {
+    _this.$$storage.removeItem(_this.$$prefix + '.keys');
+    _this.$$storage.removeItem(_this.$$prefix);
   }
-  this.$$storage = null;
-  this.$$data = null;
-  this.$$lruHeap = null;
-  this.$$expiresHeap = null;
-  this.$$prefix = null;
+  _this.$$storage = null;
+  _this.$$data = null;
+  _this.$$lruHeap = null;
+  _this.$$expiresHeap = null;
+  _this.$$prefix = null;
 };
 
 },{}],3:[function(require,module,exports){
@@ -329,8 +321,8 @@ module.exports = function get(key, options) {
   var _this = this;
 
   if (angular.isArray(key)) {
-    var keys = key,
-      values = [];
+    var keys = key;
+    var values = [];
 
     angular.forEach(keys, function (key) {
       var value = _this.get(key, options);
@@ -343,7 +335,7 @@ module.exports = function get(key, options) {
   } else {
     key = utils.stringifyNumber(key);
 
-    if (this.$$disabled) {
+    if (_this.$$disabled) {
       return;
     }
   }
@@ -359,8 +351,12 @@ module.exports = function get(key, options) {
 
   var item;
 
-  if (this.$$storage) {
-    var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  if (_this.$$storage) {
+    if (_this.$$promises[key]) {
+      return _this.$$promises[key];
+    }
+
+    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
 
     if (itemJson) {
       item = angular.fromJson(itemJson);
@@ -368,63 +364,64 @@ module.exports = function get(key, options) {
       return;
     }
   } else {
-    if (!(key in this.$$data)) {
+    if (!(key in _this.$$data)) {
       return;
     }
 
-    item = this.$$data[key];
+    item = _this.$$data[key];
   }
 
-  var value = item.value,
-    now = new Date().getTime();
+  var value = item.value;
+  var now = new Date().getTime();
 
-  if (this.$$storage) {
-    this.$$lruHeap.remove({
+  if (_this.$$storage) {
+    _this.$$lruHeap.remove({
       key: key,
       accessed: item.accessed
     });
     item.accessed = now;
-    this.$$lruHeap.push({
+    _this.$$lruHeap.push({
       key: key,
       accessed: now
     });
   } else {
-    this.$$lruHeap.remove(item);
+    _this.$$lruHeap.remove(item);
     item.accessed = now;
-    this.$$lruHeap.push(item);
+    _this.$$lruHeap.push(item);
   }
 
-  if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
-    this.remove(key);
+  if (_this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
+    _this.remove(key);
 
-    if (this.$$onExpire) {
-      this.$$onExpire(key, item.value, options.onExpire);
+    if (_this.$$onExpire) {
+      _this.$$onExpire(key, item.value, options.onExpire);
     } else if (options.onExpire) {
       options.onExpire(key, item.value);
     }
     value = undefined;
-  } else if (this.$$storage) {
-    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+  } else if (_this.$$storage) {
+    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, angular.toJson(item));
   }
 
   return value;
 };
 
 },{"../utils":21}],4:[function(require,module,exports){
-var defaults = require('../defaults'),
-  DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
+var defaults = require('../defaults');
+var DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
 /*!
  * Configure the cache to use webStorage.
  */
 function _setStorageMode(storageMode, storageImpl) {
+  var _this = this;
   if (!angular.isString(storageMode)) {
     throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
   } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
     throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: {0}.', storageMode);
   }
 
-  this.$$storageMode = storageMode;
+  _this.$$storageMode = storageMode;
 
   if (storageImpl) {
     if (!angular.isObject(storageImpl)) {
@@ -436,24 +433,24 @@ function _setStorageMode(storageMode, storageImpl) {
     } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
       throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
     }
-    this.$$storage = storageImpl;
-  } else if (this.$$storageMode === 'localStorage') {
+    _this.$$storage = storageImpl;
+  } else if (_this.$$storageMode === 'localStorage') {
     try {
       localStorage.setItem('angular-cache', 'angular-cache');
       localStorage.removeItem('angular-cache');
-      this.$$storage = localStorage;
+      _this.$$storage = localStorage;
     } catch (e) {
-      delete this.$$storage;
-      this.$$storageMode = 'memory';
+      delete _this.$$storage;
+      _this.$$storageMode = 'memory';
     }
-  } else if (this.$$storageMode === 'sessionStorage') {
+  } else if (_this.$$storageMode === 'sessionStorage') {
     try {
       sessionStorage.setItem('angular-cache', 'angular-cache');
       sessionStorage.removeItem('angular-cache');
-      this.$$storage = sessionStorage;
+      _this.$$storage = sessionStorage;
     } catch (e) {
-      delete this.$$storage;
-      this.$$storageMode = 'memory';
+      delete _this.$$storage;
+      _this.$$storageMode = 'memory';
     }
   }
 }
@@ -488,11 +485,14 @@ function _setStorageMode(storageMode, storageImpl) {
  * - `{number=}` - `cacheFlushInterval` - Default: `null`
  * - `{number=}` - `recycleFreq` - Default: `1000`
  * - `{boolean=}` - `disabled` - Default: `false`
+ * - `{boolean=}` - `storeOnResolve` - If putting a promise, also put the resolved value if the promise resolves. Default: `true`.
+ * - `{boolean=}` - `storeOnReject` - If putting a promise, also put the rejection value if the the promise rejects. Default: `true`.
  *
  * @param {boolean=} strict If true then any existing configuration will be reset to the defaults before
  * applying the new options, otherwise only the options specified in the options hash will be altered.
  */
 function _setOptions(cacheOptions, strict) {
+  var _this = this;
   cacheOptions = cacheOptions || {};
   strict = !!strict;
   if (!angular.isObject(cacheOptions)) {
@@ -500,45 +500,57 @@ function _setOptions(cacheOptions, strict) {
   }
 
   if ('disabled' in cacheOptions) {
-    this.$$disabled = !!cacheOptions.disabled;
+    _this.$$disabled = !!cacheOptions.disabled;
   } else if (strict) {
-    delete this.$$disabled;
+    delete _this.$$disabled;
+  }
+
+  if ('storeOnResolve' in cacheOptions) {
+    _this.$$storeOnResolve = !!cacheOptions.storeOnResolve;
+  } else if (strict) {
+    _this.$$storeOnResolve = true;
+  }
+
+  if ('storeOnReject' in cacheOptions) {
+    _this.$$storeOnReject = !!cacheOptions.storeOnReject;
+  } else if (strict) {
+    _this.$$storeOnReject = true;
   }
 
   if ('capacity' in cacheOptions) {
-    this.setCapacity(cacheOptions.capacity);
+    _this.setCapacity(cacheOptions.capacity);
   } else if (strict) {
-    this.setCapacity(null);
+    _this.setCapacity(null);
   }
 
   if ('deleteOnExpire' in cacheOptions) {
-    this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
+    _this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
   } else if (strict) {
-    this.setDeleteOnExpire(null);
+    _this.setDeleteOnExpire(null);
   }
 
   if ('maxAge' in cacheOptions) {
-    this.setMaxAge(cacheOptions.maxAge);
+    _this.setMaxAge(cacheOptions.maxAge);
   } else if (strict) {
-    this.setMaxAge(null);
+    _this.setMaxAge(null);
   }
 
   if ('recycleFreq' in cacheOptions) {
-    this.setRecycleFreq(cacheOptions.recycleFreq);
+    _this.setRecycleFreq(cacheOptions.recycleFreq);
   } else if (strict) {
-    this.setRecycleFreq(null);
+    _this.setRecycleFreq(null);
   }
 
   if ('cacheFlushInterval' in cacheOptions) {
-    this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
+    _this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
   } else if (strict) {
-    this.setCacheFlushInterval(null);
+    _this.setCacheFlushInterval(null);
   }
 
   if ('onExpire' in cacheOptions) {
-    this.setOnExpire(cacheOptions.onExpire);
+    _this.setOnExpire(cacheOptions.onExpire);
   } else if (strict) {
-    this.setOnExpire(null);
+    _this.setOnExpire(null);
   }
 }
 
@@ -553,32 +565,34 @@ function _setOptions(cacheOptions, strict) {
  * @param {object=} options Configuration options.
  */
 function DSCache(cacheId, options) {
+  var _this = this;
 
-  this.$$data = {};
-  this.$$id = cacheId;
-  this.$$storage = null;
+  _this.$$data = {};
+  _this.$$promises = {};
+  _this.$$id = cacheId;
+  _this.$$storage = null;
 
-  this.$$expiresHeap = new DSBinaryHeap(function (x) {
+  _this.$$expiresHeap = new DSBinaryHeap(function (x) {
     return x.expires;
   });
 
-  this.$$lruHeap = new DSBinaryHeap(function (x) {
+  _this.$$lruHeap = new DSBinaryHeap(function (x) {
     return x.accessed;
   });
 
   options = options || {};
 
   if ('storageMode' in options) {
-    _setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
+    _setStorageMode.apply(_this, [options.storageMode, options.storageImpl]);
   }
   if ('storagePrefix' in options) {
-    this.$$storagePrefix = options.storagePrefix;
+    _this.$$storagePrefix = options.storagePrefix;
   }
 
-  this.$$prefix = this.$$storagePrefix + cacheId;
+  _this.$$prefix = _this.$$storagePrefix + cacheId;
 
-  // Initialize this cache with the default and given options
-  _setOptions.apply(this, [options, true]);
+  // Initialize _this cache with the default and given options
+  _setOptions.apply(_this, [options, true]);
 }
 
 for (var key in defaults.defaults) {
@@ -832,20 +846,20 @@ DSCache.prototype.enable = function () {
  * @param {string=} key The key of the item to touch.
  */
 DSCache.prototype.touch = function (key) {
+  var _this = this;
   if (key) {
-    var _this = this;
-    var val = this.get(key, {
+    var val = _this.get(key, {
       onExpire: function (k, v) {
         _this.put(k, v);
       }
     });
     if (val) {
-      this.put(key, val);
+      _this.put(key, val);
     }
   } else {
-    var keys = this.keys();
+    var keys = _this.keys();
     for (var i = 0; i < keys.length; i++) {
-      this.touch(keys[i]);
+      _this.touch(keys[i]);
     }
   }
 };
@@ -900,10 +914,11 @@ module.exports = DSCache;
  * @returns {object} The status of this cache or of the item with the given key.
  */
 module.exports = function info(key) {
+  var _this = this;
   if (key) {
     var item;
-    if (this.$$storage) {
-      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+    if (_this.$$storage) {
+      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         item = angular.fromJson(itemJson);
@@ -911,20 +926,20 @@ module.exports = function info(key) {
           created: item.created,
           accessed: item.accessed,
           expires: item.expires,
-          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+          isExpired: (new Date().getTime() - item.created) > _this.$$maxAge
         };
       } else {
         return undefined;
       }
     } else {
-      if (key in this.$$data) {
-        item = this.$$data[key];
+      if (key in _this.$$data) {
+        item = _this.$$data[key];
 
         return {
           created: item.created,
           accessed: item.accessed,
           expires: item.expires,
-          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+          isExpired: (new Date().getTime() - item.created) > _this.$$maxAge
         };
       } else {
         return undefined;
@@ -932,17 +947,17 @@ module.exports = function info(key) {
     }
   } else {
     return {
-      id: this.$$id,
-      capacity: this.$$capacity,
-      maxAge: this.$$maxAge,
-      deleteOnExpire: this.$$deleteOnExpire,
-      onExpire: this.$$onExpire,
-      cacheFlushInterval: this.$$cacheFlushInterval,
-      recycleFreq: this.$$recycleFreq,
-      storageMode: this.$$storageMode,
-      storageImpl: this.$$storage,
-      disabled: this.$$disabled,
-      size: this.$$lruHeap && this.$$lruHeap.size() || 0
+      id: _this.$$id,
+      capacity: _this.$$capacity,
+      maxAge: _this.$$maxAge,
+      deleteOnExpire: _this.$$deleteOnExpire,
+      onExpire: _this.$$onExpire,
+      cacheFlushInterval: _this.$$cacheFlushInterval,
+      recycleFreq: _this.$$recycleFreq,
+      storageMode: _this.$$storageMode,
+      storageImpl: _this.$$storage,
+      disabled: _this.$$disabled,
+      size: _this.$$lruHeap && _this.$$lruHeap.size() || 0
     };
   }
 };
@@ -975,8 +990,9 @@ var utils = require('../utils');
  * @returns {object} An object of the keys in this cache.
  */
 module.exports = function keySet() {
-  if (this.$$storage) {
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
+  var _this = this;
+  if (_this.$$storage) {
+    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys'),
       kSet = {};
 
     if (keysJson) {
@@ -988,7 +1004,7 @@ module.exports = function keySet() {
     }
     return kSet;
   } else {
-    return utils.keySet(this.$$data);
+    return utils.keySet(_this.$$data);
   }
 };
 
@@ -1020,8 +1036,9 @@ var utils = require('../utils');
  * @returns {Array} An array of the keys in this cache.
  */
 module.exports = function keys() {
-  if (this.$$storage) {
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  var _this = this;
+  if (_this.$$storage) {
+    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
 
     if (keysJson) {
       return angular.fromJson(keysJson);
@@ -1029,12 +1046,16 @@ module.exports = function keys() {
       return [];
     }
   } else {
-    return utils.keys(this.$$data);
+    return utils.keys(_this.$$data);
   }
 };
 
 },{"../utils":21}],8:[function(require,module,exports){
 var utils = require('../utils');
+
+function isPromiseLike(v) {
+  return v && typeof v.then === 'function';
+}
 
 /**
  * @doc method
@@ -1067,21 +1088,40 @@ var utils = require('../utils');
  *
  * @param {string} key The key under which to store the given value.
  * @param {*} value The value to store.
+ * @param {options=} options Configuration options. Properties:
+ *
+ *  - `{boolean=}` - `storeOnResolve` - If putting a promise, put the resolved value if the promise resolves.
+ *  - `{boolean=}` - `storeOnReject` - If putting a promise, put the rejection value if the the promise rejects.
+ *
  * @returns {*} The newly stored item.
  */
-module.exports = function put(key, value) {
+module.exports = function put(key, value, options) {
+  options = options || {};
+
   var _this = this;
-  if (this.$$disabled || value === null || value === undefined) {
-    return;
-  }
-  if (value && value.then) {
-    value.then(function (v) {
-      if (angular.isObject(v) && 'status' in v && 'data' in v) {
-        _this.put(key, [v.status, v.data, v.headers(), v.statusText]);
-      } else {
-        _this.put(key, v);
+  var storeOnResolve = 'storeOnResolve' in options ? !!options.storeOnResolve : _this.$$storeOnResolve;
+  var storeOnReject = 'storeOnReject' in options ? !!options.storeOnReject : _this.$$storeOnReject;
+
+  function getHandler(store, isError) {
+    return function handlePromise(v) {
+      if (store) {
+        delete _this.$$promises[key];
+        if (angular.isObject(v) && 'status' in v && 'data' in v) {
+          v = [v.status, v.data, v.headers(), v.statusText];
+          _this.put(key, v);
+        } else {
+          _this.put(key, v);
+        }
       }
-    });
+      if (isError) {
+        return _this.$q.reject(v);
+      } else {
+        return v;
+      }
+    };
+  }
+
+  if (_this.$$disabled || value === null || value === undefined) {
     return;
   }
   key = utils.stringifyNumber(key);
@@ -1090,37 +1130,41 @@ module.exports = function put(key, value) {
     throw angular.$$minErr('ng')('areq', 'Expected key to be a string! Found: {0}.', typeof key);
   }
 
-  var now = new Date().getTime(),
-    item = {
-      key: key,
-      value: value,
-      created: now,
-      accessed: now
-    };
+  var now = new Date().getTime();
+  var item = {
+    key: key,
+    value: isPromiseLike(value) ? value.then(getHandler(storeOnResolve, false), getHandler(storeOnReject, true)) : value,
+    created: now,
+    accessed: now
+  };
 
-  item.expires = item.created + this.$$maxAge;
+  item.expires = item.created + _this.$$maxAge;
 
-  if (this.$$storage) {
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
-      keys = keysJson ? angular.fromJson(keysJson) : [],
-      itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  if (_this.$$storage) {
+    if (isPromiseLike(item.value)) {
+      _this.$$promises[key] = item.value;
+      return _this.$$promises[key];
+    }
+    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
+    var keys = keysJson ? angular.fromJson(keysJson) : [];
+    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
 
     // Remove existing
     if (itemJson) {
-      this.remove(key);
+      _this.remove(key);
     }
     // Add to expires heap
-    this.$$expiresHeap.push({
+    _this.$$expiresHeap.push({
       key: key,
       expires: item.expires
     });
     // Add to lru heap
-    this.$$lruHeap.push({
+    _this.$$lruHeap.push({
       key: key,
       accessed: item.accessed
     });
     // Set item
-    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, angular.toJson(item));
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
       if (keys[i] === key) {
@@ -1131,23 +1175,24 @@ module.exports = function put(key, value) {
     if (!exists) {
       keys.push(key);
     }
-    this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
+    _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson(keys));
   } else {
     // Remove existing
-    if (this.$$data[key]) {
-      this.remove(key);
+    if (_this.$$data[key]) {
+      _this.remove(key);
     }
     // Add to expires heap
-    this.$$expiresHeap.push(item);
+    _this.$$expiresHeap.push(item);
     // Add to lru heap
-    this.$$lruHeap.push(item);
+    _this.$$lruHeap.push(item);
     // Set item
-    this.$$data[key] = item;
+    _this.$$data[key] = item;
+    delete _this.$$promises[key];
   }
 
   // Handle exceeded capacity
-  if (this.$$lruHeap.size() > this.$$capacity) {
-    this.remove(this.$$lruHeap.peek().key);
+  if (_this.$$lruHeap.size() > _this.$$capacity) {
+    _this.remove(_this.$$lruHeap.peek().key);
   }
 
   return value;
@@ -1183,36 +1228,38 @@ module.exports = function put(key, value) {
  * @returns {*} The removed item if an item was removed.
  */
 module.exports = function remove(key) {
-  if (this.$$storage) {
-    var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+  var _this = this;
+  delete _this.$$promises[key];
+  if (_this.$$storage) {
+    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
 
     if (itemJson) {
       var item = angular.fromJson(itemJson);
-      this.$$lruHeap.remove({
+      _this.$$lruHeap.remove({
         key: key,
         accessed: item.accessed
       });
-      this.$$expiresHeap.remove({
+      _this.$$expiresHeap.remove({
         key: key,
         expires: item.expires
       });
-      this.$$storage.removeItem(this.$$prefix + '.data.' + key);
-      var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
+      _this.$$storage.removeItem(_this.$$prefix + '.data.' + key);
+      var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys'),
         keys = keysJson ? angular.fromJson(keysJson) : [],
         index = keys.indexOf(key);
 
       if (index >= 0) {
         keys.splice(index, 1);
       }
-      this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson(keys));
+      _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson(keys));
       return item.value;
     }
   } else {
-    var value = this.$$data[key] ? this.$$data[key].value : undefined;
-    this.$$lruHeap.remove(this.$$data[key]);
-    this.$$expiresHeap.remove(this.$$data[key]);
-    this.$$data[key] = null;
-    delete this.$$data[key];
+    var value = _this.$$data[key] ? _this.$$data[key].value : undefined;
+    _this.$$lruHeap.remove(_this.$$data[key]);
+    _this.$$expiresHeap.remove(_this.$$data[key]);
+    _this.$$data[key] = null;
+    delete _this.$$data[key];
     return value;
   }
 };
@@ -1249,26 +1296,27 @@ module.exports = function remove(key) {
  * ```
  */
 module.exports = function removeAll() {
-  if (this.$$storage) {
-    this.$$lruHeap.removeAll();
-    this.$$expiresHeap.removeAll();
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  var _this = this;
+  if (_this.$$storage) {
+    _this.$$lruHeap.removeAll();
+    _this.$$expiresHeap.removeAll();
+    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
 
     if (keysJson) {
       var keys = angular.fromJson(keysJson);
 
       for (var i = 0; i < keys.length; i++) {
-        this.remove(keys[i]);
+        _this.remove(keys[i]);
       }
     }
-    this.$$storage.setItem(this.$$prefix + '.keys', angular.toJson([]));
+    _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson([]));
   } else {
-    this.$$lruHeap.removeAll();
-    this.$$expiresHeap.removeAll();
-    for (var key in this.$$data) {
-      this.$$data[key] = null;
+    _this.$$lruHeap.removeAll();
+    _this.$$expiresHeap.removeAll();
+    for (var key in _this.$$data) {
+      _this.$$data[key] = null;
     }
-    this.$$data = {};
+    _this.$$data = {};
   }
 };
 
@@ -1316,33 +1364,34 @@ module.exports = function removeAll() {
  * @returns {object} The removed items, if any.
  */
 module.exports = function removeExpired() {
-  var now = new Date().getTime(),
-    expired = {},
-    key,
-    expiredItem;
+  var _this = this;
+  var now = new Date().getTime();
+  var expired = {};
+  var key;
+  var expiredItem;
 
-  while ((expiredItem = this.$$expiresHeap.peek()) && expiredItem.expires < now) {
+  while ((expiredItem = _this.$$expiresHeap.peek()) && expiredItem.expires < now) {
     expired[expiredItem.key] = expiredItem.value ? expiredItem.value : null;
-    this.$$expiresHeap.pop();
+    _this.$$expiresHeap.pop();
   }
 
-  if (this.$$storage) {
+  if (_this.$$storage) {
     for (key in expired) {
-      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
       if (itemJson) {
         expired[key] = angular.fromJson(itemJson).value;
-        this.remove(key);
+        _this.remove(key);
       }
     }
   } else {
     for (key in expired) {
-      this.remove(key);
+      _this.remove(key);
     }
   }
 
-  if (this.$$onExpire) {
+  if (_this.$$onExpire) {
     for (key in expired) {
-      this.$$onExpire(key, expired[key]);
+      _this.$$onExpire(key, expired[key]);
     }
   }
 
@@ -1385,20 +1434,21 @@ module.exports = function removeExpired() {
  * `cacheFlushInterval` is `null` then `cacheFlushInterval` for this cache will be reset to the default (`null`).
  */
 module.exports = function setCacheFlushInterval(cacheFlushInterval) {
+  var _this = this;
   if (cacheFlushInterval === null) {
-    delete this.$$cacheFlushInterval;
+    delete _this.$$cacheFlushInterval;
   } else if (!angular.isNumber(cacheFlushInterval)) {
     throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be a number! Found: {0}.', typeof cacheFlushInterval);
   } else if (cacheFlushInterval < 0) {
     throw angular.$$minErr('ng')('areq', 'Expected cacheFlushInterval to be greater than zero! Found: {0}.', cacheFlushInterval);
-  } else if (cacheFlushInterval !== this.$$cacheFlushInterval) {
-    this.$$cacheFlushInterval = cacheFlushInterval;
-    clearInterval(this.$$cacheFlushIntervalId);
-    (function (_this) {
-      _this.$$cacheFlushIntervalId = setInterval(function () {
-        _this.removeAll();
-      }, _this.$$cacheFlushInterval);
-    })(this);
+  } else if (cacheFlushInterval !== _this.$$cacheFlushInterval) {
+    _this.$$cacheFlushInterval = cacheFlushInterval;
+    clearInterval(_this.$$cacheFlushIntervalId);
+    (function (self) {
+      self.$$cacheFlushIntervalId = setInterval(function () {
+        self.removeAll();
+      }, self.$$cacheFlushInterval);
+    })(_this);
   }
 };
 
@@ -1443,18 +1493,19 @@ module.exports = function setCacheFlushInterval(cacheFlushInterval) {
  * @returns {object} Key-value pairs of any items removed because this cache's size exceeds the new capacity.
  */
 module.exports = function setCapacity(capacity) {
+  var _this = this;
   if (capacity === null) {
-    delete this.$$capacity;
+    delete _this.$$capacity;
   } else if (!angular.isNumber(capacity)) {
     throw angular.$$minErr('ng')('areq', 'Expected capacity to be a number! Found: {0}.', typeof capacity);
   } else if (capacity < 0) {
     throw angular.$$minErr('ng')('areq', 'Expected capacity to be greater than zero! Found: {0}.', capacity);
   } else {
-    this.$$capacity = capacity;
+    _this.$$capacity = capacity;
   }
   var removed = {};
-  while (this.$$lruHeap.size() > this.$$capacity) {
-    removed[this.$$lruHeap.peek().key] = this.remove(this.$$lruHeap.peek().key);
+  while (_this.$$lruHeap.size() > _this.$$capacity) {
+    removed[_this.$$lruHeap.peek().key] = _this.remove(_this.$$lruHeap.peek().key);
   }
   return removed;
 };
@@ -1503,16 +1554,17 @@ module.exports = function setCapacity(capacity) {
  * `deleteOnExpire` for this cache will be reset to the default (`"none"`).
  */
 module.exports = function setDeleteOnExpire(deleteOnExpire) {
+  var _this = this;
   if (deleteOnExpire === null) {
-    delete this.$$deleteOnExpire;
+    delete _this.$$deleteOnExpire;
   } else if (!angular.isString(deleteOnExpire)) {
     throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be a string! Found: {0}.', typeof deleteOnExpire);
   } else if (deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
     throw angular.$$minErr('ng')('areq', 'Expected deleteOnExpire to be "none", "passive" or "aggressive"! Found: {0}.', deleteOnExpire);
   } else {
-    this.$$deleteOnExpire = deleteOnExpire;
+    _this.$$deleteOnExpire = deleteOnExpire;
   }
-  this.setRecycleFreq(this.$$recycleFreq);
+  _this.setRecycleFreq(_this.$$recycleFreq);
 };
 
 },{}],15:[function(require,module,exports){
@@ -1558,56 +1610,57 @@ var utils = require('../utils');
  * `maxAge`. Items are only removed if the `deleteOnExpire` setting for this cache is set to `"aggressive"`.
  */
 module.exports = function setMaxAge(maxAge) {
+  var _this = this;
   if (maxAge === null) {
-    delete this.$$maxAge;
+    delete _this.$$maxAge;
   } else if (!angular.isNumber(maxAge)) {
     throw angular.$$minErr('ng')('areq', 'Expected maxAge to be a number! Found: {0}.', typeof maxAge);
   } else if (maxAge < 0) {
     throw angular.$$minErr('ng')('areq', 'Expected maxAge to be greater than zero! Found: {0}.', maxAge);
   } else {
-    this.$$maxAge = maxAge;
+    _this.$$maxAge = maxAge;
   }
   var i, keys, key;
 
-  this.$$expiresHeap.removeAll();
+  _this.$$expiresHeap.removeAll();
 
-  if (this.$$storage) {
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  if (_this.$$storage) {
+    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
 
     keys = keysJson ? angular.fromJson(keysJson) : [];
 
     for (i = 0; i < keys.length; i++) {
       key = keys[i];
-      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         var item = angular.fromJson(itemJson);
-        if (this.$$maxAge === Number.MAX_VALUE) {
+        if (_this.$$maxAge === Number.MAX_VALUE) {
           item.expires = Number.MAX_VALUE;
         } else {
-          item.expires = item.created + this.$$maxAge;
+          item.expires = item.created + _this.$$maxAge;
         }
-        this.$$expiresHeap.push({
+        _this.$$expiresHeap.push({
           key: key,
           expires: item.expires
         });
       }
     }
   } else {
-    keys = utils.keys(this.$$data);
+    keys = utils.keys(_this.$$data);
 
     for (i = 0; i < keys.length; i++) {
       key = keys[i];
-      if (this.$$maxAge === Number.MAX_VALUE) {
-        this.$$data[key].expires = Number.MAX_VALUE;
+      if (_this.$$maxAge === Number.MAX_VALUE) {
+        _this.$$data[key].expires = Number.MAX_VALUE;
       } else {
-        this.$$data[key].expires = this.$$data[key].created + this.$$maxAge;
+        _this.$$data[key].expires = _this.$$data[key].created + _this.$$maxAge;
       }
-      this.$$expiresHeap.push(this.$$data[key]);
+      _this.$$expiresHeap.push(_this.$$data[key]);
     }
   }
-  if (this.$$deleteOnExpire === 'aggressive') {
-    return this.removeExpired();
+  if (_this.$$deleteOnExpire === 'aggressive') {
+    return _this.removeExpired();
   } else {
     return {};
   }
@@ -1710,31 +1763,32 @@ module.exports = function setOnExpire(onExpire) {
  * `recycleFreq` for this cache will be reset to the default (`1000` milliseconds).
  */
 module.exports = function setRecycleFreq(recycleFreq) {
+  var _this = this;
   if (recycleFreq === null) {
-    delete this.$$recycleFreq;
+    delete _this.$$recycleFreq;
   } else if (!angular.isNumber(recycleFreq)) {
     throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be a number! Found: {0}.', typeof recycleFreq);
   } else if (recycleFreq < 0) {
     throw angular.$$minErr('ng')('areq', 'Expected recycleFreq to be greater than zero! Found: {0}.', recycleFreq);
   } else {
-    this.$$recycleFreq = recycleFreq;
+    _this.$$recycleFreq = recycleFreq;
   }
-  clearInterval(this.$$recycleFreqId);
-  if (this.$$deleteOnExpire === 'aggressive') {
-    (function (_this) {
-      _this.$$recycleFreqId = setInterval(function () {
-        _this.removeExpired();
-      }, _this.$$recycleFreq);
-    })(this);
+  clearInterval(_this.$$recycleFreqId);
+  if (_this.$$deleteOnExpire === 'aggressive') {
+    (function (self) {
+      self.$$recycleFreqId = setInterval(function () {
+        self.removeExpired();
+      }, self.$$recycleFreq);
+    })(_this);
   } else {
-    delete this.$$recycleFreqId;
+    delete _this.$$recycleFreqId;
   }
 };
 
 },{}],18:[function(require,module,exports){
-var defaults = require('../defaults'),
-  DSCache = require('../DSCache'),
-  version = '3.1.1';
+var defaults = require('../defaults');
+var DSCache = require('../DSCache');
+var version = '3.1.1';
 
 /**
  * @doc function
@@ -1743,9 +1797,11 @@ var defaults = require('../defaults'),
  */
 function DSCacheFactoryProvider() {
 
+  var _this = this;
+
   var config = new defaults.Config();
 
-  this.version = version;
+  _this.version = version;
 
   /**
    * @doc method
@@ -1754,7 +1810,7 @@ function DSCacheFactoryProvider() {
    * @desc Set the default configuration for all caches created by $angularCacheFactory.
    * @param {object} options Default configuration options for each new cache.
    */
-  this.setCacheDefaults = function (options) {
+  _this.setCacheDefaults = function (options) {
     options = options || {};
 
     if (!angular.isObject(options)) {
@@ -1771,7 +1827,7 @@ function DSCacheFactoryProvider() {
     }
   };
 
-  this.$get = function () {
+  _this.$get = ['$q', function ($q) {
     var caches = {};
 
     /*!
@@ -1802,6 +1858,7 @@ function DSCacheFactoryProvider() {
         this.constructor.prototype.destroy.call(this);
         delete caches[this.$$id];
       };
+      caches[cacheId].$q = $q;
       return caches[cacheId];
     }
 
@@ -2081,7 +2138,7 @@ function DSCacheFactoryProvider() {
     };
 
     return DSCacheFactory;
-  };
+  }];
 }
 
 module.exports = DSCacheFactoryProvider;

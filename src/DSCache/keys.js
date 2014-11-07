@@ -25,8 +25,9 @@ var utils = require('../utils');
  * @returns {Array} An array of the keys in this cache.
  */
 module.exports = function keys() {
-  if (this.$$storage) {
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  var _this = this;
+  if (_this.$$storage) {
+    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
 
     if (keysJson) {
       return angular.fromJson(keysJson);
@@ -34,6 +35,6 @@ module.exports = function keys() {
       return [];
     }
   } else {
-    return utils.keys(this.$$data);
+    return utils.keys(_this.$$data);
   }
 };

@@ -1,17 +1,18 @@
-var defaults = require('../defaults'),
-  DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
+var defaults = require('../defaults');
+var DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
 /*!
  * Configure the cache to use webStorage.
  */
 function _setStorageMode(storageMode, storageImpl) {
+  var _this = this;
   if (!angular.isString(storageMode)) {
     throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
   } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
     throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: {0}.', storageMode);
   }
 
-  this.$$storageMode = storageMode;
+  _this.$$storageMode = storageMode;
 
   if (storageImpl) {
     if (!angular.isObject(storageImpl)) {
@@ -23,24 +24,24 @@ function _setStorageMode(storageMode, storageImpl) {
     } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
       throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
     }
-    this.$$storage = storageImpl;
-  } else if (this.$$storageMode === 'localStorage') {
+    _this.$$storage = storageImpl;
+  } else if (_this.$$storageMode === 'localStorage') {
     try {
       localStorage.setItem('angular-cache', 'angular-cache');
       localStorage.removeItem('angular-cache');
-      this.$$storage = localStorage;
+      _this.$$storage = localStorage;
     } catch (e) {
-      delete this.$$storage;
-      this.$$storageMode = 'memory';
+      delete _this.$$storage;
+      _this.$$storageMode = 'memory';
     }
-  } else if (this.$$storageMode === 'sessionStorage') {
+  } else if (_this.$$storageMode === 'sessionStorage') {
     try {
       sessionStorage.setItem('angular-cache', 'angular-cache');
       sessionStorage.removeItem('angular-cache');
-      this.$$storage = sessionStorage;
+      _this.$$storage = sessionStorage;
     } catch (e) {
-      delete this.$$storage;
-      this.$$storageMode = 'memory';
+      delete _this.$$storage;
+      _this.$$storageMode = 'memory';
     }
   }
 }
@@ -75,11 +76,14 @@ function _setStorageMode(storageMode, storageImpl) {
  * - `{number=}` - `cacheFlushInterval` - Default: `null`
  * - `{number=}` - `recycleFreq` - Default: `1000`
  * - `{boolean=}` - `disabled` - Default: `false`
+ * - `{boolean=}` - `storeOnResolve` - If putting a promise, also put the resolved value if the promise resolves. Default: `true`.
+ * - `{boolean=}` - `storeOnReject` - If putting a promise, also put the rejection value if the the promise rejects. Default: `true`.
  *
  * @param {boolean=} strict If true then any existing configuration will be reset to the defaults before
  * applying the new options, otherwise only the options specified in the options hash will be altered.
  */
 function _setOptions(cacheOptions, strict) {
+  var _this = this;
   cacheOptions = cacheOptions || {};
   strict = !!strict;
   if (!angular.isObject(cacheOptions)) {
@@ -87,45 +91,57 @@ function _setOptions(cacheOptions, strict) {
   }
 
   if ('disabled' in cacheOptions) {
-    this.$$disabled = !!cacheOptions.disabled;
+    _this.$$disabled = !!cacheOptions.disabled;
   } else if (strict) {
-    delete this.$$disabled;
+    delete _this.$$disabled;
+  }
+
+  if ('storeOnResolve' in cacheOptions) {
+    _this.$$storeOnResolve = !!cacheOptions.storeOnResolve;
+  } else if (strict) {
+    _this.$$storeOnResolve = true;
+  }
+
+  if ('storeOnReject' in cacheOptions) {
+    _this.$$storeOnReject = !!cacheOptions.storeOnReject;
+  } else if (strict) {
+    _this.$$storeOnReject = true;
   }
 
   if ('capacity' in cacheOptions) {
-    this.setCapacity(cacheOptions.capacity);
+    _this.setCapacity(cacheOptions.capacity);
   } else if (strict) {
-    this.setCapacity(null);
+    _this.setCapacity(null);
   }
 
   if ('deleteOnExpire' in cacheOptions) {
-    this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
+    _this.setDeleteOnExpire(cacheOptions.deleteOnExpire);
   } else if (strict) {
-    this.setDeleteOnExpire(null);
+    _this.setDeleteOnExpire(null);
   }
 
   if ('maxAge' in cacheOptions) {
-    this.setMaxAge(cacheOptions.maxAge);
+    _this.setMaxAge(cacheOptions.maxAge);
   } else if (strict) {
-    this.setMaxAge(null);
+    _this.setMaxAge(null);
   }
 
   if ('recycleFreq' in cacheOptions) {
-    this.setRecycleFreq(cacheOptions.recycleFreq);
+    _this.setRecycleFreq(cacheOptions.recycleFreq);
   } else if (strict) {
-    this.setRecycleFreq(null);
+    _this.setRecycleFreq(null);
   }
 
   if ('cacheFlushInterval' in cacheOptions) {
-    this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
+    _this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
   } else if (strict) {
-    this.setCacheFlushInterval(null);
+    _this.setCacheFlushInterval(null);
   }
 
   if ('onExpire' in cacheOptions) {
-    this.setOnExpire(cacheOptions.onExpire);
+    _this.setOnExpire(cacheOptions.onExpire);
   } else if (strict) {
-    this.setOnExpire(null);
+    _this.setOnExpire(null);
   }
 }
 
@@ -140,32 +156,34 @@ function _setOptions(cacheOptions, strict) {
  * @param {object=} options Configuration options.
  */
 function DSCache(cacheId, options) {
+  var _this = this;
 
-  this.$$data = {};
-  this.$$id = cacheId;
-  this.$$storage = null;
+  _this.$$data = {};
+  _this.$$promises = {};
+  _this.$$id = cacheId;
+  _this.$$storage = null;
 
-  this.$$expiresHeap = new DSBinaryHeap(function (x) {
+  _this.$$expiresHeap = new DSBinaryHeap(function (x) {
     return x.expires;
   });
 
-  this.$$lruHeap = new DSBinaryHeap(function (x) {
+  _this.$$lruHeap = new DSBinaryHeap(function (x) {
     return x.accessed;
   });
 
   options = options || {};
 
   if ('storageMode' in options) {
-    _setStorageMode.apply(this, [options.storageMode, options.storageImpl]);
+    _setStorageMode.apply(_this, [options.storageMode, options.storageImpl]);
   }
   if ('storagePrefix' in options) {
-    this.$$storagePrefix = options.storagePrefix;
+    _this.$$storagePrefix = options.storagePrefix;
   }
 
-  this.$$prefix = this.$$storagePrefix + cacheId;
+  _this.$$prefix = _this.$$storagePrefix + cacheId;
 
-  // Initialize this cache with the default and given options
-  _setOptions.apply(this, [options, true]);
+  // Initialize _this cache with the default and given options
+  _setOptions.apply(_this, [options, true]);
 }
 
 for (var key in defaults.defaults) {
@@ -419,20 +437,20 @@ DSCache.prototype.enable = function () {
  * @param {string=} key The key of the item to touch.
  */
 DSCache.prototype.touch = function (key) {
+  var _this = this;
   if (key) {
-    var _this = this;
-    var val = this.get(key, {
+    var val = _this.get(key, {
       onExpire: function (k, v) {
         _this.put(k, v);
       }
     });
     if (val) {
-      this.put(key, val);
+      _this.put(key, val);
     }
   } else {
-    var keys = this.keys();
+    var keys = _this.keys();
     for (var i = 0; i < keys.length; i++) {
-      this.touch(keys[i]);
+      _this.touch(keys[i]);
     }
   }
 };
