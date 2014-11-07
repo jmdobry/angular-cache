@@ -1,3 +1,8 @@
+##### 3.2.0 07 November 2014
+
+###### Backwards compatible API changes
+- #135 - Closes #135. (Improved handling of promises.)
+
 ##### 3.1.1 28 August 2014
 
 ###### Backwards compatible bug fixes
