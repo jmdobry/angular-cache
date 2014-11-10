@@ -42,7 +42,7 @@ module.exports = function removeAll() {
         _this.remove(keys[i]);
       }
     }
-    _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson([]));
+    _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify([]));
   } else {
     _this.$$lruHeap.removeAll();
     _this.$$expiresHeap.removeAll();

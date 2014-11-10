@@ -180,7 +180,7 @@ module.exports = function get(key, options) {
     }
     value = undefined;
   } else if (_this.$$storage) {
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, angular.toJson(item));
+    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
   }
 
   return value;

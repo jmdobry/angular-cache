@@ -50,7 +50,7 @@ module.exports = function remove(key) {
       if (index >= 0) {
         keys.splice(index, 1);
       }
-      _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson(keys));
+      _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
       return item.value;
     }
   } else {

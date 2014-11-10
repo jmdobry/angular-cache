@@ -111,7 +111,7 @@ module.exports = function put(key, value, options) {
       accessed: item.accessed
     });
     // Set item
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, angular.toJson(item));
+    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
       if (keys[i] === key) {
@@ -122,7 +122,7 @@ module.exports = function put(key, value, options) {
     if (!exists) {
       keys.push(key);
     }
-    _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson(keys));
+    _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
   } else {
     // Remove existing
     if (_this.$$data[key]) {

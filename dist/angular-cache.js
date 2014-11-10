@@ -400,7 +400,7 @@ module.exports = function get(key, options) {
     }
     value = undefined;
   } else if (_this.$$storage) {
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, angular.toJson(item));
+    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
   }
 
   return value;
@@ -1164,7 +1164,7 @@ module.exports = function put(key, value, options) {
       accessed: item.accessed
     });
     // Set item
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, angular.toJson(item));
+    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
       if (keys[i] === key) {
@@ -1175,7 +1175,7 @@ module.exports = function put(key, value, options) {
     if (!exists) {
       keys.push(key);
     }
-    _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson(keys));
+    _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
   } else {
     // Remove existing
     if (_this.$$data[key]) {
@@ -1251,7 +1251,7 @@ module.exports = function remove(key) {
       if (index >= 0) {
         keys.splice(index, 1);
       }
-      _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson(keys));
+      _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
       return item.value;
     }
   } else {
@@ -1309,7 +1309,7 @@ module.exports = function removeAll() {
         _this.remove(keys[i]);
       }
     }
-    _this.$$storage.setItem(_this.$$prefix + '.keys', angular.toJson([]));
+    _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify([]));
   } else {
     _this.$$lruHeap.removeAll();
     _this.$$expiresHeap.removeAll();
@@ -1788,7 +1788,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults');
 var DSCache = require('../DSCache');
-var version = '3.2.0';
+var version = '3.2.1';
 
 /**
  * @doc function
@@ -2437,7 +2437,7 @@ module.exports = {
    * @id angular-cache
    * @name Overview
    * @description
-   * __Version:__ 3.2.0
+   * __Version:__ 3.2.1
    *
    * ## Install
    *
@@ -2457,7 +2457,7 @@ module.exports = {
    * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
    *
    * #### Manual download
-   * Download angular-cache.3.2.0.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+   * Download angular-cache.3.2.1.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
    * section of the angular-cache GitHub project.
    *
    * ## Load into Angular

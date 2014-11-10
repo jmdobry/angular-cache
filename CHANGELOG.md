@@ -1,3 +1,8 @@
+##### 3.2.1 10 November 2014
+
+###### Backwards compatible bug fixes
+- #142 - Use JSON.stringify instead of angular.toJson
+
 ##### 3.2.0 07 November 2014
 
 ###### Backwards compatible API changes
