@@ -98,12 +98,10 @@ module.exports = function put(key, value) {
           itemToFlush = this.$$storage.getItem(this.$$prefix + '.data.' + this.$$lruHeap.peek());
 
           if(!itemToFlush) {
-            console.log("trying to flush a null for key : ", this.$$prefix + '.data.' + this.$$lruHeap.peek().key); 
             return;
           }
           releasedMemorySize += itemToFlush.length;
           this.remove(this.$$prefix + '.data.' + this.$$lruHeap.pop().key);
-          console.log("removed : ", this.$$lruHeap.peek().key);
         }
       } 
 
