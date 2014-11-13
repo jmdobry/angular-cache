@@ -1,12 +1,3 @@
-/**
- * @author Jason Dobry <jason.dobry@gmail.com>
- * @file angular-cache.js
- * @version 3.1.1 - Homepage <https://github.com/jmdobry/angular-cache>
- * @copyright (c) 2013-2014 Jason Dobry <http://www.pseudobry.com>
- * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
- *
- * @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
- */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @method bubbleUp
@@ -188,6 +179,361 @@ module.exports = {
 };
 
 },{}],2:[function(require,module,exports){
+var defaults = require('../defaults'),
+  DSCache = require('../DSCache'),
+  version = '3.1.1';
+
+/**
+ * @doc function
+ * @id DSCacheFactoryProvider
+ * @name DSCacheFactoryProvider
+ */
+function DSCacheFactoryProvider() {
+
+  var config = new defaults.Config();
+
+  this.version = version;
+
+  /**
+   * @doc method
+   * @id DSCacheFactoryProvider.methods:setCacheDefaults
+   * @name setCacheDefaults
+   * @desc Set the default configuration for all caches created by $angularCacheFactory.
+   * @param {object} options Default configuration options for each new cache.
+   */
+  this.setCacheDefaults = function (options) {
+    options = options || {};
+
+    if (!angular.isObject(options)) {
+      throw angular.$$minErr('ng')('areq', 'Expected options to be an object! Found: {0}.', typeof options);
+    }
+
+    for (var key in defaults.defaults) {
+      if (key in options) {
+        config[key] = options[key];
+      }
+    }
+    if ('disabled' in options) {
+      config.$$disabled = !!options.disabled;
+    }
+  };
+
+  this.$get = function () {
+    var caches = {};
+
+    /*!
+     * @method _keys
+     * @desc Returns an array of the keys of the given collection.
+     * @param {object} collection The collection from which to get the keys.
+     * @returns {array} An array of the keys of the given collection.
+     */
+    function _keys(collection) {
+      var keys = [], key;
+      for (key in collection) {
+        if (collection.hasOwnProperty(key)) {
+          keys.push(key);
+        }
+      }
+      return keys;
+    }
+
+    function createCache(cacheId, options) {
+      if (cacheId in caches) {
+        throw angular.$$minErr('$cacheFactory')('iid', "CacheId '{0}' is already taken!", cacheId);
+      } else if (!angular.isString(cacheId)) {
+        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
+      }
+
+      caches[cacheId] = new DSCache(cacheId, angular.extend({}, config, options));
+      caches[cacheId].destroy = function () {
+        this.constructor.prototype.destroy.call(this);
+        delete caches[this.$$id];
+      };
+      return caches[cacheId];
+    }
+
+    /**
+     * @doc function
+     * @id DSCacheFactory
+     * @name DSCacheFactory
+     * @description
+     * Factory function that produces instances of `DSCache`.
+     *
+     * @param {string} cacheId The id of the new cache.
+     * @param {object} options Configuration options. Properties:
+     *
+     * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+     * - `{number=}` - `maxAge` - Default: `null`
+     * - `{number=}` - `deleteOnExpire` - Default: `none`
+     * - `{function=}` - `onExpire` - Default: `null`
+     * - `{number=}` - `cacheFlushInterval` - Default: `null`
+     * - `{number=}` - `recycleFreq` - Default: `1000`
+     * - `{number=}` - `deleteOnExpire` - Default: `null`
+     * - `{string=}` - `storageMode` - Default: `'none`
+     * - `{object=}` - `storageImpl` - Default: `null`
+     * - `{boolean=}` - `disabled` - Default: `false`
+     * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
+     *
+     * @returns {DSCache} New instance of DSCache.
+     */
+    function DSCacheFactory(cacheId, options) {
+      return createCache(cacheId, options);
+    }
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:createCache
+     * @name createCache
+     * @description
+     * Factory function that produces instances of `DSCache`.
+     *
+     * @param {string} cacheId The id of the new cache.
+     * @param {object} options Configuration options. Properties:
+     *
+     * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
+     * - `{number=}` - `maxAge` - Default: `null`
+     * - `{number=}` - `deleteOnExpire` - Default: `none`
+     * - `{function=}` - `onExpire` - Default: `null`
+     * - `{number=}` - `cacheFlushInterval` - Default: `null`
+     * - `{number=}` - `recycleFreq` - Default: `1000`
+     * - `{number=}` - `deleteOnExpire` - Default: `null`
+     * - `{string=}` - `storageMode` - Default: `'none`
+     * - `{object=}` - `storageImpl` - Default: `null`
+     * - `{boolean=}` - `disabled` - Default: `false`
+     * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
+     *
+     * @returns {DSCache} New instance of DSCache.
+     */
+    DSCacheFactory.createCache = createCache;
+
+    DSCacheFactory.version = version;
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:info
+     * @name info
+     * @description
+     * Return the status of `DSCacheFactory`.
+     * @returns {object} The status of `DSCacheFactory`.
+     */
+    DSCacheFactory.info = function () {
+      var keys = _keys(caches);
+      var info = {
+        size: keys.length,
+        caches: {}
+      };
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        info.caches[key] = caches[key].info();
+      }
+      var c = info.cacheDefaults = angular.extend({}, config);
+      for (var option in defaults.defaults) {
+        if (!(option in c)) {
+          c[option] = config['$$' + option];
+        }
+      }
+      return info;
+    };
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:get
+     * @name get
+     * @description
+     * Return the cache with the given `cacheId`.
+     * @param {string} cacheId The id of the desired cache.
+     * @returns {DSCache} The cache with the specified `cacheId`.
+     */
+    DSCacheFactory.get = function (cacheId) {
+      if (!angular.isString(cacheId)) {
+        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
+      }
+      return caches[cacheId];
+    };
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:keySet
+     * @name keySet
+     * @description
+     * Return an object containing the `cacheId` of each cache.
+     * @returns {object} An object containing the `cacheId` of each cache.
+     */
+    DSCacheFactory.keySet = function () {
+      var cacheIds = {}, cacheId;
+      for (cacheId in caches) {
+        if (caches.hasOwnProperty(cacheId)) {
+          cacheIds[cacheId] = cacheId;
+        }
+      }
+      return cacheIds;
+    };
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:keys
+     * @name keys
+     * @description
+     * Return an array containing the `cacheId` of each cache.
+     * @returns {array} An array containing the `cacheId` of each cache.
+     */
+    DSCacheFactory.keys = function () {
+      return _keys(caches);
+    };
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:destroyAll
+     * @name destroyAll
+     * @description
+     * Destroy all caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.destroyAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache');
+     * var otherCache = DSCacheFactory('otherCache');
+     *
+     * newCache.info().size; // 0
+     * otherCache.info().size; // 0
+     *
+     * newCache.put('1', 'apple');
+     * newCache.put('2', 'banana');
+     * otherCache.put('abcd', 'horse');
+     *
+     * newCache.info().size; // 2
+     * otherCache.info().size; // 1
+     *
+     * DSCacheFactory.destroyAll();
+     *
+     * newCache.info().size; // Error thrown
+     * otherCache.info().size; // Error thrown
+     *
+     * DSCacheFactory.get('newCache'); // undefined
+     * DSCacheFactory.get('otherCache'); // undefined
+     * ```
+     */
+    DSCacheFactory.destroyAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].destroy();
+      }
+      caches = {};
+    };
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:clearAll
+     * @name clearAll
+     * @description
+     * Clear the contents of all caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.clearAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache');
+     * var otherCache = DSCacheFactory('otherCache');
+     *
+     * newCache.info().size; // 0
+     * otherCache.info().size; // 0
+     *
+     * newCache.put('1', 'apple');
+     * newCache.put('2', 'banana');
+     * otherCache.put('abcd', 'horse');
+     *
+     * newCache.info().size; // 2
+     * otherCache.info().size; // 1
+     *
+     * DSCacheFactory.clearAll();
+     *
+     * newCache.info().size; // 0
+     * otherCache.info().size; // 0
+     * ```
+     */
+    DSCacheFactory.clearAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].removeAll();
+      }
+    };
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:enableAll
+     * @name enableAll
+     * @description
+     * Enable any disabled caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.enableAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache', { disabled: true });
+     * var otherCache = DSCacheFactory('otherCache', { disabled: true });
+     *
+     * newCache.info().disabled; // true
+     * otherCache.info().disabled; // true
+     *
+     * DSCacheFactory.enableAll();
+     *
+     * newCache.info().disabled; // false
+     * otherCache.info().disabled; // false
+     * ```
+     */
+    DSCacheFactory.enableAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].$$disabled = false;
+      }
+    };
+
+    /**
+     * @doc method
+     * @id DSCacheFactory.methods:disableAll
+     * @name disableAll
+     * @description
+     * Disable all caches.
+     *
+     * ## Signature:
+     * ```js
+     * DSCacheFactory.disableAll()
+     * ```
+     *
+     * ## Example:
+     * ```js
+     * var newCache = DSCacheFactory('newCache');
+     * var otherCache = DSCacheFactory('otherCache');
+     *
+     * newCache.info().disabled; // false
+     * otherCache.info().disabled; // false
+     *
+     * DSCacheFactory.disableAll();
+     *
+     * newCache.info().disabled; // true
+     * otherCache.info().disabled; // true
+     * ```
+     */
+    DSCacheFactory.disableAll = function () {
+      for (var cacheId in caches) {
+        caches[cacheId].$$disabled = true;
+      }
+    };
+
+    return DSCacheFactory;
+  };
+}
+
+module.exports = DSCacheFactoryProvider;
+
+},{"../DSCache":5,"../defaults":19}],3:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:destroy
@@ -225,7 +571,7 @@ module.exports = function destroy() {
   this.$$prefix = null;
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -410,7 +756,7 @@ module.exports = function get(key, options) {
   return value;
 };
 
-},{"../utils":21}],4:[function(require,module,exports){
+},{"../utils":21}],5:[function(require,module,exports){
 var defaults = require('../defaults'),
   DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
@@ -852,7 +1198,7 @@ DSCache.prototype.touch = function (key) {
 
 module.exports = DSCache;
 
-},{"../DSBinaryHeap":1,"../defaults":19,"./destroy":2,"./get":3,"./info":5,"./keySet":6,"./keys":7,"./put":8,"./remove":9,"./removeAll":10,"./removeExpired":11,"./setCacheFlushInterval":12,"./setCapacity":13,"./setDeleteOnExpire":14,"./setMaxAge":15,"./setOnExpire":16,"./setRecycleFreq":17}],5:[function(require,module,exports){
+},{"../DSBinaryHeap":1,"../defaults":19,"./destroy":3,"./get":4,"./info":6,"./keySet":7,"./keys":8,"./put":9,"./remove":10,"./removeAll":11,"./removeExpired":12,"./setCacheFlushInterval":13,"./setCapacity":14,"./setDeleteOnExpire":15,"./setMaxAge":16,"./setOnExpire":17,"./setRecycleFreq":18}],6:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:info
@@ -947,7 +1293,7 @@ module.exports = function info(key) {
   }
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -992,7 +1338,7 @@ module.exports = function keySet() {
   }
 };
 
-},{"../utils":21}],7:[function(require,module,exports){
+},{"../utils":21}],8:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1033,7 +1379,7 @@ module.exports = function keys() {
   }
 };
 
-},{"../utils":21}],8:[function(require,module,exports){
+},{"../utils":21}],9:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1119,8 +1465,33 @@ module.exports = function put(key, value) {
       key: key,
       accessed: item.accessed
     });
+
     // Set item
-    this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    try {
+      this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    } catch(e){
+
+      var targetItemSize = angular.toJson(item).length;
+      var releasedMemorySize = 0, itemToFlush;
+
+      while(releasedMemorySize < (targetItemSize * 2) ){ 
+        // we release 2 * memory more than the size of the target item to avoid generating too much exceptions
+        if(this.$$storage){
+          itemToFlush = this.$$storage.getItem(this.$$prefix + '.data.' + this.$$lruHeap.peek());
+
+          if(!itemToFlush) {
+            console.log("trying to flush a null for key : ", this.$$prefix + '.data.' + this.$$lruHeap.peek().key); 
+            return;
+          }
+          releasedMemorySize += itemToFlush.length;
+          this.remove(this.$$prefix + '.data.' + this.$$lruHeap.pop().key);
+          console.log("removed : ", this.$$lruHeap.peek().key);
+        }
+      } 
+
+      this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
+    }
+
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
       if (keys[i] === key) {
@@ -1153,7 +1524,7 @@ module.exports = function put(key, value) {
   return value;
 };
 
-},{"../utils":21}],9:[function(require,module,exports){
+},{"../utils":21}],10:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:remove
@@ -1217,7 +1588,7 @@ module.exports = function remove(key) {
   }
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:removeAll
@@ -1272,7 +1643,7 @@ module.exports = function removeAll() {
   }
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:removeExpired
@@ -1349,7 +1720,7 @@ module.exports = function removeExpired() {
   return expired;
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setCacheFlushInterval
@@ -1402,7 +1773,7 @@ module.exports = function setCacheFlushInterval(cacheFlushInterval) {
   }
 };
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setCapacity
@@ -1459,7 +1830,7 @@ module.exports = function setCapacity(capacity) {
   return removed;
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setDeleteOnExpire
@@ -1515,7 +1886,7 @@ module.exports = function setDeleteOnExpire(deleteOnExpire) {
   this.setRecycleFreq(this.$$recycleFreq);
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1613,7 +1984,7 @@ module.exports = function setMaxAge(maxAge) {
   }
 };
 
-},{"../utils":21}],16:[function(require,module,exports){
+},{"../utils":21}],17:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setOnExpire
@@ -1660,7 +2031,7 @@ module.exports = function setOnExpire(onExpire) {
   }
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setRecycleFreq
@@ -1731,362 +2102,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
   }
 };
 
-},{}],18:[function(require,module,exports){
-var defaults = require('../defaults'),
-  DSCache = require('../DSCache'),
-  version = '3.1.1';
-
-/**
- * @doc function
- * @id DSCacheFactoryProvider
- * @name DSCacheFactoryProvider
- */
-function DSCacheFactoryProvider() {
-
-  var config = new defaults.Config();
-
-  this.version = version;
-
-  /**
-   * @doc method
-   * @id DSCacheFactoryProvider.methods:setCacheDefaults
-   * @name setCacheDefaults
-   * @desc Set the default configuration for all caches created by $angularCacheFactory.
-   * @param {object} options Default configuration options for each new cache.
-   */
-  this.setCacheDefaults = function (options) {
-    options = options || {};
-
-    if (!angular.isObject(options)) {
-      throw angular.$$minErr('ng')('areq', 'Expected options to be an object! Found: {0}.', typeof options);
-    }
-
-    for (var key in defaults.defaults) {
-      if (key in options) {
-        config[key] = options[key];
-      }
-    }
-    if ('disabled' in options) {
-      config.$$disabled = !!options.disabled;
-    }
-  };
-
-  this.$get = function () {
-    var caches = {};
-
-    /*!
-     * @method _keys
-     * @desc Returns an array of the keys of the given collection.
-     * @param {object} collection The collection from which to get the keys.
-     * @returns {array} An array of the keys of the given collection.
-     */
-    function _keys(collection) {
-      var keys = [], key;
-      for (key in collection) {
-        if (collection.hasOwnProperty(key)) {
-          keys.push(key);
-        }
-      }
-      return keys;
-    }
-
-    function createCache(cacheId, options) {
-      if (cacheId in caches) {
-        throw angular.$$minErr('$cacheFactory')('iid', "CacheId '{0}' is already taken!", cacheId);
-      } else if (!angular.isString(cacheId)) {
-        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
-      }
-
-      caches[cacheId] = new DSCache(cacheId, angular.extend({}, config, options));
-      caches[cacheId].destroy = function () {
-        this.constructor.prototype.destroy.call(this);
-        delete caches[this.$$id];
-      };
-      return caches[cacheId];
-    }
-
-    /**
-     * @doc function
-     * @id DSCacheFactory
-     * @name DSCacheFactory
-     * @description
-     * Factory function that produces instances of `DSCache`.
-     *
-     * @param {string} cacheId The id of the new cache.
-     * @param {object} options Configuration options. Properties:
-     *
-     * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
-     * - `{number=}` - `maxAge` - Default: `null`
-     * - `{number=}` - `deleteOnExpire` - Default: `none`
-     * - `{function=}` - `onExpire` - Default: `null`
-     * - `{number=}` - `cacheFlushInterval` - Default: `null`
-     * - `{number=}` - `recycleFreq` - Default: `1000`
-     * - `{number=}` - `deleteOnExpire` - Default: `null`
-     * - `{string=}` - `storageMode` - Default: `'none`
-     * - `{object=}` - `storageImpl` - Default: `null`
-     * - `{boolean=}` - `disabled` - Default: `false`
-     * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
-     *
-     * @returns {DSCache} New instance of DSCache.
-     */
-    function DSCacheFactory(cacheId, options) {
-      return createCache(cacheId, options);
-    }
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:createCache
-     * @name createCache
-     * @description
-     * Factory function that produces instances of `DSCache`.
-     *
-     * @param {string} cacheId The id of the new cache.
-     * @param {object} options Configuration options. Properties:
-     *
-     * - `{number=}` - `capacity` - Default: `Number.MAX_VALUE`
-     * - `{number=}` - `maxAge` - Default: `null`
-     * - `{number=}` - `deleteOnExpire` - Default: `none`
-     * - `{function=}` - `onExpire` - Default: `null`
-     * - `{number=}` - `cacheFlushInterval` - Default: `null`
-     * - `{number=}` - `recycleFreq` - Default: `1000`
-     * - `{number=}` - `deleteOnExpire` - Default: `null`
-     * - `{string=}` - `storageMode` - Default: `'none`
-     * - `{object=}` - `storageImpl` - Default: `null`
-     * - `{boolean=}` - `disabled` - Default: `false`
-     * - `{string=}` - `storagePrefix` - Default: `"angular-cache.caches."`
-     *
-     * @returns {DSCache} New instance of DSCache.
-     */
-    DSCacheFactory.createCache = createCache;
-
-    DSCacheFactory.version = version;
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:info
-     * @name info
-     * @description
-     * Return the status of `DSCacheFactory`.
-     * @returns {object} The status of `DSCacheFactory`.
-     */
-    DSCacheFactory.info = function () {
-      var keys = _keys(caches);
-      var info = {
-        size: keys.length,
-        caches: {}
-      };
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        info.caches[key] = caches[key].info();
-      }
-      var c = info.cacheDefaults = angular.extend({}, config);
-      for (var option in defaults.defaults) {
-        if (!(option in c)) {
-          c[option] = config['$$' + option];
-        }
-      }
-      return info;
-    };
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:get
-     * @name get
-     * @description
-     * Return the cache with the given `cacheId`.
-     * @param {string} cacheId The id of the desired cache.
-     * @returns {DSCache} The cache with the specified `cacheId`.
-     */
-    DSCacheFactory.get = function (cacheId) {
-      if (!angular.isString(cacheId)) {
-        throw angular.$$minErr('ng')('areq', 'Expected cacheId to be a string! Found: {0}.', typeof cacheId);
-      }
-      return caches[cacheId];
-    };
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:keySet
-     * @name keySet
-     * @description
-     * Return an object containing the `cacheId` of each cache.
-     * @returns {object} An object containing the `cacheId` of each cache.
-     */
-    DSCacheFactory.keySet = function () {
-      var cacheIds = {}, cacheId;
-      for (cacheId in caches) {
-        if (caches.hasOwnProperty(cacheId)) {
-          cacheIds[cacheId] = cacheId;
-        }
-      }
-      return cacheIds;
-    };
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:keys
-     * @name keys
-     * @description
-     * Return an array containing the `cacheId` of each cache.
-     * @returns {array} An array containing the `cacheId` of each cache.
-     */
-    DSCacheFactory.keys = function () {
-      return _keys(caches);
-    };
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:destroyAll
-     * @name destroyAll
-     * @description
-     * Destroy all caches.
-     *
-     * ## Signature:
-     * ```js
-     * DSCacheFactory.destroyAll()
-     * ```
-     *
-     * ## Example:
-     * ```js
-     * var newCache = DSCacheFactory('newCache');
-     * var otherCache = DSCacheFactory('otherCache');
-     *
-     * newCache.info().size; // 0
-     * otherCache.info().size; // 0
-     *
-     * newCache.put('1', 'apple');
-     * newCache.put('2', 'banana');
-     * otherCache.put('abcd', 'horse');
-     *
-     * newCache.info().size; // 2
-     * otherCache.info().size; // 1
-     *
-     * DSCacheFactory.destroyAll();
-     *
-     * newCache.info().size; // Error thrown
-     * otherCache.info().size; // Error thrown
-     *
-     * DSCacheFactory.get('newCache'); // undefined
-     * DSCacheFactory.get('otherCache'); // undefined
-     * ```
-     */
-    DSCacheFactory.destroyAll = function () {
-      for (var cacheId in caches) {
-        caches[cacheId].destroy();
-      }
-      caches = {};
-    };
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:clearAll
-     * @name clearAll
-     * @description
-     * Clear the contents of all caches.
-     *
-     * ## Signature:
-     * ```js
-     * DSCacheFactory.clearAll()
-     * ```
-     *
-     * ## Example:
-     * ```js
-     * var newCache = DSCacheFactory('newCache');
-     * var otherCache = DSCacheFactory('otherCache');
-     *
-     * newCache.info().size; // 0
-     * otherCache.info().size; // 0
-     *
-     * newCache.put('1', 'apple');
-     * newCache.put('2', 'banana');
-     * otherCache.put('abcd', 'horse');
-     *
-     * newCache.info().size; // 2
-     * otherCache.info().size; // 1
-     *
-     * DSCacheFactory.clearAll();
-     *
-     * newCache.info().size; // 0
-     * otherCache.info().size; // 0
-     * ```
-     */
-    DSCacheFactory.clearAll = function () {
-      for (var cacheId in caches) {
-        caches[cacheId].removeAll();
-      }
-    };
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:enableAll
-     * @name enableAll
-     * @description
-     * Enable any disabled caches.
-     *
-     * ## Signature:
-     * ```js
-     * DSCacheFactory.enableAll()
-     * ```
-     *
-     * ## Example:
-     * ```js
-     * var newCache = DSCacheFactory('newCache', { disabled: true });
-     * var otherCache = DSCacheFactory('otherCache', { disabled: true });
-     *
-     * newCache.info().disabled; // true
-     * otherCache.info().disabled; // true
-     *
-     * DSCacheFactory.enableAll();
-     *
-     * newCache.info().disabled; // false
-     * otherCache.info().disabled; // false
-     * ```
-     */
-    DSCacheFactory.enableAll = function () {
-      for (var cacheId in caches) {
-        caches[cacheId].$$disabled = false;
-      }
-    };
-
-    /**
-     * @doc method
-     * @id DSCacheFactory.methods:disableAll
-     * @name disableAll
-     * @description
-     * Disable all caches.
-     *
-     * ## Signature:
-     * ```js
-     * DSCacheFactory.disableAll()
-     * ```
-     *
-     * ## Example:
-     * ```js
-     * var newCache = DSCacheFactory('newCache');
-     * var otherCache = DSCacheFactory('otherCache');
-     *
-     * newCache.info().disabled; // false
-     * otherCache.info().disabled; // false
-     *
-     * DSCacheFactory.disableAll();
-     *
-     * newCache.info().disabled; // true
-     * otherCache.info().disabled; // true
-     * ```
-     */
-    DSCacheFactory.disableAll = function () {
-      for (var cacheId in caches) {
-        caches[cacheId].$$disabled = true;
-      }
-    };
-
-    return DSCacheFactory;
-  };
-}
-
-module.exports = DSCacheFactoryProvider;
-
-},{"../DSCache":4,"../defaults":19}],19:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var defaults = {
   /**
    * @doc overview
@@ -2424,13 +2440,13 @@ module.exports = {
 
 })(window, window.angular);
 
-},{"./DSBinaryHeap":1,"./DSCacheFactory":18}],21:[function(require,module,exports){
+},{"./DSBinaryHeap":1,"./DSCacheFactory":2}],21:[function(require,module,exports){
 module.exports = {
   /*!
    * Stringify a number.
    */
   stringifyNumber: function (number) {
-    if (number && angular.isNumber(number)) {
+    if (angular.isNumber(number)) {
       return number.toString();
     }
     return number;
