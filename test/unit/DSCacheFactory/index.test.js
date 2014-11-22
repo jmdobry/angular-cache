@@ -227,7 +227,7 @@ describe('DSCacheFactory(cacheId, options)', function () {
     } catch (err) {
       var msg = err.message;
     }
-    assert.equal(msg, '[ng:areq] Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: ' + storageMode + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + storageMode);
+    assert.equal(msg, '[ng:areq] Expected storageMode to be "memory", "localStorage", "sessionStorage", or "localforage"! Found: ' + storageMode + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + storageMode);
     for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
       try {
         TestDSCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });

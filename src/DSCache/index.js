@@ -9,7 +9,7 @@ function _setStorageMode(storageMode, storageImpl) {
   if (!angular.isString(storageMode)) {
     throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
   } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage' && storageMode !== 'localforage') {
-    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage", "sessionStorage". or "localforage"! Found: {0}.', storageMode);
+    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage", "sessionStorage", or "localforage"! Found: {0}.', storageMode);
   }
 
   _this.$$storageMode = storageMode;
