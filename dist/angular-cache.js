@@ -417,8 +417,8 @@ function _setStorageMode(storageMode, storageImpl) {
   var _this = this;
   if (!angular.isString(storageMode)) {
     throw angular.$$minErr('ng')('areq', 'Expected storageMode to be a string! Found: {0}.', typeof storageMode);
-  } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
-    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage" or "sessionStorage"! Found: {0}.', storageMode);
+  } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage' && storageMode !== 'localforage') {
+    throw angular.$$minErr('ng')('areq', 'Expected storageMode to be "memory", "localStorage", "sessionStorage". or "localforage"! Found: {0}.', storageMode);
   }
 
   _this.$$storageMode = storageMode;
@@ -448,6 +448,15 @@ function _setStorageMode(storageMode, storageImpl) {
       sessionStorage.setItem('angular-cache', 'angular-cache');
       sessionStorage.removeItem('angular-cache');
       _this.$$storage = sessionStorage;
+    } catch (e) {
+      delete _this.$$storage;
+      _this.$$storageMode = 'memory';
+    }
+  } else if (_this.$$storageMode === 'localforage') {
+    try {
+      localforage.setItem('angular-cache', 'angular-cache');
+      localforage.removeItem('angular-cache');
+      _this.$$storage = localforage;
     } catch (e) {
       delete _this.$$storage;
       _this.$$storageMode = 'memory';
