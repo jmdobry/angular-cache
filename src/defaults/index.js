@@ -217,7 +217,38 @@ var defaults = {
    * - `DSCacheFactoryProvider.setCacheDefaults(options)`
    * - `DSCacheFactory(cacheId[, options])`
    */
-  storagePrefix: 'angular-cache.caches.'
+  storagePrefix: 'angular-cache.caches.',
+
+  /**
+   * @doc overview
+   * @id storeOnResolve
+   * @name storeOnResolve
+   * @description
+   * __Default:__ `false`
+   *
+   * If putting a promise, also put the resolved value if the promise resolves.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  storeOnResolve: false,
+
+  /**
+   * @doc overview
+   * @id storeOnReject
+   * @name storeOnReject
+   * @description
+   * __Default:__ `false`
+   *
+   * If putting a promise, also put the rejection value if the the promise rejects.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   */
+  storeOnReject: false
 };
 
 function Config() {

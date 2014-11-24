@@ -76,8 +76,8 @@ function _setStorageMode(storageMode, storageImpl) {
  * - `{number=}` - `cacheFlushInterval` - Default: `null`
  * - `{number=}` - `recycleFreq` - Default: `1000`
  * - `{boolean=}` - `disabled` - Default: `false`
- * - `{boolean=}` - `storeOnResolve` - If putting a promise, also put the resolved value if the promise resolves. Default: `true`.
- * - `{boolean=}` - `storeOnReject` - If putting a promise, also put the rejection value if the the promise rejects. Default: `true`.
+ * - `{boolean=}` - `storeOnResolve` - If putting a promise, also put the resolved value if the promise resolves. Default: `false`.
+ * - `{boolean=}` - `storeOnReject` - If putting a promise, also put the rejection value if the the promise rejects. Default: `false`.
  *
  * @param {boolean=} strict If true then any existing configuration will be reset to the defaults before
  * applying the new options, otherwise only the options specified in the options hash will be altered.
@@ -99,13 +99,13 @@ function _setOptions(cacheOptions, strict) {
   if ('storeOnResolve' in cacheOptions) {
     _this.$$storeOnResolve = !!cacheOptions.storeOnResolve;
   } else if (strict) {
-    _this.$$storeOnResolve = true;
+    _this.$$storeOnResolve = false;
   }
 
   if ('storeOnReject' in cacheOptions) {
     _this.$$storeOnReject = !!cacheOptions.storeOnReject;
   } else if (strict) {
-    _this.$$storeOnReject = true;
+    _this.$$storeOnReject = false;
   }
 
   if ('capacity' in cacheOptions) {

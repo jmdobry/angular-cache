@@ -1,3 +1,8 @@
+##### 3.2.2 24 November 2014
+
+###### Backwards compatible bug fixes
+- #147 - `storeOnResolve` and `storeOnReject` should default to `false`
+
 ##### 3.2.1 10 November 2014
 
 ###### Backwards compatible bug fixes

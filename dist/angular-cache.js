@@ -1,3 +1,12 @@
+/**
+* @author Jason Dobry <jason.dobry@gmail.com>
+* @file angular-cache.js
+* @version 3.2.2 - Homepage <https://github.com/jmdobry/angular-cache>
+* @copyright (c) 2013-2014 Jason Dobry <http://www.pseudobry.com>
+* @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
+*
+* @overview angular-cache is a very useful replacement for Angular's $cacheFactory.
+*/
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * @method bubbleUp
@@ -485,8 +494,8 @@ function _setStorageMode(storageMode, storageImpl) {
  * - `{number=}` - `cacheFlushInterval` - Default: `null`
  * - `{number=}` - `recycleFreq` - Default: `1000`
  * - `{boolean=}` - `disabled` - Default: `false`
- * - `{boolean=}` - `storeOnResolve` - If putting a promise, also put the resolved value if the promise resolves. Default: `true`.
- * - `{boolean=}` - `storeOnReject` - If putting a promise, also put the rejection value if the the promise rejects. Default: `true`.
+ * - `{boolean=}` - `storeOnResolve` - If putting a promise, also put the resolved value if the promise resolves. Default: `false`.
+ * - `{boolean=}` - `storeOnReject` - If putting a promise, also put the rejection value if the the promise rejects. Default: `false`.
  *
  * @param {boolean=} strict If true then any existing configuration will be reset to the defaults before
  * applying the new options, otherwise only the options specified in the options hash will be altered.
@@ -508,13 +517,13 @@ function _setOptions(cacheOptions, strict) {
   if ('storeOnResolve' in cacheOptions) {
     _this.$$storeOnResolve = !!cacheOptions.storeOnResolve;
   } else if (strict) {
-    _this.$$storeOnResolve = true;
+    _this.$$storeOnResolve = false;
   }
 
   if ('storeOnReject' in cacheOptions) {
     _this.$$storeOnReject = !!cacheOptions.storeOnReject;
   } else if (strict) {
-    _this.$$storeOnReject = true;
+    _this.$$storeOnReject = false;
   }
 
   if ('capacity' in cacheOptions) {
@@ -1788,7 +1797,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults');
 var DSCache = require('../DSCache');
-var version = '3.2.1';
+var version = '3.2.2';
 
 /**
  * @doc function
@@ -2363,7 +2372,38 @@ var defaults = {
    * - `DSCacheFactoryProvider.setCacheDefaults(options)`
    * - `DSCacheFactory(cacheId[, options])`
    */
-  storagePrefix: 'angular-cache.caches.'
+  storagePrefix: 'angular-cache.caches.',
+
+  /**
+   * @doc overview
+   * @id storeOnResolve
+   * @name storeOnResolve
+   * @description
+   * __Default:__ `false`
+   *
+   * If putting a promise, also put the resolved value if the promise resolves.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   * - `DSCache.setOptions(options[, strict])`
+   */
+  storeOnResolve: false,
+
+  /**
+   * @doc overview
+   * @id storeOnReject
+   * @name storeOnReject
+   * @description
+   * __Default:__ `false`
+   *
+   * If putting a promise, also put the rejection value if the the promise rejects.
+   *
+   * ### Where can it be used?
+   * - `DSCacheFactoryProvider.setCacheDefaults(options)`
+   * - `DSCacheFactory(cacheId[, options])`
+   */
+  storeOnReject: false
 };
 
 function Config() {
@@ -2437,7 +2477,7 @@ module.exports = {
    * @id angular-cache
    * @name Overview
    * @description
-   * __Version:__ 3.2.1
+   * __Version:__ 3.2.2
    *
    * ## Install
    *
@@ -2457,7 +2497,7 @@ module.exports = {
    * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
    *
    * #### Manual download
-   * Download angular-cache.3.2.1.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+   * Download angular-cache.3.2.2.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
    * section of the angular-cache GitHub project.
    *
    * ## Load into Angular

@@ -1,7 +1,7 @@
 {
   "name": "angular-cache",
   "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "homepage": "http://jmdobry.github.io/angular-cache",
   "main": "src/index.js",
   "repository": {
@@ -21,9 +21,9 @@
   ],
   "postinstall": "node node_modules/grunt-cli/bin/grunt build",
   "devDependencies": {
-    "chai": "1.9.2",
+    "chai": "1.10.0",
     "grunt": "0.4.5",
-    "grunt-browserify": "3.2.0",
+    "grunt-browserify": "3.2.1",
     "grunt-cli": "0.1.13",
     "grunt-contrib-clean": "0.6.0",
     "grunt-contrib-jshint": "0.10.0",
@@ -32,7 +32,7 @@
     "grunt-docular": "0.1.2",
     "grunt-karma": "0.9.0",
     "grunt-karma-coveralls": "2.5.2",
-    "karma": "0.12.24",
+    "karma": "0.12.25",
     "karma-chai": "0.1.0",
     "karma-chrome-launcher": "0.1.5",
     "karma-coverage": "0.2.6",
@@ -43,11 +43,10 @@
     "karma-sinon": "1.0.3",
     "load-grunt-tasks": "1.0.0",
     "mocha": "2.0.1",
-    "sinon": "1.11.1",
+    "sinon": "1.12.1",
     "time-grunt": "1.0.0"
   },
   "scripts": {
-    "test": "node node_modules/grunt-cli/bin/grunt test",
-    "test_ci": "node node_modules/grunt-cli/bin/grunt ci"
+    "test": "grunt ci"
   }
 }

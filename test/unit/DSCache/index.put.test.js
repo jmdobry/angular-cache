@@ -106,7 +106,13 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should handle normal promises.', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive', recycleFreq: 20 });
+    var cache = TestDSCacheFactory('cache', {
+      maxAge: 10,
+      deleteOnExpire: 'passive',
+      recycleFreq: 20,
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     var deferred = $q.defer();
     var item = cache.put('item1', deferred.promise);
     assert.equal(typeof item.then, 'function');
@@ -127,7 +133,14 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should handle normal promises using localStorage.', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive', recycleFreq: 20, storageMode: 'localStorage' });
+    var cache = TestDSCacheFactory('cache', {
+      maxAge: 10,
+      deleteOnExpire: 'passive',
+      recycleFreq: 20,
+      storageMode: 'localStorage',
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     var deferred = $q.defer();
     var item = cache.put('item1', deferred.promise);
     assert.equal(typeof item.then, 'function');
@@ -149,7 +162,10 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', {});
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     $http.get('test.com', {
       cache: cache
     }).success(function (data) {
@@ -168,7 +184,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises when storeOnResolve is false.', function () {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', { storeOnResolve: false });
+    var cache = TestDSCacheFactory('cache', { storeOnReject: true });
     $http.get('test.com', {
       cache: cache
     }).success(function (data) {
@@ -179,9 +195,11 @@ describe('DSCache.put(key, value, options)', function () {
     });
     $httpBackend.flush();
   });
-  it('should work with promises when storeOnResolve is false.', function () {
+  it('should work with promises when storeOnResolve is true.', function () {
     var deferred = $q.defer();
-    var cache = TestDSCacheFactory('cache', {});
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true
+    });
     cache.put('test', deferred.promise);
     deferred.resolve('value');
     $rootScope.$safeApply();
@@ -189,7 +207,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected $http promises when storeOnReject and storeOnResolve are false.', function (done) {
     $httpBackend.expectGET('test.com').respond(404, 'Not Found');
-    var cache = TestDSCacheFactory('cache', { storeOnReject: false, storeOnResolve: false });
+    var cache = TestDSCacheFactory('cache', {});
     $http.get('test.com', {
       cache: cache
     }).success(function () {
@@ -213,7 +231,9 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected $http promises when storeOnReject and storeOnResolve are false and using localStorage.', function (done) {
     $httpBackend.expectGET('test.com').respond(404, 'Not Found');
-    var cache = TestDSCacheFactory('cache', { storeOnReject: false, storeOnResolve: false, storageMode: 'localStorage' });
+    var cache = TestDSCacheFactory('cache', {
+      storageMode: 'localStorage'
+    });
     $http.get('test.com', {
       cache: cache
     }).success(function () {
@@ -237,7 +257,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected promises when storeOnReject is false.', function () {
     var deferred = $q.defer();
-    var cache = TestDSCacheFactory('cache', { storeOnReject: false });
+    var cache = TestDSCacheFactory('cache', { storeOnResolve: true });
     cache.put('test', deferred.promise);
     deferred.reject('error');
     $rootScope.$safeApply();
@@ -245,7 +265,10 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected promises.', function () {
     var deferred = $q.defer();
-    var cache = TestDSCacheFactory('cache', {});
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     cache.put('test', deferred.promise);
     deferred.reject('error');
     $rootScope.$safeApply();
@@ -253,7 +276,11 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises using localStorage.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', { storageMode: 'localStorage' });
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true,
+      storageMode: 'localStorage'
+    });
     $http.get('test.com', {
       cache: cache
     }).success(function (data) {
@@ -270,7 +297,10 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises with multiple requests.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', {});
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     $http.get('test.com', {
       cache: cache
     });
@@ -308,7 +338,11 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises with multiple requests using localStorage.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', { storageMode: 'localStorage' });
+    var cache = TestDSCacheFactory('cache', {
+      storageMode: 'localStorage',
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     $http.get('test.com', {
       cache: cache
     });
