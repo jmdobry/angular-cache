@@ -90,23 +90,23 @@ module.exports = function put(key, value) {
     } catch(e){
 
       var targetItemSize = angular.toJson(item).length;
-      var releasedMemorySize = 0, itemToFlush;
+      var releasedMemorySize = 0, keyToRemove, itemToRemove;
 
       while(releasedMemorySize < (targetItemSize * 2) ){ 
         // we release 2 * memory more than the size of the target item to avoid generating too much exceptions
         if(this.$$storage){
-          itemToFlush = this.$$storage.getItem(this.$$prefix + '.data.' + this.$$lruHeap.peek());
+          keyToRemove = angular.fromJson(this.$$storage.getItem(this.$$prefix + '.keys'))[0];
+          itemToRemove = this.$$storage.getItem(this.$$prefix + '.data.' + keyToRemove);
 
-          if(!itemToFlush) {
-            return;
-          }
-          releasedMemorySize += itemToFlush.length;
-          this.remove(this.$$prefix + '.data.' + this.$$lruHeap.pop().key);
+          if(itemToRemove) {
+            releasedMemorySize += itemToRemove.length;
+            this.remove(keyToRemove);
+          } 
         }
       } 
 
       this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
-    }
+      }
 
     var exists = false;
     for (var i = 0; i < keys.length; i++) {

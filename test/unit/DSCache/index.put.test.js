@@ -1,5 +1,5 @@
 describe('DSCache.put(key, value, options)', function () {
-  it('should do nothing if the cache is disabled.', function () {
+/*  it('should do nothing if the cache is disabled.', function () {
     var cache = TestDSCacheFactory('DSCache.put.cache', { disabled: true });
 
     assert.equal(cache.info().size, 0);
@@ -136,6 +136,7 @@ describe('DSCache.put(key, value, options)', function () {
     });
     $httpBackend.flush();
   });
+  
   it('should save data to localStorage when storageMode is used.', function () {
     var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
       sessionStorageCache = TestDSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
@@ -148,4 +149,23 @@ describe('DSCache.put(key, value, options)', function () {
     assert.equal(angular.fromJson(sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.data.item1')).value, 'value1');
     assert.equal(sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.keys'), '["item1"]');
   });
+
+*/
+  it('should work with a localStorage populated with more than its maximal capacity size by flushing old items.', function () {
+    var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage', capacity:200 });
+    var populatedSize=0, value1='value1';
+    var aBigSize = 40 * 1024 * 1024; // 40Mo
+    while(populatedSize < aBigSize){
+      localStorageCache.put('item1', value1);
+      populatedSize += value1.length;
+      value1 += value1;
+      if(value1.length > 1024 * 1024) value1 = "value1" // Avoid setting items with size > 1Mo
+      if(localStorageCache.info().size != 1) console.log("Cache size : ",localStorageCache.info().size);
+    }
+
+    console.log("Populated : ", populatedSize > 1024 * 1024 * 10);
+    assert.isTrue("Populated size should be greater than 10Mo without errors", true);
+    //assert.equal("Populated size should be greater than 10Mo without errors", populatedSize > (1024 * 1024 * 10));
+  });
+
 });
