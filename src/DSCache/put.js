@@ -92,7 +92,7 @@ module.exports = function put(key, value) {
       var targetItemSize = angular.toJson(item).length;
       var releasedMemorySize = 0, keyToRemove, itemToRemove;
 
-      while(releasedMemorySize < (targetItemSize * 2) ){ 
+      while(releasedMemorySize < (targetItemSize * 2)){ 
         // we release 2 * memory more than the size of the target item to avoid generating too much exceptions
         if(this.$$storage){
           keyToRemove = angular.fromJson(this.$$storage.getItem(this.$$prefix + '.keys'))[0];
@@ -101,7 +101,9 @@ module.exports = function put(key, value) {
           if(itemToRemove) {
             releasedMemorySize += itemToRemove.length;
             this.remove(keyToRemove);
-          } 
+          } else { // No more items to remove  
+            return;
+          }
         }
       } 
 
