@@ -88,26 +88,28 @@ module.exports = function put(key, value) {
     try {
       this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
     } catch(e){
+        if(e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'){
 
-      var targetItemSize = angular.toJson(item).length;
-      var releasedMemorySize = 0, keyToRemove, itemToRemove;
+          // release 30% of the used memory (could be a parameter) + size of the rejected item
+          var requiredMemory = JSON.stringify(this.$$storage).length * 0.3 + JSON.stringify(item).length;
+          var releasedMemorySize = 0, keyToRemove, itemToRemove;
 
-      while(releasedMemorySize < (targetItemSize * 2)){ 
-        // we release 2 * memory more than the size of the target item to avoid generating too much exceptions
-        if(this.$$storage){
-          keyToRemove = angular.fromJson(this.$$storage.getItem(this.$$prefix + '.keys'))[0];
-          itemToRemove = this.$$storage.getItem(this.$$prefix + '.data.' + keyToRemove);
+          while(releasedMemorySize < requiredMemory){ 
+            if(this.$$storage){
+              keyToRemove = angular.fromJson(this.$$storage.getItem(this.$$prefix + '.keys'))[0];
+              itemToRemove = this.$$storage.getItem(this.$$prefix + '.data.' + keyToRemove);
 
-          if(itemToRemove) {
-            releasedMemorySize += itemToRemove.length;
-            this.remove(keyToRemove);
-          } else { // No more items to remove  
-            return;
-          }
+              if(itemToRemove) {
+                releasedMemorySize += itemToRemove.length;
+                this.remove(keyToRemove);
+              } else { // No more items to remove  
+                break;
+              }
+            }
+          } 
+
+          this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
         }
-      } 
-
-      this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
       }
 
     var exists = false;
