@@ -1470,25 +1470,30 @@ module.exports = function put(key, value) {
     try {
       this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
     } catch(e){
+       if(e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED'){
 
-      var targetItemSize = angular.toJson(item).length;
-      var releasedMemorySize = 0, itemToFlush;
+          // release 30% of the used memory (could be a parameter) + size of the rejected item
+          var requiredMemory = JSON.stringify(this.$$storage).length * 0.3 + JSON.stringify(item).length;
+          var releasedMemorySize = 0, keyToRemove, itemToRemove;
+          var changePosition = 0;
 
-      while(releasedMemorySize < (targetItemSize * 2) ){ 
-        // we release 2 * memory more than the size of the target item to avoid generating too much exceptions
-        if(this.$$storage){
-          itemToFlush = this.$$storage.getItem(this.$$prefix + '.data.' + this.$$lruHeap.peek());
+          while(releasedMemorySize < requiredMemory){ 
+            if(this.$$storage){
+              keyToRemove = angular.fromJson(this.$$storage.getItem(this.$$prefix + '.keys'))[changePosition];
+              itemToRemove = this.$$storage.getItem(this.$$prefix + '.data.' + keyToRemove);
 
-          if(!itemToFlush) {
-            return;
-          }
-          releasedMemorySize += itemToFlush.length;
-          this.remove(this.$$prefix + '.data.' + this.$$lruHeap.pop().key);
+              if(itemToRemove) {
+                releasedMemorySize += itemToRemove.length;
+                this.remove(keyToRemove);
+              } else { // No more items to remove or keys without values  
+                  changePosition++;
+              }
+            }
+          } 
+
+          this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
         }
-      } 
-
-      this.$$storage.setItem(this.$$prefix + '.data.' + key, angular.toJson(item));
-    }
+      }
 
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
