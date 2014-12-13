@@ -24,12 +24,16 @@ function _setStorageMode(storageMode, storageImpl) {
     } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
       throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
     }
-    _this.$$storage = storageImpl;
+    _this.$$storage = function () {
+      return storageImpl;
+    };
   } else if (_this.$$storageMode === 'localStorage') {
     try {
       localStorage.setItem('angular-cache', 'angular-cache');
       localStorage.removeItem('angular-cache');
-      _this.$$storage = localStorage;
+      _this.$$storage = function () {
+        return localStorage;
+      };
     } catch (e) {
       delete _this.$$storage;
       _this.$$storageMode = 'memory';
@@ -38,7 +42,9 @@ function _setStorageMode(storageMode, storageImpl) {
     try {
       sessionStorage.setItem('angular-cache', 'angular-cache');
       sessionStorage.removeItem('angular-cache');
-      _this.$$storage = sessionStorage;
+      _this.$$storage = function () {
+        return sessionStorage;
+      };
     } catch (e) {
       delete _this.$$storage;
       _this.$$storageMode = 'memory';

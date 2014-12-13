@@ -54,7 +54,7 @@ module.exports = function removeExpired() {
 
   if (_this.$$storage) {
     for (key in expired) {
-      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
       if (itemJson) {
         expired[key] = angular.fromJson(itemJson).value;
         _this.remove(key);

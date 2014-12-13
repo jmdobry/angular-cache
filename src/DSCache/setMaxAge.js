@@ -55,13 +55,13 @@ module.exports = function setMaxAge(maxAge) {
   _this.$$expiresHeap.removeAll();
 
   if (_this.$$storage) {
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys');
 
     keys = keysJson ? angular.fromJson(keysJson) : [];
 
     for (i = 0; i < keys.length; i++) {
       key = keys[i];
-      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         var item = angular.fromJson(itemJson);

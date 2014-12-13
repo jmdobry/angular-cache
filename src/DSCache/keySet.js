@@ -27,7 +27,7 @@ var utils = require('../utils');
 module.exports = function keySet() {
   var _this = this;
   if (_this.$$storage) {
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys'),
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys'),
       kSet = {};
 
     if (keysJson) {

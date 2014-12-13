@@ -26,8 +26,8 @@ module.exports = function destroy() {
   clearInterval(_this.$$recycleFreqId);
   _this.removeAll();
   if (_this.$$storage) {
-    _this.$$storage.removeItem(_this.$$prefix + '.keys');
-    _this.$$storage.removeItem(_this.$$prefix);
+    _this.$$storage().removeItem(_this.$$prefix + '.keys');
+    _this.$$storage().removeItem(_this.$$prefix);
   }
   _this.$$storage = null;
   _this.$$data = null;

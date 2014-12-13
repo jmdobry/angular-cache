@@ -49,7 +49,7 @@ module.exports = function info(key) {
   if (key) {
     var item;
     if (_this.$$storage) {
-      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         item = angular.fromJson(itemJson);
@@ -86,7 +86,7 @@ module.exports = function info(key) {
       cacheFlushInterval: _this.$$cacheFlushInterval,
       recycleFreq: _this.$$recycleFreq,
       storageMode: _this.$$storageMode,
-      storageImpl: _this.$$storage,
+      storageImpl: _this.$$storage ? _this.$$storage() : undefined,
       disabled: _this.$$disabled,
       size: _this.$$lruHeap && _this.$$lruHeap.size() || 0
     };

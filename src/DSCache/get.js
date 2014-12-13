@@ -136,7 +136,7 @@ module.exports = function get(key, options) {
       return _this.$$promises[key];
     }
 
-    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+    var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
     if (itemJson) {
       item = angular.fromJson(itemJson);
@@ -180,7 +180,7 @@ module.exports = function get(key, options) {
     }
     value = undefined;
   } else if (_this.$$storage) {
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
+    _this.$$storage().setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
   }
 
   return value;

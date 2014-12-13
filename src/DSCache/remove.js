@@ -30,7 +30,7 @@ module.exports = function remove(key) {
   var _this = this;
   delete _this.$$promises[key];
   if (_this.$$storage) {
-    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+    var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
     if (itemJson) {
       var item = angular.fromJson(itemJson);
@@ -42,15 +42,15 @@ module.exports = function remove(key) {
         key: key,
         expires: item.expires
       });
-      _this.$$storage.removeItem(_this.$$prefix + '.data.' + key);
-      var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys'),
+      _this.$$storage().removeItem(_this.$$prefix + '.data.' + key);
+      var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys'),
         keys = keysJson ? angular.fromJson(keysJson) : [],
         index = keys.indexOf(key);
 
       if (index >= 0) {
         keys.splice(index, 1);
       }
-      _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
+      _this.$$storage().setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
       return item.value;
     }
   } else {

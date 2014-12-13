@@ -1,7 +1,7 @@
 /**
 * @author Jason Dobry <jason.dobry@gmail.com>
 * @file angular-cache.js
-* @version 3.2.2 - Homepage <https://github.com/jmdobry/angular-cache>
+* @version 3.2.3 - Homepage <https://github.com/jmdobry/angular-cache>
 * @copyright (c) 2013-2014 Jason Dobry <http://www.pseudobry.com>
 * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
 *
@@ -216,8 +216,8 @@ module.exports = function destroy() {
   clearInterval(_this.$$recycleFreqId);
   _this.removeAll();
   if (_this.$$storage) {
-    _this.$$storage.removeItem(_this.$$prefix + '.keys');
-    _this.$$storage.removeItem(_this.$$prefix);
+    _this.$$storage().removeItem(_this.$$prefix + '.keys');
+    _this.$$storage().removeItem(_this.$$prefix);
   }
   _this.$$storage = null;
   _this.$$data = null;
@@ -365,7 +365,7 @@ module.exports = function get(key, options) {
       return _this.$$promises[key];
     }
 
-    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+    var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
     if (itemJson) {
       item = angular.fromJson(itemJson);
@@ -409,7 +409,7 @@ module.exports = function get(key, options) {
     }
     value = undefined;
   } else if (_this.$$storage) {
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
+    _this.$$storage().setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
   }
 
   return value;
@@ -442,12 +442,16 @@ function _setStorageMode(storageMode, storageImpl) {
     } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
       throw angular.$$minErr('ng')('areq', 'Expected storageImpl to implement "removeItem(key)"! Found: {0}.', typeof storageImpl.removeItem);
     }
-    _this.$$storage = storageImpl;
+    _this.$$storage = function () {
+      return storageImpl;
+    };
   } else if (_this.$$storageMode === 'localStorage') {
     try {
       localStorage.setItem('angular-cache', 'angular-cache');
       localStorage.removeItem('angular-cache');
-      _this.$$storage = localStorage;
+      _this.$$storage = function () {
+        return localStorage;
+      };
     } catch (e) {
       delete _this.$$storage;
       _this.$$storageMode = 'memory';
@@ -456,7 +460,9 @@ function _setStorageMode(storageMode, storageImpl) {
     try {
       sessionStorage.setItem('angular-cache', 'angular-cache');
       sessionStorage.removeItem('angular-cache');
-      _this.$$storage = sessionStorage;
+      _this.$$storage = function () {
+        return sessionStorage;
+      };
     } catch (e) {
       delete _this.$$storage;
       _this.$$storageMode = 'memory';
@@ -927,7 +933,7 @@ module.exports = function info(key) {
   if (key) {
     var item;
     if (_this.$$storage) {
-      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         item = angular.fromJson(itemJson);
@@ -964,7 +970,7 @@ module.exports = function info(key) {
       cacheFlushInterval: _this.$$cacheFlushInterval,
       recycleFreq: _this.$$recycleFreq,
       storageMode: _this.$$storageMode,
-      storageImpl: _this.$$storage,
+      storageImpl: _this.$$storage ? _this.$$storage() : undefined,
       disabled: _this.$$disabled,
       size: _this.$$lruHeap && _this.$$lruHeap.size() || 0
     };
@@ -1001,7 +1007,7 @@ var utils = require('../utils');
 module.exports = function keySet() {
   var _this = this;
   if (_this.$$storage) {
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys'),
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys'),
       kSet = {};
 
     if (keysJson) {
@@ -1047,7 +1053,7 @@ var utils = require('../utils');
 module.exports = function keys() {
   var _this = this;
   if (_this.$$storage) {
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys');
 
     if (keysJson) {
       return angular.fromJson(keysJson);
@@ -1154,9 +1160,9 @@ module.exports = function put(key, value, options) {
       _this.$$promises[key] = item.value;
       return _this.$$promises[key];
     }
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys');
     var keys = keysJson ? angular.fromJson(keysJson) : [];
-    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+    var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
     // Remove existing
     if (itemJson) {
@@ -1173,7 +1179,7 @@ module.exports = function put(key, value, options) {
       accessed: item.accessed
     });
     // Set item
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
+    _this.$$storage().setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
       if (keys[i] === key) {
@@ -1184,7 +1190,7 @@ module.exports = function put(key, value, options) {
     if (!exists) {
       keys.push(key);
     }
-    _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
+    _this.$$storage().setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
   } else {
     // Remove existing
     if (_this.$$data[key]) {
@@ -1240,7 +1246,7 @@ module.exports = function remove(key) {
   var _this = this;
   delete _this.$$promises[key];
   if (_this.$$storage) {
-    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+    var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
     if (itemJson) {
       var item = angular.fromJson(itemJson);
@@ -1252,15 +1258,15 @@ module.exports = function remove(key) {
         key: key,
         expires: item.expires
       });
-      _this.$$storage.removeItem(_this.$$prefix + '.data.' + key);
-      var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys'),
+      _this.$$storage().removeItem(_this.$$prefix + '.data.' + key);
+      var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys'),
         keys = keysJson ? angular.fromJson(keysJson) : [],
         index = keys.indexOf(key);
 
       if (index >= 0) {
         keys.splice(index, 1);
       }
-      _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
+      _this.$$storage().setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
       return item.value;
     }
   } else {
@@ -1309,7 +1315,7 @@ module.exports = function removeAll() {
   if (_this.$$storage) {
     _this.$$lruHeap.removeAll();
     _this.$$expiresHeap.removeAll();
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys');
 
     if (keysJson) {
       var keys = angular.fromJson(keysJson);
@@ -1318,7 +1324,7 @@ module.exports = function removeAll() {
         _this.remove(keys[i]);
       }
     }
-    _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify([]));
+    _this.$$storage().setItem(_this.$$prefix + '.keys', JSON.stringify([]));
   } else {
     _this.$$lruHeap.removeAll();
     _this.$$expiresHeap.removeAll();
@@ -1386,7 +1392,7 @@ module.exports = function removeExpired() {
 
   if (_this.$$storage) {
     for (key in expired) {
-      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
       if (itemJson) {
         expired[key] = angular.fromJson(itemJson).value;
         _this.remove(key);
@@ -1634,13 +1640,13 @@ module.exports = function setMaxAge(maxAge) {
   _this.$$expiresHeap.removeAll();
 
   if (_this.$$storage) {
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys');
 
     keys = keysJson ? angular.fromJson(keysJson) : [];
 
     for (i = 0; i < keys.length; i++) {
       key = keys[i];
-      var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         var item = angular.fromJson(itemJson);
@@ -1797,7 +1803,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
 },{}],18:[function(require,module,exports){
 var defaults = require('../defaults');
 var DSCache = require('../DSCache');
-var version = '3.2.2';
+var version = '3.2.3';
 
 /**
  * @doc function
@@ -2477,7 +2483,7 @@ module.exports = {
    * @id angular-cache
    * @name Overview
    * @description
-   * __Version:__ 3.2.2
+   * __Version:__ 3.2.3
    *
    * ## Install
    *
@@ -2497,7 +2503,7 @@ module.exports = {
    * also consumable by Browserify and you should be able to `require('angular-cache')`. The `main` file is `src/index.js`.
    *
    * #### Manual download
-   * Download angular-cache.3.2.2.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
+   * Download angular-cache.3.2.3.js from the [Releases](https://github.com/jmdobry/angular-cache/releases)
    * section of the angular-cache GitHub project.
    *
    * ## Load into Angular
@@ -2513,8 +2519,8 @@ module.exports = {
    *
    * [DSBinaryHeap](/documentation/api/api/DSBinaryHeap) is a priority queue implemented as a Binary Heap.
    *
-   * Angular-cache is a dependency of [angular-data](/documentation/api/api/angular-data) and must be loaded before
-   * angular-data if you are using angular-data.
+   * If you want to use angular-cache with [angular-data](/documentation/api/api/angular-data), then angular-cache must
+   * be loaded before angular-data.
    */
   angular.module('angular-data.DSCacheFactory', ['ng', 'angular-data.DSBinaryHeap'])
     .provider('DSCacheFactory', require('./DSCacheFactory'));

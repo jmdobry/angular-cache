@@ -1,3 +1,10 @@
+##### 3.2.3 13 December 2014
+
+###### Backwards compatible bug fixes
+- #112 - $resource cache and 3.0.0-beta-x
+- #122 - Error using DSCacheFactory with $http/ $resource and localStorage
+- #148 - Illegal operation when using local-/sessionStorage
+
 ##### 3.2.2 24 November 2014
 
 ###### Backwards compatible bug fixes

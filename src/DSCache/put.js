@@ -92,9 +92,9 @@ module.exports = function put(key, value, options) {
       _this.$$promises[key] = item.value;
       return _this.$$promises[key];
     }
-    var keysJson = _this.$$storage.getItem(_this.$$prefix + '.keys');
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys');
     var keys = keysJson ? angular.fromJson(keysJson) : [];
-    var itemJson = _this.$$storage.getItem(_this.$$prefix + '.data.' + key);
+    var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
     // Remove existing
     if (itemJson) {
@@ -111,7 +111,7 @@ module.exports = function put(key, value, options) {
       accessed: item.accessed
     });
     // Set item
-    _this.$$storage.setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
+    _this.$$storage().setItem(_this.$$prefix + '.data.' + key, JSON.stringify(item));
     var exists = false;
     for (var i = 0; i < keys.length; i++) {
       if (keys[i] === key) {
@@ -122,7 +122,7 @@ module.exports = function put(key, value, options) {
     if (!exists) {
       keys.push(key);
     }
-    _this.$$storage.setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
+    _this.$$storage().setItem(_this.$$prefix + '.keys', JSON.stringify(keys));
   } else {
     // Remove existing
     if (_this.$$data[key]) {

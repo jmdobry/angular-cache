@@ -92,8 +92,8 @@
    *
    * [DSBinaryHeap](/documentation/api/api/DSBinaryHeap) is a priority queue implemented as a Binary Heap.
    *
-   * Angular-cache is a dependency of [angular-data](/documentation/api/api/angular-data) and must be loaded before
-   * angular-data if you are using angular-data.
+   * If you want to use angular-cache with [angular-data](/documentation/api/api/angular-data), then angular-cache must
+   * be loaded before angular-data.
    */
   angular.module('angular-data.DSCacheFactory', ['ng', 'angular-data.DSBinaryHeap'])
     .provider('DSCacheFactory', require('./DSCacheFactory'));
