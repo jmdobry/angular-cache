@@ -36,6 +36,12 @@ describe('DSCache.remove(key)', function () {
       sessionStorageCache = TestDSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
 
     localStorageCache.put('item1', 'value1');
+
+    localStorageCache.put('2', "value2");
+    assert.equal(localStorageCache.keys().length, 2);
+    localStorageCache.remove(2);
+    assert.equal(localStorageCache.keys().length, 1);
+
     sessionStorageCache.put('item1', 'value1');
 
     assert.equal(angular.fromJson(localStorage.getItem(localStorageCache.$$storagePrefix + 'localStorageCache.data.item1')).value, 'value1');

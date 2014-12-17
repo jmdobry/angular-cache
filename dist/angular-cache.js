@@ -1244,6 +1244,7 @@ module.exports = function put(key, value, options) {
  */
 module.exports = function remove(key) {
   var _this = this;
+  key += '';
   delete _this.$$promises[key];
   if (_this.$$storage) {
     var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
