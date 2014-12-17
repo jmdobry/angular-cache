@@ -1,7 +1,6 @@
-## angular-cache
-__A very useful replacement for Angular's $cacheFactory.__
+## angular-cache [![Bower version](https://badge.fury.io/bo/angular-cache.svg)](http://badge.fury.io/bo/angular-cache) [![npm version](https://badge.fury.io/js/angular-cache.svg)](http://badge.fury.io/js/angular-cache)
 
-__Version:__ 3.2.3
+__A very useful replacement for Angular's $cacheFactory.__
 
 Documentation for 3.x.x can be found at [angular-data.pseudobry.com](http://angular-data.pseudobry.com).
 

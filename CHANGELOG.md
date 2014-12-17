@@ -1,3 +1,8 @@
+##### 3.2.4 17 December 2014
+
+###### Backwards compatible bug fixes
+- #149 - when removing an object from localStorage the key didn't get removed if the passed parameter is of number type.
+
 ##### 3.2.3 13 December 2014
 
 ###### Backwards compatible bug fixes
