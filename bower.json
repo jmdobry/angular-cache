@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/jmdobry/angular-cache.git"
   },
-  "main": "./dist/angular-cache.min.js",
+  "main": "./dist/angular-cache.js",
   "ignore": [
     ".idea/",
     ".*",
