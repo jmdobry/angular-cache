@@ -47,7 +47,7 @@ module.exports = function removeExpired() {
   var key;
   var expiredItem;
 
-  while ((expiredItem = _this.$$expiresHeap.peek()) && expiredItem.expires < now) {
+  while ((expiredItem = _this.$$expiresHeap.peek()) && expiredItem.expires <= now) {
     expired[expiredItem.key] = expiredItem.value ? expiredItem.value : null;
     _this.$$expiresHeap.pop();
   }
