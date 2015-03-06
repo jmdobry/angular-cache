@@ -1,7 +1,6 @@
-## angular-cache
-__A very useful replacement for Angular's $cacheFactory.__
+## angular-cache [![Bower version](https://badge.fury.io/bo/angular-cache.svg)](http://badge.fury.io/bo/angular-cache) [![npm version](https://badge.fury.io/js/angular-cache.svg)](http://badge.fury.io/js/angular-cache)
 
-__Version:__ 3.1.1
+__A very useful replacement for Angular's $cacheFactory.__
 
 Documentation for 3.x.x can be found at [angular-data.pseudobry.com](http://angular-data.pseudobry.com).
 
@@ -12,7 +11,7 @@ See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSIT
 ## License
 [MIT License](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)
 
-Copyright (C) 2013-2014 Jason Dobry
+Copyright (C) 2013-2015 Jason Dobry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

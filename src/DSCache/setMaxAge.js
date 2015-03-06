@@ -40,56 +40,57 @@ var utils = require('../utils');
  * `maxAge`. Items are only removed if the `deleteOnExpire` setting for this cache is set to `"aggressive"`.
  */
 module.exports = function setMaxAge(maxAge) {
+  var _this = this;
   if (maxAge === null) {
-    delete this.$$maxAge;
+    delete _this.$$maxAge;
   } else if (!angular.isNumber(maxAge)) {
     throw angular.$$minErr('ng')('areq', 'Expected maxAge to be a number! Found: {0}.', typeof maxAge);
   } else if (maxAge < 0) {
     throw angular.$$minErr('ng')('areq', 'Expected maxAge to be greater than zero! Found: {0}.', maxAge);
   } else {
-    this.$$maxAge = maxAge;
+    _this.$$maxAge = maxAge;
   }
   var i, keys, key;
 
-  this.$$expiresHeap.removeAll();
+  _this.$$expiresHeap.removeAll();
 
-  if (this.$$storage) {
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys');
+  if (_this.$$storage) {
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys');
 
     keys = keysJson ? angular.fromJson(keysJson) : [];
 
     for (i = 0; i < keys.length; i++) {
       key = keys[i];
-      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         var item = angular.fromJson(itemJson);
-        if (this.$$maxAge === Number.MAX_VALUE) {
+        if (_this.$$maxAge === Number.MAX_VALUE) {
           item.expires = Number.MAX_VALUE;
         } else {
-          item.expires = item.created + this.$$maxAge;
+          item.expires = item.created + _this.$$maxAge;
         }
-        this.$$expiresHeap.push({
+        _this.$$expiresHeap.push({
           key: key,
           expires: item.expires
         });
       }
     }
   } else {
-    keys = utils.keys(this.$$data);
+    keys = utils.keys(_this.$$data);
 
     for (i = 0; i < keys.length; i++) {
       key = keys[i];
-      if (this.$$maxAge === Number.MAX_VALUE) {
-        this.$$data[key].expires = Number.MAX_VALUE;
+      if (_this.$$maxAge === Number.MAX_VALUE) {
+        _this.$$data[key].expires = Number.MAX_VALUE;
       } else {
-        this.$$data[key].expires = this.$$data[key].created + this.$$maxAge;
+        _this.$$data[key].expires = _this.$$data[key].created + _this.$$maxAge;
       }
-      this.$$expiresHeap.push(this.$$data[key]);
+      _this.$$expiresHeap.push(_this.$$data[key]);
     }
   }
-  if (this.$$deleteOnExpire === 'aggressive') {
-    return this.removeExpired();
+  if (_this.$$deleteOnExpire === 'aggressive') {
+    return _this.removeExpired();
   } else {
     return {};
   }

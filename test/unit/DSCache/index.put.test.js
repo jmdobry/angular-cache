@@ -1,5 +1,5 @@
 describe('DSCache.put(key, value, options)', function () {
-/*  it('should do nothing if the cache is disabled.', function () {
+  it('should do nothing if the cache is disabled.', function () {
     var cache = TestDSCacheFactory('DSCache.put.cache', { disabled: true });
 
     assert.equal(cache.info().size, 0);
@@ -106,23 +106,66 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should handle normal promises.', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive', recycleFreq: 20 });
+    var cache = TestDSCacheFactory('cache', {
+      maxAge: 10,
+      deleteOnExpire: 'passive',
+      recycleFreq: 20,
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     var deferred = $q.defer();
-    cache.put('item1', deferred.promise);
+    var item = cache.put('item1', deferred.promise);
+    assert.equal(typeof item.then, 'function');
+    assert.equal(typeof cache.get('item1').then, 'function');
     setTimeout(function () {
-      $rootScope.$apply(function () {
-        deferred.resolve('value1');
-      });
-      assert.equal(cache.get('item1'), 'value1');
-      setTimeout(function () {
-        assert.isUndefined(cache.get('item1'));
-        done();
-      }, 100);
+      try {
+        $rootScope.$apply(function () {
+          deferred.resolve('value1');
+        });
+        assert.equal(cache.get('item1'), 'value1');
+        setTimeout(function () {
+          assert.isUndefined(cache.get('item1'));
+          done();
+        }, 100);
+      } catch (err) {
+        done(err);
+      }
     }, 100);
   });
-  it('should work with $http promises.', function () {
+  it('should handle normal promises using localStorage.', function (done) {
+    var cache = TestDSCacheFactory('cache', {
+      maxAge: 10,
+      deleteOnExpire: 'passive',
+      recycleFreq: 20,
+      storageMode: 'localStorage',
+      storeOnResolve: true,
+      storeOnReject: true
+    });
+    var deferred = $q.defer();
+    var item = cache.put('item1', deferred.promise);
+    assert.equal(typeof item.then, 'function');
+    assert.equal(typeof cache.get('item1').then, 'function');
+    setTimeout(function () {
+      try {
+        $rootScope.$apply(function () {
+          deferred.resolve('value1');
+        });
+        assert.equal(cache.get('item1'), 'value1');
+        setTimeout(function () {
+          assert.isUndefined(cache.get('item1'));
+          done();
+        }, 100);
+      } catch (err) {
+        done(err);
+      }
+    }, 100);
+  });
+  it('should work with $http promises.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', {});
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true
+    });
     $http.get('test.com', {
       cache: cache
     }).success(function (data) {
@@ -133,13 +176,196 @@ describe('DSCache.put(key, value, options)', function () {
         assert.deepEqual(data, { name: 'John' });
       });
       $rootScope.$safeApply();
+      assert.equal(cache.get('test.com')[0], 200);
+      assert.deepEqual(cache.get('test.com')[1], { name: 'John' });
+      done();
     });
     $httpBackend.flush();
   });
-  
+  it('should work with $http promises when storeOnResolve is false.', function () {
+    $httpBackend.expectGET('test.com').respond({ name: 'John' });
+    var cache = TestDSCacheFactory('cache', { storeOnReject: true });
+    $http.get('test.com', {
+      cache: cache
+    }).success(function (data) {
+      assert.deepEqual(data, { name: 'John' });
+      $rootScope.$safeApply();
+      assert.equal(cache.get('test.com')[0], 200);
+      assert.deepEqual(cache.get('test.com')[1], { name: 'John' });
+    });
+    $httpBackend.flush();
+  });
+  it('should work with promises when storeOnResolve is true.', function () {
+    var deferred = $q.defer();
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true
+    });
+    cache.put('test', deferred.promise);
+    deferred.resolve('value');
+    $rootScope.$safeApply();
+    assert.equal(cache.get('test'), 'value');
+  });
+  it('should work with rejected $http promises when storeOnReject and storeOnResolve are false.', function (done) {
+    $httpBackend.expectGET('test.com').respond(404, 'Not Found');
+    var cache = TestDSCacheFactory('cache', {});
+    $http.get('test.com', {
+      cache: cache
+    }).success(function () {
+      done('Should not have succeeded');
+    }).error(function (data) {
+      assert.deepEqual(data, 'Not Found');
+      // should not have cached the 404
+      $httpBackend.expectGET('test.com').respond(200, { test: 'data' });
+      $http.get('test.com', {
+        cache: cache
+      }).success(function (data) {
+        assert.deepEqual(data, { test: 'data' });
+        done();
+      }).error(function (data) {
+        console.log(data);
+        done('Should not have failed');
+      });
+      //$httpBackend.flush();
+    });
+    $httpBackend.flush();
+  });
+  it('should work with rejected $http promises when storeOnReject and storeOnResolve are false and using localStorage.', function (done) {
+    $httpBackend.expectGET('test.com').respond(404, 'Not Found');
+    var cache = TestDSCacheFactory('cache', {
+      storageMode: 'localStorage'
+    });
+    $http.get('test.com', {
+      cache: cache
+    }).success(function () {
+      done('Should not have succeeded');
+    }).error(function (data) {
+      assert.deepEqual(data, 'Not Found');
+      // should not have cached the 404
+      $httpBackend.expectGET('test.com').respond(200, { test: 'data' });
+      $http.get('test.com', {
+        cache: cache
+      }).success(function (data) {
+        assert.deepEqual(data, { test: 'data' });
+        done();
+      }).error(function (data) {
+        console.log(data);
+        done('Should not have failed');
+      });
+      //$httpBackend.flush();
+    });
+    $httpBackend.flush();
+  });
+  it('should work with rejected promises when storeOnReject is false.', function () {
+    var deferred = $q.defer();
+    var cache = TestDSCacheFactory('cache', { storeOnResolve: true });
+    cache.put('test', deferred.promise);
+    deferred.reject('error');
+    $rootScope.$safeApply();
+    assert.equal(typeof cache.get('test').then, 'function');
+  });
+  it('should work with rejected promises.', function () {
+    var deferred = $q.defer();
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true
+    });
+    cache.put('test', deferred.promise);
+    deferred.reject('error');
+    $rootScope.$safeApply();
+    assert.equal(cache.get('test'), 'error');
+  });
+  it('should work with $http promises using localStorage.', function (done) {
+    $httpBackend.expectGET('test.com').respond({ name: 'John' });
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true,
+      storageMode: 'localStorage'
+    });
+    $http.get('test.com', {
+      cache: cache
+    }).success(function (data) {
+      assert.deepEqual(data, { name: 'John' });
+      $http.get('test.com', {
+        cache: cache
+      }).success(function (data) {
+        assert.deepEqual(data, { name: 'John' });
+        done();
+      }).error(done);
+      $rootScope.$safeApply();
+    }).error(done);
+    $httpBackend.flush();
+  });
+  it('should work with $http promises with multiple requests.', function (done) {
+    $httpBackend.expectGET('test.com').respond({ name: 'John' });
+    var cache = TestDSCacheFactory('cache', {
+      storeOnResolve: true,
+      storeOnReject: true
+    });
+    $http.get('test.com', {
+      cache: cache
+    });
+    $rootScope.$safeApply();
+    assert.deepEqual(cache.keys(), ['test.com']);
+    setTimeout(function () {
+      try {
+        var promise = cache.get('test.com');
+        assert.equal(typeof promise.then, 'function');
+        $http.get('test.com', {
+          cache: cache
+        });
+        $rootScope.$safeApply();
+        assert.deepEqual(cache.keys(), ['test.com']);
+        assert.isTrue(promise === cache.get('test.com'));
+        setTimeout(function () {
+          try {
+            $http.get('test.com', {
+              cache: cache
+            });
+            $rootScope.$safeApply();
+            assert.deepEqual(cache.keys(), ['test.com']);
+            assert.isTrue(promise === cache.get('test.com'));
+            $httpBackend.flush();
+            assert.deepEqual(cache.keys(), ['test.com']);
+            done();
+          } catch (err) {
+            done(err);
+          }
+        }, 20);
+      } catch (err) {
+        done(err);
+      }
+    }, 20);
+  });
+  it('should work with $http promises with multiple requests using localStorage.', function (done) {
+    $httpBackend.expectGET('test.com').respond({ name: 'John' });
+    var cache = TestDSCacheFactory('cache', {
+      storageMode: 'localStorage',
+      storeOnResolve: true,
+      storeOnReject: true
+    });
+    $http.get('test.com', {
+      cache: cache
+    });
+    assert.deepEqual(cache.keys(), []);
+    setTimeout(function () {
+      $http.get('test.com', {
+        cache: cache
+      });
+      assert.deepEqual(cache.keys(), []);
+      setTimeout(function () {
+        $http.get('test.com', {
+          cache: cache
+        });
+        assert.deepEqual(cache.keys(), []);
+        $httpBackend.flush();
+        assert.deepEqual(cache.keys(), ['test.com']);
+        done();
+      }, 20);
+    }, 20);
+  });
   it('should save data to localStorage when storageMode is used.', function () {
-    var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
-      sessionStorageCache = TestDSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+    var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage' });
+    var sessionStorageCache = TestDSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
 
     localStorageCache.put('item1', 'value1');
     sessionStorageCache.put('item1', 'value1');
@@ -149,23 +375,4 @@ describe('DSCache.put(key, value, options)', function () {
     assert.equal(angular.fromJson(sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.data.item1')).value, 'value1');
     assert.equal(sessionStorage.getItem(sessionStorageCache.$$storagePrefix + 'sessionStorageCache.keys'), '["item1"]');
   });
-
-*/
-  it('should work with a localStorage populated with more than its maximal capacity size by flushing old items.', function () {
-    var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage', capacity:200 });
-    var populatedSize=0, value1='value1';
-    var aBigSize = 40 * 1024 * 1024; // 40Mo
-    while(populatedSize < aBigSize){
-      localStorageCache.put('item1', value1);
-      populatedSize += value1.length;
-      value1 += value1;
-      if(value1.length > 1024 * 1024) value1 = "value1" // Avoid setting items with size > 1Mo
-      if(localStorageCache.info().size != 1) console.log("Cache size : ",localStorageCache.info().size);
-    }
-
-    console.log("Populated : ", populatedSize > 1024 * 1024 * 10);
-    assert.isTrue("Populated size should be greater than 10Mo without errors", true);
-    //assert.equal("Populated size should be greater than 10Mo without errors", populatedSize > (1024 * 1024 * 10));
-  });
-
 });

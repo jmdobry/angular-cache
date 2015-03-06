@@ -1,3 +1,36 @@
+##### 3.2.5 02 February 2015
+
+###### Backwards compatible bug fixes
+- #152 - Expired items sometimes only expire after double time.
+- #153 - Missing angular dependency in bower.json
+
+##### 3.2.4 17 December 2014
+
+###### Backwards compatible bug fixes
+- #149 - when removing an object from localStorage the key didn't get removed if the passed parameter is of number type.
+
+##### 3.2.3 13 December 2014
+
+###### Backwards compatible bug fixes
+- #112 - $resource cache and 3.0.0-beta-x
+- #122 - Error using DSCacheFactory with $http/ $resource and localStorage
+- #148 - Illegal operation when using local-/sessionStorage
+
+##### 3.2.2 24 November 2014
+
+###### Backwards compatible bug fixes
+- #147 - `storeOnResolve` and `storeOnReject` should default to `false`
+
+##### 3.2.1 10 November 2014
+
+###### Backwards compatible bug fixes
+- #142 - Use JSON.stringify instead of angular.toJson
+
+##### 3.2.0 07 November 2014
+
+###### Backwards compatible API changes
+- #135 - Closes #135. (Improved handling of promises.)
+
 ##### 3.1.1 28 August 2014
 
 ###### Backwards compatible bug fixes

@@ -45,10 +45,11 @@
  * @returns {object} The status of this cache or of the item with the given key.
  */
 module.exports = function info(key) {
+  var _this = this;
   if (key) {
     var item;
-    if (this.$$storage) {
-      var itemJson = this.$$storage.getItem(this.$$prefix + '.data.' + key);
+    if (_this.$$storage) {
+      var itemJson = _this.$$storage().getItem(_this.$$prefix + '.data.' + key);
 
       if (itemJson) {
         item = angular.fromJson(itemJson);
@@ -56,20 +57,20 @@ module.exports = function info(key) {
           created: item.created,
           accessed: item.accessed,
           expires: item.expires,
-          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+          isExpired: (new Date().getTime() - item.created) > _this.$$maxAge
         };
       } else {
         return undefined;
       }
     } else {
-      if (key in this.$$data) {
-        item = this.$$data[key];
+      if (key in _this.$$data) {
+        item = _this.$$data[key];
 
         return {
           created: item.created,
           accessed: item.accessed,
           expires: item.expires,
-          isExpired: (new Date().getTime() - item.created) > this.$$maxAge
+          isExpired: (new Date().getTime() - item.created) > _this.$$maxAge
         };
       } else {
         return undefined;
@@ -77,17 +78,17 @@ module.exports = function info(key) {
     }
   } else {
     return {
-      id: this.$$id,
-      capacity: this.$$capacity,
-      maxAge: this.$$maxAge,
-      deleteOnExpire: this.$$deleteOnExpire,
-      onExpire: this.$$onExpire,
-      cacheFlushInterval: this.$$cacheFlushInterval,
-      recycleFreq: this.$$recycleFreq,
-      storageMode: this.$$storageMode,
-      storageImpl: this.$$storage,
-      disabled: this.$$disabled,
-      size: this.$$lruHeap && this.$$lruHeap.size() || 0
+      id: _this.$$id,
+      capacity: _this.$$capacity,
+      maxAge: _this.$$maxAge,
+      deleteOnExpire: _this.$$deleteOnExpire,
+      onExpire: _this.$$onExpire,
+      cacheFlushInterval: _this.$$cacheFlushInterval,
+      recycleFreq: _this.$$recycleFreq,
+      storageMode: _this.$$storageMode,
+      storageImpl: _this.$$storage ? _this.$$storage() : undefined,
+      disabled: _this.$$disabled,
+      size: _this.$$lruHeap && _this.$$lruHeap.size() || 0
     };
   }
 };

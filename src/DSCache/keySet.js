@@ -25,8 +25,9 @@ var utils = require('../utils');
  * @returns {object} An object of the keys in this cache.
  */
 module.exports = function keySet() {
-  if (this.$$storage) {
-    var keysJson = this.$$storage.getItem(this.$$prefix + '.keys'),
+  var _this = this;
+  if (_this.$$storage) {
+    var keysJson = _this.$$storage().getItem(_this.$$prefix + '.keys'),
       kSet = {};
 
     if (keysJson) {
@@ -38,6 +39,6 @@ module.exports = function keySet() {
     }
     return kSet;
   } else {
-    return utils.keySet(this.$$data);
+    return utils.keySet(_this.$$data);
   }
 };

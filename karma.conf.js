@@ -2,10 +2,10 @@ module.exports = function (config) {
 	config.set({
 		basePath: './',
 		frameworks: ['mocha', 'chai', 'sinon'],
-		browsers: ['Firefox', 'PhantomJS'],
+		browsers: ['PhantomJS'],
 		files: [
-			'bower_components/angular-1.2.16/angular.js',
-			'bower_components/angular-mocks-1.2.16/angular-mocks.js',
+			'bower_components/angular-1.2.25/angular.js',
+			'bower_components/angular-mocks-1.2.25/angular-mocks.js',
 			'dist/angular-cache.js',
 			'./karma.start.js',
 			'test/unit/DSCache/index.put.test.js'
