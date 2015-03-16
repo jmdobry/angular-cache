@@ -29,14 +29,13 @@ var fail = function (msg) {
     storagePrefix: 'ac.'
   };
 
-var TestDSCacheFactoryProvider, TestDSCacheFactory, TestDSBinaryHeap, $q, $rootScope, $http, $httpBackend;
+var TestCacheFactoryProvider, TestCacheFactory, $q, $rootScope, $http, $httpBackend;
 
-beforeEach(module('angular-data.DSCacheFactory', function (_DSCacheFactoryProvider_) {
-  TestDSCacheFactoryProvider = _DSCacheFactoryProvider_;
+beforeEach(module('angular-cache', function (_CacheFactoryProvider_) {
+  TestCacheFactoryProvider = _CacheFactoryProvider_;
 }));
-beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_, _$q_, _$rootScope_, _$http_, _$httpBackend_) {
-  TestDSCacheFactory = _DSCacheFactory_;
-  TestDSBinaryHeap = _DSBinaryHeap_;
+beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$http_, _$httpBackend_) {
+  TestCacheFactory = _CacheFactory_;
   $q = _$q_;
   $rootScope = _$rootScope_;
   $rootScope.$safeApply = function () {
@@ -72,5 +71,5 @@ beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_, _$q_, _$rootScope_
   $httpBackend = _$httpBackend_;
 }));
 afterEach(function () {
-  TestDSCacheFactory.destroyAll();
+  TestCacheFactory.destroyAll();
 });

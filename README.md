@@ -1,14 +1,50 @@
-## angular-cache [![Bower version](https://badge.fury.io/bo/angular-cache.svg)](http://badge.fury.io/bo/angular-cache) [![npm version](https://badge.fury.io/js/angular-cache.svg)](http://badge.fury.io/js/angular-cache)
+## angular-cache [![bower version](https://img.shields.io/bower/v/angular-cache.svg?style=flat-square)](https://www.npmjs.org/package/angular-cache) [![npm version](https://img.shields.io/npm/v/angular-cache.svg?style=flat-square)](https://www.npmjs.org/package/angular-cache) [![Circle CI](https://img.shields.io/circleci/project/jmdobry/angular-cache/master.svg?style=flat-square)](https://circleci.com/gh/jmdobry/angular-cache/tree/master) [![npm downloads](https://img.shields.io/npm/dm/angular-cache.svg?style=flat-square)](https://www.npmjs.org/package/angular-cache) [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)
 
 __A very useful replacement for Angular's $cacheFactory.__
 
-Documentation for 3.x.x can be found at [angular-data.pseudobry.com](http://angular-data.pseudobry.com).
+__angular-cache < 4.0.0 have been deprecated__
 
-Documentation for 2.x.x can be found at [jmdobry.github.io/angular-cache](http://jmdobry.github.io/angular-cache).
+__Latest Release:__ [![Latest Release](https://img.shields.io/github/release/jmdobry/angular-cache.svg?style=flat-square)](https://github.com/jmdobry/angular-cache/releases)
 
-See [TRANSITION.md](https://github.com/jmdobry/angular-cache/blob/master/TRANSITION.md) for upgrading from 2.x.x to 3.x.x.
+__Status:__
 
-## License
+[![Dependency Status](https://img.shields.io/gemnasium/jmdobry/angular-cache.svg?style=flat-square)](https://gemnasium.com/jmdobry/angular-cache) [![Coverage Status](https://img.shields.io/coveralls/jmdobry/angular-cache/master.svg?style=flat-square)](https://coveralls.io/r/jmdobry/angular-cache?branch=master) [![Codacity](https://img.shields.io/codacy/5e27e21d0c4c4d4cb203d589384aa93a.svg?style=flat-square)](https://www.codacy.com/public/jasondobry/angular-cache/dashboard)
+
+__Supported Browsers:__
+
+[![browsers](https://img.shields.io/badge/Browser-Chrome%2CFirefox%2CSafari%2COpera%2CIE%209%2B%2CiOS%20Safari%207.1%2B%2CAndroid%20Browser%202.3%2B-green.svg?style=flat-square)](https://github.com/jmdobry/angular-cache)
+
+### Quick Start
+`bower install --save angular-cache` or `npm install --save angular-cache`.
+
+```js
+angular.module('myApp', ['angular-cache'])
+  .config(function (CacheFactoryProvider) {
+    angular.extend(CacheFactoryProvider.defaults, { maxAge: 900000 });
+  })
+  .service('BookService', function (CacheFactory) {
+    if (!CacheFactory.get('bookCache')) {
+      CacheFactory.createCache('bookCache', {
+        deleteOnExpire: 'aggressive',
+        recycleFreq: 60000
+      });
+    }
+
+    var bookCache = CacheFactory.get('bookCache');
+
+    return {
+      findBookById: function (id) {
+        return $http.get('/api/books/' + id, { cache: bookCache });
+      }
+    };
+  });
+```
+
+### API
+
+TODO
+
+### License
 [MIT License](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)
 
 Copyright (C) 2013-2015 Jason Dobry

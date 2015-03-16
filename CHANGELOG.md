@@ -1,3 +1,24 @@
+##### 4.0.0 15 March 2015
+
+###### Breaking API changes
+- Completely disassociated angular-cache from the deprecated angular-data (angular-data has been replaced by js-data + js-data-angular)
+- Angular module renamed to _angular-cache_
+- _DSCacheFactory_ renamed to _CacheFactory_
+- _DSBinaryHeap_ renamed to _BinaryHeap_
+- Removed `DSCacheFactoryProvider.setCacheDefaults`. You now do `angular.extend(CacheFactoryProvider.defaults, { ... });`
+- No longer exposing a `DSCache` constructor function (as it no longer exists)
+- `storageMode` can now be set dynamically, which will remove all items from current storage and insert them into the new storage
+
+###### Other
+- Fixes #161
+- Converted to ES6 and a webpack build with better umd support
+- Now exporting the module name _angular-cache_ (when you do `require('angular-cache')` you get `"angular-cache"`)
+- Deprecating angular-cache < 4.0.0
+
+###### Backwards compatible bug fixes
+- #152 - Expired items sometimes only expire after double time.
+- #153 - Missing angular dependency in bower.json
+
 ##### 3.2.5 02 February 2015
 
 ###### Backwards compatible bug fixes

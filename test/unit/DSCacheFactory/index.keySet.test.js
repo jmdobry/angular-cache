@@ -1,12 +1,12 @@
-describe('DSCacheFactory.keySet()', function () {
-  it('should return the set of keys of all caches in DSCacheFactory.', function (done) {
-    var cacheKeys = ['DSCacheFactory.keySet.cache', 'DSCacheFactory.keySet.cache1', 'DSCacheFactory.keySet.cache2'];
+describe('CacheFactory.keySet()', function () {
+  it('should return the set of keys of all caches in CacheFactory.', function (done) {
+    var cacheKeys = ['CacheFactory.keySet.cache', 'CacheFactory.keySet.cache1', 'CacheFactory.keySet.cache2'];
 
-    TestDSCacheFactory(cacheKeys[0]);
-    TestDSCacheFactory(cacheKeys[1]);
-    TestDSCacheFactory(cacheKeys[2]);
+    TestCacheFactory(cacheKeys[0]);
+    TestCacheFactory(cacheKeys[1]);
+    TestCacheFactory(cacheKeys[2]);
 
-    var keySet = TestDSCacheFactory.keySet();
+    var keySet = TestCacheFactory.keySet();
 
     assert.equal(keySet.hasOwnProperty(cacheKeys[0]), true);
     assert.equal(keySet.hasOwnProperty(cacheKeys[1]), true);
@@ -16,8 +16,8 @@ describe('DSCacheFactory.keySet()', function () {
     assert.equal(keySet[cacheKeys[1]], cacheKeys[1]);
     assert.equal(keySet[cacheKeys[2]], cacheKeys[2]);
 
-    TestDSCacheFactory.get(cacheKeys[0]).destroy();
-    keySet = TestDSCacheFactory.keySet();
+    TestCacheFactory.get(cacheKeys[0]).destroy();
+    keySet = TestCacheFactory.keySet();
     assert.equal(keySet.hasOwnProperty(cacheKeys[0]), false);
     assert.equal(keySet.hasOwnProperty(cacheKeys[1]), true);
     assert.equal(keySet.hasOwnProperty(cacheKeys[2]), true);
@@ -25,8 +25,8 @@ describe('DSCacheFactory.keySet()', function () {
     assert.equal(keySet[cacheKeys[1]], cacheKeys[1]);
     assert.equal(keySet[cacheKeys[2]], cacheKeys[2]);
 
-    TestDSCacheFactory.get(cacheKeys[1]).destroy();
-    keySet = TestDSCacheFactory.keySet();
+    TestCacheFactory.get(cacheKeys[1]).destroy();
+    keySet = TestCacheFactory.keySet();
     assert.equal(keySet.hasOwnProperty(cacheKeys[0]), false);
     assert.equal(keySet.hasOwnProperty(cacheKeys[1]), false);
     assert.equal(keySet.hasOwnProperty(cacheKeys[2]), true);
@@ -34,9 +34,9 @@ describe('DSCacheFactory.keySet()', function () {
     assert.isUndefined(keySet[cacheKeys[1]]);
     assert.equal(keySet[cacheKeys[2]], cacheKeys[2]);
 
-    TestDSCacheFactory.get(cacheKeys[2]).destroy();
+    TestCacheFactory.get(cacheKeys[2]).destroy();
 
-    keySet = TestDSCacheFactory.keySet();
+    keySet = TestCacheFactory.keySet();
 
     assert.equal(keySet.hasOwnProperty(cacheKeys[0]), false);
     assert.equal(keySet.hasOwnProperty(cacheKeys[1]), false);

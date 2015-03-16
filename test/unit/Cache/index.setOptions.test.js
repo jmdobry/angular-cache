@@ -1,6 +1,6 @@
-describe('DSCache.setOptions()', function () {
+describe('Cache#setOptions([options][, strict])', function () {
   it('should throw an error if "options" is not an object.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
       try {
         cache.setOptions(TYPES_EXCEPT_OBJECT[i]);
@@ -8,7 +8,7 @@ describe('DSCache.setOptions()', function () {
           fail(TYPES_EXCEPT_OBJECT[i]);
         }
       } catch (err) {
-        assert.equal(err.message, '[ng:areq] Expected cacheOptions to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
+        assert.equal(err.message, 'cacheOptions must be an object!');
         continue;
       }
       if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
@@ -19,7 +19,7 @@ describe('DSCache.setOptions()', function () {
   it('should correctly reset to defaults if strict mode is true', function () {
     var onExpire = function () {
     };
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       maxAge: 100,
       cacheFlushInterval: 200,
       onExpire: onExpire,
@@ -33,13 +33,13 @@ describe('DSCache.setOptions()', function () {
     assert.isTrue(cache.info().disabled);
     cache.setOptions({ }, true);
     assert.equal(cache.info().maxAge, Number.MAX_VALUE);
-    assert.isNull(cache.info().cacheFlushInterval);
-    assert.isNull(cache.info().onExpire);
-    assert.equal(cache.info().storageMode, 'localStorage');
+    assert.isUndefined(cache.info().cacheFlushInterval);
+    assert.isUndefined(cache.info().onExpire);
+    assert.equal(cache.info().storageMode, 'memory');
     assert.isFalse(cache.info().disabled);
   });
   it('should correctly modify the capacity of a cache', function (done) {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     assert.equal(cache.info().capacity, Number.MAX_VALUE);
     cache.setOptions({ capacity: 5 }, false);
     assert.equal(cache.info().capacity, 5);
@@ -64,7 +64,7 @@ describe('DSCache.setOptions()', function () {
     }, 50);
   });
   it('should correctly modify the maxAge of a cache', function (done) {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     assert.equal(cache.info().maxAge, Number.MAX_VALUE);
     cache.setOptions({ maxAge: 1000, deleteOnExpire: 'aggressive', recycleFreq: 20 }, false);
     assert.equal(cache.info().maxAge, 1000);
@@ -108,8 +108,8 @@ describe('DSCache.setOptions()', function () {
     }, 100);
   });
   it('should correctly modify the cacheFlushInterval of a cache', function (done) {
-    var cache = TestDSCacheFactory('cache');
-    assert.isNull(cache.info().cacheFlushInterval);
+    var cache = TestCacheFactory('cache');
+    assert.isUndefined(cache.info().cacheFlushInterval);
     cache.setOptions({ cacheFlushInterval: 10 }, false);
     assert.equal(cache.info().cacheFlushInterval, 10);
     cache.put('item1', 1);
@@ -141,7 +141,7 @@ describe('DSCache.setOptions()', function () {
     }, 100);
   });
   it('should correctly modify the deleteOnExpire of a cache', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10 });
+    var cache = TestCacheFactory('cache', { maxAge: 10 });
     assert.equal(cache.info().deleteOnExpire, 'none');
     cache.setOptions({ deleteOnExpire: 'passive' });
     assert.equal(cache.info().deleteOnExpire, 'passive');
@@ -165,7 +165,7 @@ describe('DSCache.setOptions()', function () {
     }, 100);
   });
   it('should correctly set configuration to default when "strict" is true', function () {
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       capacity: 10,
       maxAge: 1000,
       cacheFlushInterval: 1000,
@@ -182,8 +182,7 @@ describe('DSCache.setOptions()', function () {
     assert.equal(cacheInfo.maxAge, Number.MAX_VALUE);
     assert.equal(cacheInfo.cacheFlushInterval, null);
     assert.equal(cacheInfo.deleteOnExpire, 'none');
-    // Storage mode is not dynamically configurable
-    assert.equal(cacheInfo.storageMode, 'localStorage');
+    assert.equal(cacheInfo.storageMode, 'memory');
     assert.equal(cacheInfo.onExpire, null);
   });
 });
