@@ -173,9 +173,9 @@ class CacheFactoryProvider {
               this.remove(key);
 
               if (this.$$onExpire) {
-                this.$$onExpire(key, item.value, options.onExpire);
+                this.$$onExpire.call(this, key, item.value, options.onExpire);
               } else if (options.onExpire) {
-                options.onExpire(key, item.value);
+                options.onExpire.call(this, key, item.value);
               }
               value = undefined;
             } else if (this.$$storage) {
@@ -455,7 +455,7 @@ class CacheFactoryProvider {
 
             if (this.$$onExpire) {
               for (key in expired) {
-                this.$$onExpire(key, expired[key]);
+                this.$$onExpire.call(this, key, expired[key]);
               }
             }
 

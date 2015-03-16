@@ -264,9 +264,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.remove(key);
 
 	            if (this.$$onExpire) {
-	              this.$$onExpire(key, item.value, options.onExpire);
+	              this.$$onExpire.call(this, key, item.value, options.onExpire);
 	            } else if (options.onExpire) {
-	              options.onExpire(key, item.value);
+	              options.onExpire.call(this, key, item.value);
 	            }
 	            value = undefined;
 	          } else if (this.$$storage) {
@@ -548,7 +548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	          if (this.$$onExpire) {
 	            for (key in expired) {
-	              this.$$onExpire(key, expired[key]);
+	              this.$$onExpire.call(this, key, expired[key]);
 	            }
 	          }
 
@@ -778,6 +778,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error("storageMode must be \"memory\", \"localStorage\" or \"sessionStorage\"!");
 	          }
 
+	          var shouldReInsert = false;
+	          var items = {};
+
+	          if (typeof this.$$storageMode === "string" && this.$$storageMode !== storageMode) {
+	            var keys = this.keys();
+
+	            if (keys.length) {
+	              for (var i = 0; i < keys.length; i++) {
+	                items[keys[i]] = this.get(keys[i]);
+	              }
+	              for (i = 0; i < keys.length; i++) {
+	                this.remove(keys[i]);
+	              }
+	              shouldReInsert = true;
+	            }
+	          }
+
 	          this.$$storageMode = storageMode;
 
 	          if (storageImpl) {
@@ -814,6 +831,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } catch (e) {
 	              delete this.$$storage;
 	              this.$$storageMode = "memory";
+	            }
+	          }
+
+	          if (shouldReInsert) {
+	            for (var key in items) {
+	              this.put(key, items[key]);
 	            }
 	          }
 	        },
