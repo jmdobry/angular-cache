@@ -1,6 +1,6 @@
-describe('asCache.get(key)', function () {
+describe('Cache#get(key[, options])', function () {
   it('should do nothing if the cache is disabled.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
 
     assert.equal(cache.info().size, 0);
     cache.put('1', 'item');
@@ -11,20 +11,20 @@ describe('asCache.get(key)', function () {
     assert.isUndefined(cache.get('1'));
   });
   it('should throw an error if "key" is not a string or array.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     for (var i = 0; i < TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER.length; i++) {
       try {
         cache.get(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
         fail(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
       } catch (err) {
-        assert.equal(err.message, '[ng:areq] Expected key to be a string! Found: ' + typeof TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
+        assert.equal(err.message, 'key must be a string!');
         continue;
       }
       fail(TYPES_EXCEPT_STRING_OR_ARRAY_OR_NUMBER[i]);
     }
   });
   it('should throw an error if "options" is not an object.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
       try {
         cache.get('item', TYPES_EXCEPT_OBJECT[i]);
@@ -32,7 +32,7 @@ describe('asCache.get(key)', function () {
           fail(TYPES_EXCEPT_OBJECT[i]);
         }
       } catch (err) {
-        assert.equal(err.message, '[ng:areq] Expected options to be an object! Found: ' + typeof TYPES_EXCEPT_OBJECT[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_OBJECT[i]);
+        assert.equal(err.message, 'options must be an object!');
         continue;
       }
       if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
@@ -41,7 +41,7 @@ describe('asCache.get(key)', function () {
     }
   });
   it('should throw an error if "onExpire" is not a function.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     for (var i = 0; i < TYPES_EXCEPT_FUNCTION.length; i++) {
       try {
         if (!TYPES_EXCEPT_FUNCTION[i]) {
@@ -52,7 +52,7 @@ describe('asCache.get(key)', function () {
           fail(TYPES_EXCEPT_FUNCTION[i]);
         }
       } catch (err) {
-        assert.equal(err.message, '[ng:areq] Expected options.onExpire to be a function! Found: ' + typeof TYPES_EXCEPT_FUNCTION[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_FUNCTION[i]);
+        assert.equal(err.message, 'options.onExpire must be a function!');
         continue;
       }
       if (TYPES_EXCEPT_FUNCTION[i] !== null && TYPES_EXCEPT_FUNCTION[i] !== undefined && TYPES_EXCEPT_FUNCTION[i] !== false) {
@@ -61,7 +61,7 @@ describe('asCache.get(key)', function () {
     }
   });
   it('should return the correct value for the specified key.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     var value1 = 'value1',
       value2 = 2,
       value3 = {
@@ -75,11 +75,11 @@ describe('asCache.get(key)', function () {
     assert.equal(cache.get('item3'), value3);
   });
   it('should return undefined if the key isn\'t in the cache.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     assert.isUndefined(cache.get('item'));
   });
   it('should execute globally configured "onExpire" callback if the item is expired in passive mode and global "onExpire" callback is configured.', function (done) {
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory.createCache('cache', {
       maxAge: 10,
       recycleFreq: 20,
       deleteOnExpire: 'passive',
@@ -89,11 +89,13 @@ describe('asCache.get(key)', function () {
     });
     cache.put('item', 'value');
     setTimeout(function () {
-      cache.get('item', { onExpire: function (key, value, test) {
-        assert.equal(key, 'item');
-        assert.equal(value, 'value');
-        assert.equal(test, 'executed global callback');
-      }});
+      cache.get('item', {
+        onExpire: function (key, value, test) {
+          assert.equal(key, 'item');
+          assert.equal(value, 'value');
+          assert.equal(test, 'executed global callback');
+        }
+      });
       done();
     }, 100);
   });
@@ -106,7 +108,7 @@ describe('asCache.get(key)', function () {
       }
     };
     sinon.spy(options, 'onExpire');
-    var cache = TestDSCacheFactory('cache', options);
+    var cache = TestCacheFactory.createCache('cache', options);
     cache.put('item', 'value');
     setTimeout(function () {
       assert.isTrue(options.onExpire.called);
@@ -115,22 +117,24 @@ describe('asCache.get(key)', function () {
     }, 100);
   });
   it('should execute local "onExpire" callback if the item is expired in passive mode and global "onExpire" callback is NOT configured.', function (done) {
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory.createCache('cache', {
       maxAge: 10,
       deleteOnExpire: 'passive',
       recycleFreq: 20
     });
     cache.put('item', 'value');
     setTimeout(function () {
-      cache.get('item', { onExpire: function (key, value) {
-        assert.equal(key, 'item');
-        assert.equal(value, 'value');
-      }});
+      cache.get('item', {
+        onExpire: function (key, value) {
+          assert.equal(key, 'item');
+          assert.equal(value, 'value');
+        }
+      });
       done();
     }, 100);
   });
   it('should return the correct values for multiple keys.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     var value1 = 'value1',
       value2 = 2,
       value3 = {
@@ -142,7 +146,7 @@ describe('asCache.get(key)', function () {
     assert.deepEqual(cache.get(['item1', 'item2', 'item3']), [value1, value2, value3]);
   });
   it('should not return undefined values for multiple keys.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     var value1 = 'value1',
       value2 = 2;
     cache.put('item1', value1);

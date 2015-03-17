@@ -1,8 +1,8 @@
-describe('DSCache.keys()', function () {
+describe('Cache#keys()', function () {
   it('should return the array of keys of all items in the cache.', function () {
     var itemKeys = ['item1', 'item2', 'item3'];
 
-    var cache = TestDSCacheFactory('DSCache.keys.cache');
+    var cache = TestCacheFactory('DSCache.keys.cache');
 
     cache.put(itemKeys[0], itemKeys[0]);
     assert.deepEqual(cache.keys(), [itemKeys[0]]);
@@ -35,7 +35,7 @@ describe('DSCache.keys()', function () {
   it('should return the array of keys of all items in the cache when using localStorage.', function () {
     var itemKeys = ['item1', 'item2', 'item3'];
 
-    var cache = TestDSCacheFactory('DSCache.keys.cache', {
+    var cache = TestCacheFactory('DSCache.keys.cache', {
       storageMode: 'localStorage'
     });
 

@@ -1,33 +1,33 @@
-describe('DSCache.put(key, value, options)', function () {
+describe('Cache#put(key, value[, options])', function () {
   it('should do nothing if the cache is disabled.', function () {
-    var cache = TestDSCacheFactory('DSCache.put.cache', { disabled: true });
+    var cache = TestCacheFactory('DSCache.put.cache', { disabled: true });
 
     assert.equal(cache.info().size, 0);
     assert.isUndefined(cache.put('1', 'item'));
     assert.equal(cache.info().size, 0);
   });
   it('should throw an error if "key" is not a string.', function () {
-    var cache = TestDSCacheFactory('DSCache.put.cache');
+    var cache = TestCacheFactory('DSCache.put.cache');
     for (var i = 0; i < TYPES_EXCEPT_STRING_OR_NUMBER.length; i++) {
       try {
         cache.put(TYPES_EXCEPT_STRING_OR_NUMBER[i], 'value');
         fail(TYPES_EXCEPT_STRING_OR_NUMBER[i]);
       } catch (err) {
-        assert.equal(err.message, '[ng:areq] Expected key to be a string! Found: ' + typeof TYPES_EXCEPT_STRING_OR_NUMBER[i] + '.\nhttp://errors.angularjs.org/' + angular.version.full + '/ng/areq?p0=' + typeof TYPES_EXCEPT_STRING_OR_NUMBER[i]);
+        assert.equal(err.message, 'key must be a string!');
         continue;
       }
       fail(TYPES_EXCEPT_STRING_OR_NUMBER[i]);
     }
   });
   it('should not add values that are not defined.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     cache.put('item', null);
     assert.equal(cache.get('item'), undefined);
     cache.put('item', undefined);
     assert.equal(cache.get('item'), undefined);
   });
   it('should increase the size of the cache by one.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     assert.equal(cache.info().size, 0);
     cache.put('item', 'value1');
     assert.equal(cache.info().size, 1);
@@ -35,7 +35,7 @@ describe('DSCache.put(key, value, options)', function () {
     assert.equal(cache.info().size, 2);
   });
   it('should overwrite an item if it is re-added to the cache.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     assert.equal(cache.info().size, 0);
     cache.put('item', 'value1');
     assert.equal(cache.info().size, 1);
@@ -44,7 +44,7 @@ describe('DSCache.put(key, value, options)', function () {
     assert.equal(cache.get('item'), 'value2');
   });
   it('should remove the least recently used item if the capacity has been reached.', function () {
-    var cache = TestDSCacheFactory('cache', { capacity: 2 });
+    var cache = TestCacheFactory('cache', { capacity: 2 });
     assert.equal(cache.info().size, 0);
     cache.put('item1', 'value1');
     assert.equal(cache.info().size, 1);
@@ -62,7 +62,7 @@ describe('DSCache.put(key, value, options)', function () {
     assert.equal(cache.get('item2'), 'value2');
   });
   it('should not delete items if maxAge is specified and deleteOnExpire is set to "none".', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'none', recycleFreq: 20 });
+    var cache = TestCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'none', recycleFreq: 20 });
     cache.put('item1', 'value1');
     assert.equal(cache.get('item1'), 'value1');
     setTimeout(function () {
@@ -72,7 +72,7 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should remove items if maxAge is specified and deleteOnExpire is set to "aggressive".', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'aggressive', recycleFreq: 20 });
+    var cache = TestCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'aggressive', recycleFreq: 20 });
     cache.put('item1', 'value1');
     assert.equal(cache.get('item1'), 'value1');
     setTimeout(function () {
@@ -83,7 +83,7 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should should lazy delete an item when maxAge is specified and deleteOnExpire is set to "passive".', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive' });
+    var cache = TestCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive' });
     cache.put('item1', 'value1');
     assert.equal(cache.get('item1'), 'value1');
     setTimeout(function () {
@@ -94,7 +94,7 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should touch an item.', function (done) {
-    var cache = TestDSCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive' });
+    var cache = TestCacheFactory('cache', { maxAge: 10, deleteOnExpire: 'passive' });
     cache.put('item1', 'value1');
     assert.equal(cache.get('item1'), 'value1');
     setTimeout(function () {
@@ -106,7 +106,7 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should handle normal promises.', function (done) {
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       maxAge: 10,
       deleteOnExpire: 'passive',
       recycleFreq: 20,
@@ -133,7 +133,7 @@ describe('DSCache.put(key, value, options)', function () {
     }, 100);
   });
   it('should handle normal promises using localStorage.', function (done) {
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       maxAge: 10,
       deleteOnExpire: 'passive',
       recycleFreq: 20,
@@ -162,7 +162,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       storeOnResolve: true,
       storeOnReject: true
     });
@@ -184,7 +184,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises when storeOnResolve is false.', function () {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', { storeOnReject: true });
+    var cache = TestCacheFactory('cache', { storeOnReject: true });
     $http.get('test.com', {
       cache: cache
     }).success(function (data) {
@@ -197,7 +197,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with promises when storeOnResolve is true.', function () {
     var deferred = $q.defer();
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       storeOnResolve: true
     });
     cache.put('test', deferred.promise);
@@ -207,7 +207,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected $http promises when storeOnReject and storeOnResolve are false.', function (done) {
     $httpBackend.expectGET('test.com').respond(404, 'Not Found');
-    var cache = TestDSCacheFactory('cache', {});
+    var cache = TestCacheFactory('cache', {});
     $http.get('test.com', {
       cache: cache
     }).success(function () {
@@ -231,7 +231,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected $http promises when storeOnReject and storeOnResolve are false and using localStorage.', function (done) {
     $httpBackend.expectGET('test.com').respond(404, 'Not Found');
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       storageMode: 'localStorage'
     });
     $http.get('test.com', {
@@ -257,7 +257,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected promises when storeOnReject is false.', function () {
     var deferred = $q.defer();
-    var cache = TestDSCacheFactory('cache', { storeOnResolve: true });
+    var cache = TestCacheFactory('cache', { storeOnResolve: true });
     cache.put('test', deferred.promise);
     deferred.reject('error');
     $rootScope.$safeApply();
@@ -265,7 +265,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with rejected promises.', function () {
     var deferred = $q.defer();
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       storeOnResolve: true,
       storeOnReject: true
     });
@@ -276,7 +276,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises using localStorage.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       storeOnResolve: true,
       storeOnReject: true,
       storageMode: 'localStorage'
@@ -297,7 +297,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises with multiple requests.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       storeOnResolve: true,
       storeOnReject: true
     });
@@ -338,7 +338,7 @@ describe('DSCache.put(key, value, options)', function () {
   });
   it('should work with $http promises with multiple requests using localStorage.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });
-    var cache = TestDSCacheFactory('cache', {
+    var cache = TestCacheFactory('cache', {
       storageMode: 'localStorage',
       storeOnResolve: true,
       storeOnReject: true
@@ -364,8 +364,8 @@ describe('DSCache.put(key, value, options)', function () {
     }, 20);
   });
   it('should save data to localStorage when storageMode is used.', function () {
-    var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage' });
-    var sessionStorageCache = TestDSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+    var localStorageCache = TestCacheFactory('localStorageCache', { storageMode: 'localStorage' });
+    var sessionStorageCache = TestCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
 
     localStorageCache.put('item1', 'value1');
     sessionStorageCache.put('item1', 'value1');

@@ -1,6 +1,6 @@
-describe('DSCache.remove(key)', function () {
+describe('Cache#remove(key)', function () {
   it('should remove the item with the specified key.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     var value1 = 'value1',
       value2 = 2,
       value3 = {
@@ -17,7 +17,7 @@ describe('DSCache.remove(key)', function () {
     assert.isUndefined(cache.get('item3'));
   });
   it('should reduce the size of the cache by one if the size is greater than zero.', function () {
-    var cache = TestDSCacheFactory('cache');
+    var cache = TestCacheFactory('cache');
     cache.put('item1', 'value1');
     assert.equal(cache.info().size, 1);
     cache.put('item2', 'value2');
@@ -32,8 +32,8 @@ describe('DSCache.remove(key)', function () {
     assert.equal(cache.info().size, 0);
   });
   it('should remove items from localStorage when storageMode is used.', function () {
-    var localStorageCache = TestDSCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
-      sessionStorageCache = TestDSCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+    var localStorageCache = TestCacheFactory('localStorageCache', { storageMode: 'localStorage' }),
+      sessionStorageCache = TestCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
 
     localStorageCache.put('item1', 'value1');
 
