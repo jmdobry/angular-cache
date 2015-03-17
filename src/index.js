@@ -792,6 +792,13 @@ class CacheFactoryProvider {
 
       CacheFactory.keys = () => _keys(caches);
 
+      CacheFactory.destroy = cacheId => {
+        if (caches[cacheId]) {
+          caches[cacheId].destroy();
+          delete caches[cacheId];
+        }
+      };
+
       CacheFactory.destroyAll = () => {
         for (var cacheId in caches) {
           caches[cacheId].destroy();
@@ -805,6 +812,14 @@ class CacheFactoryProvider {
         }
       };
 
+      CacheFactory.removeExpiredFromAll = () => {
+        let expired = {};
+        for (var cacheId in caches) {
+          expired[cacheId] = caches[cacheId].removeExpired();
+        }
+        return expired;
+      };
+
       CacheFactory.enableAll = () => {
         for (var cacheId in caches) {
           caches[cacheId].$$disabled = false;
@@ -814,6 +829,12 @@ class CacheFactoryProvider {
       CacheFactory.disableAll = () => {
         for (var cacheId in caches) {
           caches[cacheId].$$disabled = true;
+        }
+      };
+
+      CacheFactory.touchAll = () => {
+        for (var cacheId in caches) {
+          caches[cacheId].touch();
         }
       };
 
