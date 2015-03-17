@@ -1,8 +1,8 @@
 ## angular-cache [![bower version](https://img.shields.io/bower/v/angular-cache.svg?style=flat-square)](https://www.npmjs.org/package/angular-cache) [![npm version](https://img.shields.io/npm/v/angular-cache.svg?style=flat-square)](https://www.npmjs.org/package/angular-cache) [![Circle CI](https://img.shields.io/circleci/project/jmdobry/angular-cache/master.svg?style=flat-square)](https://circleci.com/gh/jmdobry/angular-cache/tree/master) [![npm downloads](https://img.shields.io/npm/dm/angular-cache.svg?style=flat-square)](https://www.npmjs.org/package/angular-cache) [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)
 
-__A very useful replacement for Angular's $cacheFactory.__
+A very useful replacement for Angular's $cacheFactory.
 
-__angular-cache < 4.0.0 have been deprecated__
+__versions of angular-cache below 4.0.0 have been deprecated, see the [breaking changes](https://github.com/jmdobry/angular-cache/blob/master/CHANGELOG.md) in 4.0.0__
 
 __Latest Release:__ [![Latest Release](https://img.shields.io/github/release/jmdobry/angular-cache.svg?style=flat-square)](https://github.com/jmdobry/angular-cache/releases)
 
@@ -180,41 +180,73 @@ These options apply to:
 - `Cache#setOptions(options[, strict])`
 - `Cache#setMaxAge(maxAge)`, `Cache#setOnExpire(onExpire)`, etc.
 
-| option | description |
-| -- | -- |
-| cacheFlushInterval | If set, remove all items from a cache on an interval after the given number of milliseconds. Default: `null`.|
-| capacity | Maximum number of items a cache can hold. Adding more items than the capacity will cause the cache to operate like an LRU cache, removing the least recently used items to stay under capacity. Default: `Number.MAX_VALUE`.|
-| deleteOnExpire | Determines the behavior of a cache when an item expires. Default: `none`.
+##### `cacheFlushInterval`
+
+If set, remove all items from a cache on an interval after the given number of milliseconds. Default: `null`.
+
+##### `capacity`
+
+Maximum number of items a cache can hold. Adding more items than the capacity will cause the cache to operate like an LRU cache, removing the least recently used items to stay under capacity. Default: `Number.MAX_VALUE`.
+
+##### `deleteOnExpire`
+
+Determines the behavior of a cache when an item expires. Default: `none`.
 
 Possible values:
 
 - `none` - Cache will do nothing when an item expires.
 - `passive` - Cache will do nothing when an item expires. Expired items will remain in the cache until requested, at which point they are removed, and `undefined` is returned.
-- `aggressive` - Cache will remove expired items as soon as they are discovered. |
+- `aggressive` - Cache will remove expired items as soon as they are discovered.
 
-| disabled | Determines whether a cache is disabled. Default: `false`. |
-| onExpire | A callback function to be executed whenever an expired item is removed from a cache when the cache is in `passive` or `aggressive` mode. Will be passed the `key` and `value` of the expired item.
+##### `disabled`
 
-Will be passed a third `done` argument if the cache is in `passive` mode. This allows you to synchronously access the `key` and `value` of the expired item when you make the `Cache#get(key[, options])` call that is the reason the expired item is being removed in the first place. Default: `null`. |
-| maxAge | The number of milliseconds until a newly inserted item expires. Default: `Number.MAX_VALUE`. |
-| recycleFreq | Determines how often a cache will scan for expired items when in `aggressive` mode. Default: `1000` (milliseconds). |
-| storageImpl | Provide a custom storage medium, e.g. a polyfill for `localStorage`. Default: `null`.
+Determines whether a cache is disabled. Default: `false`. 
+
+##### `onExpire`
+
+A callback function to be executed whenever an expired item is removed from a cache when the cache is in `passive` or `aggressive` mode. Will be passed the `key` and `value` of the expired item.
+
+Will be passed a third `done` argument if the cache is in `passive` mode. This allows you to synchronously access the `key` and `value` of the expired item when you make the `Cache#get(key[, options])` call that is the reason the expired item is being removed in the first place. Default: `null`.
+
+##### `maxAge`
+
+The number of milliseconds until a newly inserted item expires. Default: `Number.MAX_VALUE`.
+
+##### `recycleFreq`
+
+Determines how often a cache will scan for expired items when in `aggressive` mode. Default: `1000` (milliseconds).
+
+##### `storageImpl`
+
+Provide a custom storage medium, e.g. a polyfill for `localStorage`. Default: `null`.
 
 Must implement:
 
 - `setItem` - Same API as `localStorage.setItem(key, value)`
 - `getItem` - Same API as `localStorage.getItem(key)`
-- `removeItem` - Same API as `localStorage.removeItem(key)` |
-| storageMode | Determines the storage medium used by a cache. Default: `memory`.
+- `removeItem` - Same API as `localStorage.removeItem(key)`
+
+##### `storageMode`
+
+Determines the storage medium used by a cache. Default: `memory`.
 
 Possible values:
 
 - `memory` - Cache will hold data in memory. Data is cleared when the page is refreshed.
 - `localStorage` - Cache will hold data in `localStorage` if available. Data is _not_ cleared when the page is refreshed.
-- `sessionStorage` - Cache will hold data in `sessionStorage` if available. Data is _not_ cleared when the page is refreshed. |
-| storagePrefix | Determines the namespace of a cache when `storageMode` is set to `localStorage` or `sessionStorage`. Make it a shorter string to save space. Default: `angular-cache.caches.`. |
-| storeOnReject | If inserting a promise into a cache, also insert the rejection value if the promise rejects. Default: `false`. |
-| storeOnResolve | If inserting a promise into a cache, also insert the resolved value if the promise resolves. Default: `false`. |
+- `sessionStorage` - Cache will hold data in `sessionStorage` if available. Data is _not_ cleared when the page is refreshed.
+
+##### `storagePrefix`
+
+Determines the namespace of a cache when `storageMode` is set to `localStorage` or `sessionStorage`. Make it a shorter string to save space. Default: `angular-cache.caches.`.
+
+##### `storeOnReject`
+
+If inserting a promise into a cache, also insert the rejection value if the promise rejects. Default: `false`.
+
+##### storeOnResolve
+
+If inserting a promise into a cache, also insert the resolved value if the promise resolves. Default: `false`.
 
 ### Using angular-cache with $http
 
