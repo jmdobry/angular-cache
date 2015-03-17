@@ -15,10 +15,6 @@
 - Now exporting the module name _angular-cache_ (when you do `require('angular-cache')` you get `"angular-cache"`)
 - Deprecating angular-cache < 4.0.0
 
-###### Backwards compatible bug fixes
-- #152 - Expired items sometimes only expire after double time.
-- #153 - Missing angular dependency in bower.json
-
 ##### 3.2.5 02 February 2015
 
 ###### Backwards compatible bug fixes
