@@ -15,13 +15,13 @@ __Supported Browsers:__
 [![browsers](https://img.shields.io/badge/Browser-Chrome%2CFirefox%2CSafari%2COpera%2CIE%209%2B%2CiOS%20Safari%207.1%2B%2CAndroid%20Browser%202.3%2B-green.svg?style=flat-square)](https://github.com/jmdobry/angular-cache)
 
 ### Table of Contents
-- [Quick Start]()
+- [Quick Start](#quick-start)
 - [The Basics](#the-basics)
 - [Working with a cache](#working-with-a-cache)
 - [Configuration Options](#configuration-options)
-- [Using angular-cache with $http](#using-angular-cache-with-$http)
+- [Using angular-cache with $http](#using-angular-cache-with-http)
 - [Using angular-cache with localStorage](#using-angular-cache-with-localstorage)
-- [API Reference]()
+- [API Reference](#api-reference)
 
 ### Quick Start
 `bower install --save angular-cache` or `npm install --save angular-cache`.
@@ -200,7 +200,7 @@ Possible values:
 
 ##### `disabled`
 
-Determines whether a cache is disabled. Default: `false`. 
+Determines whether a cache is disabled. Default: `false`.
 
 ##### `onExpire`
 

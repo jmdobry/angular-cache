@@ -899,6 +899,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return _keys(caches);
 	    };
 
+	    CacheFactory.destroy = function (cacheId) {
+	      if (caches[cacheId]) {
+	        caches[cacheId].destroy();
+	        delete caches[cacheId];
+	      }
+	    };
+
 	    CacheFactory.destroyAll = function () {
 	      for (var cacheId in caches) {
 	        caches[cacheId].destroy();
@@ -912,6 +919,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    };
 
+	    CacheFactory.removeExpiredFromAll = function () {
+	      var expired = {};
+	      for (var cacheId in caches) {
+	        expired[cacheId] = caches[cacheId].removeExpired();
+	      }
+	      return expired;
+	    };
+
 	    CacheFactory.enableAll = function () {
 	      for (var cacheId in caches) {
 	        caches[cacheId].$$disabled = false;
@@ -921,6 +936,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    CacheFactory.disableAll = function () {
 	      for (var cacheId in caches) {
 	        caches[cacheId].$$disabled = true;
+	      }
+	    };
+
+	    CacheFactory.touchAll = function () {
+	      for (var cacheId in caches) {
+	        caches[cacheId].touch();
 	      }
 	    };
 
