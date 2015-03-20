@@ -1,3 +1,8 @@
+##### 4.0.1 20 March 2015
+
+###### Backwards compatible bug fixes
+- #163 - Configuring CacheOption storagePrefix results in "true.{key}"
+
 ##### 4.0.0 15 March 2015
 
 ###### Breaking API changes

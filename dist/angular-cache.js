@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.0.0 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.0.1 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
@@ -681,7 +681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 
 	          if ("storagePrefix" in cacheOptions) {
-	            this.$$storagePrefix = !!cacheOptions.storagePrefix;
+	            this.$$storagePrefix = cacheOptions.storagePrefix;
 	          } else if (strict) {
 	            this.$$storagePrefix = defaults.storagePrefix;
 	          }

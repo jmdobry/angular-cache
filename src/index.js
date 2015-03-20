@@ -586,7 +586,7 @@ class CacheFactoryProvider {
             }
 
             if ('storagePrefix' in cacheOptions) {
-              this.$$storagePrefix = !!cacheOptions.storagePrefix;
+              this.$$storagePrefix = cacheOptions.storagePrefix;
             } else if (strict) {
               this.$$storagePrefix = defaults.storagePrefix;
             }
