@@ -71,8 +71,8 @@ class CacheFactoryProvider {
           $$data: {},
           $$promises: {},
           $$storage: null,
-          $$expiresHeap: new BinaryHeap(x => x.expires),
-          $$lruHeap: new BinaryHeap(x => x.accessed),
+          $$expiresHeap: new BinaryHeap(x => x.expires, angular.equals),
+          $$lruHeap: new BinaryHeap(x => x.accessed, angular.equals),
 
           destroy() {
             clearInterval(this.$$cacheFlushIntervalId);

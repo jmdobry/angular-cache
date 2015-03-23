@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.0.1 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.0.2 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
@@ -150,10 +150,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        $$storage: null,
 	        $$expiresHeap: new BinaryHeap(function (x) {
 	          return x.expires;
-	        }),
+	        }, angular.equals),
 	        $$lruHeap: new BinaryHeap(function (x) {
 	          return x.accessed;
-	        }),
+	        }, angular.equals),
 
 	        destroy: function destroy() {
 	          clearInterval(this.$$cacheFlushIntervalId);

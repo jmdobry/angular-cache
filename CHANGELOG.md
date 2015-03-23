@@ -1,3 +1,8 @@
+##### 4.0.2 22 March 2015
+
+###### Backwards compatible bug fixes
+- #164 - onExpire is still called when cache is empty
+
 ##### 4.0.1 20 March 2015
 
 ###### Backwards compatible bug fixes

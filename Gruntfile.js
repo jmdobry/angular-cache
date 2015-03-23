@@ -114,7 +114,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('test', ['karma:dist', 'karma:min']);
+  grunt.registerTask('test', ['build', 'karma:dist', 'karma:min']);
   grunt.registerTask('build', [
     'clean',
     'webpack',
