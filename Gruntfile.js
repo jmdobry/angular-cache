@@ -99,6 +99,7 @@ module.exports = function (grunt) {
         options: {
           files: [
             'bower_components/angular-1.2.25/angular.js',
+            'bower_components/angular-resource/angular-resource.js',
             'bower_components/angular-mocks-1.2.25/angular-mocks.js',
             'dist/angular-cache.min.js',
             './karma.start.js',

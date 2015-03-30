@@ -1,3 +1,8 @@
+##### 4.1.0 30 March 2015
+
+###### Backwards compatible API fixes
+- #169 - Official support for ngResource
+
 ##### 4.0.2 22 March 2015
 
 ###### Backwards compatible bug fixes

@@ -29,15 +29,26 @@ var fail = function (msg) {
     storagePrefix: 'ac.'
   };
 
-var TestCacheFactoryProvider, TestCacheFactory, $q, $rootScope, $http, $httpBackend;
+var app, TestCacheFactoryProvider, TestCacheFactory, $q, $rootScope, $http, $httpBackend, $resource, BinaryHeap;
+
+
+app = angular.module('app', ['ngResource']);
+
+beforeEach(module('app'));
 
 beforeEach(module('angular-cache', function (_CacheFactoryProvider_) {
   TestCacheFactoryProvider = _CacheFactoryProvider_;
 }));
+
+beforeEach(inject(function (_$resource_) {
+  $resource = _$resource_;
+}));
+
 beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$http_, _$httpBackend_) {
   TestCacheFactory = _CacheFactory_;
   $q = _$q_;
   $rootScope = _$rootScope_;
+  BinaryHeap = _BinaryHeap_;
   $rootScope.$safeApply = function () {
     var $scope, fn, force = false;
     if (arguments.length === 1) {
@@ -71,5 +82,7 @@ beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$
   $httpBackend = _$httpBackend_;
 }));
 afterEach(function () {
+  $httpBackend.verifyNoOutstandingRequest();
+  $httpBackend.verifyNoOutstandingExpectation();
   TestCacheFactory.destroyAll();
 });

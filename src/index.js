@@ -1,5 +1,4 @@
 import angular from 'angular';
-import BinaryHeap from 'yabh';
 
 let _keys = collection => {
   let keys = [], key;
@@ -31,6 +30,138 @@ let _keySet = collection => {
   }
   return keySet;
 };
+
+/**
+ * @method bubbleUp
+ * @param {array} heap The heap.
+ * @param {function} weightFunc The weight function.
+ * @param {number} n The index of the element to bubble up.
+ */
+function bubbleUp(heap, weightFunc, n) {
+  let element = heap[n];
+  let weight = weightFunc(element);
+  // When at 0, an element can not go up any further.
+  while (n > 0) {
+    // Compute the parent element's index, and fetch it.
+    let parentN = Math.floor((n + 1) / 2) - 1;
+    let parent = heap[parentN];
+    // If the parent has a lesser weight, things are in order and we
+    // are done.
+    if (weight >= weightFunc(parent)) {
+      break;
+    } else {
+      heap[parentN] = element;
+      heap[n] = parent;
+      n = parentN;
+    }
+  }
+}
+
+/**
+ * @method bubbleDown
+ * @param {array} heap The heap.
+ * @param {function} weightFunc The weight function.
+ * @param {number} n The index of the element to sink down.
+ */
+let bubbleDown = (heap, weightFunc, n) => {
+  var length = heap.length;
+  let node = heap[n];
+  let nodeWeight = weightFunc(node);
+
+  while (true) {
+    let child2N = (n + 1) * 2,
+      child1N = child2N - 1;
+    let swap = null;
+    if (child1N < length) {
+      let child1 = heap[child1N],
+        child1Weight = weightFunc(child1);
+      // If the score is less than our node's, we need to swap.
+      if (child1Weight < nodeWeight) {
+        swap = child1N;
+      }
+    }
+    // Do the same checks for the other child.
+    if (child2N < length) {
+      let child2 = heap[child2N],
+        child2Weight = weightFunc(child2);
+      if (child2Weight < (swap === null ? nodeWeight : weightFunc(heap[child1N]))) {
+        swap = child2N;
+      }
+    }
+
+    if (swap === null) {
+      break;
+    } else {
+      heap[n] = heap[swap];
+      heap[swap] = node;
+      n = swap;
+    }
+  }
+};
+
+class BinaryHeap {
+  constructor(weightFunc, compareFunc) {
+    if (!weightFunc) {
+      weightFunc = x => x;
+    }
+    if (!compareFunc) {
+      compareFunc = (x, y) => x === y;
+    }
+    if (typeof weightFunc !== 'function') {
+      throw new Error('BinaryHeap([weightFunc][, compareFunc]): "weightFunc" must be a function!');
+    }
+    if (typeof compareFunc !== 'function') {
+      throw new Error('BinaryHeap([weightFunc][, compareFunc]): "compareFunc" must be a function!');
+    }
+    this.weightFunc = weightFunc;
+    this.compareFunc = compareFunc;
+    this.heap = [];
+
+    this.push = node => {
+      this.heap.push(node);
+      bubbleUp(this.heap, this.weightFunc, this.heap.length - 1);
+    };
+
+    this.peek = () => {
+      return this.heap[0];
+    };
+
+    this.pop = () => {
+      let front = this.heap[0];
+      let end = this.heap.pop();
+      if (this.heap.length > 0) {
+        this.heap[0] = end;
+        bubbleDown(this.heap, this.weightFunc, 0);
+      }
+      return front;
+    };
+
+    this.remove = node => {
+      var length = this.heap.length;
+      for (let i = 0; i < length; i++) {
+        if (this.compareFunc(this.heap[i], node)) {
+          let removed = this.heap[i];
+          let end = this.heap.pop();
+          if (i !== length - 1) {
+            this.heap[i] = end;
+            bubbleUp(this.heap, this.weightFunc, i);
+            bubbleDown(this.heap, this.weightFunc, i);
+          }
+          return removed;
+        }
+      }
+      return null;
+    };
+
+    this.removeAll = () => {
+      this.heap = [];
+    };
+
+    this.size = () => {
+      return this.heap.length;
+    };
+  }
+}
 
 class BinaryHeapProvider {
   constructor() {
@@ -65,27 +196,28 @@ class CacheFactoryProvider {
           throw new Error('cacheId must be a string!');
         }
 
+        let $$data = {};
+        let $$promises = {};
+        let $$storage = null;
+        let $$expiresHeap = new BinaryHeap(x => x.expires, angular.equals);
+        let $$lruHeap = new BinaryHeap(x => x.accessed, angular.equals);
+
         let cache = caches[cacheId] = {
 
           $$id: cacheId,
-          $$data: {},
-          $$promises: {},
-          $$storage: null,
-          $$expiresHeap: new BinaryHeap(x => x.expires, angular.equals),
-          $$lruHeap: new BinaryHeap(x => x.accessed, angular.equals),
 
           destroy() {
             clearInterval(this.$$cacheFlushIntervalId);
             clearInterval(this.$$recycleFreqId);
             this.removeAll();
-            if (this.$$storage) {
-              this.$$storage().removeItem(`${this.$$prefix}.keys`);
-              this.$$storage().removeItem(this.$$prefix);
+            if ($$storage) {
+              $$storage().removeItem(`${this.$$prefix}.keys`);
+              $$storage().removeItem(this.$$prefix);
             }
-            this.$$storage = null;
-            this.$$data = null;
-            this.$$lruHeap = null;
-            this.$$expiresHeap = null;
+            $$storage = null;
+            $$data = null;
+            $$lruHeap = null;
+            $$expiresHeap = null;
             this.$$prefix = null;
             delete caches[this.$$id];
           },
@@ -130,12 +262,12 @@ class CacheFactoryProvider {
 
             let item;
 
-            if (this.$$storage) {
-              if (this.$$promises[key]) {
-                return this.$$promises[key];
+            if ($$storage) {
+              if ($$promises[key]) {
+                return $$promises[key];
               }
 
-              let itemJson = this.$$storage().getItem(`${this.$$prefix}.data.${key}`);
+              let itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
 
               if (itemJson) {
                 item = angular.fromJson(itemJson);
@@ -143,30 +275,30 @@ class CacheFactoryProvider {
                 return;
               }
             } else {
-              if (!(key in this.$$data)) {
+              if (!(key in $$data)) {
                 return;
               }
 
-              item = this.$$data[key];
+              item = $$data[key];
             }
 
             let value = item.value;
             let now = new Date().getTime();
 
-            if (this.$$storage) {
-              this.$$lruHeap.remove({
+            if ($$storage) {
+              $$lruHeap.remove({
                 key: key,
                 accessed: item.accessed
               });
               item.accessed = now;
-              this.$$lruHeap.push({
+              $$lruHeap.push({
                 key: key,
                 accessed: now
               });
             } else {
-              this.$$lruHeap.remove(item);
+              $$lruHeap.remove(item);
               item.accessed = now;
-              this.$$lruHeap.push(item);
+              $$lruHeap.push(item);
             }
 
             if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
@@ -178,8 +310,8 @@ class CacheFactoryProvider {
                 options.onExpire.call(this, key, item.value);
               }
               value = undefined;
-            } else if (this.$$storage) {
-              this.$$storage().setItem(`${this.$$prefix}.data.${key}`, JSON.stringify(item));
+            } else if ($$storage) {
+              $$storage().setItem(`${this.$$prefix}.data.${key}`, JSON.stringify(item));
             }
 
             return value;
@@ -188,8 +320,8 @@ class CacheFactoryProvider {
           info(key) {
             if (key) {
               let item;
-              if (this.$$storage) {
-                var itemJson = this.$$storage().getItem(`${this.$$prefix}.data.${key}`);
+              if ($$storage) {
+                var itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
 
                 if (itemJson) {
                   item = angular.fromJson(itemJson);
@@ -203,8 +335,8 @@ class CacheFactoryProvider {
                   return undefined;
                 }
               } else {
-                if (key in this.$$data) {
-                  item = this.$$data[key];
+                if (key in $$data) {
+                  item = $$data[key];
 
                   return {
                     created: item.created,
@@ -226,16 +358,16 @@ class CacheFactoryProvider {
                 cacheFlushInterval: this.$$cacheFlushInterval,
                 recycleFreq: this.$$recycleFreq,
                 storageMode: this.$$storageMode,
-                storageImpl: this.$$storage ? this.$$storage() : undefined,
+                storageImpl: $$storage ? $$storage() : undefined,
                 disabled: !!this.$$disabled,
-                size: this.$$lruHeap && this.$$lruHeap.size() || 0
+                size: $$lruHeap && $$lruHeap.size() || 0
               };
             }
           },
 
           keys() {
-            if (this.$$storage) {
-              let keysJson = this.$$storage().getItem(`${this.$$prefix}.keys`);
+            if ($$storage) {
+              let keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
 
               if (keysJson) {
                 return angular.fromJson(keysJson);
@@ -243,13 +375,13 @@ class CacheFactoryProvider {
                 return [];
               }
             } else {
-              return _keys(this.$$data);
+              return _keys($$data);
             }
           },
 
           keySet() {
-            if (this.$$storage) {
-              let keysJson = this.$$storage().getItem(`${this.$$prefix}.keys`);
+            if ($$storage) {
+              let keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
               let kSet = {};
 
               if (keysJson) {
@@ -261,7 +393,7 @@ class CacheFactoryProvider {
               }
               return kSet;
             } else {
-              return _keySet(this.$$data);
+              return _keySet($$data);
             }
           },
 
@@ -274,7 +406,7 @@ class CacheFactoryProvider {
             let getHandler = (store, isError) => {
               return v => {
                 if (store) {
-                  delete this.$$promises[key];
+                  delete $$promises[key];
                   if (angular.isObject(v) && 'status' in v && 'data' in v) {
                     v = [v.status, v.data, v.headers(), v.statusText];
                     this.put(key, v);
@@ -309,31 +441,31 @@ class CacheFactoryProvider {
 
             item.expires = item.created + this.$$maxAge;
 
-            if (this.$$storage) {
+            if ($$storage) {
               if (_isPromiseLike(item.value)) {
-                this.$$promises[key] = item.value;
-                return this.$$promises[key];
+                $$promises[key] = item.value;
+                return $$promises[key];
               }
-              var keysJson = this.$$storage().getItem(`${this.$$prefix}.keys`);
+              var keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
               var keys = keysJson ? angular.fromJson(keysJson) : [];
-              var itemJson = this.$$storage().getItem(`${this.$$prefix}.data.${key}`);
+              var itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
 
               // Remove existing
               if (itemJson) {
                 this.remove(key);
               }
               // Add to expires heap
-              this.$$expiresHeap.push({
+              $$expiresHeap.push({
                 key: key,
                 expires: item.expires
               });
               // Add to lru heap
-              this.$$lruHeap.push({
+              $$lruHeap.push({
                 key: key,
                 accessed: item.accessed
               });
               // Set item
-              this.$$storage().setItem(`${this.$$prefix}.data.${key}`, JSON.stringify(item));
+              $$storage().setItem(`${this.$$prefix}.data.${key}`, JSON.stringify(item));
               var exists = false;
               for (var i = 0; i < keys.length; i++) {
                 if (keys[i] === key) {
@@ -344,24 +476,24 @@ class CacheFactoryProvider {
               if (!exists) {
                 keys.push(key);
               }
-              this.$$storage().setItem(`${this.$$prefix}.keys`, JSON.stringify(keys));
+              $$storage().setItem(`${this.$$prefix}.keys`, JSON.stringify(keys));
             } else {
               // Remove existing
-              if (this.$$data[key]) {
+              if ($$data[key]) {
                 this.remove(key);
               }
               // Add to expires heap
-              this.$$expiresHeap.push(item);
+              $$expiresHeap.push(item);
               // Add to lru heap
-              this.$$lruHeap.push(item);
+              $$lruHeap.push(item);
               // Set item
-              this.$$data[key] = item;
-              delete this.$$promises[key];
+              $$data[key] = item;
+              delete $$promises[key];
             }
 
             // Handle exceeded capacity
-            if (this.$$lruHeap.size() > this.$$capacity) {
-              this.remove(this.$$lruHeap.peek().key);
+            if ($$lruHeap.size() > this.$$capacity) {
+              this.remove($$lruHeap.peek().key);
             }
 
             return value;
@@ -369,46 +501,46 @@ class CacheFactoryProvider {
 
           remove(key) {
             key += '';
-            delete this.$$promises[key];
-            if (this.$$storage) {
-              let itemJson = this.$$storage().getItem(`${this.$$prefix}.data.${key}`);
+            delete $$promises[key];
+            if ($$storage) {
+              let itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
 
               if (itemJson) {
                 let item = angular.fromJson(itemJson);
-                this.$$lruHeap.remove({
+                $$lruHeap.remove({
                   key: key,
                   accessed: item.accessed
                 });
-                this.$$expiresHeap.remove({
+                $$expiresHeap.remove({
                   key: key,
                   expires: item.expires
                 });
-                this.$$storage().removeItem(`${this.$$prefix}.data.${key}`);
-                let keysJson = this.$$storage().getItem(`${this.$$prefix}.keys`);
+                $$storage().removeItem(`${this.$$prefix}.data.${key}`);
+                let keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
                 let keys = keysJson ? angular.fromJson(keysJson) : [];
                 let index = keys.indexOf(key);
 
                 if (index >= 0) {
                   keys.splice(index, 1);
                 }
-                this.$$storage().setItem(`${this.$$prefix}.keys`, JSON.stringify(keys));
+                $$storage().setItem(`${this.$$prefix}.keys`, JSON.stringify(keys));
                 return item.value;
               }
             } else {
-              var value = this.$$data[key] ? this.$$data[key].value : undefined;
-              this.$$lruHeap.remove(this.$$data[key]);
-              this.$$expiresHeap.remove(this.$$data[key]);
-              this.$$data[key] = null;
-              delete this.$$data[key];
+              var value = $$data[key] ? $$data[key].value : undefined;
+              $$lruHeap.remove($$data[key]);
+              $$expiresHeap.remove($$data[key]);
+              $$data[key] = null;
+              delete $$data[key];
               return value;
             }
           },
 
           removeAll() {
-            if (this.$$storage) {
-              this.$$lruHeap.removeAll();
-              this.$$expiresHeap.removeAll();
-              let keysJson = this.$$storage().getItem(`${this.$$prefix}.keys`);
+            if ($$storage) {
+              $$lruHeap.removeAll();
+              $$expiresHeap.removeAll();
+              let keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
 
               if (keysJson) {
                 let keys = angular.fromJson(keysJson);
@@ -417,14 +549,14 @@ class CacheFactoryProvider {
                   this.remove(keys[i]);
                 }
               }
-              this.$$storage().setItem(`${this.$$prefix}.keys`, JSON.stringify([]));
+              $$storage().setItem(`${this.$$prefix}.keys`, JSON.stringify([]));
             } else {
-              this.$$lruHeap.removeAll();
-              this.$$expiresHeap.removeAll();
-              for (var key in this.$$data) {
-                this.$$data[key] = null;
+              $$lruHeap.removeAll();
+              $$expiresHeap.removeAll();
+              for (var key in $$data) {
+                $$data[key] = null;
               }
-              this.$$data = {};
+              $$data = {};
             }
           },
 
@@ -434,14 +566,14 @@ class CacheFactoryProvider {
             let key;
             let expiredItem;
 
-            while ((expiredItem = this.$$expiresHeap.peek()) && expiredItem.expires <= now) {
+            while ((expiredItem = $$expiresHeap.peek()) && expiredItem.expires <= now) {
               expired[expiredItem.key] = expiredItem.value ? expiredItem.value : null;
-              this.$$expiresHeap.pop();
+              $$expiresHeap.pop();
             }
 
-            if (this.$$storage) {
+            if ($$storage) {
               for (key in expired) {
-                var itemJson = this.$$storage().getItem(`${this.$$prefix}.data.${key}`);
+                var itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
                 if (itemJson) {
                   expired[key] = angular.fromJson(itemJson).value;
                   this.remove(key);
@@ -491,8 +623,8 @@ class CacheFactoryProvider {
               this.$$capacity = capacity;
             }
             var removed = {};
-            while (this.$$lruHeap.size() > this.$$capacity) {
-              removed[this.$$lruHeap.peek().key] = this.remove(this.$$lruHeap.peek().key);
+            while ($$lruHeap.size() > this.$$capacity) {
+              removed[$$lruHeap.peek().key] = this.remove($$lruHeap.peek().key);
             }
             return removed;
           },
@@ -524,16 +656,16 @@ class CacheFactoryProvider {
             }
             let i, keys, key;
 
-            this.$$expiresHeap.removeAll();
+            $$expiresHeap.removeAll();
 
-            if (this.$$storage) {
-              let keysJson = this.$$storage().getItem(`${this.$$prefix}.keys`);
+            if ($$storage) {
+              let keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
 
               keys = keysJson ? angular.fromJson(keysJson) : [];
 
               for (i = 0; i < keys.length; i++) {
                 key = keys[i];
-                let itemJson = this.$$storage().getItem(`${this.$$prefix}.data.${key}`);
+                let itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
 
                 if (itemJson) {
                   let item = angular.fromJson(itemJson);
@@ -542,23 +674,23 @@ class CacheFactoryProvider {
                   } else {
                     item.expires = item.created + this.$$maxAge;
                   }
-                  this.$$expiresHeap.push({
+                  $$expiresHeap.push({
                     key: key,
                     expires: item.expires
                   });
                 }
               }
             } else {
-              keys = _keys(this.$$data);
+              keys = _keys($$data);
 
               for (i = 0; i < keys.length; i++) {
                 key = keys[i];
                 if (this.$$maxAge === Number.MAX_VALUE) {
-                  this.$$data[key].expires = Number.MAX_VALUE;
+                  $$data[key].expires = Number.MAX_VALUE;
                 } else {
-                  this.$$data[key].expires = this.$$data[key].created + this.$$maxAge;
+                  $$data[key].expires = $$data[key].created + this.$$maxAge;
                 }
-                this.$$expiresHeap.push(this.$$data[key]);
+                $$expiresHeap.push($$data[key]);
               }
             }
             if (this.$$deleteOnExpire === 'aggressive') {
@@ -712,23 +844,23 @@ class CacheFactoryProvider {
               } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
                 throw new Error('storageImpl must implement "removeItem(key)"!');
               }
-              this.$$storage = () => storageImpl;
+              $$storage = () => storageImpl;
             } else if (this.$$storageMode === 'localStorage') {
               try {
                 localStorage.setItem('angular-cache', 'angular-cache');
                 localStorage.removeItem('angular-cache');
-                this.$$storage = () => localStorage;
+                $$storage = () => localStorage;
               } catch (e) {
-                delete this.$$storage;
+                $$storage = null;
                 this.$$storageMode = 'memory';
               }
             } else if (this.$$storageMode === 'sessionStorage') {
               try {
                 sessionStorage.setItem('angular-cache', 'angular-cache');
                 sessionStorage.removeItem('angular-cache');
-                this.$$storage = () => sessionStorage;
+                $$storage = () => sessionStorage;
               } catch (e) {
-                delete this.$$storage;
+                $$storage = null;
                 this.$$storageMode = 'memory';
               }
             }

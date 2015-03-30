@@ -12,6 +12,25 @@ describe('CacheFactory(cacheId, options)', function () {
     assert.equal(cache.info().storageMode, CACHE_DEFAULTS.storageMode);
     assert.equal(cache.info().storageImpl, CACHE_DEFAULTS.storageImpl);
   });
+  it('should work with ngResource.', function () {
+    var cache = TestCacheFactory('CacheFactory.cache');
+    cache.put('test', 'value');
+    assert.equal(cache.get('test'), 'value');
+    var copyCache = angular.copy(cache);
+    assert.equal(copyCache.get('test'), 'value');
+    $httpBackend.expectGET('/api/card').respond(200, {
+      username: 'test'
+    });
+    var CreditCard = $resource(
+      '/api/card',
+      null,
+      { charge: { method: 'GET', cache: cache } }
+    );
+    var card = new CreditCard();
+    card.$charge();
+    $httpBackend.flush();
+    card.$charge().then();
+  });
   it('should be able to create a cache with options.', function () {
     var options = {
       capacity: Math.floor((Math.random() * 100000) + 1),
@@ -46,6 +65,7 @@ describe('CacheFactory(cacheId, options)', function () {
     function setItem() {
       throw new Error();
     }
+
     var options = {
       deleteOnExpire: 'aggressive',
       storageMode: 'localStorage'
@@ -68,6 +88,7 @@ describe('CacheFactory(cacheId, options)', function () {
     function setItem() {
       throw new Error();
     }
+
     var options = {
       deleteOnExpire: 'aggressive',
       storageMode: 'sessionStorage'
