@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.1.0 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.2.0 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
@@ -93,7 +93,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _keySet = function (collection) {
 	  var keySet = {},
-	      key;
+	      key = undefined;
 	  for (key in collection) {
 	    if (collection.hasOwnProperty(key)) {
 	      keySet[key] = key;
@@ -201,7 +201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  this.peek = function () {
-	    return _this.heap[0];
+	    return _this.heap.length ? _this.heap[0] : undefined;
 	  };
 
 	  this.pop = function () {
@@ -656,6 +656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            $$data = {};
 	          }
+	          $$promises = {};
 	        },
 
 	        removeExpired: function removeExpired() {

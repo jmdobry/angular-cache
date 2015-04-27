@@ -1,6 +1,11 @@
+##### 4.2.0 27 April 2015
+
+###### Backwards compatible bug fixes
+- #174 - Cache not being fully emptied if using localStorage and multiple web pages
+
 ##### 4.1.0 30 March 2015
 
-###### Backwards compatible API fixes
+###### Backwards compatible API changes
 - #169 - Official support for ngResource
 
 ##### 4.0.2 22 March 2015

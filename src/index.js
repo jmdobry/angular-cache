@@ -22,7 +22,7 @@ let _stringifyNumber = number => {
 };
 
 let _keySet = collection => {
-  var keySet = {}, key;
+  let keySet = {}, key;
   for (key in collection) {
     if (collection.hasOwnProperty(key)) {
       keySet[key] = key;
@@ -122,9 +122,7 @@ class BinaryHeap {
       bubbleUp(this.heap, this.weightFunc, this.heap.length - 1);
     };
 
-    this.peek = () => {
-      return this.heap[0];
-    };
+    this.peek = () => this.heap.length ? this.heap[0] : undefined;
 
     this.pop = () => {
       let front = this.heap[0];
@@ -137,8 +135,8 @@ class BinaryHeap {
     };
 
     this.remove = node => {
-      var length = this.heap.length;
-      for (let i = 0; i < length; i++) {
+      let length = this.heap.length;
+      for (var i = 0; i < length; i++) {
         if (this.compareFunc(this.heap[i], node)) {
           let removed = this.heap[i];
           let end = this.heap.pop();
@@ -157,9 +155,7 @@ class BinaryHeap {
       this.heap = [];
     };
 
-    this.size = () => {
-      return this.heap.length;
-    };
+    this.size = () => this.heap.length;
   }
 }
 
@@ -171,7 +167,7 @@ class BinaryHeapProvider {
 
 class CacheFactoryProvider {
   constructor() {
-    var defaults = this.defaults = {
+    let defaults = this.defaults = {
       capacity: Number.MAX_VALUE,
       maxAge: Number.MAX_VALUE,
       deleteOnExpire: 'none',
@@ -321,7 +317,7 @@ class CacheFactoryProvider {
             if (key) {
               let item;
               if ($$storage) {
-                var itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
+                let itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
 
                 if (itemJson) {
                   item = angular.fromJson(itemJson);
@@ -385,7 +381,7 @@ class CacheFactoryProvider {
               let kSet = {};
 
               if (keysJson) {
-                var keys = angular.fromJson(keysJson);
+                let keys = angular.fromJson(keysJson);
 
                 for (var i = 0; i < keys.length; i++) {
                   kSet[keys[i]] = keys[i];
@@ -431,8 +427,8 @@ class CacheFactoryProvider {
               throw new Error('key must be a string!');
             }
 
-            var now = new Date().getTime();
-            var item = {
+            let now = new Date().getTime();
+            let item = {
               key: key,
               value: _isPromiseLike(value) ? value.then(getHandler(storeOnResolve, false), getHandler(storeOnReject, true)) : value,
               created: now,
@@ -446,9 +442,9 @@ class CacheFactoryProvider {
                 $$promises[key] = item.value;
                 return $$promises[key];
               }
-              var keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
-              var keys = keysJson ? angular.fromJson(keysJson) : [];
-              var itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
+              let keysJson = $$storage().getItem(`${this.$$prefix}.keys`);
+              let keys = keysJson ? angular.fromJson(keysJson) : [];
+              let itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
 
               // Remove existing
               if (itemJson) {
@@ -466,7 +462,7 @@ class CacheFactoryProvider {
               });
               // Set item
               $$storage().setItem(`${this.$$prefix}.data.${key}`, JSON.stringify(item));
-              var exists = false;
+              let exists = false;
               for (var i = 0; i < keys.length; i++) {
                 if (keys[i] === key) {
                   exists = true;
@@ -527,7 +523,7 @@ class CacheFactoryProvider {
                 return item.value;
               }
             } else {
-              var value = $$data[key] ? $$data[key].value : undefined;
+              let value = $$data[key] ? $$data[key].value : undefined;
               $$lruHeap.remove($$data[key]);
               $$expiresHeap.remove($$data[key]);
               $$data[key] = null;
@@ -558,6 +554,7 @@ class CacheFactoryProvider {
               }
               $$data = {};
             }
+            $$promises = {};
           },
 
           removeExpired() {
@@ -573,7 +570,7 @@ class CacheFactoryProvider {
 
             if ($$storage) {
               for (key in expired) {
-                var itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
+                let itemJson = $$storage().getItem(`${this.$$prefix}.data.${key}`);
                 if (itemJson) {
                   expired[key] = angular.fromJson(itemJson).value;
                   this.remove(key);
@@ -622,7 +619,7 @@ class CacheFactoryProvider {
             } else {
               this.$$capacity = capacity;
             }
-            var removed = {};
+            let removed = {};
             while ($$lruHeap.size() > this.$$capacity) {
               removed[$$lruHeap.peek().key] = this.remove($$lruHeap.peek().key);
             }
