@@ -1,4 +1,4 @@
-import angular from 'angular';
+let angular = require('angular');
 
 let _keys = collection => {
   let keys = [], key;
@@ -976,4 +976,5 @@ angular.module('angular-cache', [])
   .provider('BinaryHeap', BinaryHeapProvider)
   .provider('CacheFactory', CacheFactoryProvider);
 
-export default 'angular-cache';
+module.exports = 'angular-cache';
+module.exports.name = 'angular-cache';

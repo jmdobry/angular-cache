@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.2.0 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.2.1 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
@@ -63,13 +63,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+	var angular = __webpack_require__(1);
 
-	var angular = _interopRequire(__webpack_require__(1));
-
-	var _keys = function (collection) {
+	var _keys = function _keys(collection) {
 	  var keys = [],
 	      key = undefined;
 	  for (key in collection) {
@@ -80,18 +78,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return keys;
 	};
 
-	var _isPromiseLike = function (v) {
-	  return v && typeof v.then === "function";
+	var _isPromiseLike = function _isPromiseLike(v) {
+	  return v && typeof v.then === 'function';
 	};
 
-	var _stringifyNumber = function (number) {
+	var _stringifyNumber = function _stringifyNumber(number) {
 	  if (angular.isNumber(number)) {
 	    return number.toString();
 	  }
 	  return number;
 	};
 
-	var _keySet = function (collection) {
+	var _keySet = function _keySet(collection) {
 	  var keySet = {},
 	      key = undefined;
 	  for (key in collection) {
@@ -134,7 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {function} weightFunc The weight function.
 	 * @param {number} n The index of the element to sink down.
 	 */
-	var bubbleDown = function (heap, weightFunc, n) {
+	var bubbleDown = function bubbleDown(heap, weightFunc, n) {
 	  var length = heap.length;
 	  var node = heap[n];
 	  var nodeWeight = weightFunc(node);
@@ -185,11 +183,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return x === y;
 	    };
 	  }
-	  if (typeof weightFunc !== "function") {
-	    throw new Error("BinaryHeap([weightFunc][, compareFunc]): \"weightFunc\" must be a function!");
+	  if (typeof weightFunc !== 'function') {
+	    throw new Error('BinaryHeap([weightFunc][, compareFunc]): "weightFunc" must be a function!');
 	  }
-	  if (typeof compareFunc !== "function") {
-	    throw new Error("BinaryHeap([weightFunc][, compareFunc]): \"compareFunc\" must be a function!");
+	  if (typeof compareFunc !== 'function') {
+	    throw new Error('BinaryHeap([weightFunc][, compareFunc]): "compareFunc" must be a function!');
 	  }
 	  this.weightFunc = weightFunc;
 	  this.compareFunc = compareFunc;
@@ -249,33 +247,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var CacheFactoryProvider = function CacheFactoryProvider() {
-	  var _this = this;
+	  var _this5 = this;
 
 	  _classCallCheck(this, CacheFactoryProvider);
 
 	  var defaults = this.defaults = {
 	    capacity: Number.MAX_VALUE,
 	    maxAge: Number.MAX_VALUE,
-	    deleteOnExpire: "none",
+	    deleteOnExpire: 'none',
 	    onExpire: null,
 	    cacheFlushInterval: null,
 	    recycleFreq: 1000,
-	    storageMode: "memory",
+	    storageMode: 'memory',
 	    storageImpl: null,
 	    disabled: false,
-	    storagePrefix: "angular-cache.caches.",
+	    storagePrefix: 'angular-cache.caches.',
 	    storeOnResolve: false,
 	    storeOnReject: false
 	  };
 
-	  this.$get = ["$q", function ($q) {
+	  this.$get = ['$q', function ($q) {
 	    var caches = {};
 
-	    var createCache = function (cacheId, options) {
+	    var createCache = function createCache(cacheId, options) {
 	      if (cacheId in caches) {
-	        throw new Error("" + cacheId + " already exists!");
+	        throw new Error(cacheId + ' already exists!');
 	      } else if (!angular.isString(cacheId)) {
-	        throw new Error("cacheId must be a string!");
+	        throw new Error('cacheId must be a string!');
 	      }
 
 	      var $$data = {};
@@ -297,7 +295,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          clearInterval(this.$$recycleFreqId);
 	          this.removeAll();
 	          if ($$storage) {
-	            $$storage().removeItem("" + this.$$prefix + ".keys");
+	            $$storage().removeItem(this.$$prefix + '.keys');
 	            $$storage().removeItem(this.$$prefix);
 	          }
 	          $$storage = null;
@@ -336,9 +334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              };
 	            })();
 
-	            if (typeof _ret === "object") {
-	              return _ret.v;
-	            }
+	            if (typeof _ret === 'object') return _ret.v;
 	          } else {
 	            key = _stringifyNumber(key);
 
@@ -349,11 +345,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	          options = options || {};
 	          if (!angular.isString(key)) {
-	            throw new Error("key must be a string!");
+	            throw new Error('key must be a string!');
 	          } else if (options && !angular.isObject(options)) {
-	            throw new Error("options must be an object!");
+	            throw new Error('options must be an object!');
 	          } else if (options.onExpire && !angular.isFunction(options.onExpire)) {
-	            throw new Error("options.onExpire must be a function!");
+	            throw new Error('options.onExpire must be a function!');
 	          }
 
 	          var item = undefined;
@@ -363,7 +359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              return $$promises[key];
 	            }
 
-	            var itemJson = $$storage().getItem("" + this.$$prefix + ".data." + key);
+	            var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
 
 	            if (itemJson) {
 	              item = angular.fromJson(itemJson);
@@ -397,7 +393,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            $$lruHeap.push(item);
 	          }
 
-	          if (this.$$deleteOnExpire === "passive" && "expires" in item && item.expires < now) {
+	          if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
 	            this.remove(key);
 
 	            if (this.$$onExpire) {
@@ -407,7 +403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            value = undefined;
 	          } else if ($$storage) {
-	            $$storage().setItem("" + this.$$prefix + ".data." + key, JSON.stringify(item));
+	            $$storage().setItem(this.$$prefix + '.data.' + key, JSON.stringify(item));
 	          }
 
 	          return value;
@@ -417,7 +413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (key) {
 	            var item = undefined;
 	            if ($$storage) {
-	              var itemJson = $$storage().getItem("" + this.$$prefix + ".data." + key);
+	              var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
 
 	              if (itemJson) {
 	                item = angular.fromJson(itemJson);
@@ -463,7 +459,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        keys: function keys() {
 	          if ($$storage) {
-	            var keysJson = $$storage().getItem("" + this.$$prefix + ".keys");
+	            var keysJson = $$storage().getItem(this.$$prefix + '.keys');
 
 	            if (keysJson) {
 	              return angular.fromJson(keysJson);
@@ -477,7 +473,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        keySet: function keySet() {
 	          if ($$storage) {
-	            var keysJson = $$storage().getItem("" + this.$$prefix + ".keys");
+	            var keysJson = $$storage().getItem(this.$$prefix + '.keys');
 	            var kSet = {};
 
 	            if (keysJson) {
@@ -494,22 +490,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        put: function put(key, value, options) {
-	          var _this2 = this;
+	          var _this3 = this;
 
 	          options = options || {};
 
-	          var storeOnResolve = "storeOnResolve" in options ? !!options.storeOnResolve : this.$$storeOnResolve;
-	          var storeOnReject = "storeOnReject" in options ? !!options.storeOnReject : this.$$storeOnReject;
+	          var storeOnResolve = 'storeOnResolve' in options ? !!options.storeOnResolve : this.$$storeOnResolve;
+	          var storeOnReject = 'storeOnReject' in options ? !!options.storeOnReject : this.$$storeOnReject;
 
-	          var getHandler = function (store, isError) {
+	          var getHandler = function getHandler(store, isError) {
 	            return function (v) {
 	              if (store) {
 	                delete $$promises[key];
-	                if (angular.isObject(v) && "status" in v && "data" in v) {
+	                if (angular.isObject(v) && 'status' in v && 'data' in v) {
 	                  v = [v.status, v.data, v.headers(), v.statusText];
-	                  _this2.put(key, v);
+	                  _this3.put(key, v);
 	                } else {
-	                  _this2.put(key, v);
+	                  _this3.put(key, v);
 	                }
 	              }
 	              if (isError) {
@@ -526,7 +522,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          key = _stringifyNumber(key);
 
 	          if (!angular.isString(key)) {
-	            throw new Error("key must be a string!");
+	            throw new Error('key must be a string!');
 	          }
 
 	          var now = new Date().getTime();
@@ -544,9 +540,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	              $$promises[key] = item.value;
 	              return $$promises[key];
 	            }
-	            var keysJson = $$storage().getItem("" + this.$$prefix + ".keys");
+	            var keysJson = $$storage().getItem(this.$$prefix + '.keys');
 	            var keys = keysJson ? angular.fromJson(keysJson) : [];
-	            var itemJson = $$storage().getItem("" + this.$$prefix + ".data." + key);
+	            var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
 
 	            // Remove existing
 	            if (itemJson) {
@@ -563,7 +559,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              accessed: item.accessed
 	            });
 	            // Set item
-	            $$storage().setItem("" + this.$$prefix + ".data." + key, JSON.stringify(item));
+	            $$storage().setItem(this.$$prefix + '.data.' + key, JSON.stringify(item));
 	            var exists = false;
 	            for (var i = 0; i < keys.length; i++) {
 	              if (keys[i] === key) {
@@ -574,7 +570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (!exists) {
 	              keys.push(key);
 	            }
-	            $$storage().setItem("" + this.$$prefix + ".keys", JSON.stringify(keys));
+	            $$storage().setItem(this.$$prefix + '.keys', JSON.stringify(keys));
 	          } else {
 	            // Remove existing
 	            if ($$data[key]) {
@@ -598,10 +594,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        remove: function remove(key) {
-	          key += "";
+	          key += '';
 	          delete $$promises[key];
 	          if ($$storage) {
-	            var itemJson = $$storage().getItem("" + this.$$prefix + ".data." + key);
+	            var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
 
 	            if (itemJson) {
 	              var item = angular.fromJson(itemJson);
@@ -613,15 +609,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                key: key,
 	                expires: item.expires
 	              });
-	              $$storage().removeItem("" + this.$$prefix + ".data." + key);
-	              var keysJson = $$storage().getItem("" + this.$$prefix + ".keys");
+	              $$storage().removeItem(this.$$prefix + '.data.' + key);
+	              var keysJson = $$storage().getItem(this.$$prefix + '.keys');
 	              var keys = keysJson ? angular.fromJson(keysJson) : [];
 	              var index = keys.indexOf(key);
 
 	              if (index >= 0) {
 	                keys.splice(index, 1);
 	              }
-	              $$storage().setItem("" + this.$$prefix + ".keys", JSON.stringify(keys));
+	              $$storage().setItem(this.$$prefix + '.keys', JSON.stringify(keys));
 	              return item.value;
 	            }
 	          } else {
@@ -638,7 +634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if ($$storage) {
 	            $$lruHeap.removeAll();
 	            $$expiresHeap.removeAll();
-	            var keysJson = $$storage().getItem("" + this.$$prefix + ".keys");
+	            var keysJson = $$storage().getItem(this.$$prefix + '.keys');
 
 	            if (keysJson) {
 	              var keys = angular.fromJson(keysJson);
@@ -647,7 +643,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.remove(keys[i]);
 	              }
 	            }
-	            $$storage().setItem("" + this.$$prefix + ".keys", JSON.stringify([]));
+	            $$storage().setItem(this.$$prefix + '.keys', JSON.stringify([]));
 	          } else {
 	            $$lruHeap.removeAll();
 	            $$expiresHeap.removeAll();
@@ -672,7 +668,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	          if ($$storage) {
 	            for (key in expired) {
-	              var itemJson = $$storage().getItem("" + this.$$prefix + ".data." + key);
+	              var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
 	              if (itemJson) {
 	                expired[key] = angular.fromJson(itemJson).value;
 	                this.remove(key);
@@ -697,9 +693,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (cacheFlushInterval === null) {
 	            delete this.$$cacheFlushInterval;
 	          } else if (!angular.isNumber(cacheFlushInterval)) {
-	            throw new Error("cacheFlushInterval must be a number!");
+	            throw new Error('cacheFlushInterval must be a number!');
 	          } else if (cacheFlushInterval < 0) {
-	            throw new Error("cacheFlushInterval must be greater than zero!");
+	            throw new Error('cacheFlushInterval must be greater than zero!');
 	          } else if (cacheFlushInterval !== this.$$cacheFlushInterval) {
 	            this.$$cacheFlushInterval = cacheFlushInterval;
 	            clearInterval(this.$$cacheFlushIntervalId);
@@ -715,9 +711,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (capacity === null) {
 	            delete this.$$capacity;
 	          } else if (!angular.isNumber(capacity)) {
-	            throw new Error("capacity must be a number!");
+	            throw new Error('capacity must be a number!');
 	          } else if (capacity < 0) {
-	            throw new Error("capacity must be greater than zero!");
+	            throw new Error('capacity must be greater than zero!');
 	          } else {
 	            this.$$capacity = capacity;
 	          }
@@ -732,9 +728,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (deleteOnExpire === null) {
 	            delete this.$$deleteOnExpire;
 	          } else if (!angular.isString(deleteOnExpire)) {
-	            throw new Error("deleteOnExpire must be a string!");
-	          } else if (deleteOnExpire !== "none" && deleteOnExpire !== "passive" && deleteOnExpire !== "aggressive") {
-	            throw new Error("deleteOnExpire must be \"none\", \"passive\" or \"aggressive\"!");
+	            throw new Error('deleteOnExpire must be a string!');
+	          } else if (deleteOnExpire !== 'none' && deleteOnExpire !== 'passive' && deleteOnExpire !== 'aggressive') {
+	            throw new Error('deleteOnExpire must be "none", "passive" or "aggressive"!');
 	          } else {
 	            this.$$deleteOnExpire = deleteOnExpire;
 	          }
@@ -747,9 +743,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (maxAge === null) {
 	            this.$$maxAge = Number.MAX_VALUE;
 	          } else if (!angular.isNumber(maxAge)) {
-	            throw new Error("maxAge must be a number!");
+	            throw new Error('maxAge must be a number!');
 	          } else if (maxAge < 0) {
-	            throw new Error("maxAge must be greater than zero!");
+	            throw new Error('maxAge must be greater than zero!');
 	          } else {
 	            this.$$maxAge = maxAge;
 	          }
@@ -760,13 +756,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	          $$expiresHeap.removeAll();
 
 	          if ($$storage) {
-	            var keysJson = $$storage().getItem("" + this.$$prefix + ".keys");
+	            var keysJson = $$storage().getItem(this.$$prefix + '.keys');
 
 	            keys = keysJson ? angular.fromJson(keysJson) : [];
 
 	            for (i = 0; i < keys.length; i++) {
 	              key = keys[i];
-	              var itemJson = $$storage().getItem("" + this.$$prefix + ".data." + key);
+	              var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
 
 	              if (itemJson) {
 	                var item = angular.fromJson(itemJson);
@@ -794,7 +790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              $$expiresHeap.push($$data[key]);
 	            }
 	          }
-	          if (this.$$deleteOnExpire === "aggressive") {
+	          if (this.$$deleteOnExpire === 'aggressive') {
 	            return this.removeExpired();
 	          } else {
 	            return {};
@@ -805,7 +801,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (onExpire === null) {
 	            delete this.$$onExpire;
 	          } else if (!angular.isFunction(onExpire)) {
-	            throw new Error("onExpire must be a function!");
+	            throw new Error('onExpire must be a function!');
 	          } else {
 	            this.$$onExpire = onExpire;
 	          }
@@ -815,10 +811,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	          cacheOptions = cacheOptions || {};
 	          strict = !!strict;
 	          if (!angular.isObject(cacheOptions)) {
-	            throw new Error("cacheOptions must be an object!");
+	            throw new Error('cacheOptions must be an object!');
 	          }
 
-	          if ("storagePrefix" in cacheOptions) {
+	          if ('storagePrefix' in cacheOptions) {
 	            this.$$storagePrefix = cacheOptions.storagePrefix;
 	          } else if (strict) {
 	            this.$$storagePrefix = defaults.storagePrefix;
@@ -826,61 +822,61 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	          this.$$prefix = this.$$storagePrefix + this.$$id;
 
-	          if ("disabled" in cacheOptions) {
+	          if ('disabled' in cacheOptions) {
 	            this.$$disabled = !!cacheOptions.disabled;
 	          } else if (strict) {
 	            this.$$disabled = defaults.disabled;
 	          }
 
-	          if ("storageMode" in cacheOptions || "storageImpl" in cacheOptions) {
+	          if ('storageMode' in cacheOptions || 'storageImpl' in cacheOptions) {
 	            this.setStorageMode(cacheOptions.storageMode, cacheOptions.storageImpl);
 	          } else if (strict) {
 	            this.setStorageMode(defaults.storageMode, defaults.storageImpl);
 	          }
 
-	          if ("storeOnResolve" in cacheOptions) {
+	          if ('storeOnResolve' in cacheOptions) {
 	            this.$$storeOnResolve = !!cacheOptions.storeOnResolve;
 	          } else if (strict) {
 	            this.$$storeOnResolve = defaults.storeOnResolve;
 	          }
 
-	          if ("storeOnReject" in cacheOptions) {
+	          if ('storeOnReject' in cacheOptions) {
 	            this.$$storeOnReject = !!cacheOptions.storeOnReject;
 	          } else if (strict) {
 	            this.$$storeOnReject = defaults.storeOnReject;
 	          }
 
-	          if ("capacity" in cacheOptions) {
+	          if ('capacity' in cacheOptions) {
 	            this.setCapacity(cacheOptions.capacity);
 	          } else if (strict) {
 	            this.setCapacity(defaults.capacity);
 	          }
 
-	          if ("deleteOnExpire" in cacheOptions) {
+	          if ('deleteOnExpire' in cacheOptions) {
 	            this.setDeleteOnExpire(cacheOptions.deleteOnExpire, false);
 	          } else if (strict) {
 	            this.setDeleteOnExpire(defaults.deleteOnExpire, false);
 	          }
 
-	          if ("maxAge" in cacheOptions) {
+	          if ('maxAge' in cacheOptions) {
 	            this.setMaxAge(cacheOptions.maxAge);
 	          } else if (strict) {
 	            this.setMaxAge(defaults.maxAge);
 	          }
 
-	          if ("recycleFreq" in cacheOptions) {
+	          if ('recycleFreq' in cacheOptions) {
 	            this.setRecycleFreq(cacheOptions.recycleFreq);
 	          } else if (strict) {
 	            this.setRecycleFreq(defaults.recycleFreq);
 	          }
 
-	          if ("cacheFlushInterval" in cacheOptions) {
+	          if ('cacheFlushInterval' in cacheOptions) {
 	            this.setCacheFlushInterval(cacheOptions.cacheFlushInterval);
 	          } else if (strict) {
 	            this.setCacheFlushInterval(defaults.cacheFlushInterval);
 	          }
 
-	          if ("onExpire" in cacheOptions) {
+	          if ('onExpire' in cacheOptions) {
 	            this.setOnExpire(cacheOptions.onExpire);
 	          } else if (strict) {
 	            this.setOnExpire(defaults.onExpire);
@@ -891,14 +887,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (recycleFreq === null) {
 	            delete this.$$recycleFreq;
 	          } else if (!angular.isNumber(recycleFreq)) {
-	            throw new Error("recycleFreq must be a number!");
+	            throw new Error('recycleFreq must be a number!');
 	          } else if (recycleFreq < 0) {
-	            throw new Error("recycleFreq must be greater than zero!");
+	            throw new Error('recycleFreq must be greater than zero!');
 	          } else {
 	            this.$$recycleFreq = recycleFreq;
 	          }
 	          clearInterval(this.$$recycleFreqId);
-	          if (this.$$deleteOnExpire === "aggressive") {
+	          if (this.$$deleteOnExpire === 'aggressive') {
 	            (function (self) {
 	              self.$$recycleFreqId = setInterval(function () {
 	                self.removeExpired();
@@ -911,15 +907,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        setStorageMode: function setStorageMode(storageMode, storageImpl) {
 	          if (!angular.isString(storageMode)) {
-	            throw new Error("storageMode must be a string!");
-	          } else if (storageMode !== "memory" && storageMode !== "localStorage" && storageMode !== "sessionStorage") {
-	            throw new Error("storageMode must be \"memory\", \"localStorage\" or \"sessionStorage\"!");
+	            throw new Error('storageMode must be a string!');
+	          } else if (storageMode !== 'memory' && storageMode !== 'localStorage' && storageMode !== 'sessionStorage') {
+	            throw new Error('storageMode must be "memory", "localStorage" or "sessionStorage"!');
 	          }
 
 	          var shouldReInsert = false;
 	          var items = {};
 
-	          if (typeof this.$$storageMode === "string" && this.$$storageMode !== storageMode) {
+	          if (typeof this.$$storageMode === 'string' && this.$$storageMode !== storageMode) {
 	            var keys = this.keys();
 
 	            if (keys.length) {
@@ -937,38 +933,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	          if (storageImpl) {
 	            if (!angular.isObject(storageImpl)) {
-	              throw new Error("storageImpl must be an object!");
-	            } else if (!("setItem" in storageImpl) || typeof storageImpl.setItem !== "function") {
-	              throw new Error("storageImpl must implement \"setItem(key, value)\"!");
-	            } else if (!("getItem" in storageImpl) || typeof storageImpl.getItem !== "function") {
-	              throw new Error("storageImpl must implement \"getItem(key)\"!");
-	            } else if (!("removeItem" in storageImpl) || typeof storageImpl.removeItem !== "function") {
-	              throw new Error("storageImpl must implement \"removeItem(key)\"!");
+	              throw new Error('storageImpl must be an object!');
+	            } else if (!('setItem' in storageImpl) || typeof storageImpl.setItem !== 'function') {
+	              throw new Error('storageImpl must implement "setItem(key, value)"!');
+	            } else if (!('getItem' in storageImpl) || typeof storageImpl.getItem !== 'function') {
+	              throw new Error('storageImpl must implement "getItem(key)"!');
+	            } else if (!('removeItem' in storageImpl) || typeof storageImpl.removeItem !== 'function') {
+	              throw new Error('storageImpl must implement "removeItem(key)"!');
 	            }
 	            $$storage = function () {
 	              return storageImpl;
 	            };
-	          } else if (this.$$storageMode === "localStorage") {
+	          } else if (this.$$storageMode === 'localStorage') {
 	            try {
-	              localStorage.setItem("angular-cache", "angular-cache");
-	              localStorage.removeItem("angular-cache");
+	              localStorage.setItem('angular-cache', 'angular-cache');
+	              localStorage.removeItem('angular-cache');
 	              $$storage = function () {
 	                return localStorage;
 	              };
 	            } catch (e) {
 	              $$storage = null;
-	              this.$$storageMode = "memory";
+	              this.$$storageMode = 'memory';
 	            }
-	          } else if (this.$$storageMode === "sessionStorage") {
+	          } else if (this.$$storageMode === 'sessionStorage') {
 	            try {
-	              sessionStorage.setItem("angular-cache", "angular-cache");
-	              sessionStorage.removeItem("angular-cache");
+	              sessionStorage.setItem('angular-cache', 'angular-cache');
+	              sessionStorage.removeItem('angular-cache');
 	              $$storage = function () {
 	                return sessionStorage;
 	              };
 	            } catch (e) {
 	              $$storage = null;
-	              this.$$storageMode = "memory";
+	              this.$$storageMode = 'memory';
 	            }
 	          }
 
@@ -980,12 +976,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        touch: function touch(key) {
-	          var _this2 = this;
+	          var _this4 = this;
 
 	          if (key) {
 	            var val = this.get(key, {
-	              onExpire: function (k, v) {
-	                return _this2.put(k, v);
+	              onExpire: function onExpire(k, v) {
+	                return _this4.put(k, v);
 	              }
 	            });
 	            if (val) {
@@ -1017,7 +1013,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        size: keys.length,
 	        caches: {}
 	      };
-	      angular.extend(info, _this.defaults);
+	      angular.extend(info, _this5.defaults);
 	      for (var i = 0; i < keys.length; i++) {
 	        var key = keys[i];
 	        info.caches[key] = caches[key].info();
@@ -1087,9 +1083,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }];
 	};
 
-	angular.module("angular-cache", []).provider("BinaryHeap", BinaryHeapProvider).provider("CacheFactory", CacheFactoryProvider);
+	angular.module('angular-cache', []).provider('BinaryHeap', BinaryHeapProvider).provider('CacheFactory', CacheFactoryProvider);
 
-	module.exports = "angular-cache";
+	module.exports = 'angular-cache';
+	module.exports.name = 'angular-cache';
 
 /***/ },
 /* 1 */
