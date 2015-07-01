@@ -260,6 +260,9 @@ describe('CacheFactory(cacheId, options)', function () {
     }
     assert.equal(msg, 'storageMode must be "memory", "localStorage" or "sessionStorage"!');
     for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
+      if (!TYPES_EXCEPT_STRING[i]) {
+        continue;
+      }
       try {
         TestCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
         fail(TYPES_EXCEPT_STRING[i]);

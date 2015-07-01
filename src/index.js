@@ -729,7 +729,7 @@ class CacheFactoryProvider {
             }
 
             if ('storageMode' in cacheOptions || 'storageImpl' in cacheOptions) {
-              this.setStorageMode(cacheOptions.storageMode, cacheOptions.storageImpl);
+              this.setStorageMode(cacheOptions.storageMode || defaults.storageMode, cacheOptions.storageImpl || defaults.storageImpl);
             } else if (strict) {
               this.setStorageMode(defaults.storageMode, defaults.storageImpl);
             }

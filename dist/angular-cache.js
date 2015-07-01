@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.2.1 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.2.2 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
@@ -829,7 +829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 
 	          if ('storageMode' in cacheOptions || 'storageImpl' in cacheOptions) {
-	            this.setStorageMode(cacheOptions.storageMode, cacheOptions.storageImpl);
+	            this.setStorageMode(cacheOptions.storageMode || defaults.storageMode, cacheOptions.storageImpl || defaults.storageImpl);
 	          } else if (strict) {
 	            this.setStorageMode(defaults.storageMode, defaults.storageImpl);
 	          }

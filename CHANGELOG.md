@@ -1,3 +1,14 @@
+##### 4.2.2 1 July 2015
+
+###### Backwards compatible bug fixes
+- #165 - storageMode does not inherits from defaults
+
+##### 4.2.1 1 July 2015
+
+Upgraded dependencies
+Better CommonJS interop
+Added a number of build examples
+
 ##### 4.2.0 27 April 2015
 
 ###### Backwards compatible bug fixes
