@@ -6,7 +6,7 @@
     <title>Angular-cache by jmdobry</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -64,24 +64,24 @@
 
 <p><code>bower install --save angular-cache</code> or <code>npm install --save angular-cache</code>.</p>
 
-<div class="highlight highlight-js"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>myApp<span class="pl-pds">'</span></span>, [<span class="pl-s1"><span class="pl-pds">'</span>angular-cache<span class="pl-pds">'</span></span>])
-  .config(<span class="pl-st">function</span> (<span class="pl-vpf">CacheFactoryProvider</span>) {
+<div class="highlight highlight-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>myApp<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>angular-cache<span class="pl-pds">'</span></span>])
+  .config(<span class="pl-k">function</span> (<span class="pl-smi">CacheFactoryProvider</span>) {
     angular.extend(CacheFactoryProvider.defaults, { maxAge<span class="pl-k">:</span> <span class="pl-c1">15</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span> });
   })
-  .service(<span class="pl-s1"><span class="pl-pds">'</span>BookService<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">CacheFactory</span>) {
-    <span class="pl-k">if</span> (<span class="pl-k">!</span>CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>bookCache<span class="pl-pds">'</span></span>)) {
+  .service(<span class="pl-s"><span class="pl-pds">'</span>BookService<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">CacheFactory</span>) {
+    <span class="pl-k">if</span> (<span class="pl-k">!</span>CacheFactory.get(<span class="pl-s"><span class="pl-pds">'</span>bookCache<span class="pl-pds">'</span></span>)) {
       <span class="pl-c">// or CacheFactory('bookCache', { ... });</span>
-      CacheFactory.createCache(<span class="pl-s1"><span class="pl-pds">'</span>bookCache<span class="pl-pds">'</span></span>, {
-        deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>,
+      CacheFactory.createCache(<span class="pl-s"><span class="pl-pds">'</span>bookCache<span class="pl-pds">'</span></span>, {
+        deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>,
         recycleFreq<span class="pl-k">:</span> <span class="pl-c1">60000</span>
       });
     }
 
-    <span class="pl-s">var</span> bookCache <span class="pl-k">=</span> CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>bookCache<span class="pl-pds">'</span></span>);
+    <span class="pl-k">var</span> bookCache <span class="pl-k">=</span> CacheFactory.get(<span class="pl-s"><span class="pl-pds">'</span>bookCache<span class="pl-pds">'</span></span>);
 
     <span class="pl-k">return</span> {
-      <span class="pl-en">findBookById</span>: <span class="pl-st">function</span> (<span class="pl-vpf">id</span>) {
-        <span class="pl-k">return</span> $http.get(<span class="pl-s1"><span class="pl-pds">'</span>/api/books/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id, { cache<span class="pl-k">:</span> bookCache });
+      <span class="pl-en">findBookById</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">id</span>) {
+        <span class="pl-k">return</span> $http.get(<span class="pl-s"><span class="pl-pds">'</span>/api/books/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id, { cache<span class="pl-k">:</span> bookCache });
       }
     };
   });</pre></div>
@@ -91,49 +91,49 @@
 
 <p>First, inject <code>CacheFactory</code> then create a cache. Let's go:</p>
 
-<div class="highlight highlight-js"><pre>app.service(<span class="pl-s1"><span class="pl-pds">'</span>myService<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">CacheFactory</span>) {
-  <span class="pl-s">var</span> profileCache;
+<div class="highlight highlight-js"><pre>app.service(<span class="pl-s"><span class="pl-pds">'</span>myService<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">CacheFactory</span>) {
+  <span class="pl-k">var</span> profileCache;
 
   <span class="pl-c">// Check to make sure the cache doesn't already exist</span>
-  <span class="pl-k">if</span> (<span class="pl-k">!</span>CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>)) {
-    profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>);
+  <span class="pl-k">if</span> (<span class="pl-k">!</span>CacheFactory.get(<span class="pl-s"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>)) {
+    profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>);
   }
 });</pre></div>
 
 <p>Let's add some items to the cache:</p>
 
-<div class="highlight highlight-js"><pre>profileCache.put(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>, {
-    name<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>John<span class="pl-pds">'</span></span>,
-    skills<span class="pl-k">:</span> [<span class="pl-s1"><span class="pl-pds">'</span>programming<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>piano<span class="pl-pds">'</span></span>]
+<div class="highlight highlight-js"><pre>profileCache.put(<span class="pl-s"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>, {
+    name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>John<span class="pl-pds">'</span></span>,
+    skills<span class="pl-k">:</span> [<span class="pl-s"><span class="pl-pds">'</span>programming<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>piano<span class="pl-pds">'</span></span>]
 });
 
-profileCache.put(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/22<span class="pl-pds">'</span></span>, {
-    name<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>Sally<span class="pl-pds">'</span></span>,
-    skills<span class="pl-k">:</span> [<span class="pl-s1"><span class="pl-pds">'</span>marketing<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>climbing<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>painting<span class="pl-pds">'</span></span>]
+profileCache.put(<span class="pl-s"><span class="pl-pds">'</span>/profiles/22<span class="pl-pds">'</span></span>, {
+    name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Sally<span class="pl-pds">'</span></span>,
+    skills<span class="pl-k">:</span> [<span class="pl-s"><span class="pl-pds">'</span>marketing<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>climbing<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>painting<span class="pl-pds">'</span></span>]
 });</pre></div>
 
 <p>Right now, these items will stay in the cache until a page refresh.</p>
 
 <p>Let's have items which are added to <code>profileCache</code> expire after an hour:</p>
 
-<div class="highlight highlight-js"><pre>profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>, {
+<div class="highlight highlight-js"><pre>profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>, {
   maxAge<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span> <span class="pl-c">// 1 hour</span>
 });</pre></div>
 
 <p>Perfect. Say we also want the items removed from the cache when they expire:</p>
 
-<div class="highlight highlight-js"><pre>profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>, {
+<div class="highlight highlight-js"><pre>profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>, {
   maxAge<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span> <span class="pl-c">// 1 hour,</span>
-  deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>
+  deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>
 });</pre></div>
 
 <p>Let's say that when the items do expire, we want to refresh them with new values:</p>
 
-<div class="highlight highlight-js"><pre>profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>, {
+<div class="highlight highlight-js"><pre>profileCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>, {
   maxAge<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span> <span class="pl-c">// 1 hour,</span>
-  deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>,
-  <span class="pl-en">onExpire</span>: <span class="pl-st">function</span> (<span class="pl-vpf">key</span>, <span class="pl-vpf">value</span>) {
-    $http.get(key).success(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+  deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>,
+  <span class="pl-en">onExpire</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">key</span>, <span class="pl-smi">value</span>) {
+    $http.get(key).success(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
       profileCache.put(key, data);
     });
   }
@@ -141,13 +141,13 @@ profileCache.put(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/22<s
 
 <p>Or say we want all of our caches to use that configuration as their default:</p>
 
-<div class="highlight highlight-js"><pre>angular.module(<span class="pl-s1"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>, [<span class="pl-s1"><span class="pl-pds">'</span>angular-cache<span class="pl-pds">'</span></span>]).config(<span class="pl-st">function</span> (<span class="pl-vpf">CacheFactoryProvider</span>) {
+<div class="highlight highlight-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>, [<span class="pl-s"><span class="pl-pds">'</span>angular-cache<span class="pl-pds">'</span></span>]).config(<span class="pl-k">function</span> (<span class="pl-smi">CacheFactoryProvider</span>) {
   angular.extend(CacheFactoryProvider.defaults, {
     maxAge<span class="pl-k">:</span> <span class="pl-c1">3600000</span>,
-    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>,
-    <span class="pl-en">onExpire</span>: <span class="pl-st">function</span> (<span class="pl-vpf">key</span>, <span class="pl-vpf">value</span>) {
-      <span class="pl-s">var</span> _this <span class="pl-k">=</span> <span class="pl-v">this</span>; <span class="pl-c">// "this" is the cache in which the item expired</span>
-      $http.get(key).success(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>,
+    <span class="pl-en">onExpire</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">key</span>, <span class="pl-smi">value</span>) {
+      <span class="pl-k">var</span> _this <span class="pl-k">=</span> <span class="pl-v">this</span>; <span class="pl-c">// "this" is the cache in which the item expired</span>
+      $http.get(key).success(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
         _this.put(key, data);
       });
     }
@@ -159,13 +159,13 @@ profileCache.put(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/22<s
 
 <p>We can retrieve items from a cache like so:</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-s">var</span> profile <span class="pl-k">=</span> profileCache.get(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> profile <span class="pl-k">=</span> profileCache.get(<span class="pl-s"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>);
 
-profile.<span class="pl-sc">name</span>; <span class="pl-c">// 'John'</span></pre></div>
+profile.<span class="pl-c1">name</span>; <span class="pl-c">// 'John'</span></pre></div>
 
 <p>And get information about items in the cache:</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-s">var</span> info <span class="pl-k">=</span> profileCache<span class="pl-s3">.info</span>(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> info <span class="pl-k">=</span> profileCache<span class="pl-c1">.info</span>(<span class="pl-s"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>);
 
 info.isExpired; <span class="pl-c">// false</span>
 <span class="pl-c">// etc.</span></pre></div>
@@ -182,13 +182,13 @@ info.deleteOnExpire; // 'aggressive'
 
 <p>Items are easily removed, and we can destroy our cache when we're done with it:</p>
 
-<div class="highlight highlight-js"><pre>profileCache.<span class="pl-s3">remove</span>(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-js"><pre>profileCache.remove(<span class="pl-s"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>);
 
-profileCache.get(<span class="pl-s1"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>); <span class="pl-c">// undefined</span>
+profileCache.get(<span class="pl-s"><span class="pl-pds">'</span>/profiles/34<span class="pl-pds">'</span></span>); <span class="pl-c">// undefined</span>
 
 profileCache.destroy();
 
-CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>); <span class="pl-c">// undefined</span></pre></div>
+CacheFactory.get(<span class="pl-s"><span class="pl-pds">'</span>profileCache<span class="pl-pds">'</span></span>); <span class="pl-c">// undefined</span></pre></div>
 
 <h3>
 <a id="configuration-options" class="anchor" href="#configuration-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration Options</h3>
@@ -319,24 +319,24 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
 
 <p>Configure <code>$http</code> to use a cache created by <code>CacheFactory</code> by default:</p>
 
-<div class="highlight highlight-js"><pre>app.run(<span class="pl-st">function</span> (<span class="pl-vpf">$http</span>, <span class="pl-vpf">CacheFactory</span>) {
-  $http.defaults.cache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>defaultCache<span class="pl-pds">'</span></span>, {
+<div class="highlight highlight-js"><pre>app.run(<span class="pl-k">function</span> (<span class="pl-smi">$http</span>, <span class="pl-smi">CacheFactory</span>) {
+  $http.defaults.cache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>defaultCache<span class="pl-pds">'</span></span>, {
     maxAge<span class="pl-k">:</span> <span class="pl-c1">15</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// Items added to this cache expire after 15 minutes</span>
     cacheFlushInterval<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// This cache will clear itself every hour</span>
-    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span> <span class="pl-c">// Items will be deleted from this cache when they expire</span>
+    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span> <span class="pl-c">// Items will be deleted from this cache when they expire</span>
   });
 });</pre></div>
 
-<div class="highlight highlight-js"><pre>app.service(<span class="pl-s1"><span class="pl-pds">'</span>MyService<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">$http</span>, <span class="pl-vpf">$q</span>) {
+<div class="highlight highlight-js"><pre>app.service(<span class="pl-s"><span class="pl-pds">'</span>MyService<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$http</span>, <span class="pl-smi">$q</span>) {
   <span class="pl-k">return</span> {
-    <span class="pl-en">getDataById</span>: <span class="pl-st">function</span> (<span class="pl-vpf">id</span>) {
-      <span class="pl-s">var</span> deferred <span class="pl-k">=</span> $q.<span class="pl-sc">defer</span>();
-      <span class="pl-s">var</span> start <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-s3">getTime</span>();
+    <span class="pl-en">getDataById</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">id</span>) {
+      <span class="pl-k">var</span> deferred <span class="pl-k">=</span> $q.<span class="pl-c1">defer</span>();
+      <span class="pl-k">var</span> start <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-c1">getTime</span>();
 
-      $http.get(<span class="pl-s1"><span class="pl-pds">'</span>api/data/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id, {
+      $http.get(<span class="pl-s"><span class="pl-pds">'</span>api/data/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id, {
         cache<span class="pl-k">:</span> <span class="pl-c1">true</span>
-      }).success(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
-        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>time taken for request: <span class="pl-pds">'</span></span> <span class="pl-k">+</span> (<span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-s3">getTime</span>() <span class="pl-k">-</span> start) <span class="pl-k">+</span> <span class="pl-s1"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
+      }).success(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
+        <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>time taken for request: <span class="pl-pds">'</span></span> <span class="pl-k">+</span> (<span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-c1">getTime</span>() <span class="pl-k">-</span> start) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
         deferred.resolve(data);
       });
       <span class="pl-k">return</span> deferred.promise;
@@ -344,11 +344,11 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
   };
 });</pre></div>
 
-<div class="highlight highlight-js"><pre>app.controller(<span class="pl-s1"><span class="pl-pds">'</span>myCtrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">MyService</span>) {
-  MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+<div class="highlight highlight-js"><pre>app.controller(<span class="pl-s"><span class="pl-pds">'</span>myCtrl<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">MyService</span>) {
+  MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
     <span class="pl-c">// e.g. "time taken for request: 2375ms"</span>
     <span class="pl-c">// Data returned by this next call is already cached.</span>
-    <span class="pl-k">return</span> MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+    <span class="pl-k">return</span> MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
       <span class="pl-c">// e.g. "time taken for request: 1ms"</span>
     });
   });
@@ -356,23 +356,23 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
 
 <p>Tell $http to use a cache created by CacheFactory for a specific request:</p>
 
-<div class="highlight highlight-js"><pre>app.service(<span class="pl-s1"><span class="pl-pds">'</span>MyService<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">$q</span>, <span class="pl-vpf">$http</span>, <span class="pl-vpf">CacheFactory</span>) {
+<div class="highlight highlight-js"><pre>app.service(<span class="pl-s"><span class="pl-pds">'</span>MyService<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$q</span>, <span class="pl-smi">$http</span>, <span class="pl-smi">CacheFactory</span>) {
 
-  CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>, {
+  CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>, {
     maxAge<span class="pl-k">:</span> <span class="pl-c1">15</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// Items added to this cache expire after 15 minutes</span>
     cacheFlushInterval<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// This cache will clear itself every hour</span>
-    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span> <span class="pl-c">// Items will be deleted from this cache when they expire</span>
+    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span> <span class="pl-c">// Items will be deleted from this cache when they expire</span>
   });
 
   <span class="pl-k">return</span> {
-    <span class="pl-en">getDataById</span>: <span class="pl-st">function</span> (<span class="pl-vpf">id</span>) {
-      <span class="pl-s">var</span> deferred <span class="pl-k">=</span> $q.<span class="pl-sc">defer</span>();
-      <span class="pl-s">var</span> start <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-s3">getTime</span>();
+    <span class="pl-en">getDataById</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">id</span>) {
+      <span class="pl-k">var</span> deferred <span class="pl-k">=</span> $q.<span class="pl-c1">defer</span>();
+      <span class="pl-k">var</span> start <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-c1">getTime</span>();
 
-      $http.get(<span class="pl-s1"><span class="pl-pds">'</span>api/data/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id, {
-        cache<span class="pl-k">:</span> CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>)
-      }).success(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
-        <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>time taken for request: <span class="pl-pds">'</span></span> <span class="pl-k">+</span> (<span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-s3">getTime</span>() <span class="pl-k">-</span> start) <span class="pl-k">+</span> <span class="pl-s1"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
+      $http.get(<span class="pl-s"><span class="pl-pds">'</span>api/data/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id, {
+        cache<span class="pl-k">:</span> CacheFactory.get(<span class="pl-s"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>)
+      }).success(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
+        <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>time taken for request: <span class="pl-pds">'</span></span> <span class="pl-k">+</span> (<span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-c1">getTime</span>() <span class="pl-k">-</span> start) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
         deferred.resolve(data);
       });
       <span class="pl-k">return</span> deferred.promise;
@@ -380,11 +380,11 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
   };
 });</pre></div>
 
-<div class="highlight highlight-js"><pre>app.controller(<span class="pl-s1"><span class="pl-pds">'</span>myCtrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">MyService</span>) {
-  MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+<div class="highlight highlight-js"><pre>app.controller(<span class="pl-s"><span class="pl-pds">'</span>myCtrl<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">MyService</span>) {
+  MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
     <span class="pl-c">// e.g. "time taken for request: 2375ms"</span>
     <span class="pl-c">// Data returned by this next call is already cached.</span>
-    <span class="pl-k">return</span> MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+    <span class="pl-k">return</span> MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
       <span class="pl-c">// e.g. "time taken for request: 1ms"</span>
     });
   });
@@ -392,19 +392,19 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
 
 <p>Do your own caching while using the $http service:</p>
 
-<div class="highlight highlight-js"><pre>app.service(<span class="pl-s1"><span class="pl-pds">'</span>MyService<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">$q</span>, <span class="pl-vpf">$http</span>, <span class="pl-vpf">CacheFactory</span>) {
+<div class="highlight highlight-js"><pre>app.service(<span class="pl-s"><span class="pl-pds">'</span>MyService<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">$q</span>, <span class="pl-smi">$http</span>, <span class="pl-smi">CacheFactory</span>) {
 
-  CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>, {
+  CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>, {
     maxAge<span class="pl-k">:</span> <span class="pl-c1">15</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// Items added to this cache expire after 15 minutes</span>
     cacheFlushInterval<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// This cache will clear itself every hour</span>
-    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span> <span class="pl-c">// Items will be deleted from this cache when they expire</span>
+    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span> <span class="pl-c">// Items will be deleted from this cache when they expire</span>
   });
 
   <span class="pl-k">return</span> {
-    <span class="pl-en">getDataById</span>: <span class="pl-st">function</span> (<span class="pl-vpf">id</span>) {
-      <span class="pl-s">var</span> deferred <span class="pl-k">=</span> $q.<span class="pl-sc">defer</span>();
-      <span class="pl-s">var</span> start <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-s3">getTime</span>();
-      <span class="pl-s">var</span> dataCache <span class="pl-k">=</span> CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>);
+    <span class="pl-en">getDataById</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">id</span>) {
+      <span class="pl-k">var</span> deferred <span class="pl-k">=</span> $q.<span class="pl-c1">defer</span>();
+      <span class="pl-k">var</span> start <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-c1">getTime</span>();
+      <span class="pl-k">var</span> dataCache <span class="pl-k">=</span> CacheFactory.get(<span class="pl-s"><span class="pl-pds">'</span>dataCache<span class="pl-pds">'</span></span>);
 
       <span class="pl-c">// Now that control of inserting/removing from the cache is in our hands,</span>
       <span class="pl-c">// we can interact with the data in "dataCache" outside of this context,</span>
@@ -413,8 +413,8 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
       <span class="pl-k">if</span> (dataCache.get(id)) {
         deferred.resolve(dataCache.get(id));
       } <span class="pl-k">else</span> {
-        $http.get(<span class="pl-s1"><span class="pl-pds">'</span>api/data/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id).success(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
-          <span class="pl-en">console</span><span class="pl-s3">.log</span>(<span class="pl-s1"><span class="pl-pds">'</span>time taken for request: <span class="pl-pds">'</span></span> <span class="pl-k">+</span> (<span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-s3">getTime</span>() <span class="pl-k">-</span> start) <span class="pl-k">+</span> <span class="pl-s1"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
+        $http.get(<span class="pl-s"><span class="pl-pds">'</span>api/data/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> id).success(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
+          <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>time taken for request: <span class="pl-pds">'</span></span> <span class="pl-k">+</span> (<span class="pl-k">new</span> <span class="pl-en">Date</span>().<span class="pl-c1">getTime</span>() <span class="pl-k">-</span> start) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>ms<span class="pl-pds">'</span></span>);
           dataCache.put(id, data);
           deferred.resolve(data);
           });
@@ -424,11 +424,11 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
   };
 });</pre></div>
 
-<div class="highlight highlight-js"><pre>app.controller(<span class="pl-s1"><span class="pl-pds">'</span>myCtrl<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">MyService</span>) {
-  MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+<div class="highlight highlight-js"><pre>app.controller(<span class="pl-s"><span class="pl-pds">'</span>myCtrl<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">MyService</span>) {
+  MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
     <span class="pl-c">// e.g. "time taken for request: 2375ms"</span>
     <span class="pl-c">// Data returned by this next call is already cached.</span>
-    <span class="pl-k">return</span> MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-st">function</span> (<span class="pl-vpf">data</span>) {
+    <span class="pl-k">return</span> MyService.getDataById(<span class="pl-c1">1</span>).then(<span class="pl-k">function</span> (<span class="pl-smi">data</span>) {
       <span class="pl-c">// e.g. "time taken for request: 1ms"</span>
     });
   });
@@ -437,16 +437,16 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
 <h3>
 <a id="using-angular-cache-with-localstorage" class="anchor" href="#using-angular-cache-with-localstorage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using angular-cache with localStorage</h3>
 
-<div class="highlight highlight-js"><pre>app.service(<span class="pl-s1"><span class="pl-pds">'</span>myService<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">CacheFactory</span>) {
+<div class="highlight highlight-js"><pre>app.service(<span class="pl-s"><span class="pl-pds">'</span>myService<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">CacheFactory</span>) {
 
   <span class="pl-c">// This cache will sync itself with localStorage if it exists, otherwise it won't. Every time the</span>
   <span class="pl-c">// browser loads this app, this cache will attempt to initialize itself with any data it had</span>
   <span class="pl-c">// already saved to localStorage (or sessionStorage if you used that).</span>
-  <span class="pl-s">var</span> myAwesomeCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>myAwesomeCache<span class="pl-pds">'</span></span>, {
+  <span class="pl-k">var</span> myAwesomeCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>myAwesomeCache<span class="pl-pds">'</span></span>, {
     maxAge<span class="pl-k">:</span> <span class="pl-c1">15</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// Items added to this cache expire after 15 minutes.</span>
     cacheFlushInterval<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// This cache will clear itself every hour.</span>
-    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>, <span class="pl-c">// Items will be deleted from this cache right when they expire.</span>
-    storageMode<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span> <span class="pl-c">// This cache will use `localStorage`.</span>
+    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>, <span class="pl-c">// Items will be deleted from this cache right when they expire.</span>
+    storageMode<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span> <span class="pl-c">// This cache will use `localStorage`.</span>
   });
 });</pre></div>
 
@@ -458,34 +458,34 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
 
 <p>Option 3 - Tell angular-cache exactly which polyfill to use (also useful if you just want to use your own implementation/wrapper for localStorage):</p>
 
-<div class="highlight highlight-js"><pre>app.service(<span class="pl-s1"><span class="pl-pds">'</span>myService<span class="pl-pds">'</span></span>, <span class="pl-st">function</span> (<span class="pl-vpf">CacheFactory</span>) {
+<div class="highlight highlight-js"><pre>app.service(<span class="pl-s"><span class="pl-pds">'</span>myService<span class="pl-pds">'</span></span>, <span class="pl-k">function</span> (<span class="pl-smi">CacheFactory</span>) {
 
-  <span class="pl-s">var</span> localStoragePolyfill <span class="pl-k">=</span> {
-    <span class="pl-en">getItem</span>: <span class="pl-st">function</span> (<span class="pl-vpf">key</span>) { ... },
-    <span class="pl-en">setItem</span>: <span class="pl-st">function</span> (<span class="pl-vpf">key</span>, <span class="pl-vpf">value</span>) { ... },
-    <span class="pl-en">removeItem</span>: <span class="pl-st">function</span> (<span class="pl-vpf">key</span>) { ... }
+  <span class="pl-k">var</span> localStoragePolyfill <span class="pl-k">=</span> {
+    <span class="pl-en">getItem</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">key</span>) { ... },
+    <span class="pl-en">setItem</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">key</span>, <span class="pl-smi">value</span>) { ... },
+    <span class="pl-en">removeItem</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">key</span>) { ... }
   };
 
   <span class="pl-c">// Always use the polyfill</span>
-  <span class="pl-s">var</span> myAwesomeCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>myAwesomeCache<span class="pl-pds">'</span></span>, {
+  <span class="pl-k">var</span> myAwesomeCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>myAwesomeCache<span class="pl-pds">'</span></span>, {
     maxAge<span class="pl-k">:</span> <span class="pl-c1">15</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// Items added to this cache expire after 15 minutes.</span>
     cacheFlushInterval<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// This cache will clear itself every hour.</span>
-    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>, <span class="pl-c">// Items will be deleted from this cache right when they expire.</span>
-    storageMode<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span>, <span class="pl-c">// This cache will use `localStorage`.</span>
+    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>, <span class="pl-c">// Items will be deleted from this cache right when they expire.</span>
+    storageMode<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span>, <span class="pl-c">// This cache will use `localStorage`.</span>
     storageImpl<span class="pl-k">:</span> localStoragePolyfill <span class="pl-c">// angular-cache will use this polyfill instead of looking for localStorage</span>
   });
 
   <span class="pl-c">// Conditionally use the polyfill</span>
-  <span class="pl-s">var</span> options <span class="pl-k">=</span> {
+  <span class="pl-k">var</span> options <span class="pl-k">=</span> {
     maxAge<span class="pl-k">:</span> <span class="pl-c1">15</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// Items added to this cache expire after 15 minutes.</span>
     cacheFlushInterval<span class="pl-k">:</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">60</span> <span class="pl-k">*</span> <span class="pl-c1">1000</span>, <span class="pl-c">// This cache will clear itself every hour.</span>
-    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>, <span class="pl-c">// Items will be deleted from this cache right when they expire.</span>
-    storageMode<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span> <span class="pl-c">// This cache will use `localStorage`.</span>
+    deleteOnExpire<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>aggressive<span class="pl-pds">'</span></span>, <span class="pl-c">// Items will be deleted from this cache right when they expire.</span>
+    storageMode<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span> <span class="pl-c">// This cache will use `localStorage`.</span>
   };
-  <span class="pl-k">if</span> (<span class="pl-k">!</span><span class="pl-s3">window</span>.localStorage) {
+  <span class="pl-k">if</span> (<span class="pl-k">!</span><span class="pl-c1">window</span>.localStorage) {
     options.storageImpl <span class="pl-k">=</span> localStoragePolyfill;
   }
-  <span class="pl-s">var</span> myAwesomeCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>myAwesomeCache<span class="pl-pds">'</span></span>, options);
+  <span class="pl-k">var</span> myAwesomeCache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>myAwesomeCache<span class="pl-pds">'</span></span>, options);
 });</pre></div>
 
 <p>Documentation on the interface that must be implemented by any storageImpl polyfill used by angular-cache can be found on the W3C Recommendation page for webstorage. The interface itself looks like:</p>
@@ -510,14 +510,14 @@ CacheFactory.get(<span class="pl-s1"><span class="pl-pds">'</span>profileCache<s
 
 <p>One developer suggested using store.js–a wrapper and polyfill for localStorage. However, store.js has its own API that doesn't match that of the webstorage spec, so if you want to use store.js or any other 3rd-party polyfill then you'll need to create a wrapper for it if it doesn't have the same API as localStorage . For example:</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-s">var</span> storeJsToStandard {
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> storeJsToStandard {
   getItem<span class="pl-k">:</span> store.get,
   setItem<span class="pl-k">:</span> store.set,
   removeItem<span class="pl-k">:</span> store.remove
 };
 
-CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>myNewCache<span class="pl-pds">'</span></span>, {
-  storageMode<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span>,
+CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>myNewCache<span class="pl-pds">'</span></span>, {
+  storageMode<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>localStorage<span class="pl-pds">'</span></span>,
   storageImpl<span class="pl-k">:</span> storeJsToStandard
 });</pre></div>
 
@@ -525,16 +525,15 @@ CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>myNewCache<span cl
 <a id="api-reference" class="anchor" href="#api-reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>API Reference</h3>
 
 <h5>
-<a id="cachefactorycacheid-options--cachefactorycreatecachecacheid-options" class="anchor" href="#cachefactorycacheid-options--cachefactorycreatecachecacheid-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-<code>CacheFactory(cacheId[, options])</code> &amp; <code>CacheFactory.createCache(cacheId[, options])</code>
+<a id="cachefactorycacheid-options--cachefactorycreatecachecacheid-options" class="anchor" href="#cachefactorycacheid-options--cachefactorycreatecachecacheid-options" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>CacheFactory(cacheId[, options])</code> &amp; <code>CacheFactory.createCache(cacheId[, options])</code>
 </h5>
 
 <p>Create a cache. Cache must not already exist. <code>cacheId</code> must be a string. <code>options</code> is an optional argument and must be an object. Any options you pass here will override any default options.</p>
 
-<div class="highlight highlight-js"><pre><span class="pl-s">var</span> cache <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>cache<span class="pl-pds">'</span></span>);
-<span class="pl-s">var</span> cache2 <span class="pl-k">=</span> CacheFactory.createCache(<span class="pl-s1"><span class="pl-pds">'</span>cache2<span class="pl-pds">'</span></span>);
-<span class="pl-s">var</span> cache3 <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>cache<span class="pl-pds">'</span></span>, { maxAge<span class="pl-k">:</span> <span class="pl-c1">900000</span> });
-<span class="pl-s">var</span> cache4 <span class="pl-k">=</span> CacheFactory(<span class="pl-s1"><span class="pl-pds">'</span>cache<span class="pl-pds">'</span></span>); <span class="pl-c">// Error "cache already exists!"</span></pre></div>
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> cache <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>cache<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> cache2 <span class="pl-k">=</span> CacheFactory.createCache(<span class="pl-s"><span class="pl-pds">'</span>cache2<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> cache3 <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>cache<span class="pl-pds">'</span></span>, { maxAge<span class="pl-k">:</span> <span class="pl-c1">900000</span> });
+<span class="pl-k">var</span> cache4 <span class="pl-k">=</span> CacheFactory(<span class="pl-s"><span class="pl-pds">'</span>cache<span class="pl-pds">'</span></span>); <span class="pl-c">// Error "cache already exists!"</span></pre></div>
 
 <h5>
 <a id="cachefactorygetcacheid" class="anchor" href="#cachefactorygetcacheid" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>CacheFactory.get(cacheId)</code>
