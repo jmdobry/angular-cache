@@ -51,6 +51,6 @@
     "test": "grunt test"
   },
   "peerDependencies": {
-    "angular": ">=1.x"
+    "angular": ">=1.x ||  >1.4.0-rc"
   }
 }
