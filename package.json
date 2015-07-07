@@ -1,7 +1,7 @@
 {
   "name": "angular-cache",
   "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "homepage": "http://jmdobry.github.io/angular-cache/",
   "main": "dist/angular-cache.js",
   "repository": {
@@ -43,6 +43,7 @@
     "karma-script-launcher": "0.1.0",
     "karma-sinon": "1.0.4",
     "mocha": "2.2.5",
+    "phantomjs": "^1.9.17",
     "sinon": "1.15.4",
     "time-grunt": "1.2.1",
     "webpack-dev-server": "1.10.1"
@@ -54,6 +55,6 @@
     "angular": ">=1.x"
   },
   "dependencies": {
-    "cachefactory": "1.x"
+    "cachefactory": "1.0.2"
   }
 }

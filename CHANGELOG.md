@@ -1,3 +1,7 @@
+##### 4.3.1 07 July 2015
+
+- #190 - 4.3 breaks phantomJS tests
+
 ##### 4.3.0 06 July 2015
 
 - #189 - Extracted non-angular code.
