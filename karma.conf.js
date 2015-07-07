@@ -2,7 +2,7 @@ module.exports = function (config) {
   config.set({
     basePath: './',
     frameworks: ['mocha', 'chai', 'sinon'],
-    browsers: ['Chrome', 'Firefox', 'PhantomJS'],
+    browsers: ['Chrome', 'Firefox'],
     files: [
       'bower_components/angular-1.2.25/angular.js',
       'bower_components/angular-resource/angular-resource.js',

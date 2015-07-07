@@ -195,7 +195,7 @@ describe('Cache#put(key, value[, options])', function () {
     });
     $httpBackend.flush();
   });
-  it('should work with promises when storeOnResolve is true.', function () {
+  it('should work with promises when storeOnResolve is true.', function (done) {
     var deferred = $q.defer();
     var cache = TestCacheFactory('cache', {
       storeOnResolve: true
@@ -203,7 +203,10 @@ describe('Cache#put(key, value[, options])', function () {
     cache.put('test', deferred.promise);
     deferred.resolve('value');
     $rootScope.$safeApply();
-    assert.equal(cache.get('test'), 'value');
+    setTimeout(function () {
+      assert.equal(cache.get('test'), 'value');
+      done();
+    }, 30);
   });
   it('should work with rejected $http promises when storeOnReject and storeOnResolve are false.', function (done) {
     $httpBackend.expectGET('test.com').respond(404, 'Not Found');
@@ -255,15 +258,18 @@ describe('Cache#put(key, value[, options])', function () {
     });
     $httpBackend.flush();
   });
-  it('should work with rejected promises when storeOnReject is false.', function () {
+  it('should work with rejected promises when storeOnReject is false.', function (done) {
     var deferred = $q.defer();
     var cache = TestCacheFactory('cache', { storeOnResolve: true });
     cache.put('test', deferred.promise);
     deferred.reject('error');
     $rootScope.$safeApply();
-    assert.equal(typeof cache.get('test').then, 'function');
+    setTimeout(function () {
+      assert.equal(typeof cache.get('test').then, 'function');
+      done();
+    }, 30);
   });
-  it('should work with rejected promises.', function () {
+  it('should work with rejected promises.', function (done) {
     var deferred = $q.defer();
     var cache = TestCacheFactory('cache', {
       storeOnResolve: true,
@@ -272,7 +278,10 @@ describe('Cache#put(key, value[, options])', function () {
     cache.put('test', deferred.promise);
     deferred.reject('error');
     $rootScope.$safeApply();
-    assert.equal(cache.get('test'), 'error');
+    setTimeout(function () {
+      assert.equal(cache.get('test'), 'error');
+      done();
+    }, 30);
   });
   it('should work with $http promises using localStorage.', function (done) {
     $httpBackend.expectGET('test.com').respond({ name: 'John' });

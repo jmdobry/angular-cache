@@ -46,6 +46,8 @@ beforeEach(inject(function (_$resource_) {
 
 beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$http_, _$httpBackend_) {
   TestCacheFactory = _CacheFactory_;
+  angular.extend(TestCacheFactory.defaults, CACHE_DEFAULTS);
+  TestCacheFactory.destroyAll();
   $q = _$q_;
   $rootScope = _$rootScope_;
   BinaryHeap = _BinaryHeap_;
@@ -67,7 +69,7 @@ beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$
     }
     $scope = $scope || this;
     fn = fn || function () {
-    };
+      };
     if (force || !$scope.$$phase) {
       if ($scope.$apply) {
         $scope.$apply(fn);
@@ -84,5 +86,4 @@ beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$
 afterEach(function () {
   $httpBackend.verifyNoOutstandingRequest();
   $httpBackend.verifyNoOutstandingExpectation();
-  TestCacheFactory.destroyAll();
 });

@@ -1,5 +1,5 @@
 describe('CacheFactory.clearAll()', function () {
-  it('should call "removeAll()" on all caches.', function (done) {
+  it('should call "removeAll()" on all caches.', function () {
     var cacheKeys = ['CacheFactory.clearAll.cache', 'CacheFactory.clearAll.cache1', 'CacheFactory.clearAll.cache2'],
       caches = [];
 
@@ -22,10 +22,8 @@ describe('CacheFactory.clearAll()', function () {
     assert.equal(caches[0].removeAll.callCount, 1);
     assert.equal(caches[1].removeAll.callCount, 1);
     assert.equal(caches[2].removeAll.callCount, 1);
-
-    done();
   });
-  it('should result in each cache being cleared.', function (done) {
+  it('should result in each cache being cleared.', function () {
     var cacheKeys = ['CacheFactory.clearAll.cache', 'CacheFactory.clearAll.cache1', 'CacheFactory.clearAll.cache2'],
       caches = [];
 
@@ -57,7 +55,5 @@ describe('CacheFactory.clearAll()', function () {
     assert.equal(caches[0].info().size, 0);
     assert.equal(caches[1].info().size, 0);
     assert.equal(caches[2].info().size, 0);
-
-    done();
   });
 });

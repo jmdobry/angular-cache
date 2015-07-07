@@ -95,7 +95,7 @@ module.exports = function (grunt) {
         singleRun: false
       },
       min: {
-        browsers: ['Chrome', 'Firefox', 'PhantomJS'],
+        browsers: ['Chrome', 'Firefox'],
         options: {
           files: [
             'bower_components/angular-1.2.25/angular.js',

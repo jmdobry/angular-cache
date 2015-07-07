@@ -1,9 +1,13 @@
-##### 4.2.2 1 July 2015
+##### 4.3.0 06 July 2015
+
+- #189 - Extracted non-angular code.
+
+##### 4.2.2 01 July 2015
 
 ###### Backwards compatible bug fixes
 - #165 - storageMode does not inherits from defaults
 
-##### 4.2.1 1 July 2015
+##### 4.2.1 01 July 2015
 
 Upgraded dependencies
 Better CommonJS interop
