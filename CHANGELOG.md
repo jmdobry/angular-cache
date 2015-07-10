@@ -1,3 +1,7 @@
+##### 4.3.2 10 July 2015
+
+- #191 - yabh issue with ie8
+
 ##### 4.3.1 07 July 2015
 
 - #190 - 4.3 breaks phantomJS tests

@@ -1,7 +1,7 @@
 {
   "name": "angular-cache",
   "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "homepage": "http://jmdobry.github.io/angular-cache/",
   "main": "dist/angular-cache.js",
   "repository": {
@@ -20,7 +20,7 @@
     }
   ],
   "devDependencies": {
-    "babel-core": "5.6.15",
+    "babel-core": "5.6.17",
     "babel-loader": "5.3.1",
     "chai": "3.0.0",
     "grunt": "0.4.5",
@@ -55,6 +55,6 @@
     "angular": ">=1.x"
   },
   "dependencies": {
-    "cachefactory": "1.0.2"
+    "cachefactory": "1.1.0"
   }
 }

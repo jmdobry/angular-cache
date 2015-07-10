@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.3.1 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.3.2 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
@@ -108,7 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*!
 	 * cachefactory
-	 * @version 1.0.2 - Homepage <http://jmdobry.github.io/cachefactory/>
+	 * @version 1.1.0 - Homepage <http://jmdobry.github.io/cachefactory/>
 	 * @author Jason Dobry <jason.dobry@gmail.com>
 	 * @copyright (c) 2013-2015 Jason Dobry 
 	 * @license MIT <https://github.com/jmdobry/cachefactory/blob/master/LICENSE>
@@ -1085,7 +1085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		/*!
 		 * yabh
-		 * @version 1.0.1 - Homepage <http://jmdobry.github.io/yabh/>
+		 * @version 1.1.0 - Homepage <http://jmdobry.github.io/yabh/>
 		 * @author Jason Dobry <jason.dobry@gmail.com>
 		 * @copyright (c) 2015 Jason Dobry 
 		 * @license MIT <https://github.com/jmdobry/yabh/blob/master/LICENSE>
@@ -1148,13 +1148,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		/* 0 */
 		/***/ function(module, exports, __webpack_require__) {
 
-			var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-			var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-			Object.defineProperty(exports, '__esModule', {
-			  value: true
-			});
 			/**
 			 * @method bubbleUp
 			 * @param {array} heap The heap.
@@ -1223,88 +1216,75 @@ return /******/ (function(modules) { // webpackBootstrap
 			  }
 			};
 
-			var BinaryHeap = (function () {
-			  function BinaryHeap(weightFunc, compareFunc) {
-			    _classCallCheck(this, BinaryHeap);
-
-			    if (!weightFunc) {
-			      weightFunc = function (x) {
-			        return x;
-			      };
-			    }
-			    if (!compareFunc) {
-			      compareFunc = function (x, y) {
-			        return x === y;
-			      };
-			    }
-			    if (typeof weightFunc !== 'function') {
-			      throw new Error('BinaryHeap([weightFunc][, compareFunc]): "weightFunc" must be a function!');
-			    }
-			    if (typeof compareFunc !== 'function') {
-			      throw new Error('BinaryHeap([weightFunc][, compareFunc]): "compareFunc" must be a function!');
-			    }
-			    this.weightFunc = weightFunc;
-			    this.compareFunc = compareFunc;
-			    this.heap = [];
+			function BinaryHeap(weightFunc, compareFunc) {
+			  if (!weightFunc) {
+			    weightFunc = function (x) {
+			      return x;
+			    };
 			  }
+			  if (!compareFunc) {
+			    compareFunc = function (x, y) {
+			      return x === y;
+			    };
+			  }
+			  if (typeof weightFunc !== 'function') {
+			    throw new Error('BinaryHeap([weightFunc][, compareFunc]): "weightFunc" must be a function!');
+			  }
+			  if (typeof compareFunc !== 'function') {
+			    throw new Error('BinaryHeap([weightFunc][, compareFunc]): "compareFunc" must be a function!');
+			  }
+			  this.weightFunc = weightFunc;
+			  this.compareFunc = compareFunc;
+			  this.heap = [];
+			}
 
-			  _createClass(BinaryHeap, [{
-			    key: 'push',
-			    value: function push(node) {
-			      this.heap.push(node);
-			      bubbleUp(this.heap, this.weightFunc, this.heap.length - 1);
-			    }
-			  }, {
-			    key: 'peek',
-			    value: function peek() {
-			      return this.heap[0];
-			    }
-			  }, {
-			    key: 'pop',
-			    value: function pop() {
-			      var front = this.heap[0];
+			var BHProto = BinaryHeap.prototype;
+
+			BHProto.push = function (node) {
+			  this.heap.push(node);
+			  bubbleUp(this.heap, this.weightFunc, this.heap.length - 1);
+			};
+
+			BHProto.peek = function () {
+			  return this.heap[0];
+			};
+
+			BHProto.pop = function () {
+			  var front = this.heap[0];
+			  var end = this.heap.pop();
+			  if (this.heap.length > 0) {
+			    this.heap[0] = end;
+			    bubbleDown(this.heap, this.weightFunc, 0);
+			  }
+			  return front;
+			};
+
+			BHProto.remove = function (node) {
+			  var length = this.heap.length;
+			  for (var i = 0; i < length; i++) {
+			    if (this.compareFunc(this.heap[i], node)) {
+			      var removed = this.heap[i];
 			      var end = this.heap.pop();
-			      if (this.heap.length > 0) {
-			        this.heap[0] = end;
-			        bubbleDown(this.heap, this.weightFunc, 0);
+			      if (i !== length - 1) {
+			        this.heap[i] = end;
+			        bubbleUp(this.heap, this.weightFunc, i);
+			        bubbleDown(this.heap, this.weightFunc, i);
 			      }
-			      return front;
+			      return removed;
 			    }
-			  }, {
-			    key: 'remove',
-			    value: function remove(node) {
-			      var length = this.heap.length;
-			      for (var i = 0; i < length; i++) {
-			        if (this.compareFunc(this.heap[i], node)) {
-			          var removed = this.heap[i];
-			          var end = this.heap.pop();
-			          if (i !== length - 1) {
-			            this.heap[i] = end;
-			            bubbleUp(this.heap, this.weightFunc, i);
-			            bubbleDown(this.heap, this.weightFunc, i);
-			          }
-			          return removed;
-			        }
-			      }
-			      return null;
-			    }
-			  }, {
-			    key: 'removeAll',
-			    value: function removeAll() {
-			      this.heap = [];
-			    }
-			  }, {
-			    key: 'size',
-			    value: function size() {
-			      return this.heap.length;
-			    }
-			  }]);
+			  }
+			  return null;
+			};
 
-			  return BinaryHeap;
-			})();
+			BHProto.removeAll = function () {
+			  this.heap = [];
+			};
 
-			exports['default'] = BinaryHeap;
-			module.exports = exports['default'];
+			BHProto.size = function () {
+			  return this.heap.length;
+			};
+
+			module.exports = BinaryHeap;
 
 		/***/ }
 		/******/ ])
