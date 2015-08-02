@@ -121,7 +121,7 @@ angular.module('app', ['angular-cache']).config(function (CacheFactoryProvider) 
     deleteOnExpire: 'aggressive',
     onExpire: function (key, value) {
       var _this = this; // "this" is the cache in which the item expired
-      $http.get(key).success(function (data) {
+      angular.injector(['ng']).get('$http').get(key).success(function (data) {
         _this.put(key, data);
       });
     }
