@@ -68,7 +68,7 @@ dist/angular-cache-x.x.x.min.js
 
 ## Contributing/Submitting changes
 
-- Checkout a new branch based on `develop` and name it to what you intend to do:
+- Checkout a new branch based on `master` and name it to what you intend to do:
   - Example:
     ````
     $ git checkout -b BRANCH_NAME
@@ -82,5 +82,4 @@ dist/angular-cache-x.x.x.min.js
   - Please provide a git message which explains what you've done
   - Commit to the forked repository
 - Make a pull request
-  - Make sure you send the PR to the `develop` branch
   - Travis CI is watching you!
