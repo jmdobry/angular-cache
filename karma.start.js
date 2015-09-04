@@ -29,16 +29,28 @@ var fail = function (msg) {
     storagePrefix: 'ac.'
   };
 
-var TestDSCacheFactoryProvider, TestDSCacheFactory, TestDSBinaryHeap, $q, $rootScope, $http, $httpBackend;
+var app, TestCacheFactoryProvider, TestCacheFactory, $q, $rootScope, $http, $httpBackend, $resource, BinaryHeap;
 
-beforeEach(module('angular-data.DSCacheFactory', function (_DSCacheFactoryProvider_) {
-  TestDSCacheFactoryProvider = _DSCacheFactoryProvider_;
+
+app = angular.module('app', ['ngResource']);
+
+beforeEach(module('app'));
+
+beforeEach(module('angular-cache', function (_CacheFactoryProvider_) {
+  TestCacheFactoryProvider = _CacheFactoryProvider_;
 }));
-beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_, _$q_, _$rootScope_, _$http_, _$httpBackend_) {
-  TestDSCacheFactory = _DSCacheFactory_;
-  TestDSBinaryHeap = _DSBinaryHeap_;
+
+beforeEach(inject(function (_$resource_) {
+  $resource = _$resource_;
+}));
+
+beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$http_, _$httpBackend_) {
+  TestCacheFactory = _CacheFactory_;
+  angular.extend(TestCacheFactory.defaults, CACHE_DEFAULTS);
+  TestCacheFactory.destroyAll();
   $q = _$q_;
   $rootScope = _$rootScope_;
+  BinaryHeap = _BinaryHeap_;
   $rootScope.$safeApply = function () {
     var $scope, fn, force = false;
     if (arguments.length === 1) {
@@ -57,7 +69,7 @@ beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_, _$q_, _$rootScope_
     }
     $scope = $scope || this;
     fn = fn || function () {
-    };
+      };
     if (force || !$scope.$$phase) {
       if ($scope.$apply) {
         $scope.$apply(fn);
@@ -72,5 +84,6 @@ beforeEach(inject(function (_DSCacheFactory_, _DSBinaryHeap_, _$q_, _$rootScope_
   $httpBackend = _$httpBackend_;
 }));
 afterEach(function () {
-  TestDSCacheFactory.destroyAll();
+  $httpBackend.verifyNoOutstandingRequest();
+  $httpBackend.verifyNoOutstandingExpectation();
 });

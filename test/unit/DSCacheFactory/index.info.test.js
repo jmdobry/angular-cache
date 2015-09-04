@@ -1,5 +1,5 @@
-describe('DSCacheFactory.info()', function () {
-  it('should return the correct info for DSCacheFactory.', function (done) {
+describe('CacheFactory.info()', function () {
+  it('should return the correct info for CacheFactory.', function (done) {
     var options = {
         capacity: Math.floor((Math.random() * 100000) + 1),
         maxAge: Math.floor((Math.random() * 100000) + 1),
@@ -7,25 +7,25 @@ describe('DSCacheFactory.info()', function () {
       },
       caches = [];
 
-    caches.push(TestDSCacheFactory('cache'));
-    caches.push(TestDSCacheFactory('cache2', {
+    caches.push(TestCacheFactory('cache'));
+    caches.push(TestCacheFactory('cache2', {
       maxAge: options.maxAge
     }));
-    caches.push(TestDSCacheFactory('cache3', {
+    caches.push(TestCacheFactory('cache3', {
       capacity: options.capacity,
       cacheFlushInterval: options.cacheFlushInterval
     }));
-    var info = TestDSCacheFactory.info();
+    var info = TestCacheFactory.info();
     assert.equal(info.size, 3);
 
-    assert.equal(info.cacheDefaults.capacity, CACHE_DEFAULTS.capacity);
-    assert.equal(info.cacheDefaults.maxAge, CACHE_DEFAULTS.maxAge);
-    assert.equal(info.cacheDefaults.cacheFlushInterval, CACHE_DEFAULTS.cacheFlushInterval);
-    assert.equal(info.cacheDefaults.deleteOnExpire, CACHE_DEFAULTS.deleteOnExpire);
-    assert.equal(info.cacheDefaults.onExpire, CACHE_DEFAULTS.onExpire);
-    assert.equal(info.cacheDefaults.recycleFreq, CACHE_DEFAULTS.recycleFreq);
-    assert.equal(info.cacheDefaults.storageMode, CACHE_DEFAULTS.storageMode);
-    assert.equal(info.cacheDefaults.storageImpl, CACHE_DEFAULTS.storageImpl);
+    assert.equal(info.capacity, CACHE_DEFAULTS.capacity);
+    assert.equal(info.maxAge, CACHE_DEFAULTS.maxAge);
+    assert.equal(info.cacheFlushInterval, CACHE_DEFAULTS.cacheFlushInterval);
+    assert.equal(info.deleteOnExpire, CACHE_DEFAULTS.deleteOnExpire);
+    assert.equal(info.onExpire, CACHE_DEFAULTS.onExpire);
+    assert.equal(info.recycleFreq, CACHE_DEFAULTS.recycleFreq);
+    assert.equal(info.storageMode, CACHE_DEFAULTS.storageMode);
+    assert.equal(info.storageImpl, CACHE_DEFAULTS.storageImpl);
 
     assert.equal(info.caches.cache.id, caches[0].info().id);
     assert.equal(info.caches.cache.capacity, caches[0].info().capacity);
