@@ -1048,11 +1048,13 @@ return /******/ (function(modules) { // webpackBootstrap
 					$$replacementStrategy = utils.neu(selectedAlg);
 					$$lruHeap = $$replacementStrategy.$$lruHeap;
 
-					if (shouldReInsert) {
-		        for (var key in items) {
-		          this.put(key, items[key]);
-		        }
-		      }
+					for (var key in items) {
+						if (shouldReInsert) {
+							this.put(key, items[key]);
+						} else {
+							$$replacementStrategy.onPut(key, item);
+						}
+					}
 		    },
 
 		    touch: function touch(key) {
