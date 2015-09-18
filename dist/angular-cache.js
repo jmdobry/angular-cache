@@ -294,6 +294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.$$lruHeap.remove(item);
 				item.accessed = now;
 				this.$$lruHeap.push(item);
+				return true;
 			},
 			onPut: function(key, item) {
 				this.$$lruHeap.push(item);
@@ -319,6 +320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					key     : key,
 					accessed: now
 				});
+				return true;
 			},
 			onPut: function (key, item) {
 				this.$$lruHeap.push({
@@ -462,12 +464,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		        item = $$data[key];
 		      }
 
-		      var value = item.value;
-		      var now = new Date().getTime();
+					var modified = false;
+					if (!options.noMetadataUpdate) {
+						modified = $$replacementStrategy.onGet(key, item);
+					}
 
-					$$replacementStrategy.onGet(key, item);
-
-		      if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < now) {
+					var value = item.value;
+		      if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < Date.now()) {
 		        this.remove(key);
 
 		        if (this.$$onExpire) {
@@ -476,7 +479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		          options.onExpire.call(this, key, item.value);
 		        }
 		        value = undefined;
-		      } else if ($$storage) {
+		      } else if ($$storage && modified) {
 		        $$storage().setItem(this.$$prefix + '.data.' + key, JSON.stringify(item));
 		      }
 
@@ -1048,11 +1051,22 @@ return /******/ (function(modules) { // webpackBootstrap
 					$$replacementStrategy = utils.neu(selectedAlg);
 					$$lruHeap = $$replacementStrategy.$$lruHeap;
 
-					for (var key in items) {
-						if (shouldReInsert) {
+					if (shouldReInsert) {
+						for (var key in items) {
 							this.put(key, items[key]);
-						} else {
-							$$replacementStrategy.onPut(key, item);
+						}
+					} else if ($$storage) {
+						var keys = this.keys();
+						if (keys.length) {
+							for (var i = 0; i < keys.length; i++) {
+								var key = keys[i]
+								var item = this.get(key, {noMetadataUpdate: true})
+								$$replacementStrategy.onPut(key, item);
+								$$expiresHeap.push({
+									key: key,
+									expires: item.expires
+								});
+							}
 						}
 					}
 		    },
