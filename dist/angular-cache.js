@@ -442,32 +442,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		        throw new Error('options.onExpire must be a function!');
 		      }
 
-		      var item = undefined;
+					var item = _this.getItem(key)
+					if (!item || _isPromiseLike(item)) return item
 
-		      if ($$storage) {
-		        if ($$promises[key]) {
-		          return $$promises[key];
-		        }
-
-		        var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
-
-		        if (itemJson) {
-		          item = utils.fromJson(itemJson);
-		        } else {
-		          return;
-		        }
-		      } else {
-		        if (!(key in $$data)) {
-		          return;
-		        }
-
-		        item = $$data[key];
-		      }
-
-					var modified = false;
-					if (!options.noMetadataUpdate) {
-						modified = $$replacementStrategy.onGet(key, item);
-					}
+					var modified = $$replacementStrategy.onGet(key, item);
 
 					var value = item.value;
 		      if (this.$$deleteOnExpire === 'passive' && 'expires' in item && item.expires < Date.now()) {
@@ -984,6 +962,28 @@ return /******/ (function(modules) { // webpackBootstrap
 		      }
 		    },
 
+				getItem: function _getItem(key) {
+					if ($$storage) {
+						if ($$promises[key]) {
+							return $$promises[key];
+						}
+
+						var itemJson = $$storage().getItem(this.$$prefix + '.data.' + key);
+
+						if (itemJson) {
+							return utils.fromJson(itemJson);
+						} else {
+							return;
+						}
+					} else {
+						if (!(key in $$data)) {
+							return;
+						}
+
+						return $$data[key];
+					}
+				},
+
 		    setStorageMode: function setStorageMode(storageMode, storageImpl, replacementStrategy) {
 		      if (!utils.isString(storageMode)) {
 		        throw new Error('storageMode must be a string!');
@@ -1060,7 +1060,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						if (keys.length) {
 							for (var i = 0; i < keys.length; i++) {
 								var key = keys[i]
-								var item = this.get(key, {noMetadataUpdate: true})
+								var item = this.getItem(key)
 								$$replacementStrategy.onPut(key, item);
 								$$expiresHeap.push({
 									key: key,
