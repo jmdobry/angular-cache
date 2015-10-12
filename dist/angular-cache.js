@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.3.2 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.4.0 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
@@ -84,6 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _classCallCheck(this, CacheFactoryProvider);
 
 	  this.defaults = CacheFactory.defaults;
+	  this.defaults.storagePrefix = 'angular-cache.caches.';
 
 	  this.$get = ['$q', function ($q) {
 	    CacheFactory.utils.Promise = $q;
@@ -94,11 +95,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	angular.module('angular-cache', []).provider('BinaryHeap', BinaryHeapProvider).provider('CacheFactory', CacheFactoryProvider);
 
 	module.exports = 'angular-cache';
-	module.exports.name = 'angular-cache';
+	try {
+	  module.exports.name = 'angular-cache';
+	} catch (err) {}
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
@@ -108,7 +111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*!
 	 * cachefactory
-	 * @version 1.1.0 - Homepage <http://jmdobry.github.io/cachefactory/>
+	 * @version 1.2.0 - Homepage <http://jmdobry.github.io/cachefactory/>
 	 * @author Jason Dobry <jason.dobry@gmail.com>
 	 * @copyright (c) 2013-2015 Jason Dobry 
 	 * @license MIT <https://github.com/jmdobry/cachefactory/blob/master/LICENSE>
@@ -119,7 +122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		if(true)
 			module.exports = factory();
 		else if(typeof define === 'function' && define.amd)
-			define(factory);
+			define([], factory);
 		else if(typeof exports === 'object')
 			exports["CacheFactory"] = factory();
 		else
@@ -407,7 +410,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		              created: item.created,
 		              accessed: item.accessed,
 		              expires: item.expires,
-		              isExpired: new Date().getTime() - item.created > this.$$maxAge
+		              isExpired: new Date().getTime() - item.created > (item.maxAge || this.$$maxAge)
 		            };
 		          } else {
 		            return undefined;
@@ -420,7 +423,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		              created: item.created,
 		              accessed: item.accessed,
 		              expires: item.expires,
-		              isExpired: new Date().getTime() - item.created > this.$$maxAge
+		              isExpired: new Date().getTime() - item.created > (item.maxAge || this.$$maxAge)
 		            };
 		          } else {
 		            return undefined;
@@ -523,7 +526,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        accessed: now
 		      };
 
-		      item.expires = item.created + this.$$maxAge;
+		      if (options.maxAge) {
+		        item.maxAge = options.maxAge;
+		      }
+
+		      item.expires = item.created + (item.maxAge || this.$$maxAge);
 
 		      if ($$storage) {
 		        if (_isPromiseLike(item.value)) {
@@ -759,7 +766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		            if (this.$$maxAge === Number.MAX_VALUE) {
 		              item.expires = Number.MAX_VALUE;
 		            } else {
-		              item.expires = item.created + this.$$maxAge;
+		              item.expires = item.created + (item.maxAge || this.$$maxAge);
 		            }
 		            $$expiresHeap.push({
 		              key: key,
@@ -775,7 +782,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		          if (this.$$maxAge === Number.MAX_VALUE) {
 		            $$data[key].expires = Number.MAX_VALUE;
 		          } else {
-		            $$data[key].expires = $$data[key].created + this.$$maxAge;
+		            $$data[key].expires = $$data[key].created + ($$data[key].maxAge || this.$$maxAge);
 		          }
 		          $$expiresHeap.push($$data[key]);
 		        }
@@ -905,18 +912,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		      var shouldReInsert = false;
 		      var items = {};
 
-		      if (typeof this.$$storageMode === 'string' && this.$$storageMode !== storageMode) {
-		        var keys = this.keys();
+		      var keys = this.keys();
 
-		        if (keys.length) {
-		          for (var i = 0; i < keys.length; i++) {
-		            items[keys[i]] = this.get(keys[i]);
-		          }
-		          for (i = 0; i < keys.length; i++) {
-		            this.remove(keys[i]);
-		          }
-		          shouldReInsert = true;
+		      if (keys.length) {
+		        for (var i = 0; i < keys.length; i++) {
+		          items[keys[i]] = this.get(keys[i]);
 		        }
+		        for (i = 0; i < keys.length; i++) {
+		          this.remove(keys[i]);
+		        }
+		        shouldReInsert = true;
 		      }
 
 		      this.$$storageMode = storageMode;

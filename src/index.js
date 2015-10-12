@@ -14,6 +14,7 @@ class BinaryHeapProvider {
 class CacheFactoryProvider {
   constructor() {
     this.defaults = CacheFactory.defaults;
+    this.defaults.storagePrefix = 'angular-cache.caches.';
 
     this.$get = ['$q', $q => {
       CacheFactory.utils.Promise = $q;
@@ -27,4 +28,9 @@ angular.module('angular-cache', [])
   .provider('CacheFactory', CacheFactoryProvider);
 
 module.exports = 'angular-cache';
-module.exports.name = 'angular-cache';
+try {
+  module.exports.name = 'angular-cache';  
+} catch (err) {
+  
+}
+

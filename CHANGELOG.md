@@ -1,3 +1,8 @@
+##### 4.4.0 12 October 2015
+
+- #200 - 4.3 storagePrefix is not backwards compatible
+- #201 - webpack minification error
+
 ##### 4.3.2 10 July 2015
 
 - #191 - yabh issue with ie8
