@@ -1,3 +1,7 @@
+##### 4.4.1 12 October 2015
+
+- #203 - trouble: bundle with r.js not works
+
 ##### 4.4.0 12 October 2015
 
 - #200 - 4.3 storagePrefix is not backwards compatible

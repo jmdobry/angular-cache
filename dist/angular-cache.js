@@ -11,7 +11,7 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("angular"));
 	else if(typeof define === 'function' && define.amd)
-		define(["angular"], factory);
+		define("angular-cache", ["angular"], factory);
 	else if(typeof exports === 'object')
 		exports["angularCacheModuleName"] = factory(require("angular"));
 	else
@@ -122,7 +122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		if(true)
 			module.exports = factory();
 		else if(typeof define === 'function' && define.amd)
-			define([], factory);
+			define("cachefactory", [], factory);
 		else if(typeof exports === 'object')
 			exports["CacheFactory"] = factory();
 		else

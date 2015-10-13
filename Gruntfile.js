@@ -80,6 +80,23 @@ module.exports = function (grunt) {
           ]
         },
         plugins: [
+          {
+            apply: function (compiler) {
+              compiler.plugin('compilation', function (compilation) {
+                compilation.plugin('optimize-chunk-assets', function (chunks, callback) {
+                  chunks.forEach(function (chunk) {
+                    if (chunk.initial) {
+                      chunk.files.forEach(function (file) {
+                        compilation.assets[file]._source.children[0].children[0]._value = compilation.assets[file]._source.children[0].children[0]._value.replace('define(["angular"], factory)', 'define("angular-cache", ["angular"], factory)');
+                        compilation.assets[file]._source.children[0].children[1].children[5].children[11].children[1]._source._source._source._value = compilation.assets[file]._source.children[0].children[1].children[5].children[11].children[1]._source._source._source._value.replace('define([], factory)', 'define("cachefactory", [], factory)');
+                      });
+                    }
+                  });
+                  callback();
+                });
+              });
+            }
+          },
           new webpack.BannerPlugin(banner)
         ]
       }
