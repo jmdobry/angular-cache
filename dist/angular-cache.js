@@ -1,6 +1,6 @@
 /*!
  * angular-cache
- * @version 4.4.0 - Homepage <http://jmdobry.github.io/angular-cache/>
+ * @version 4.4.2 - Homepage <http://jmdobry.github.io/angular-cache/>
  * @author Jason Dobry <jason.dobry@gmail.com>
  * @copyright (c) 2013-2015 Jason Dobry 
  * @license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>
