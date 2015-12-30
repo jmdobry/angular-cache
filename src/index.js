@@ -1,36 +1,32 @@
-let angular = require('angular');
-let CacheFactory = require('cachefactory');
+const angular = require('angular')
+const CacheFactory = require('cachefactory')
 
-CacheFactory.utils.equals = angular.equals;
-CacheFactory.utils.isObject = angular.isObject;
-CacheFactory.utils.fromJson = angular.fromJson;
+CacheFactory.utils.equals = angular.equals
+CacheFactory.utils.isObject = angular.isObject
+CacheFactory.utils.fromJson = angular.fromJson
 
-class BinaryHeapProvider {
-  constructor() {
-    this.$get = () => CacheFactory.BinaryHeap;
-  }
+function BinaryHeapProvider () {
+  this.$get = function () { return CacheFactory.BinaryHeap }
 }
 
-class CacheFactoryProvider {
-  constructor() {
-    this.defaults = CacheFactory.defaults;
-    this.defaults.storagePrefix = 'angular-cache.caches.';
+function CacheFactoryProvider () {
+  this.defaults = CacheFactory.defaults
+  this.defaults.storagePrefix = 'angular-cache.caches.'
 
-    this.$get = ['$q', $q => {
-      CacheFactory.utils.Promise = $q;
-      return CacheFactory;
-    }];
-  }
+  this.$get = ['$q', function ($q) {
+    CacheFactory.utils.Promise = $q
+    return CacheFactory
+  }]
 }
 
 angular.module('angular-cache', [])
   .provider('BinaryHeap', BinaryHeapProvider)
-  .provider('CacheFactory', CacheFactoryProvider);
+  .provider('CacheFactory', CacheFactoryProvider)
 
-module.exports = 'angular-cache';
+module.exports = 'angular-cache'
 try {
-  module.exports.name = 'angular-cache';  
+  module.exports.name = 'angular-cache'
 } catch (err) {
-  
+
 }
 

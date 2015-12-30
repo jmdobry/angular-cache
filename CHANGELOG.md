@@ -1,3 +1,8 @@
+##### 4.4.3 30 December 2015
+
+- #179 - capacity does not work on often reload
+- #210 - Why does angular-cache ignore capacity configuration?
+
 ##### 4.4.1 12 October 2015
 
 - #203 - trouble: bundle with r.js not works
