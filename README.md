@@ -50,6 +50,35 @@ angular.module('myApp', ['angular-cache'])
   });
 ```
 
+#### Why would you want to replace $cacheFactory?
+
+| Feature | $cacheFactory | angular-cache |
+| ----------- | ------------------- | --------------- |
+| core implementation usable outside of Angular | no | [__yes__](https://github.com/jmdobry/CacheFactory) |
+| key/value store | __yes__ | __yes__ |
+| in-memory support | __yes__ | __yes__ |
+| localStorage support | no | __yes__ |
+| sessionStorage support | no | __yes__ |
+| custom storage support | no | __yes__ |
+| can set maximum capacity | __yes__ | __yes__ |
+| LRU support | __yes__ | __yes__ |
+| support for time-based expiration of items | no | __yes__ |
+| remove all expired items | n/a | __yes__ |
+| "touch" an item | n/a | __yes__ |
+| execute callback when an item expires | n/a | __yes__ |
+| get info about cache | __yes__ | __yes__ |
+| get info about single item | no | __yes__ |
+| get item by key | __yes__ | __yes__ |
+| remove item by key | __yes__ | __yes__ |
+| remove all items | __yes__ | __yes__ |
+| get keys of all caches | no | __yes__ |
+| clear all caches | no | __yes__ |
+| disable/enable a cache | no | __yes__ |
+| "touch" all items in all caches | n/a | __yes__ |
+| remove expired items from all caches | n/a | __yes__ |
+| get all keys in a cache | no | __yes__ |
+| clear a cache on a given interval | no | __yes__ |
+
 ### The Basics
 
 First, inject `CacheFactory` then create a cache. Let's go:
@@ -582,6 +611,10 @@ Enable the cache.
 
 Disable the cache.
 
+##### `Cache#values()`
+
+Return all values in the cache.
+
 ##### `Cache#touch([key])`
 
 `Cache#touch()` will "touch" all items in the cache.
@@ -622,7 +655,7 @@ Set multiple options for the cache at a time. Setting `strict` to `true` will re
 ### License
 [MIT License](https://github.com/jmdobry/angular-cache/blob/master/LICENSE)
 
-Copyright (C) 2013-2015 Jason Dobry
+Copyright (C) 2013-2016 Jason Dobry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

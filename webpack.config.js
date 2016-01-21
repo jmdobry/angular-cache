@@ -1,14 +1,15 @@
 var webpack = require('webpack');
 var pkg = JSON.parse(require('fs').readFileSync('package.json'));
 var banner = 'angular-cache\n' +
-    '@version ' + pkg.version + ' - Homepage <http://jmdobry.github.io/angular-cache/>\n' +
+    '@version ' + pkg.version + ' - Homepage <https://github.com/jmdobry/angular-cache>\n' +
     '@author Jason Dobry <jason.dobry@gmail.com>\n' +
-    '@copyright (c) 2013-2015 Jason Dobry \n' +
+    '@copyright (c) 2013-2016 Jason Dobry \n' +
     '@license MIT <https://github.com/jmdobry/angular-cache/blob/master/LICENSE>\n' +
     '\n' +
     '@overview angular-cache is a very useful replacement for Angular\'s $cacheFactory.';
 
 module.exports = {
+  devtool: 'source-map',
   entry: './src/index.js',
   output: {
     filename: './dist/angular-cache.js',

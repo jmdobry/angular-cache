@@ -1,8 +1,8 @@
 {
   "name": "angular-cache",
   "description": "angular-cache is a very useful replacement for Angular's $cacheFactory.",
-  "version": "4.4.3",
-  "homepage": "http://jmdobry.github.io/angular-cache/",
+  "version": "4.5.0",
+  "homepage": "https://github.com/jmdobry/angular-cache",
   "main": "dist/angular-cache.js",
   "repository": {
     "type": "git",
@@ -25,28 +25,28 @@
     "ci": "npm test && cat ./coverage/PhantomJS*/lcov.info | coveralls || true"
   },
   "devDependencies": {
-    "cachefactory": "1.3.0",
-    "babel-core": "6.3.26",
+    "cachefactory": "1.4.0",
+    "babel-core": "6.4.5",
     "babel-eslint": "4.1.6",
-    "babel-loader": "6.2.0",
+    "babel-loader": "6.2.1",
     "babel-preset-es2015": "6.3.13",
     "chai": "3.4.1",
     "coveralls": "2.11.6",
     "es6-promise": "3.0.2",
-    "karma": "0.13.10",
+    "karma": "0.13.19",
     "karma-chai": "0.1.0",
-    "karma-chrome-launcher": "0.2.1",
+    "karma-chrome-launcher": "0.2.2",
     "karma-coverage": "0.5.3",
     "karma-firefox-launcher": "0.1.7",
     "karma-mocha": "0.2.1",
-    "karma-phantomjs-launcher": "0.2.1",
+    "karma-phantomjs-launcher": "0.2.3",
     "karma-sinon": "1.0.4",
     "mocha": "2.3.4",
     "phantomjs": "1.9.19",
     "sinon": "1.17.2",
     "standard": "5.4.1",
     "uglify-js": "2.6.1",
-    "webpack": "1.12.9"
+    "webpack": "1.12.11"
   },
   "peerDependencies": {
     "angular": ">=1.x"
