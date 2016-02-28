@@ -31,7 +31,7 @@ angular.module('myApp', ['angular-cache'])
   .config(function (CacheFactoryProvider) {
     angular.extend(CacheFactoryProvider.defaults, { maxAge: 15 * 60 * 1000 });
   })
-  .service('BookService', function (CacheFactory) {
+  .service('BookService', function (CacheFactory, $http) {
     if (!CacheFactory.get('bookCache')) {
       // or CacheFactory('bookCache', { ... });
       CacheFactory.createCache('bookCache', {
