@@ -1,5 +1,6 @@
+/*eslint-disable*/
 var fail = function (msg) {
-    assert.equal('should not reach this!: ' + msg, 'failure');
+    assert.equal('should not reach this!: ' + msg, 'failure')
   },
   TYPES_EXCEPT_STRING = [123, 123.123, null, undefined, {}, [], true, false, function () {
   }],
@@ -27,63 +28,71 @@ var fail = function (msg) {
     storageImpl: null,
     disabled: false,
     storagePrefix: 'ac.'
-  };
+  }
 
-var app, TestCacheFactoryProvider, TestCacheFactory, $q, $rootScope, $http, $httpBackend, $resource, BinaryHeap;
+assert.objectsEqual = function (a, b, msg) {
+  assert.equal(
+    JSON.parse(JSON.stringify(a)),
+    JSON.parse(JSON.stringify(b)),
+    msg
+  )
+}
 
+var app, TestCacheFactoryProvider, TestCacheFactory, $q, $rootScope, $http, $httpBackend, $resource, BinaryHeap
 
-app = angular.module('app', ['ngResource']);
+app = angular.module('app', ['ngResource'])
 
-beforeEach(module('app'));
+beforeEach(module('app'))
 
 beforeEach(module('angular-cache', function (_CacheFactoryProvider_) {
-  TestCacheFactoryProvider = _CacheFactoryProvider_;
-}));
+  TestCacheFactoryProvider = _CacheFactoryProvider_
+}))
 
 beforeEach(inject(function (_$resource_) {
-  $resource = _$resource_;
-}));
+  $resource = _$resource_
+}))
 
 beforeEach(inject(function (_CacheFactory_, _BinaryHeap_, _$q_, _$rootScope_, _$http_, _$httpBackend_) {
-  TestCacheFactory = _CacheFactory_;
-  angular.extend(TestCacheFactory.defaults, CACHE_DEFAULTS);
-  TestCacheFactory.destroyAll();
-  $q = _$q_;
-  $rootScope = _$rootScope_;
-  BinaryHeap = _BinaryHeap_;
+  TestCacheFactory = _CacheFactory_
+  angular.extend(TestCacheFactory.defaults, CACHE_DEFAULTS)
+  TestCacheFactory.destroyAll()
+  $q = _$q_
+  $rootScope = _$rootScope_
+  BinaryHeap = _BinaryHeap_
   $rootScope.$safeApply = function () {
-    var $scope, fn, force = false;
+    var $scope, fn, force = false
     if (arguments.length === 1) {
-      var arg = arguments[0];
+      var arg = arguments[0]
       if (typeof arg === 'function') {
-        fn = arg;
+        fn = arg
       } else {
-        $scope = arg;
+        $scope = arg
       }
     } else {
-      $scope = arguments[0];
-      fn = arguments[1];
+      $scope = arguments[0]
+      fn = arguments[1]
       if (arguments.length === 3) {
-        force = !!arguments[2];
+        force = !!arguments[2]
       }
     }
-    $scope = $scope || this;
+    $scope = $scope || this
     fn = fn || function () {
-      };
+      }
     if (force || !$scope.$$phase) {
       if ($scope.$apply) {
-        $scope.$apply(fn);
+        $scope.$apply(fn)
       } else {
-        $scope.apply(fn);
+        $scope.apply(fn)
       }
     } else {
-      fn();
+      fn()
     }
-  };
-  $http = _$http_;
-  $httpBackend = _$httpBackend_;
-}));
+  }
+  $http = _$http_
+  $httpBackend = _$httpBackend_
+}))
 afterEach(function () {
-  $httpBackend.verifyNoOutstandingRequest();
-  $httpBackend.verifyNoOutstandingExpectation();
-});
+  $httpBackend.verifyNoOutstandingRequest()
+  $httpBackend.verifyNoOutstandingExpectation()
+})
+/*eslint-enable*/

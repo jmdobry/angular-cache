@@ -1,7 +1,12 @@
+##### 4.6.0 29 April 2016
+
+###### Bug fixes
+- #215 - angular-cache.min.js tries to load the .map from dist/
+- #204 - Does not work with Angular 1.3 and browserify
+
 ##### 4.5.0 12 January 2016
 
 ###### Backwards compatible API changes
-
 - #205 - Feature request: Cache.getAllValues
 
 ###### Backwards compatible bug fixes

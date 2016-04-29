@@ -2,11 +2,11 @@ module.exports = function (config) {
   config.set({
     basePath: './',
     frameworks: ['mocha', 'chai', 'sinon'],
-    browsers: ['Chrome', 'PhantomJS'],
+    browsers: ['PhantomJS'],
     files: [
-      'bower_components/angular-1.2.25/angular.js',
-      'bower_components/angular-resource/angular-resource.js',
-      'bower_components/angular-mocks-1.2.25/angular-mocks.js',
+      'node_modules/angular/angular.js',
+      'node_modules/angular-resource/angular-resource.js',
+      'node_modules/angular-mocks/angular-mocks.js',
       'dist/angular-cache.js',
       './karma.start.js',
       'test/**/*.js'
@@ -16,8 +16,6 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     port: 9876,
     plugins: [
-      'karma-chrome-launcher',
-      'karma-firefox-launcher',
       'karma-phantomjs-launcher',
       'karma-mocha',
       'karma-chai',
@@ -35,5 +33,5 @@ module.exports = function (config) {
       'dist/angular-cache.js': ['coverage']
     },
     reporters: ['progress', 'coverage']
-  });
-};
+  })
+}

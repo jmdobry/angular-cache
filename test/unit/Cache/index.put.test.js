@@ -317,6 +317,7 @@ describe('Cache#put(key, value[, options])', function () {
     assert.deepEqual(cache.keys(), ['test.com']);
     setTimeout(function () {
       try {
+        $rootScope.$safeApply();
         var promise = cache.get('test.com');
         assert.equal(typeof promise.then, 'function');
         $http.get('test.com', {
