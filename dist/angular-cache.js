@@ -1101,7 +1101,11 @@
     }];
   }
 
-  angular.module('angular-cache', []).provider('BinaryHeap', BinaryHeapProvider).provider('CacheFactory', CacheFactoryProvider);
+  angular.module('angular-cache', []).provider('BinaryHeap', BinaryHeapProvider).provider('CacheFactory', CacheFactoryProvider).run(['$rootScope', function ($rootScope) {
+    $rootScope.$on('$destroy', function () {
+      CacheFactory.destroyAll();
+    });
+  }]);
 
   var index = 'angular-cache';
 
