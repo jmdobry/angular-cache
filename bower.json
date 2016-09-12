@@ -20,9 +20,9 @@
     "CONTRIBUTING.md",
     "node_modules/",
     "test/",
-    "karma.conf.js",
-    "karma.start.js",
-    "libpeerconnection.log"
+    "karma.*.js",
+    "libpeerconnection.log",
+    "build_examples/"
   ],
   "devDependencies": {
     "angular-1.2.25": "angular#1.2.25",
