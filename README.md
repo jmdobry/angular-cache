@@ -569,19 +569,19 @@ Insert the item with the given `key` and `value` into the cache. `options`, if p
 If inserting a promise, `options.storeOnReject` determines whether to insert the rejection value if the promise rejects (overriding the default `storeOnReject` setting for the cache).
 If inserting a promise, `options.storeOnResolve` determines whether to insert the resolved value if the promise resolves (overriding the default `storeOnResolve` setting for the cache).
 
-##### `Cache.remove(key)`
+##### `Cache#remove(key)`
 
 Remove and return the item with the given `key`, if it is in the cache.
 
-##### `Cache.removeAll()`
+##### `Cache#removeAll()`
 
 Remove all items in the cache.
 
-##### `Cache.removeExpired()`
+##### `Cache#removeExpired()`
 
 Remove and return all expired items in the cache.
 
-##### `Cache.destroy()`
+##### `Cache#destroy()`
 
 Completely destroy this cache and its data.
 
