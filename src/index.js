@@ -1,5 +1,5 @@
 import angular from 'angular'
-import CacheFactory from '../node_modules/cachefactory/dist/cachefactory.es2015'
+import CacheFactory from '../node_modules/cachefactory/dist/cachefactory.es2015.js'
 
 CacheFactory.utils.equals = angular.equals
 CacheFactory.utils.isObject = angular.isObject
