@@ -7,11 +7,11 @@ describe('CacheFactory.info()', function () {
       },
       caches = [];
 
-    caches.push(TestCacheFactory('cache'));
-    caches.push(TestCacheFactory('cache2', {
+    caches.push(TestCacheFactory.createCache('cache'));
+    caches.push(TestCacheFactory.createCache('cache2', {
       maxAge: options.maxAge
     }));
-    caches.push(TestCacheFactory('cache3', {
+    caches.push(TestCacheFactory.createCache('cache3', {
       capacity: options.capacity,
       cacheFlushInterval: options.cacheFlushInterval
     }));

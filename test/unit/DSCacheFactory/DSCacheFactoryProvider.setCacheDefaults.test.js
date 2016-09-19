@@ -1,6 +1,6 @@
 describe('CacheFactoryProvider.setCacheDefaults(options)', function () {
   it('should have the correct defaults.', function () {
-    var cache = TestCacheFactory('CacheFactoryProvider.setCacheDefaults.cache');
+    var cache = TestCacheFactory.createCache('CacheFactoryProvider.setCacheDefaults.cache');
     assert.isDefined(cache);
     assert.equal(cache.info().id, 'CacheFactoryProvider.setCacheDefaults.cache');
     assert.equal(cache.info().capacity, CACHE_DEFAULTS.capacity);
@@ -35,7 +35,7 @@ describe('CacheFactoryProvider.setCacheDefaults(options)', function () {
       }
     };
     angular.extend(TestCacheFactoryProvider.defaults, options);
-    var cache = TestCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     assert.isDefined(cache);
     assert.equal(cache.info().id, 'cache');
     assert.equal(cache.info().capacity, options.capacity);

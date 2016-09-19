@@ -11,7 +11,7 @@ module.exports = function (config) {
       './karma.start.js',
       'test/**/*.js'
     ],
-    captureTimeout: 60000,
+    captureTimeout: 60 * 1000,
     colors: true,
     logLevel: config.LOG_INFO,
     port: 9876,

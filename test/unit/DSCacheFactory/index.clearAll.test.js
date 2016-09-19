@@ -3,13 +3,13 @@ describe('CacheFactory.clearAll()', function () {
     var cacheKeys = ['CacheFactory.clearAll.cache', 'CacheFactory.clearAll.cache1', 'CacheFactory.clearAll.cache2'],
       caches = [];
 
-    caches.push(TestCacheFactory(cacheKeys[0]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[0]));
     caches[0].put('item', 'value');
     caches[0].put('item2', 'value2');
-    caches.push(TestCacheFactory(cacheKeys[1]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[1]));
     caches[1].put('item', 'value');
     caches[1].put('item2', 'value2');
-    caches.push(TestCacheFactory(cacheKeys[2]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[2]));
     caches[2].put('item', 'value');
     caches[2].put('item2', 'value2');
 
@@ -27,13 +27,13 @@ describe('CacheFactory.clearAll()', function () {
     var cacheKeys = ['CacheFactory.clearAll.cache', 'CacheFactory.clearAll.cache1', 'CacheFactory.clearAll.cache2'],
       caches = [];
 
-    caches.push(TestCacheFactory(cacheKeys[0]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[0]));
     caches[0].put('item', 'value');
     caches[0].put('item2', 'value2');
-    caches.push(TestCacheFactory(cacheKeys[1]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[1]));
     caches[1].put('item', 'value');
     caches[1].put('item2', 'value2');
-    caches.push(TestCacheFactory(cacheKeys[2]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[2]));
     caches[2].put('item', 'value');
     caches[2].put('item2', 'value2');
 

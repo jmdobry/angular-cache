@@ -15,7 +15,11 @@ function CacheFactoryProvider () {
 
   this.$get = ['$q', function ($q) {
     CacheFactory.utils.Promise = $q
-    return CacheFactory
+    var cacheFactory = new CacheFactory()
+    Object.defineProperty(cacheFactory, 'defaults', {
+      value: CacheFactory.defaults
+    })
+    return cacheFactory
   }]
 }
 

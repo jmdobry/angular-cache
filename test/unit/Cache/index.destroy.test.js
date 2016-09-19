@@ -1,6 +1,6 @@
 describe('Cache#destroy()', function () {
   it('should destroy the cache and remove all traces of its existence.', function () {
-    var cache = TestCacheFactory('cache');
+    var cache = TestCacheFactory.createCache('cache');
     cache.destroy();
     try {
       assert.equal(cache.info(), { size: 0 });
@@ -11,8 +11,8 @@ describe('Cache#destroy()', function () {
     assert.isUndefined(TestCacheFactory.get('cache'));
   });
   it('should remove items from localStorage when storageMode is used.', function () {
-    var localStorageCache = TestCacheFactory('localStorageCache', { storageMode: 'localStorage', storagePrefix: 'acc.' });
-    var sessionStorageCache = TestCacheFactory('sessionStorageCache', { storageMode: 'sessionStorage' });
+    var localStorageCache = TestCacheFactory.createCache('localStorageCache', { storageMode: 'localStorage', storagePrefix: 'acc.' });
+    var sessionStorageCache = TestCacheFactory.createCache('sessionStorageCache', { storageMode: 'sessionStorage' });
 
     localStorageCache.put('item1', 'value1');
     sessionStorageCache.put('item1', 'value1');

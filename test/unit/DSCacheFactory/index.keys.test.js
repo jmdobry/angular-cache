@@ -2,9 +2,9 @@ describe('CacheFactory.keys()', function () {
   it('should return the array of keys of all caches in CacheFactory.', function (done) {
     var cacheKeys = ['cache', 'cache1', 'cache2'];
 
-    TestCacheFactory(cacheKeys[0]);
-    TestCacheFactory(cacheKeys[1]);
-    TestCacheFactory(cacheKeys[2]);
+    TestCacheFactory.createCache(cacheKeys[0]);
+    TestCacheFactory.createCache(cacheKeys[1]);
+    TestCacheFactory.createCache(cacheKeys[2]);
 
     var keys = TestCacheFactory.keys();
     assert.equal(keys.length, 3);

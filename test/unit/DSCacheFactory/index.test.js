@@ -1,6 +1,6 @@
 describe('CacheFactory(cacheId, options)', function () {
   it('should be able to create a default cache.', function () {
-    var cache = TestCacheFactory('CacheFactory.cache');
+    var cache = TestCacheFactory.createCache('CacheFactory.cache');
     assert.isDefined(cache);
     assert.equal(cache.info().id, 'CacheFactory.cache');
     assert.equal(cache.info().capacity, CACHE_DEFAULTS.capacity);
@@ -13,7 +13,7 @@ describe('CacheFactory(cacheId, options)', function () {
     assert.equal(cache.info().storageImpl, CACHE_DEFAULTS.storageImpl);
   });
   it('should work with ngResource.', function () {
-    var cache = TestCacheFactory('CacheFactory.cache');
+    var cache = TestCacheFactory.createCache('CacheFactory.cache');
     cache.put('test', 'value');
     assert.equal(cache.get('test'), 'value');
     var copyCache = angular.copy(cache);
@@ -50,7 +50,7 @@ describe('CacheFactory(cacheId, options)', function () {
       onExpire: function () {
       }
     };
-    var cache = TestCacheFactory('CacheFactory.cache', options);
+    var cache = TestCacheFactory.createCache('CacheFactory.cache', options);
     assert.isDefined(cache);
     assert.equal(cache.info().id, 'CacheFactory.cache');
     assert.equal(cache.info().capacity, options.capacity);
@@ -73,7 +73,7 @@ describe('CacheFactory(cacheId, options)', function () {
     var orig = localStorage.setItem;
     localStorage.setItem = setItem;
     if (localStorage.setItem === setItem) {
-      var cache = TestCacheFactory('CacheFactory.cache', options);
+      var cache = TestCacheFactory.createCache('CacheFactory.cache', options);
       assert.isDefined(cache);
       assert.equal(cache.info().id, 'CacheFactory.cache');
       assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
@@ -96,7 +96,7 @@ describe('CacheFactory(cacheId, options)', function () {
     var orig = sessionStorage.setItem;
     sessionStorage.setItem = setItem;
     if (sessionStorage.setItem === setItem) {
-      var cache = TestCacheFactory('CacheFactory.cache', options);
+      var cache = TestCacheFactory.createCache('CacheFactory.cache', options);
       assert.isDefined(cache);
       assert.equal(cache.info().id, 'CacheFactory.cache');
       assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
@@ -110,7 +110,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should throw an exception if "capacity" is not a number or is less than zero.', function () {
     var capacity = Math.floor((Math.random() * 100000) + 1) * -1;
     try {
-      TestCacheFactory('capacityCache99', { capacity: capacity });
+      TestCacheFactory.createCache('capacityCache99', { capacity: capacity });
       fail();
     } catch (err) {
       var msg = err.message;
@@ -121,7 +121,7 @@ describe('CacheFactory(cacheId, options)', function () {
         continue;
       }
       try {
-        TestCacheFactory('capacityCache' + i, { capacity: TYPES_EXCEPT_NUMBER[i] });
+        TestCacheFactory.createCache('capacityCache' + i, { capacity: TYPES_EXCEPT_NUMBER[i] });
         fail();
       } catch (err) {
         assert.equal(err.message, 'capacity must be a number!');
@@ -133,7 +133,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should validate maxAge.', function () {
     var maxAge = Math.floor((Math.random() * 100000) + 1) * -1;
     try {
-      TestCacheFactory('maxAgeCache99', { maxAge: maxAge });
+      TestCacheFactory.createCache('maxAgeCache99', { maxAge: maxAge });
       fail();
     } catch (err) {
       var msg = err.message;
@@ -141,7 +141,7 @@ describe('CacheFactory(cacheId, options)', function () {
     assert.equal(msg, 'maxAge must be greater than zero!');
     for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
       try {
-        TestCacheFactory('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] });
+        TestCacheFactory.createCache('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] });
         if (TYPES_EXCEPT_NUMBER[i] !== null) {
           fail(TYPES_EXCEPT_NUMBER[i]);
         }
@@ -157,7 +157,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should validate cacheFlushInterval.', function () {
     var cacheFlushInterval = Math.floor((Math.random() * 100000) + 1) * -1;
     try {
-      TestCacheFactory('cacheFlushIntervalCache99', { cacheFlushInterval: cacheFlushInterval });
+      TestCacheFactory.createCache('cacheFlushIntervalCache99', { cacheFlushInterval: cacheFlushInterval });
       fail();
     } catch (err) {
       var msg = err.message;
@@ -165,7 +165,7 @@ describe('CacheFactory(cacheId, options)', function () {
     assert.equal(msg, 'cacheFlushInterval must be greater than zero!');
     for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
       try {
-        TestCacheFactory('cacheFlushIntervalCache' + i, { cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] });
+        TestCacheFactory.createCache('cacheFlushIntervalCache' + i, { cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] });
         if (TYPES_EXCEPT_NUMBER[i] !== null) {
           fail();
         }
@@ -181,7 +181,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should validate recycleFreq.', function () {
     var recycleFreq = Math.floor((Math.random() * 100000) + 1) * -1;
     try {
-      TestCacheFactory('recycleFreqCache99', { recycleFreq: recycleFreq });
+      TestCacheFactory.createCache('recycleFreqCache99', { recycleFreq: recycleFreq });
       fail();
     } catch (err) {
       var msg = err.message;
@@ -189,7 +189,7 @@ describe('CacheFactory(cacheId, options)', function () {
     assert.equal(msg, 'recycleFreq must be greater than zero!');
     for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
       try {
-        TestCacheFactory('recycleFreqCache' + i, { recycleFreq: TYPES_EXCEPT_NUMBER[i] });
+        TestCacheFactory.createCache('recycleFreqCache' + i, { recycleFreq: TYPES_EXCEPT_NUMBER[i] });
         if (TYPES_EXCEPT_NUMBER[i] !== null) {
           fail();
         }
@@ -205,7 +205,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should validate onExpire.', function () {
     var onExpire = 234;
     try {
-      TestCacheFactory('onExpireCache99', { onExpire: onExpire });
+      TestCacheFactory.createCache('onExpireCache99', { onExpire: onExpire });
       assert.equal('should not reach this!', false);
     } catch (err) {
       var msg = err.message;
@@ -214,7 +214,7 @@ describe('CacheFactory(cacheId, options)', function () {
     for (var i = 0; i < TYPES_EXCEPT_FUNCTION.length; i++) {
       try {
         if (TYPES_EXCEPT_FUNCTION[i]) {
-          TestCacheFactory('onExpireCache' + i, { onExpire: TYPES_EXCEPT_FUNCTION[i] });
+          TestCacheFactory.createCache('onExpireCache' + i, { onExpire: TYPES_EXCEPT_FUNCTION[i] });
         } else {
           continue;
         }
@@ -230,7 +230,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should validate deleteOnExpire.', function () {
     var deleteOnExpire = 'fail';
     try {
-      TestCacheFactory('cache', { deleteOnExpire: deleteOnExpire });
+      TestCacheFactory.createCache('cache', { deleteOnExpire: deleteOnExpire });
       fail('should not reach this!');
     } catch (err) {
       var msg = err.message;
@@ -241,7 +241,7 @@ describe('CacheFactory(cacheId, options)', function () {
         continue;
       }
       try {
-        TestCacheFactory('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] });
+        TestCacheFactory.createCache('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] });
         fail(TYPES_EXCEPT_STRING[i]);
       } catch (err) {
         assert.equal(err.message, 'deleteOnExpire must be a string!');
@@ -253,7 +253,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should validate storageMode.', function () {
     var storageMode = 'fail';
     try {
-      TestCacheFactory('cache', { storageMode: storageMode });
+      TestCacheFactory.createCache('cache', { storageMode: storageMode });
       assert.equal('should not reach this!', false);
     } catch (err) {
       var msg = err.message;
@@ -264,7 +264,7 @@ describe('CacheFactory(cacheId, options)', function () {
         continue;
       }
       try {
-        TestCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
+        TestCacheFactory.createCache('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
         fail(TYPES_EXCEPT_STRING[i]);
       } catch (err) {
         assert.equal(err.message, 'storageMode must be a string!');
@@ -276,7 +276,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should validate storageImpl.', function () {
     var storageImpl = 'fail';
     try {
-      TestCacheFactory('cache', { storageMode: 'localStorage', storageImpl: storageImpl });
+      TestCacheFactory.createCache('cache', { storageMode: 'localStorage', storageImpl: storageImpl });
       assert.equal('should not reach this!', false);
     } catch (err) {
       var msg = err.message;
@@ -284,7 +284,7 @@ describe('CacheFactory(cacheId, options)', function () {
     assert.equal(msg, 'storageImpl must be an object!');
     for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
       try {
-        TestCacheFactory('storageImplCache' + i, { storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
+        TestCacheFactory.createCache('storageImplCache' + i, { storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
         if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
           fail(TYPES_EXCEPT_OBJECT[i]);
         }
@@ -303,7 +303,7 @@ describe('CacheFactory(cacheId, options)', function () {
         removeItem: function () {
         }
       };
-      TestCacheFactory('storageImplCache-noSetItem', {
+      TestCacheFactory.createCache('storageImplCache-noSetItem', {
         storageMode: 'localStorage',
         storageImpl: storageImpl
       });
@@ -318,7 +318,7 @@ describe('CacheFactory(cacheId, options)', function () {
         removeItem: function () {
         }
       };
-      TestCacheFactory('storageImplCache-noGetItem', {
+      TestCacheFactory.createCache('storageImplCache-noGetItem', {
         storageMode: 'localStorage',
         storageImpl: storageImpl
       });
@@ -333,7 +333,7 @@ describe('CacheFactory(cacheId, options)', function () {
         setItem: function () {
         }
       };
-      TestCacheFactory('storageImplCache-noRemoveItem', {
+      TestCacheFactory.createCache('storageImplCache-noRemoveItem', {
         storageMode: 'localStorage',
         storageImpl: storageImpl
       });
@@ -344,8 +344,8 @@ describe('CacheFactory(cacheId, options)', function () {
   });
   it('should prevent a cache from being duplicated.', function () {
     try {
-      TestCacheFactory('cache');
-      TestCacheFactory('cache');
+      TestCacheFactory.createCache('cache');
+      TestCacheFactory.createCache('cache');
     } catch (err) {
       var msg = err.message;
     }
@@ -354,7 +354,7 @@ describe('CacheFactory(cacheId, options)', function () {
   it('should require cacheId to be a string.', function () {
     for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
       try {
-        TestCacheFactory(TYPES_EXCEPT_STRING[i]);
+        TestCacheFactory.createCache(TYPES_EXCEPT_STRING[i]);
         fail(TYPES_EXCEPT_STRING[i]);
       } catch (err) {
         assert.equal(err.message, 'cacheId must be a string!');

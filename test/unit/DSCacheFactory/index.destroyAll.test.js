@@ -3,9 +3,9 @@ describe('CacheFactory.destroyAll()', function () {
     var cacheKeys = ['CacheFactory.destroyAll.cache', 'CacheFactory.destroyAll.cache1', 'CacheFactory.destroyAll.cache2'],
       caches = [];
 
-    caches.push(TestCacheFactory(cacheKeys[0]));
-    caches.push(TestCacheFactory(cacheKeys[1]));
-    caches.push(TestCacheFactory(cacheKeys[2]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[0]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[1]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[2]));
 
     sinon.spy(caches[0], 'destroy');
     sinon.spy(caches[1], 'destroy');
@@ -22,9 +22,9 @@ describe('CacheFactory.destroyAll()', function () {
     var cacheKeys = ['CacheFactory.destroyAll.cache', 'CacheFactory.destroyAll.cache1', 'CacheFactory.destroyAll.cache2'],
       caches = [];
 
-    caches.push(TestCacheFactory(cacheKeys[0]));
-    caches.push(TestCacheFactory(cacheKeys[1]));
-    caches.push(TestCacheFactory(cacheKeys[2]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[0]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[1]));
+    caches.push(TestCacheFactory.createCache(cacheKeys[2]));
 
     TestCacheFactory.destroyAll();
 

@@ -2,13 +2,13 @@ describe('Cache#info()', function () {
   it('should return the correct values.', function () {
     var onExpire = function () {
     };
-    var cache = TestCacheFactory('cache'),
-      cache2 = TestCacheFactory('cache2', { maxAge: 1000 }),
-      cache3 = TestCacheFactory('cache3', { cacheFlushInterval: 1000 }),
-      cache4 = TestCacheFactory('cache4', { capacity: 1000 }),
-      cache5 = TestCacheFactory('cache5', { storageMode: 'localStorage' }),
-      cache6 = TestCacheFactory('cache6', { storageMode: 'sessionStorage' }),
-      cache7 = TestCacheFactory('cache7', { maxAge: 100, onExpire: onExpire });
+    var cache = TestCacheFactory.createCache('cache'),
+      cache2 = TestCacheFactory.createCache('cache2', { maxAge: 1000 }),
+      cache3 = TestCacheFactory.createCache('cache3', { cacheFlushInterval: 1000 }),
+      cache4 = TestCacheFactory.createCache('cache4', { capacity: 1000 }),
+      cache5 = TestCacheFactory.createCache('cache5', { storageMode: 'localStorage' }),
+      cache6 = TestCacheFactory.createCache('cache6', { storageMode: 'sessionStorage' }),
+      cache7 = TestCacheFactory.createCache('cache7', { maxAge: 100, onExpire: onExpire });
     var cacheInfo = cache.info();
     assert.equal(cacheInfo.id, 'cache');
     assert.equal(cacheInfo.capacity, Number.MAX_VALUE);
