@@ -118,7 +118,7 @@ Perfect. Say we also want the items removed from the cache when they expire:
 
 ```js
 profileCache = CacheFactory('profileCache', {
-  maxAge: 60 * 60 * 1000 // 1 hour,
+  maxAge: 60 * 60 * 1000, // 1 hour
   deleteOnExpire: 'aggressive'
 });
 ```
@@ -127,7 +127,7 @@ Let's say that when the items do expire, we want to refresh them with new values
 
 ```js
 profileCache = CacheFactory('profileCache', {
-  maxAge: 60 * 60 * 1000 // 1 hour,
+  maxAge: 60 * 60 * 1000, // 1 hour
   deleteOnExpire: 'aggressive',
   onExpire: function (key, value) {
     $http.get(key).success(function (data) {
