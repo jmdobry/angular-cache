@@ -514,7 +514,7 @@ var cache4 = CacheFactory('cache'); // Error "cache already exists!"
 
 ##### `CacheFactory.get(cacheId)`
 
-Return the cache with the given `cacheId`.
+Return the cache with the given `cacheId`. __Note:__ angular-cache does not automatically load meta data about previously created caches from the defined storage system. This means that on a page refresh this function will return `undefined`. To 'reload' an existing cache simply re-create the cache with the same name every time your app loads, and the cache will possibly load any data that was previously saved under that cache's name.
 
 ##### `CacheFactory.info()`
 
