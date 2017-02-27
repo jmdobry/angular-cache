@@ -2,9 +2,9 @@ module.exports = function (config) {
   config.set({
     basePath: './',
     frameworks: ['mocha', 'chai', 'sinon'],
-    browsers: ['Chrome'],
-    // browsers: ['PhantomJS'],
+    browsers: ['PhantomJS'],
     files: [
+      'node_modules/es6-promise/dist/es6-promise.auto.js',
       'node_modules/angular/angular.js',
       'node_modules/angular-resource/angular-resource.js',
       'node_modules/angular-mocks/angular-mocks.js',
@@ -36,7 +36,7 @@ module.exports = function (config) {
     },
     preprocessors: {
       'node_modules/cachefactory/dist/cachefactory.es2015.js': ['babel'],
-      'src/index.js': ['babel', 'coverage', 'sourcemap'],
+      'src/index.js': ['babel', /*'coverage',*/ 'sourcemap'],
       'test/**/*.js': ['babel', 'sourcemap']
     },
     babelPreprocessor: {
