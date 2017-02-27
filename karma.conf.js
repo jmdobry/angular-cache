@@ -4,18 +4,23 @@ module.exports = function (config) {
     frameworks: ['mocha', 'chai', 'sinon'],
     browsers: ['PhantomJS'],
     files: [
+      'node_modules/es6-promise/dist/es6-promise.auto.js',
       'node_modules/angular/angular.js',
       'node_modules/angular-resource/angular-resource.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'dist/angular-cache.js',
-      './karma.start.js',
+      'node_modules/cachefactory/dist/cachefactory.es2015.js',
+      'src/index.js',
+      'test/_setup.js',
       'test/**/*.js'
     ],
-    captureTimeout: 60000,
+    captureTimeout: 60 * 1000,
     colors: true,
     logLevel: config.LOG_INFO,
     port: 9876,
     plugins: [
+      'karma-sourcemap-loader',
+      'karma-babel-preprocessor',
+      'karma-chrome-launcher',
       'karma-phantomjs-launcher',
       'karma-mocha',
       'karma-chai',
@@ -23,14 +28,25 @@ module.exports = function (config) {
       'karma-coverage'
     ],
     runnerPort: 9100,
-    singleRun: true,
-    autoWatch: false,
+    singleRun: false,
+    autoWatch: true,
     coverageReporter: {
       type: 'lcov',
       dir: 'coverage/'
     },
     preprocessors: {
-      'dist/angular-cache.js': ['coverage']
+      'node_modules/cachefactory/dist/cachefactory.es2015.js': ['babel'],
+      'src/index.js': ['babel', /*'coverage',*/ 'sourcemap'],
+      'test/**/*.js': ['babel', 'sourcemap']
+    },
+    babelPreprocessor: {
+      options: {
+        presets: ['es2015'],
+        plugins: [
+          'transform-es2015-modules-umd'
+        ],
+        sourceMap: 'inline'
+      }
     },
     reporters: ['progress', 'coverage']
   })
