@@ -1,36 +1,37 @@
+/* global fail, $httpBackend, $resource, TestCacheFactory, CACHE_DEFAULTS, TYPES_EXCEPT_STRING, TYPES_EXCEPT_OBJECT, TYPES_EXCEPT_NUMBER, TYPES_EXCEPT_FUNCTION */
+
 describe('CacheFactory(cacheId, options)', function () {
   it('should be able to create a default cache.', function () {
-    var cache = TestCacheFactory('CacheFactory.cache');
-    assert.isDefined(cache);
-    assert.equal(cache.info().id, 'CacheFactory.cache');
-    assert.equal(cache.info().capacity, CACHE_DEFAULTS.capacity);
-    assert.equal(cache.info().maxAge, CACHE_DEFAULTS.maxAge);
-    assert.equal(cache.info().cacheFlushInterval, CACHE_DEFAULTS.cacheFlushInterval);
-    assert.equal(cache.info().deleteOnExpire, CACHE_DEFAULTS.deleteOnExpire);
-    assert.equal(cache.info().onExpire, CACHE_DEFAULTS.onExpire);
-    assert.equal(cache.info().recycleFreq, CACHE_DEFAULTS.recycleFreq);
-    assert.equal(cache.info().storageMode, CACHE_DEFAULTS.storageMode);
-    assert.equal(cache.info().storageImpl, CACHE_DEFAULTS.storageImpl);
-  });
+    var cache = TestCacheFactory.createCache('CacheFactory.cache')
+    assert.isDefined(cache)
+    assert.equal(cache.info().id, 'CacheFactory.cache')
+    assert.equal(cache.info().capacity, CACHE_DEFAULTS.capacity)
+    assert.equal(cache.info().maxAge, CACHE_DEFAULTS.maxAge)
+    assert.equal(cache.info().cacheFlushInterval, CACHE_DEFAULTS.cacheFlushInterval)
+    assert.equal(cache.info().deleteOnExpire, CACHE_DEFAULTS.deleteOnExpire)
+    assert.equal(cache.info().onExpire, CACHE_DEFAULTS.onExpire)
+    assert.equal(cache.info().recycleFreq, CACHE_DEFAULTS.recycleFreq)
+    assert.equal(cache.info().storageMode, CACHE_DEFAULTS.storageMode)
+    assert.equal(cache.info().storageImpl, CACHE_DEFAULTS.storageImpl)
+  })
   it('should work with ngResource.', function () {
-    var cache = TestCacheFactory('CacheFactory.cache');
-    cache.put('test', 'value');
-    assert.equal(cache.get('test'), 'value');
-    var copyCache = angular.copy(cache);
-    assert.equal(copyCache.get('test'), 'value');
+    var cache = TestCacheFactory.createCache('CacheFactory.cache')
+    cache.put('test', 'value')
+    assert.equal(cache.get('test'), 'value')
     $httpBackend.expectGET('/api/card').respond(200, {
       username: 'test'
-    });
-    var CreditCard = $resource(
-      '/api/card',
-      null,
-      { charge: { method: 'GET', cache: cache } }
-    );
-    var card = new CreditCard();
-    card.$charge();
-    $httpBackend.flush();
-    card.$charge().then();
-  });
+    })
+    var CreditCard = $resource('/api/card', null, {
+      charge: {
+        method: 'GET',
+        cache: cache
+      }
+    })
+    var card = new CreditCard()
+    card.$charge()
+    $httpBackend.flush()
+    card.$charge().then()
+  })
   it('should be able to create a cache with options.', function () {
     var options = {
       capacity: Math.floor((Math.random() * 100000) + 1),
@@ -49,251 +50,257 @@ describe('CacheFactory(cacheId, options)', function () {
       recycleFreq: 2000,
       onExpire: function () {
       }
-    };
-    var cache = TestCacheFactory('CacheFactory.cache', options);
-    assert.isDefined(cache);
-    assert.equal(cache.info().id, 'CacheFactory.cache');
-    assert.equal(cache.info().capacity, options.capacity);
-    assert.equal(cache.info().maxAge, options.maxAge);
-    assert.equal(cache.info().cacheFlushInterval, options.cacheFlushInterval);
-    assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
-    assert.equal(cache.info().storageMode, options.storageMode);
-    assert.equal(cache.info().storageImpl, options.storageImpl);
-    assert.equal(cache.info().onExpire, options.onExpire);
-  });
+    }
+    var cache = TestCacheFactory.createCache('CacheFactory.cache', options)
+    assert.isDefined(cache)
+    assert.equal(cache.info().id, 'CacheFactory.cache')
+    assert.equal(cache.info().capacity, options.capacity)
+    assert.equal(cache.info().maxAge, options.maxAge)
+    assert.equal(cache.info().cacheFlushInterval, options.cacheFlushInterval)
+    assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire)
+    assert.equal(cache.info().storageMode, options.storageMode)
+    assert.equal(cache.info().storageImpl, options.storageImpl)
+    assert.equal(cache.info().onExpire, options.onExpire)
+  })
   it('should not use localStorage if it is not available.', function () {
-    function setItem() {
-      throw new Error();
+    function setItem () {
+      throw new Error()
     }
 
     var options = {
       deleteOnExpire: 'aggressive',
       storageMode: 'localStorage'
-    };
-    var orig = localStorage.setItem;
-    localStorage.setItem = setItem;
-    if (localStorage.setItem === setItem) {
-      var cache = TestCacheFactory('CacheFactory.cache', options);
-      assert.isDefined(cache);
-      assert.equal(cache.info().id, 'CacheFactory.cache');
-      assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
-      assert.equal(cache.info().storageMode, 'memory');
-      assert.isUndefined(cache.info().storageImpl);
-      localStorage.setItem = orig;
-    } else {
-      console.log('skipping because Firefox!');
     }
-  });
+    var orig = localStorage.setItem
+    localStorage.setItem = setItem
+    if (localStorage.setItem === setItem) {
+      var cache = TestCacheFactory.createCache('CacheFactory.cache', options)
+      assert.isDefined(cache)
+      assert.equal(cache.info().id, 'CacheFactory.cache')
+      assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire)
+      assert.equal(cache.info().storageMode, 'memory')
+      assert.isUndefined(cache.info().storageImpl)
+      localStorage.setItem = orig
+    } else {
+      console.log('skipping because Firefox!')
+    }
+  })
   it('should not use sessionStorage if it is not available.', function () {
-    function setItem() {
-      throw new Error();
+    function setItem () {
+      throw new Error()
     }
 
     var options = {
       deleteOnExpire: 'aggressive',
       storageMode: 'sessionStorage'
-    };
-    var orig = sessionStorage.setItem;
-    sessionStorage.setItem = setItem;
+    }
+    var orig = sessionStorage.setItem
+    sessionStorage.setItem = setItem
     if (sessionStorage.setItem === setItem) {
-      var cache = TestCacheFactory('CacheFactory.cache', options);
-      assert.isDefined(cache);
-      assert.equal(cache.info().id, 'CacheFactory.cache');
-      assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire);
-      assert.equal(cache.info().storageMode, 'memory');
-      assert.isUndefined(cache.info().storageImpl);
-      sessionStorage.setItem = orig;
+      var cache = TestCacheFactory.createCache('CacheFactory.cache', options)
+      assert.isDefined(cache)
+      assert.equal(cache.info().id, 'CacheFactory.cache')
+      assert.equal(cache.info().deleteOnExpire, options.deleteOnExpire)
+      assert.equal(cache.info().storageMode, 'memory')
+      assert.isUndefined(cache.info().storageImpl)
+      sessionStorage.setItem = orig
     } else {
-      console.log('skipping because Firefox!');
+      console.log('skipping because Firefox!')
     }
-  });
+  })
   it('should throw an exception if "capacity" is not a number or is less than zero.', function () {
-    var capacity = Math.floor((Math.random() * 100000) + 1) * -1;
+    var capacity = Math.floor((Math.random() * 100000) + 1) * -1
     try {
-      TestCacheFactory('capacityCache99', { capacity: capacity });
-      fail();
+      TestCacheFactory.createCache('capacityCache99', { capacity: capacity })
+      fail()
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'capacity must be greater than zero!');
+    assert.equal(msg, '"capacity" must be greater than zero!')
     for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
       if (TYPES_EXCEPT_NUMBER[i] === null) {
-        continue;
+        continue
       }
       try {
-        TestCacheFactory('capacityCache' + i, { capacity: TYPES_EXCEPT_NUMBER[i] });
-        fail();
+        TestCacheFactory.createCache('capacityCache' + i, { capacity: TYPES_EXCEPT_NUMBER[i] })
+        fail()
       } catch (err) {
-        assert.equal(err.message, 'capacity must be a number!');
-        continue;
+        assert.equal(err.message, '"capacity" must be a number!')
+        continue
       }
-      fail();
+      fail()
     }
-  });
+  })
   it('should validate maxAge.', function () {
-    var maxAge = Math.floor((Math.random() * 100000) + 1) * -1;
+    var maxAge = Math.floor((Math.random() * 100000) + 1) * -1
     try {
-      TestCacheFactory('maxAgeCache99', { maxAge: maxAge });
-      fail();
+      TestCacheFactory.createCache('maxAgeCache99', { maxAge: maxAge })
+      fail()
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'maxAge must be greater than zero!');
+    assert.equal(msg, '"maxAge" must be greater than zero!')
     for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
       try {
-        TestCacheFactory('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] });
+        TestCacheFactory.createCache('maxAgeCache' + i, { maxAge: TYPES_EXCEPT_NUMBER[i] })
         if (TYPES_EXCEPT_NUMBER[i] !== null) {
-          fail(TYPES_EXCEPT_NUMBER[i]);
+          fail(TYPES_EXCEPT_NUMBER[i])
         }
       } catch (err) {
-        assert.equal(err.message, 'maxAge must be a number!');
-        continue;
+        assert.equal(err.message, '"maxAge" must be a number!')
+        continue
       }
       if (TYPES_EXCEPT_NUMBER[i] !== null) {
-        fail(TYPES_EXCEPT_NUMBER[i]);
+        fail(TYPES_EXCEPT_NUMBER[i])
       }
     }
-  });
+  })
   it('should validate cacheFlushInterval.', function () {
-    var cacheFlushInterval = Math.floor((Math.random() * 100000) + 1) * -1;
+    var cacheFlushInterval = Math.floor((Math.random() * 100000) + 1) * -1
     try {
-      TestCacheFactory('cacheFlushIntervalCache99', { cacheFlushInterval: cacheFlushInterval });
-      fail();
+      TestCacheFactory.createCache('cacheFlushIntervalCache99', { cacheFlushInterval: cacheFlushInterval })
+      fail()
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'cacheFlushInterval must be greater than zero!');
+    assert.equal(msg, '"cacheFlushInterval" must be greater than zero!')
     for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
       try {
-        TestCacheFactory('cacheFlushIntervalCache' + i, { cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] });
+        TestCacheFactory.createCache('cacheFlushIntervalCache' + i, { cacheFlushInterval: TYPES_EXCEPT_NUMBER[i] })
         if (TYPES_EXCEPT_NUMBER[i] !== null) {
-          fail();
+          fail()
         }
       } catch (err) {
-        assert.equal(err.message, 'cacheFlushInterval must be a number!');
-        continue;
+        assert.equal(err.message, '"cacheFlushInterval" must be a number!')
+        continue
       }
       if (TYPES_EXCEPT_NUMBER[i] !== null) {
-        fail();
+        fail()
       }
     }
-  });
+  })
   it('should validate recycleFreq.', function () {
-    var recycleFreq = Math.floor((Math.random() * 100000) + 1) * -1;
+    var recycleFreq = Math.floor((Math.random() * 100000) + 1) * -1
     try {
-      TestCacheFactory('recycleFreqCache99', { recycleFreq: recycleFreq });
-      fail();
+      TestCacheFactory.createCache('recycleFreqCache99', { recycleFreq: recycleFreq })
+      fail()
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'recycleFreq must be greater than zero!');
+    assert.equal(msg, '"recycleFreq" must be greater than zero!')
     for (var i = 0; i < TYPES_EXCEPT_NUMBER.length; i++) {
       try {
-        TestCacheFactory('recycleFreqCache' + i, { recycleFreq: TYPES_EXCEPT_NUMBER[i] });
+        TestCacheFactory.createCache('recycleFreqCache' + i, { recycleFreq: TYPES_EXCEPT_NUMBER[i] })
         if (TYPES_EXCEPT_NUMBER[i] !== null) {
-          fail();
+          fail()
         }
       } catch (err) {
-        assert.equal(err.message, 'recycleFreq must be a number!');
-        continue;
+        assert.equal(err.message, '"recycleFreq" must be a number!')
+        continue
       }
       if (TYPES_EXCEPT_NUMBER[i] !== null) {
-        fail();
+        fail()
       }
     }
-  });
+  })
   it('should validate onExpire.', function () {
-    var onExpire = 234;
+    var onExpire = 234
     try {
-      TestCacheFactory('onExpireCache99', { onExpire: onExpire });
-      assert.equal('should not reach this!', false);
+      TestCacheFactory.createCache('onExpireCache99', { onExpire: onExpire })
+      assert.equal('should not reach this!', false)
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'onExpire must be a function!');
+    assert.equal(msg, '"onExpire" must be a function!')
     for (var i = 0; i < TYPES_EXCEPT_FUNCTION.length; i++) {
       try {
         if (TYPES_EXCEPT_FUNCTION[i]) {
-          TestCacheFactory('onExpireCache' + i, { onExpire: TYPES_EXCEPT_FUNCTION[i] });
+          TestCacheFactory.createCache('onExpireCache' + i, { onExpire: TYPES_EXCEPT_FUNCTION[i] })
         } else {
-          continue;
+          continue
         }
       } catch (err) {
-        assert.equal(err.message, 'onExpire must be a function!');
-        continue;
+        assert.equal(err.message, '"onExpire" must be a function!')
+        continue
       }
       if (TYPES_EXCEPT_FUNCTION[i] !== null) {
-        fail();
+        fail()
       }
     }
-  });
+  })
   it('should validate deleteOnExpire.', function () {
-    var deleteOnExpire = 'fail';
+    var deleteOnExpire = 'fail'
     try {
-      TestCacheFactory('cache', { deleteOnExpire: deleteOnExpire });
-      fail('should not reach this!');
+      TestCacheFactory.createCache('cache', { deleteOnExpire: deleteOnExpire })
+      fail('should not reach this!')
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'deleteOnExpire must be "none", "passive" or "aggressive"!');
+    assert.equal(msg, '"deleteOnExpire" must be "none", "passive" or "aggressive"!')
     for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
       if (TYPES_EXCEPT_STRING[i] === null) {
-        continue;
+        continue
       }
       try {
-        TestCacheFactory('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] });
-        fail(TYPES_EXCEPT_STRING[i]);
+        TestCacheFactory.createCache('deleteOnExpireCache' + i, { deleteOnExpire: TYPES_EXCEPT_STRING[i] })
+        fail(TYPES_EXCEPT_STRING[i])
       } catch (err) {
-        assert.equal(err.message, 'deleteOnExpire must be a string!');
-        continue;
+        assert.equal(err.message, '"deleteOnExpire" must be a string!')
+        continue
       }
-      fail(TYPES_EXCEPT_STRING[i]);
+      fail(TYPES_EXCEPT_STRING[i])
     }
-  });
+  })
   it('should validate storageMode.', function () {
-    var storageMode = 'fail';
+    var storageMode = 'fail'
     try {
-      TestCacheFactory('cache', { storageMode: storageMode });
-      assert.equal('should not reach this!', false);
+      TestCacheFactory.createCache('cache', { storageMode: storageMode })
+      assert.equal('should not reach this!', false)
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'storageMode must be "memory", "localStorage" or "sessionStorage"!');
+    assert.equal(msg, '"storageMode" must be "memory", "localStorage", or "sessionStorage"!')
     for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
       if (!TYPES_EXCEPT_STRING[i]) {
-        continue;
+        continue
       }
       try {
-        TestCacheFactory('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] });
-        fail(TYPES_EXCEPT_STRING[i]);
+        TestCacheFactory.createCache('storageModeCache' + i, { storageMode: TYPES_EXCEPT_STRING[i] })
+        fail(TYPES_EXCEPT_STRING[i])
       } catch (err) {
-        assert.equal(err.message, 'storageMode must be a string!');
-        continue;
+        assert.equal(err.message, '"storageMode" must be a string!')
+        continue
       }
-      fail(TYPES_EXCEPT_STRING[i]);
+      fail(TYPES_EXCEPT_STRING[i])
     }
-  });
+  })
   it('should validate storageImpl.', function () {
-    var storageImpl = 'fail';
+    var storageImpl = 'fail'
     try {
-      TestCacheFactory('cache', { storageMode: 'localStorage', storageImpl: storageImpl });
-      assert.equal('should not reach this!', false);
+      TestCacheFactory.createCache('cache', {
+        storageMode: 'localStorage',
+        storageImpl: storageImpl
+      })
+      assert.equal('should not reach this!', false)
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'storageImpl must be an object!');
+    assert.equal(msg, '"storageImpl" must be an object!')
     for (var i = 0; i < TYPES_EXCEPT_OBJECT.length; i++) {
       try {
-        TestCacheFactory('storageImplCache' + i, { storageMode: 'localStorage', storageImpl: TYPES_EXCEPT_OBJECT[i] });
+        TestCacheFactory.createCache('storageImplCache' + i, {
+          storageMode: 'localStorage',
+          storageImpl: TYPES_EXCEPT_OBJECT[i]
+        })
         if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
-          fail(TYPES_EXCEPT_OBJECT[i]);
+          fail(TYPES_EXCEPT_OBJECT[i])
         }
       } catch (err) {
-        assert.equal(err.message, 'storageImpl must be an object!');
-        continue;
+        assert.equal(err.message, '"storageImpl" must be an object!')
+        continue
       }
       if (TYPES_EXCEPT_OBJECT[i] !== null && TYPES_EXCEPT_OBJECT[i] !== undefined && TYPES_EXCEPT_OBJECT[i] !== false) {
-        fail(TYPES_EXCEPT_OBJECT[i]);
+        fail(TYPES_EXCEPT_OBJECT[i])
       }
     }
     try {
@@ -302,14 +309,14 @@ describe('CacheFactory(cacheId, options)', function () {
         },
         removeItem: function () {
         }
-      };
-      TestCacheFactory('storageImplCache-noSetItem', {
+      }
+      TestCacheFactory.createCache('storageImplCache-noSetItem', {
         storageMode: 'localStorage',
         storageImpl: storageImpl
-      });
-      fail();
+      })
+      fail()
     } catch (err) {
-      assert.equal(err.message, 'storageImpl must implement "setItem(key, value)"!');
+      assert.equal(err.message, '"storageImpl" must implement "setItem(key, value)"!')
     }
     try {
       storageImpl = {
@@ -317,14 +324,14 @@ describe('CacheFactory(cacheId, options)', function () {
         },
         removeItem: function () {
         }
-      };
-      TestCacheFactory('storageImplCache-noGetItem', {
+      }
+      TestCacheFactory.createCache('storageImplCache-noGetItem', {
         storageMode: 'localStorage',
         storageImpl: storageImpl
-      });
-      fail();
+      })
+      fail()
     } catch (err) {
-      assert.equal(err.message, 'storageImpl must implement "getItem(key)"!');
+      assert.equal(err.message, '"storageImpl" must implement "getItem(key)"!')
     }
     try {
       storageImpl = {
@@ -332,35 +339,35 @@ describe('CacheFactory(cacheId, options)', function () {
         },
         setItem: function () {
         }
-      };
-      TestCacheFactory('storageImplCache-noRemoveItem', {
+      }
+      TestCacheFactory.createCache('storageImplCache-noRemoveItem', {
         storageMode: 'localStorage',
         storageImpl: storageImpl
-      });
-      fail();
+      })
+      fail()
     } catch (err) {
-      assert.equal(err.message, 'storageImpl must implement "removeItem(key)"!');
+      assert.equal(err.message, '"storageImpl" must implement "removeItem(key)"!')
     }
-  });
+  })
   it('should prevent a cache from being duplicated.', function () {
     try {
-      TestCacheFactory('cache');
-      TestCacheFactory('cache');
+      TestCacheFactory.createCache('cache')
+      TestCacheFactory.createCache('cache')
     } catch (err) {
-      var msg = err.message;
+      var msg = err.message
     }
-    assert.equal(msg, 'cache already exists!');
-  });
+    assert.equal(msg, 'cache "cache" already exists!')
+  })
   it('should require cacheId to be a string.', function () {
     for (var i = 0; i < TYPES_EXCEPT_STRING.length; i++) {
       try {
-        TestCacheFactory(TYPES_EXCEPT_STRING[i]);
-        fail(TYPES_EXCEPT_STRING[i]);
+        TestCacheFactory.createCache(TYPES_EXCEPT_STRING[i])
+        fail(TYPES_EXCEPT_STRING[i])
       } catch (err) {
-        assert.equal(err.message, 'cacheId must be a string!');
-        continue;
+        assert.equal(err.message, '"id" must be a string!')
+        continue
       }
-      fail(TYPES_EXCEPT_STRING[i]);
+      fail(TYPES_EXCEPT_STRING[i])
     }
-  });
-});
+  })
+})

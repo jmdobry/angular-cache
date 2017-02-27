@@ -4,24 +4,13 @@ module.exports = function (config) {
     frameworks: ['mocha', 'chai', 'sinon'],
     browsers: ['PhantomJS'],
     files: [
-      'node_modules/angular/angular.js',
-      'node_modules/angular-resource/angular-resource.js',
-      'node_modules/angular-mocks/angular-mocks.js',
-      'dist/angular-cache.js',
-      './karma.start.js',
-      'test/**/*.js'
+      'node_modules/angular/angular.js', 'node_modules/angular-resource/angular-resource.js', 'node_modules/angular-mocks/angular-mocks.js', 'dist/angular-cache.js', 'karma.start.js', 'test/**/*.js'
     ],
     captureTimeout: 60000,
     colors: true,
     logLevel: config.LOG_INFO,
     port: 9876,
-    plugins: [
-      'karma-phantomjs-launcher',
-      'karma-mocha',
-      'karma-chai',
-      'karma-sinon',
-      'karma-coverage'
-    ],
+    plugins: ['karma-phantomjs-launcher', 'karma-mocha', 'karma-chai', 'karma-sinon', 'karma-spec-reporter', 'karma-coverage'],
     runnerPort: 9100,
     singleRun: true,
     autoWatch: false,
@@ -29,9 +18,12 @@ module.exports = function (config) {
       type: 'lcov',
       dir: 'coverage/'
     },
+    mochaOpts: {
+      bail: true
+    },
     preprocessors: {
       'dist/angular-cache.js': ['coverage']
     },
-    reporters: ['progress', 'coverage']
+    reporters: ['spec', 'coverage']
   })
 }
