@@ -71,6 +71,6 @@
     "uglify-js": "~2.7.5"
   },
   "peerDependencies": {
-    "angular": ">=1.4.4 <2"
+    "angular": ">=1.x <2"
   }
 }
