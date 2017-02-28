@@ -1,11 +1,9 @@
 module.exports = {
-  entry: './app.js',
-  output: {
+  entry: './app.js', output: {
     filename: 'bundle.js'
-  },
-  resolve: {
+  }, resolve: {
     alias: {
       'angular-cache': '../../dist/angular-cache.js'
     }
   }
-};
+}

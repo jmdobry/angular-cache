@@ -85,7 +85,7 @@ app.service('myService', function (CacheFactory) {
 
   // Check to make sure the cache doesn't already exist
   if (!CacheFactory.get('profileCache')) {
-    profileCache = CacheFactory('profileCache');
+    profileCache = CacheFactory.createCache('profileCache');
   }
 });
 ```
@@ -109,7 +109,7 @@ Right now, these items will stay in the cache until a page refresh.
 Let's have items which are added to `profileCache` expire after an hour:
 
 ```js
-profileCache = CacheFactory('profileCache', {
+profileCache = CacheFactory.createCache('profileCache', {
   maxAge: 60 * 60 * 1000 // 1 hour
 });
 ```
@@ -117,7 +117,7 @@ profileCache = CacheFactory('profileCache', {
 Perfect. Say we also want the items removed from the cache when they expire:
 
 ```js
-profileCache = CacheFactory('profileCache', {
+profileCache = CacheFactory.createCache('profileCache', {
   maxAge: 60 * 60 * 1000, // 1 hour
   deleteOnExpire: 'aggressive'
 });
@@ -126,7 +126,7 @@ profileCache = CacheFactory('profileCache', {
 Let's say that when the items do expire, we want to refresh them with new values:
 
 ```js
-profileCache = CacheFactory('profileCache', {
+profileCache = CacheFactory.createCache('profileCache', {
   maxAge: 60 * 60 * 1000, // 1 hour
   deleteOnExpire: 'aggressive',
   onExpire: function (key, value) {
@@ -223,9 +223,9 @@ Possible values:
 - `passive` - Cache will do nothing when an item expires. Expired items will remain in the cache until requested, at which point they are removed, and `undefined` is returned.
 - `aggressive` - Cache will remove expired items as soon as they are discovered.
 
-##### `disabled`
+##### `enabled`
 
-Determines whether a cache is disabled. Default: `false`.
+Determines whether a cache is enabled. Default: `true`.
 
 ##### `onExpire`
 
@@ -281,7 +281,7 @@ Configure `$http` to use a cache created by `CacheFactory` by default:
 
 ```js
 app.run(function ($http, CacheFactory) {
-  $http.defaults.cache = CacheFactory('defaultCache', {
+  $http.defaults.cache = CacheFactory.createCache('defaultCache', {
     maxAge: 15 * 60 * 1000, // Items added to this cache expire after 15 minutes
     cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
     deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire

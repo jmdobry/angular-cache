@@ -1,4 +1,4 @@
-var angular = require('angular');
+var angular = require('angular')
 
 angular.module('app', [
   // this is what you would do in a real app
@@ -7,5 +7,5 @@ angular.module('app', [
   // for the example to work
   require('../../dist/angular-cache.js')
 ]).run(function ($rootScope, CacheFactory) {
-  $rootScope.test = 'It works! Using ' + (CacheFactory ? 'angular-cache' : 'undefined');
-});
+  $rootScope.test = 'It works! Using ' + (CacheFactory ? 'angular-cache' : 'undefined')
+})
