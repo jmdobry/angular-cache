@@ -279,8 +279,6 @@ __Note:__ The downside of letting `$http` handle caching for you is that it cach
 
 Configure `$http` to use a cache created by `CacheFactory` by default:
 
-__Note:__ For angular 1.4.4-1.5.x should call `$httpProvider.useLegacyPromiseExtensions(false)`
-
 ```js
 app.run(function ($http, CacheFactory) {
   $http.defaults.cache = CacheFactory.createCache('defaultCache', {

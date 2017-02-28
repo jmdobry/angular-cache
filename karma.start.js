@@ -61,7 +61,6 @@ beforeEach(module('app'))
 
 beforeEach(module('angular-cache', function (_CacheFactoryProvider_, _$httpProvider_) {
   $httpProvider = _$httpProvider_
-  $httpProvider.useLegacyPromiseExtensions && $httpProvider.useLegacyPromiseExtensions(false) // note: to suuport promises in angular >1.4.4 <1.6.x
   TestCacheFactoryProvider = _CacheFactoryProvider_
 }))
 
