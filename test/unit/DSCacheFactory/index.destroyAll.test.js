@@ -34,4 +34,15 @@ describe('CacheFactory.destroyAll()', function () {
 
     done();
   });
+  it('should be called when the $rootScope is destroyed', function (done) {
+    var destroyAllOrig = TestCacheFactory.destroyAll;
+
+    sinon.spy(TestCacheFactory, 'destroyAll');
+    $rootScope.$destroy();
+
+    assert.equal(TestCacheFactory.destroyAll.callCount, 1);
+
+    TestCacheFactory.destroyAll = destroyAllOrig;
+    done();
+  });
 });
