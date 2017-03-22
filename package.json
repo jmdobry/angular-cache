@@ -62,7 +62,7 @@
     "karma-sinon": "1.0.5",
     "mocha": "3.0.2",
     "phantomjs-prebuilt": "2.1.12",
-    "rollup": "0.34.10",
+    "rollup": "0.34.11",
     "rollup-plugin-babel": "2.6.1",
     "sinon": "1.17.5",
     "standard": "8.0.0",
