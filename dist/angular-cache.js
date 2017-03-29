@@ -342,6 +342,10 @@
           item = $$data[key];
         }
 
+        if (!item) {
+          return;
+        }
+
         var value = item.value;
         var now = new Date().getTime();
 
